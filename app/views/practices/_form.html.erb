@@ -1,0 +1,75 @@
+<%= form_for @practice, :html => { :class => "form-horizontal practice" } do |f| %>
+
+    <% if @practice.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@practice.errors.count, "error") %> prohibited this practice from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @practice.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :title, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:title]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :question, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :question, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:question]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :answer, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :answer, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:answer]) %>
+  </div>
+  <% if current_user.has_role? :admin %>
+  <div class="control-group">
+    <%= f.label :user_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :user_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:user_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :tutor_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :tutor_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:tutor_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :lesson_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :lesson_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:lesson_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :activate, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :activate, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:activate]) %>
+  </div>
+ <% end %>
+
+
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            practices_path, :class => 'btn btn-default' %>
+
+<% end %>

@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  title: MyString
+  question: MyText
+  answer: MyText
+  user_id: 
+  tutor_id: 
+  lesson_id: 
+  activate: false
+
+two:
+  title: MyString
+  question: MyText
+  answer: MyText
+  user_id: 
+  tutor_id: 
+  lesson_id: 
+  activate: false

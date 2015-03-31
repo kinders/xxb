@@ -1,0 +1,16 @@
+<h2>重新确认</h2>
+
+<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+  <%= devise_error_messages! %>
+
+  <div class="field">
+    <%= f.label :email, "电子邮件地址" %><br />
+    <%= f.email_field :email, autofocus: true %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "重新发送确认邮件" %>
+  </div>
+<% end %>
+
+<%= render "devise/shared/links" %>

@@ -1,0 +1,44 @@
+<h2>编辑 <%= resource_name.to_s.humanize %></h2>
+
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= devise_error_messages! %>
+
+  <div class="field">
+    <%= f.label :email, "电子邮箱地址" %><br />
+    <%= f.email_field :email, autofocus: true %>
+  </div>
+
+  <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+    <div>正在等待 <%= resource.unconfirmed_email %> 的确认……</div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label "姓名" %><br />
+    <%= f.text_field :name %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password, "密码" %> <i>(如果不想更改则留空白)</i><br />
+    <%= f.password_field :password, autocomplete: "off" %>
+  </div>
+
+  <div class="field">
+    <%= f.label :password_confirmation, "确认密码" %><br />
+    <%= f.password_field :password_confirmation, autocomplete: "off" %>
+  </div>
+
+  <div class="field">
+    <%= f.label '原有密码' %> <i>(输入旧密码来确认更改)</i><br />
+    <%= f.password_field :current_password, autocomplete: "off" %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "更改" %>
+  </div>
+<% end %>
+
+<h3>销毁账户</h3>
+
+<p>不开心？ <%= button_to "删除我的数据", registration_path(resource_name), data: { confirm: "您确定要删除吗？" }, method: :delete %></p>
+
+<%= link_to "返回", :back %>
