@@ -1,0 +1,74 @@
+<%= form_for @plan, :html => { :class => "form-horizontal plan" } do |f| %>
+
+    <% if @plan.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@plan.errors.count, "error") %> 让这个辅导无法添加到教学计划中：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @plan.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <% unless current_user.has_role? :admin %>
+  <div class="control-group">
+    <%= f.label "序号", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :serail, :class => 'form-control' %>
+    </div>
+    <%= error_span(@plan[:serail]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label "辅导", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :tutor_id, Tutor.titles, prompt: "请选择一个辅导", :class => 'form-control' %>
+    </div>
+    <%= error_span(@plan[:tutor_id]) %>
+  </div>
+  <hr>
+  <%= f.submit "添加到教学计划中", :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+    plans_path, :class => 'btn btn-default' %>
+
+<% else %>  <!--下面是管理员界面 -->
+
+  <div class="control-group">
+    <%= f.label :serail, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :serail, :class => 'form-control' %>
+    </div>
+    <%= error_span(@plan[:serail]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :user_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :user_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@plan[:user_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :teaching_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :teaching_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@plan[:teaching_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :tutor_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :tutor_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@plan[:tutor_id]) %>
+  </div>
+  <hr>
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            plans_path, :class => 'btn btn-default' %>
+  <% end %>
+
+<% end %>

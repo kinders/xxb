@@ -11,10 +11,72 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150329144629) do
+ActiveRecord::Schema.define(version: 20150408152631) do
+
+  create_table "catalogs", force: :cascade do |t|
+    t.decimal  "serial"
+    t.integer  "user_id"
+    t.integer  "textbook_id"
+    t.integer  "lesson_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "catalogs", ["lesson_id"], name: "index_catalogs_on_lesson_id"
+  add_index "catalogs", ["textbook_id"], name: "index_catalogs_on_textbook_id"
+  add_index "catalogs", ["user_id"], name: "index_catalogs_on_user_id"
+
+  create_table "evaluations", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "tutor_id"
+    t.integer  "practice_id"
+    t.string   "title"
+    t.text     "question"
+    t.text     "answer"
+    t.text     "your_answer"
+    t.decimal  "score"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.decimal  "practice_score"
+  end
+
+  add_index "evaluations", ["practice_id"], name: "index_evaluations_on_practice_id"
+  add_index "evaluations", ["tutor_id"], name: "index_evaluations_on_tutor_id"
+  add_index "evaluations", ["user_id"], name: "index_evaluations_on_user_id"
+
+  create_table "histories", force: :cascade do |t|
+    t.integer  "user_id",    null: false
+    t.string   "modelname",  null: false
+    t.integer  "entryid",    null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "histories", ["user_id"], name: "index_histories_on_user_id"
+
+  create_table "justices", force: :cascade do |t|
+    t.decimal  "score",                             null: false
+    t.text     "remark"
+    t.boolean  "activity",           default: true
+    t.integer  "user_id"
+    t.integer  "evaluation_id"
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.string   "title"
+    t.text     "question"
+    t.text     "answer"
+    t.text     "your_answer"
+    t.decimal  "practice_score"
+    t.integer  "evaluation_user_id"
+    t.integer  "practice_id"
+  end
+
+  add_index "justices", ["evaluation_id"], name: "index_justices_on_evaluation_id"
+  add_index "justices", ["practice_id"], name: "index_justices_on_practice_id"
+  add_index "justices", ["user_id"], name: "index_justices_on_user_id"
 
   create_table "lessons", force: :cascade do |t|
-    t.string   "name"
+    t.string   "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "user_id"
@@ -22,6 +84,19 @@ ActiveRecord::Schema.define(version: 20150329144629) do
   end
 
   add_index "lessons", ["user_id"], name: "index_lessons_on_user_id"
+
+  create_table "plans", force: :cascade do |t|
+    t.decimal  "serail"
+    t.integer  "user_id"
+    t.integer  "teaching_id"
+    t.integer  "tutor_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "plans", ["teaching_id"], name: "index_plans_on_teaching_id"
+  add_index "plans", ["tutor_id"], name: "index_plans_on_tutor_id"
+  add_index "plans", ["user_id"], name: "index_plans_on_user_id"
 
   create_table "practices", force: :cascade do |t|
     t.string   "title"
@@ -31,8 +106,9 @@ ActiveRecord::Schema.define(version: 20150329144629) do
     t.integer  "tutor_id"
     t.integer  "lesson_id"
     t.boolean  "activate"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.decimal  "score",      default: 1.0
   end
 
   add_index "practices", ["lesson_id"], name: "index_practices_on_lesson_id"
@@ -49,6 +125,28 @@ ActiveRecord::Schema.define(version: 20150329144629) do
 
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
   add_index "roles", ["name"], name: "index_roles_on_name"
+
+  create_table "teachings", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "lesson_id"
+    t.string   "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "teachings", ["lesson_id"], name: "index_teachings_on_lesson_id"
+  add_index "teachings", ["user_id"], name: "index_teachings_on_user_id"
+
+  create_table "textbooks", force: :cascade do |t|
+    t.string   "title"
+    t.text     "description"
+    t.decimal  "serial"
+    t.integer  "user_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "textbooks", ["user_id"], name: "index_textbooks_on_user_id"
 
   create_table "tutors", force: :cascade do |t|
     t.string   "title",      null: false

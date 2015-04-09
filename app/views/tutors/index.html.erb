@@ -1,4 +1,5 @@
 <%- model_class = Tutor -%>
+<% unless current_user.has_role? :admin %>
 <div class="page-header">
   <h3>所有辅导</h3>
 </div>
@@ -9,11 +10,6 @@
       <th>标题</th>
       <th>难度</th>
       <th>创建者</th>
-      <% if current_user.has_role? :admin %>
-      <th><%= model_class.human_attribute_name(:page) %></th>
-      <th><%= model_class.human_attribute_name(:lesson_id) %></th>
-      <th><%= model_class.human_attribute_name(:created_at) %></th>
-      <% end %>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -25,11 +21,6 @@
         <td><%= tutor.title %></td>
         <td><%= tutor.difficulty %></td>
         <td><%= @tutor_user.name %></td>
-      <% if current_user.has_role? :admin %>
-        <td><%= tutor.page %></td>
-        <td><%= tutor.lesson_id %></td>
-        <td><%=l tutor.created_at %></td>
-      <% end %>
         <td>
           <%= link_to "进入辅导页面", tutor_path(tutor), :class => 'btn btn-xs btn-success' %>
 	<% if current_user.id == tutor.user_id %>
@@ -50,4 +41,56 @@
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_tutor_path,
             :class => 'btn btn-primary' %>
-	  <%= link_to "返回《#{@lesson.name}》原文", lesson_path(@lesson), :class => 'btn btn-default' %>
+<% if @lesson %>
+<%= link_to "返回《#{@lesson.title}》原文", lesson_path(@lesson), :class => 'btn btn-default' %>
+<% end %>
+
+
+<% else %>
+
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:page) %></th>
+      <th><%= model_class.human_attribute_name(:difficulty) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:lesson_id) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%= model_class.human_attribute_name(:updated_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tutors.each do |tutor| %>
+      <tr>
+        <td><%= link_to tutor.id, tutor_path(tutor) %></td>
+        <td><%= tutor.title %></td>
+        <td><%= tutor.page %></td>
+        <td><%= tutor.difficulty %></td>
+        <td><%= tutor.user_id %></td>
+        <td><%= tutor.lesson_id %></td>
+        <td><%=l tutor.created_at %></td>
+        <td><%=l tutor.updated_at %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_tutor_path(tutor), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      tutor_path(tutor),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_tutor_path,
+	    :class => 'btn btn-primary' %>
+<% end %>

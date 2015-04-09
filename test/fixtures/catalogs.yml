@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  serial: 9.99
+  user_id: 
+  textbook_id: 
+  lesson_id: 
+
+two:
+  serial: 9.99
+  user_id: 
+  textbook_id: 
+  lesson_id: 

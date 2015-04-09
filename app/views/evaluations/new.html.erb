@@ -1,0 +1,16 @@
+<%- model_class = Evaluation -%>
+<% if current_user.has_role? :admin %>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
+</div>
+<% else %>
+<div class="page-header">
+  <h1>小测验</h1>
+</div>
+<% end %>
+<%= render :partial => 'form' %>
+<hr>
+<% unless current_user.has_role? :admin %>
+  <%= link_to "做不出来？再辅导一次吧", tutor_path(@tutor),  :class => 'btn btn-default' %>
+<% end %>
+<hr>

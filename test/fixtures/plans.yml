@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  serail: 9.99
+  user_id: 
+  teaching_id: 
+  tutor_id: 
+
+two:
+  serail: 9.99
+  user_id: 
+  teaching_id: 
+  tutor_id: 

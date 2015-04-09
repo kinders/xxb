@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  score: 9.99
+  remark: MyText
+  activity: false
+  user_id: 
+  evaluation_id: 
+
+two:
+  score: 9.99
+  remark: MyText
+  activity: false
+  user_id: 
+  evaluation_id: 

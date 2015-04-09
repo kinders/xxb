@@ -1,0 +1,11 @@
+<%- model_class = Plan -%>
+<% if current_user.has_role? :admin %>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
+</div>
+<% else %>
+<div class="page-header">
+  <h3>为教学计划添加辅导</h3>
+</div>
+<% end %>
+<%= render :partial => 'form' %>

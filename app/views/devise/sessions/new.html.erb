@@ -1,26 +1,38 @@
-<h2>登录</h2>
+<div class="page-header">
+<h2>登录页面
+  <%= link_to "还没有账号吗？现在就注册吧", new_registration_path(resource_name), class: "btn btn-default" %><br />
+</h2>
+</div>
+<%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class:  "form-horizontal user"}) do |f| %>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email, "电子邮箱地址" %><br />
-    <%= f.email_field :email, autofocus: true %>
+  <div class="control-group">
+    <%= f.label "电子邮箱地址", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.email_field :email, autofocus: true, class: 'form-control' %>
+    </div>
   </div>
 
-  <div class="field">
-    <%= f.label :password, "密码" %><br />
-    <%= f.password_field :password, autocomplete: "off" %>
+  <div class="control-group">
+    <%= f.label "密码", class: 'control-label' %> 
+    <div class="controls">
+    <%= f.password_field :password, autocomplete: "off", class: 'form-control' %>
+    </div>
   </div>
 
   <% if devise_mapping.rememberable? -%>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me, "记住密码" %>
-    </div>
+  <div class="control-group">
+    <%= f.check_box :remember_me %>
+    <%= f.label :remember_me, "记住密码", class: 'control-label' %>
+  </div>
   <% end -%>
 
+  <hr>
+
   <div class="actions">
-    <%= f.submit "登录" %>
+    <%= f.submit "登录", class: "btn btn-primary" %>
   </div>
 <% end %>
 
-<%= render "devise/shared/links" %>
+  <%= link_to "忘记密码？", new_password_path(resource_name), class: "btn btn-default" %><br />
+  <hr>
+  <hr>

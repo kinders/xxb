@@ -17,20 +17,32 @@ class TutorsController < ApplicationController
   # GET /tutors/1
   # GET /tutors/1.json
   def show
+    history = History.create { |h| 
+      h.user_id = current_user.id
+      h.modelname = "tutor"
+      h.entryid = @tutor.id
+    }
     session[:tutor_id] = @tutor.id
+    @lesson = Lesson.find_by(id: session[:lesson_id])
     @practice = Practice.find_by(tutor_id: @tutor.id)
-    @tutors = Tutor.where(lesson_id: session[:lesson_id])
-    @tutors.each_with_index do | tutor, index |
-      if tutor == @tutor
+    unless session[:teaching_id]
+      session[:teaching_id] = Teaching.find_by(user_id: 2).id
+    end
+    teaching_id = session[:teaching_id]
+    @plans = Plan.where(teaching_id: teaching_id)
+    @tutors_in_plans = []
+    @plans.each {|plan| @tutors_in_plans << plan.tutor_id}
+    @tutors_in_plans.each_with_index do | tutor, index |
+      if tutor == @tutor.id
         if index - 1 < 0
 	  @previous_tutor = nil  
 	else
-	  @previous_tutor = @tutors[index - 1] 
+	  @previous_tutor = @tutors_in_plans[index - 1] 
 	end
-	if index + 1 == @tutors.length
+	if index + 1 == @tutors_in_plans.length
 	  @next_tutor = nil
 	else
-	  @next_tutor = @tutors[index + 1]
+	  @next_tutor = @tutors_in_plans[index + 1]
 	end
       end
     end

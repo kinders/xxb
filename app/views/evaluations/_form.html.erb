@@ -1,0 +1,117 @@
+<%= form_for @evaluation, :html => { :class => "form-horizontal evaluation" } do |f| %>
+
+    <% if @evaluation.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@evaluation.errors.count, "error") %> prohibited this evaluation from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @evaluation.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <% if current_user.has_role? :admin %>
+
+  <div class="control-group">
+    <%= f.label :user_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :user_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@evaluation[:user_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :tutor_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :tutor_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@evaluation[:tutor_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :practice_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :practice_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@evaluation[:practice_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :title, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, :class => 'form-control' %>
+    </div>
+    <%= error_span(@evaluation[:title]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :question, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :question, :class => 'form-control' %>
+    </div>
+    <%= error_span(@evaluation[:question]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :answer, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :answer, :class => 'form-control' %>
+    </div>
+    <%= error_span(@evaluation[:answer]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :your_answer, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :your_answer, :class => 'form-control' %>
+    </div>
+    <%= error_span(@evaluation[:your_answer]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :score, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :score, :class => 'form-control' %>
+    </div>
+    <%= error_span(@evaluation[:score]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :practice_score, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :practice_score, :class => 'form-control' %>
+    </div>
+    <%= error_span(@evaluation[:practice_score]) %>
+  </div>
+
+
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            evaluations_path, :class => 'btn btn-default' %>
+
+  <% else %>
+
+  <div class="control-group">
+    <%= f.label "类别", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, :class => 'form-control', disabled: true %>
+    </div>
+    <%= error_span(@evaluation[:title]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label "问题", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :question, :class => 'form-control', disabled: true %>
+    </div>
+    <%= error_span(@evaluation[:question]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label "我的答案", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :your_answer, :class => 'form-control' %>
+    </div>
+    <%= error_span(@evaluation[:your_answer]) %>
+  </div>
+  <hr>
+
+  <%= f.submit "提交答案", :class => 'btn btn-primary' %>
+
+  <% end %> 
+<% end %>

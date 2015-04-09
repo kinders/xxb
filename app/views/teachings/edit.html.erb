@@ -1,0 +1,9 @@
+<%- model_class = Teaching -%>
+<div class="page-header">
+  <% if current_user.has_role? :admin %>
+    <h1><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h1>
+  <% else %>
+    <h3>修改教学方案</h3>
+  <% end %>
+</div>
+<%= render :partial => 'form' %>

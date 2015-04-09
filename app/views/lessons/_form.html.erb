@@ -16,15 +16,15 @@
   <% end %>
 
   <div class="control-group">
-    <%= f.label :name, :class => 'control-label' %>
+    <%= f.label "标题", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :name, :class => 'form-control' %>
+      <%= f.text_field :title, :class => 'form-control' %>
     </div>
-    <%= error_span(@lesson[:name]) %>
+    <%= error_span(@lesson[:title]) %>
   </div>
 
   <div class="control-group">
-    <%= f.label :content, :class => 'control-label' %>
+    <%= f.label "内容", :class => 'control-label' %>
     <div class="controls">
       <%= f.text_area :content, :class => 'form-control', rows: "10" %>
     </div>
@@ -40,6 +40,7 @@
     <%= error_span(@lesson[:user_id]) %>
   </div>
 <% end %>
+
 <hr>
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

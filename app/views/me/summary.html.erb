@@ -1,0 +1,143 @@
+<div class="page-header">
+    <h3>我的主页</h3>
+      <%= link_to "用户信息", edit_registration_path(current_user), class: "btn btn-sm btn-default" %>
+      <%= link_to "查看积分", me_point_card_path, class: "btn btn-sm btn-default" %>
+      <%= link_to "我来评卷", me_justify_path, class: "btn btn-sm btn-default" %>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <h4>我编纂的教科书</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>教科书标题</th>
+          <th>修改时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @my_textbooks.each do |textbook| %>
+          <tr>
+            <td><%= link_to textbook.title, textbook_path(textbook) %></td>
+            <td><%= textbook.created_at.strftime("%F %T") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-6">
+    <h4>最近翻过的教科书</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>教科书标题</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @ever_textbooks.each do |textbook| %>
+          <tr>
+            <td><%= link_to textbook.title, textbook_path(textbook) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <h4>我编定的课程</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>课程标题</th>
+          <th>修改时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @my_lessons.each do |lesson| %>
+          <tr>
+            <td><%= link_to lesson.title, lesson_path(lesson) %></td>
+            <td><%= lesson.created_at.strftime("%F %T") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-6">
+    <h4>最近念过的课程</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>课程标题</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @ever_lessons.each do |lesson| %>
+          <tr>
+            <td><%= link_to lesson.title, lesson_path(lesson) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <h4>我编排的辅导</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>辅导标题</th>
+          <th>修改时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @my_tutors.each do |tutor| %>
+          <tr>
+            <td><%= link_to tutor.title, tutor_path(tutor) %></td>
+            <td><%= tutor.created_at.strftime("%F %T") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-6">
+    <h4>最近看过的辅导</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>辅导标题</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @ever_tutors.each do |tutor| %>
+          <tr>
+            <td><%= link_to tutor.title, tutor_path(tutor) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <h4>编写的练习</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>练习标题</th>
+          <th>修改时间</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @my_practices.each do |practice| %>
+          <tr>
+            <td><%= link_to practice.title, practice_path(practice) %></td>
+            <td><%= practice.created_at.strftime("%F %T") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-6">
+  </div>
+</div>

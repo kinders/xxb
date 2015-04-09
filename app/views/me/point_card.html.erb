@@ -1,0 +1,28 @@
+<div class="page-header">
+    <h3> 积分，当然还不嫌多啦！<%= link_to "加油，我有信心当学霸！", textbooks_path, class: "btn btn-sm btn-success" %><h3>
+     <%= link_to "返回主页", me_summary_path,  class: "btn btn-sm btn-default" %>
+     <%= link_to "我要评卷", me_justify_path,  class: "btn btn-sm btn-default" %>
+
+</div>
+  <h4>积分详情</h4>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>标题</th>
+      <th>问题</th>
+      <th>我的得分</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @practices.each do |practice, score | %>
+      <% p = Practice.find(practice) %>
+      <tr>
+        <td><%= p.title %></td>
+        <td><%= p.question %></td>
+        <td><%= score.round(2) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+     <%= link_to "查看做过的试题", evaluations_path,  class: "btn btn-sm btn-default" %>
+     <hr>

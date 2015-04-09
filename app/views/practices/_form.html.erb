@@ -3,7 +3,7 @@
     <% if @practice.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
-        <h3 class="panel-title"><%= pluralize(@practice.errors.count, "error") %> prohibited this practice from being saved:</h3>
+        <h3 class="panel-title"><%= pluralize(@practice.errors.count, "error") %> 让这个练习无法保存：</h3>
       </div>
       <div class="panel-body">
         <ul>
@@ -14,6 +14,8 @@
       </div>
     </div>
   <% end %>
+
+  <% if current_user.has_role? :admin %>
 
   <div class="control-group">
     <%= f.label :title, :class => 'control-label' %>
@@ -36,7 +38,6 @@
     </div>
     <%= error_span(@practice[:answer]) %>
   </div>
-  <% if current_user.has_role? :admin %>
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
@@ -65,11 +66,47 @@
     </div>
     <%= error_span(@practice[:activate]) %>
   </div>
- <% end %>
+  <div class="control-group">
+    <%= f.label :score, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :score, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:score]) %>
+  </div>
 
-
+  <hr>
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             practices_path, :class => 'btn btn-default' %>
 
+<% else %>  <!-- 普通用户界面 -->
+
+  <div class="control-group">
+    <%= f.label "标题", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:title]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :"问题", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :question, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:question]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :"答案", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :answer, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:answer]) %>
+  </div>
+
+  <hr>
+  <%= f.submit "保存这个练习", :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            practices_path, :class => 'btn btn-default' %>
+
+ <% end %>
 <% end %>

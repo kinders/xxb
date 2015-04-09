@@ -1,0 +1,105 @@
+<% if current_user.has_role? :admin %>
+<%= form_for @textbook, :html => { :class => "form-horizontal textbook" } do |f| %>
+
+    <% if @textbook.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@textbook.errors.count, "error") %> prohibited this textbook from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @textbook.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :title, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, :class => 'form-control' %>
+    </div>
+    <%= error_span(@textbook[:title]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :description, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :description, :class => 'form-control' %>
+    </div>
+    <%= error_span(@textbook[:description]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :serial, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :serial, :class => 'form-control' %>
+    </div>
+    <%= error_span(@textbook[:serial]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :user_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :user_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@textbook[:user_id]) %>
+  </div>
+
+
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            textbooks_path, :class => 'btn btn-default' %>
+
+<% end %>
+
+<% else %>
+
+<%= form_for @textbook, :html => { :class => "form-horizontal textbook" } do |f| %>
+
+    <% if @textbook.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@textbook.errors.count, "error") %> 让这本教科书的信息无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @textbook.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label "教科书的名称", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, :class => 'form-control' %>
+    </div>
+    <%= error_span(@textbook[:title]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label "关于这本书的简要描述", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :description, :class => 'form-control' %>
+    </div>
+    <%= error_span(@textbook[:description]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label "这本书在书架上的序号", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :serial, :class => 'form-control' %>
+    </div>
+    <%= error_span(@textbook[:serial]) %>
+  </div>
+
+  <hr>
+
+  <%= f.submit "保存信息", :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            textbooks_path, :class => 'btn btn-default' %>
+
+<% end %>
+<% end %>
+  <hr>
+  <hr>

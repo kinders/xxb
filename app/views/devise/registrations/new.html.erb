@@ -1,34 +1,54 @@
+<div class="page-header">
 <h2>注册账户</h2>
+<div>
+  <p>已经有了账户？</p>
+<%= render "devise/shared/links" %>
+</div>
+</div>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class:  "form-horizontal user"}) do |f| %>
   <%= devise_error_messages! %>
 
-  <div class="field">
-    <%= f.label :email, "电子邮箱地址" %><br />
-    <%= f.email_field :email, autofocus: true %>
+  <div class="control-group">
+    <%= f.label "电子邮箱地址", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.email_field :email, autofocus: true, class: 'form-control' %>
+    </div>
+    <%= error_span(@user[:email]) %>
   </div>
 
-  <div class="field">
-    <%= f.label "姓名" %><br />
-    <%= f.text_field :name %>
+  <div class="control-group">
+    <%= f.label "姓名", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.email_field :name, class: 'form-control' %>
+    </div>
+    <%= error_span(@user[:email]) %>
   </div>
 
-  <div class="field">
-    <%= f.label :password, "密码" %>
+  <div class="control-group">
+    <%= f.label "密码", :class => 'control-label' %>
     <% if @validatable %>
     <em>(最少需要<%= @minimum_password_length %> 个字符)</em>
     <% end %><br />
-    <%= f.password_field :password, autocomplete: "off" %>
+    <div class="controls">
+      <%= f.email_field :password, autocomplete: "off", class: 'form-control' %>
+    </div>
+    <%= error_span(@user[:email]) %>
   </div>
 
-  <div class="field">
-    <%= f.label :password_confirmation, "密码确认" %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off" %>
+  <div class="control-group">
+    <%= f.label "确认密码", class: 'control-label' %><br />
+    <div class="controls">
+    <%= f.password_field :password_confirmation, autocomplete: "off", class: 'form-control' %>
+    </div>
+    <%= error_span(@user[:name]) %>
   </div>
+
+  <hr>
 
   <div class="actions">
-    <%= f.submit "提交资料，注册账户" %>
+    <%= f.submit "提交资料，注册账户", class:'btn btn-primary' %>
   </div>
 <% end %>
-
-<%= render "devise/shared/links" %>
+  <hr>
+  <hr>

@@ -1,0 +1,86 @@
+<%- model_class = Evaluation -%>
+
+<% if current_user.has_role? :admin %>
+
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @evaluation.user_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:tutor_id) %>:</strong></dt>
+  <dd><%= @evaluation.tutor_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:practice_id) %>:</strong></dt>
+  <dd><%= @evaluation.practice_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:title) %>:</strong></dt>
+  <dd><%= @evaluation.title %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:question) %>:</strong></dt>
+  <dd><%= @evaluation.question %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:answer) %>:</strong></dt>
+  <dd><%= @evaluation.answer %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:your_answer) %>:</strong></dt>
+  <dd><%= @evaluation.your_answer %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:score) %>:</strong></dt>
+  <dd><%= @evaluation.score %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:practice_score) %>:</strong></dt>
+  <dd><%= @evaluation.practice_score %></dd>
+</dl>
+<hr>
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              evaluations_path, :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_evaluation_path(@evaluation), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              evaluation_path(@evaluation),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+	  
+<% else %>
+		
+<div class="page-header">
+  <p><%= @evaluation.title %></p>
+</div>
+<div class="paragragh">
+  <h2><%= sanitize(@evaluation.question) %></h2>
+</div>
+<hr>
+<div><p>回答：</p>
+<div class="paragragh">
+  <h2><%= sanitize(@evaluation.your_answer) %></h2>
+</div>
+<hr>
+<% if current_user.id == @evaluation.user_id %>
+<% if session[:tutor_id] %>
+<%= link_to "做下一道题", new_evaluation_path, :class => 'btn btn-primary' %>
+<% end %>
+<%= link_to "重做这道题", edit_evaluation_path(@evaluation), :class => 'btn btn-default' %>
+<%= link_to "查看做过的习题", evaluations_path, :class => 'btn btn-default'  %>
+<% else %>
+  <%= link_to "我来评卷", new_justice_path, class: "btn btn-primary" %>
+  <%= link_to "返回待评列表", me_justify_path, class: "btn btn-default" %>
+<% end %>
+
+<% end %>
+<hr>
+<% if @justices %>
+<h4>学友评分</h4>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>评分</th>
+      <th>评语</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @justices.each do |justice| %>
+      <tr>
+        <td><%= justice.score %></td>
+        <td><%= justice.remark %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+<hr>

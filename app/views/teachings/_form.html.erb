@@ -1,0 +1,62 @@
+<%= form_for @teaching, :html => { :class => "form-horizontal teaching" } do |f| %>
+
+    <% if @teaching.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@teaching.errors.count, "error") %> 阻止保存该教学方案</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @teaching.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <% if current_user.has_role? :admin %>
+  <div class="control-group">
+    <%= f.label :user_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :user_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@teaching[:user_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :lesson_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :lesson_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@teaching[:lesson_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :title, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, :class => 'form-control' %>
+    </div>
+    <%= error_span(@teaching[:title]) %>
+  </div>
+
+  <hr>
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            teachings_path, :class => 'btn btn-default' %>
+
+  <% else %>
+
+  <div class="control-group">
+    <%= f.label "教学方案的名称", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :title, :class => 'form-control' %>
+    </div>
+    <%= error_span(@teaching[:title]) %>
+  </div>
+
+  <hr>
+  <%= f.submit "保存该教学方案", :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            teachings_path, :class => 'btn btn-default' %>
+  <% end %>
+
+<% end %>

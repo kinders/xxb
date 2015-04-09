@@ -1,6 +1,22 @@
 Rails.application.routes.draw do
 
 
+  resources :justices
+
+  resources :evaluations
+
+  get 'me/summary'
+  get 'me/point_card'
+  get 'me/justify'
+
+  resources :plans
+
+  resources :teachings
+
+  resources :catalogs
+
+  resources :textbooks
+
   resources :practices
   resources :tutors 
   resources :lessons 

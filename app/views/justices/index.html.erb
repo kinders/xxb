@@ -1,0 +1,100 @@
+<%- model_class = Justice -%>
+<% if current_user.has_role? :admin %>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:score) %></th>
+      <th><%= model_class.human_attribute_name(:practice_score) %></th>
+      <th><%= model_class.human_attribute_name(:accepted) %></th>
+      <th><%= model_class.human_attribute_name(:remark) %></th>
+      <th><%= model_class.human_attribute_name(:activity) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:evaluation_id) %></th>
+      <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:question) %></th>
+      <th><%= model_class.human_attribute_name(:answer) %></th>
+      <th><%= model_class.human_attribute_name(:your_answer) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @justices.each do |justice| %>
+      <tr>
+        <td><%= link_to justice.id, justice_path(justice) %></td>
+        <td><%= justice.score %></td>
+        <td><%= justice.practice_score %></td>
+        <td><%= justice.accepted %></td>
+        <td><%= justice.remark %></td>
+        <td><%= justice.activity %></td>
+        <td><%= justice.user_id %></td>
+        <td><%= justice.evaluation_id %></td>
+        <td><%=l justice.created_at %></td>
+        <td><%= justice.title %></td>
+        <td><%= justice.question %></td>
+        <td><%= justice.answer %></td>
+        <td><%= justice.your_answer %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_justice_path(justice), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      justice_path(justice),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_justice_path,
+            :class => 'btn btn-primary' %>
+
+<% else %>
+
+<div class="page-header">
+  <h1>我评过的答卷</h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>题目</th>
+      <th>问题</th>
+      <th>答题</th>
+      <th>评分</th>
+      <th>评语</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @justices.each do |justice| %>
+      <tr>
+        <td><%= justice.title %></td>
+        <td><%= justice.question %></td>
+        <td><%= justice.your_answer %></td>
+        <td><%= justice.score %></td>
+        <td><%= justice.remark %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_justice_path(justice), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      justice_path(justice),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "接着评卷", me_justify_path, :class => 'btn btn-primary' %>
+<hr>
+<% end %>
+<hr>

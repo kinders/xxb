@@ -1,5 +1,9 @@
 <%- model_class = Practice -%>
 <div class="page-header">
+<% if current_user.has_role? :admin %>
   <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
+<% else %>
+  <h3>添加练习到辅导中</h3>
+<% end %>
 </div>
 <%= render :partial => 'form' %>

@@ -1,0 +1,9 @@
+<%- model_class = Justice -%>
+<div class="page-header">
+<% if current_user.has_role? :admin %>
+  <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
+<% else %>
+  <h2>评卷</h2>
+<% end %>
+</div>
+<%= render :partial => 'form' %>

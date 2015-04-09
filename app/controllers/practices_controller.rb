@@ -18,6 +18,11 @@ class PracticesController < ApplicationController
   # GET /practices/1
   # GET /practices/1.json
   def show
+    history = History.create { |h| 
+      h.user_id = current_user.id
+      h.modelname = "practice"
+      h.entryid = @practice.id
+    }
     session[:practice_id] = @practice.id
     @lesson = Lesson.find_by(id: @practice.lesson_id)
     @tutor = Tutor.find_by(id: @practice.tutor_id)
@@ -51,10 +56,12 @@ class PracticesController < ApplicationController
   # POST /practices.json
   def create
     @practice = Practice.new(practice_params)
+    unless current_user.has_role? :admin
     @practice.user_id = current_user.id
     @practice.lesson_id = session[:lesson_id]
     @practice.tutor_id = session[:tutor_id]
-
+    @practice.score = (@practice.answer.to_s.length.to_f / 10).ceil
+    end
     respond_to do |format|
       if @practice.save
         format.html { redirect_to @practice, notice: "练习#{@practice.id}已经成功添加" }
@@ -69,6 +76,9 @@ class PracticesController < ApplicationController
   # PATCH/PUT /practices/1
   # PATCH/PUT /practices/1.json
   def update
+    unless current_user.has_role? :admin
+    @practice.score = (@practice.answer.to_s.length.to_f / 10).ceil
+    end
     respond_to do |format|
       if @practice.update(practice_params)
         format.html { redirect_to @practice, notice: "练习#{@practice.id}已经更新成功" }
@@ -98,6 +108,6 @@ class PracticesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def practice_params
-      params.require(:practice).permit(:title, :question, :answer, :user_id, :tutor_id, :lesson_id, :activate)
+      params.require(:practice).permit(:title, :question, :answer, :user_id, :tutor_id, :lesson_id, :activate, :score)
     end
 end

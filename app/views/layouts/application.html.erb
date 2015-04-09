@@ -50,12 +50,17 @@
           <ul class="nav navbar-nav pull-right">
             <% if current_user %>
               <% if current_user.name %>
-	        <li><%= menu_text "#{current_user.name}" %></li>
+		<li><%= link_to "我是 #{current_user.name} ", me_summary_path %></li>
 	      <% else %>
 	        <li><%= menu_text "#{current_user.email}" %></li>
 	      <% end %>
+
+	      <% if @point = Justice.where(evaluation_user_id: current_user.id).group(:practice_id).average(:score).values.inject(:+) %>
+		<li><%= link_to "#{@point.round(2) || 0}积分", me_point_card_path %></li>
+	      <% else %>
+	      <li><%= link_to " 0 积分", me_point_card_path %></li>
+              <% end %>
 	      <li><%= link_to "退出登录", "/users/sign_out", method: :delete %></li>
-	      <li><%= link_to "修改信息", edit_user_registration_path %></li>
 	    <% else %>
               <li><%= link_to "注册", "/users/sign_up"  %></li>
 	      <li><%= link_to "登录", "/users/sign_in"  %></li>

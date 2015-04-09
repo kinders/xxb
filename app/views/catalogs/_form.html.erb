@@ -1,0 +1,54 @@
+<%= form_for @catalog, :html => { :class => "form-horizontal catalog" } do |f| %>
+
+    <% if @catalog.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@catalog.errors.count, "error") %> 让这篇课文无法添加进教科书:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @catalog.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label "序号", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :serial, :class => 'form-control' %>
+    </div>
+    <%= error_span(@catalog[:serial]) %>
+  </div>
+<% if current_user.has_role? :admin %>
+  <div class="control-group">
+    <%= f.label "序号", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :user_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@catalog[:user_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label "教科书", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :textbook_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@catalog[:textbook_id]) %>
+  </div>
+<% end %>
+  <div class="control-group">
+    <%= f.label "课文", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :lesson_id, Lesson.titles, prompt: "请选择一篇课文", :class => 'form-control' %>
+    </div>
+    <%= error_span(@catalog[:lesson_id]) %>
+  </div>
+
+  <hr>
+  <%= f.submit "添加这篇课文", :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            catalogs_path, :class => 'btn btn-default' %>
+
+<% end %>

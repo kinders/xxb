@@ -14,8 +14,9 @@
 <% if @next_practice != nil %>
   <%= link_to "下一个练习", practice_path(@next_practice), class: 'btn btn-default' %>
 <% end %>
+<hr>
+<%= link_to "不能回答？可以返回辅导", tutor_path(@tutor), class: "btn btn-default" %>
 <%= link_to "查看所有练习", practices_path, :class => 'btn btn-default'  %>
-<%= link_to "返回辅导", tutor_path(@tutor), class: "btn btn-default" %>
 	    <% if current_user == @practice.user_id %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_practice_path(@practice), :class => 'btn btn-default' %>
@@ -26,7 +27,7 @@
 	      :class => 'btn btn-danger' %>
 	    <% end %>
 <hr>
-	      <p>这是《<%= @lesson.name %>》“<%= @tutor.title %>”一节的练习</p>
+	      <p>这是《<%= @lesson.title %>》“<%= @tutor.title %>”一节的练习</p>
 <% if current_user.has_role? :admin %>
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
