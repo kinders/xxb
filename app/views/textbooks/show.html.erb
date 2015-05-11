@@ -21,6 +21,7 @@
 <% end %>
 <hr>
 <%= link_to "进入目录", catalogs_path, class: "btn btn-primary" %>
+<%= link_to "我还要新编一本教科书", new_textbook_path, :class => 'btn btn-primary' %>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               textbooks_path, :class => 'btn btn-default'  %>
 <% if current_user.id == @textbook.user_id %>

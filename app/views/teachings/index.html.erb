@@ -13,10 +13,9 @@
   </thead>
   <tbody>
     <% @teachings.each do |teaching| %>
-    <% teaching_user = User.find(teaching.user_id) %>
       <tr>
         <td><%= teaching.title %></td>
-        <td><%= teaching_user.name %></td>
+        <td><%= teaching.user.name %></td>
         <td>
           <%= link_to "查看详细计划", teaching_path(teaching), class: "btn btn-xs btn-success" %>
           <% if current_user.id == teaching.user_id %>

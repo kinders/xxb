@@ -21,8 +21,8 @@
         <td><%= practice.question %></td>
         <td><%= practice.score %></td>
         <td>
-	  <%= link_to "查看", practice_path(practice), class: "btn btn-xs btn-default" %>
 <% if current_user.id == practice.user_id %>
+	  <%= link_to "查看", practice_path(practice), class: "btn btn-xs btn-default" %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_practice_path(practice), :class => 'btn btn-default btn-xs' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),

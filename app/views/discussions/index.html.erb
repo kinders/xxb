@@ -1,0 +1,96 @@
+<% if current_user.has_role? :admin %>
+
+<%- model_class = Discussion -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:classroom_id) %></th>
+      <th><%= model_class.human_attribute_name(:textbook_id) %></th>
+      <th><%= model_class.human_attribute_name(:lesson_id) %></th>
+      <th><%= model_class.human_attribute_name(:teaching_id) %></th>
+      <th><%= model_class.human_attribute_name(:end) %></th>
+      <th><%= model_class.human_attribute_name(:end_at) %></th>
+      <th><%= model_class.human_attribute_name(:deleted_at) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @discussions.each do |discussion| %>
+      <tr>
+        <td><%= link_to discussion.id, discussion_path(discussion) %></td>
+        <td><%= discussion.user_id %></td>
+        <td><%= discussion.classroom_id %></td>
+        <td><%= discussion.textbook_id %></td>
+        <td><%= discussion.lesson_id %></td>
+        <td><%= discussion.teaching_id %></td>
+        <td><%= discussion.end %></td>
+        <td><%= discussion.end_at %></td>
+        <td><%= discussion.deleted_at %></td>
+        <td><%=l discussion.created_at %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_discussion_path(discussion), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      discussion_path(discussion),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_discussion_path,
+            :class => 'btn btn-primary' %>
+
+<% else %>
+
+<%- model_class = Discussion -%>
+<div class="page-header">
+  <h3>集体学习，正在进行中……</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>主持人</th>
+      <th>教室</th>
+      <th>课程</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @discussions.each do |discussion| %>
+      <tr>
+        <td><%= discussion.user.name %></td>
+        <td><%= discussion.classroom.name %></td>
+        <td><%= discussion.lesson.title %></td>
+        <td>
+	  <%= link_to "参与学习", discussion_path(discussion), class: 'btn btn-xs btn-success' %>
+          <% if current_user.id == discussion.user_id %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_discussion_path(discussion), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      discussion_path(discussion),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_discussion_path,
+            :class => 'btn btn-primary' %>
+
+<% end %>

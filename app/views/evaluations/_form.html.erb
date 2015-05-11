@@ -3,7 +3,7 @@
     <% if @evaluation.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
-        <h3 class="panel-title"><%= pluralize(@evaluation.errors.count, "error") %> prohibited this evaluation from being saved:</h3>
+        <h3 class="panel-title"><%= pluralize(@evaluation.errors.count, "error") %> 让本次评估无法完成：</h3>
       </div>
       <div class="panel-body">
         <ul>
@@ -102,13 +102,46 @@
     </div>
     <%= error_span(@evaluation[:question]) %>
   </div>
+  <% if @practice.picture_q_file_name %>
+  <p></p>
+    <%= image_tag @practice.picture_q, class: "img-responsive center-block" %>
+  <p></p>
+  <% end %>
   <div class="control-group">
     <%= f.label "我的答案", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :your_answer, :class => 'form-control' %>
+      <%= f.text_area :your_answer, :class => 'form-control', rows: '5' %>
     </div>
     <%= error_span(@evaluation[:your_answer]) %>
   </div>
+
+  <% if @practice.picture_a_file_name %>
+  <div class="control-group">
+    <%= f.label "图片式回答", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.file_field :picture_ya, :class => 'form-control' %>
+    </div>
+    <%= error_span(@evaluation[:picture_ya]) %>
+  </div>
+  <% end %>
+
+  <p></p>
+
+<div class="row">
+  <% if @evaluation.picture_ya_file_name %>
+  <div class="col-sm-6 col-md-6">
+    <div class="thumbnail">
+      <%= image_tag @evaluation.picture_ya.url, size: "300x300" %>
+      <div class="caption">
+	<p>
+          <%= link_to "删除图片", evaluation_delete_picture_ya_path(@evaluation), class: "btn btn-default" %>
+	</p>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>
+
   <hr>
 
   <%= f.submit "提交答案", :class => 'btn btn-primary' %>

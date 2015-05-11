@@ -1,9 +1,9 @@
-<%= form_for @lesson, :html => { :class => "form-horizontal lesson" } do |f| %>
+<%= form_for @lesson, :html => { class: "form-horizontal lesson", multipart: true } do |f| %>
 
     <% if @lesson.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
-        <h3 class="panel-title"><%= pluralize(@lesson.errors.count, "error") %> prohibited this lesson from being saved:</h3>
+        <h3 class="panel-title"><%= pluralize(@lesson.errors.count, "error") %> 的原因让本课程无法保存：</h3>
       </div>
       <div class="panel-body">
         <ul>
@@ -23,10 +23,35 @@
     <%= error_span(@lesson[:title]) %>
   </div>
 
+  <p></p>
+
+<div class="row">
+  <% if @lesson.picture_file_name %>
+  <div class="col-sm-6 col-md-6">
+    <div class="thumbnail">
+      <%= image_tag @lesson.picture.url, size: "300x300" %>
+      <div class="caption">
+	<p>
+          <%= link_to "删除图片", lesson_delete_picture_path(@lesson), class: "btn btn-default" %>
+	</p>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>
+
+  <div class="control-group">
+    <%= f.label "图片", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.file_field :picture, :class => 'form-control' %>
+    </div>
+    <%= error_span(@lesson[:picture]) %>
+  </div>
+
   <div class="control-group">
     <%= f.label "内容", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :content, :class => 'form-control', rows: "10" %>
+      <%= f.text_area :content, :class => 'form-control', rows: "30" %>
     </div>
     <%= error_span(@lesson[:content]) %>
   </div>

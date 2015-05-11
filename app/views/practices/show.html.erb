@@ -1,23 +1,54 @@
 <%- model_class = Practice -%>
+
+<div role="tabpanel">
+
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#question" aria-controls="question" role="tab" data-toggle="tab">问题</a></li>
+    <li role="presentation"><a href="#answer" aria-controls="answer" role="tab" data-toggle="tab">答案</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="question">
 <div class="page-header">
   <p><%= @practice.title %></p>
 </div>
-<div class="paragragh">
-  <h1><%= sanitize(@practice.question) %></h1>
+<div class="paragraph">
+  <p><%= sanitize(@practice.question) %></p>
+  <% if @practice.picture_q_file_name %>
+    <%= image_tag @practice.picture_q.url, class: "img-responsive center-block"  %>
+  <% end %>
 </div>
-<hr>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="answer">
+      <div class="paragraph">
+      <p><%= sanitize(@practice.answer) %></p>
+      </div>
+      <% if @practice.picture_a_file_name %>
+        <%= image_tag @practice.picture_a.url, class: "img-responsive center-block"  %>
+      <% end %>
+    </div>
+  </div>
+
+</div>
+
 <hr>
 <% if @previous_practice != nil %>
     <%= link_to "上一个练习", practice_path(@previous_practice), class: 'btn btn-default' %>
 <% end %>
-<%= link_to "查看答案", "#answer_modal", class: "btn btn-primary", data: {toggle: "modal"} %>
 <% if @next_practice != nil %>
   <%= link_to "下一个练习", practice_path(@next_practice), class: 'btn btn-default' %>
 <% end %>
-<hr>
-<%= link_to "不能回答？可以返回辅导", tutor_path(@tutor), class: "btn btn-default" %>
 <%= link_to "查看所有练习", practices_path, :class => 'btn btn-default'  %>
-	    <% if current_user == @practice.user_id %>
+<%= link_to "不能回答？可以返回辅导", tutor_path(@tutor), class: "btn btn-default" %>
+<hr>
+	    <% if current_user.id == @practice.user_id %>
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_practice_path,
+            :class => 'btn btn-primary' %>
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              practices_path, :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_practice_path(@practice), :class => 'btn btn-default' %>
 <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
@@ -40,10 +71,3 @@
   <dd><%= @practice.activate %></dd>
 </dl>
 <% end %>
-
-<%= modal_dialog id: "answer_modal",
-         header: { show_close: true, dismiss: 'modal', title: '答案' },
-         body:   { style: "font-size: 24px;", content: @practice.answer },
-	 footer: {  } 
-%>
-

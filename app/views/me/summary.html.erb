@@ -6,26 +6,20 @@
 </div>
 <div class="row">
   <div class="col-md-6">
-    <h4>我编纂的教科书</h4>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>教科书标题</th>
-          <th>修改时间</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @my_textbooks.each do |textbook| %>
-          <tr>
-            <td><%= link_to textbook.title, textbook_path(textbook) %></td>
-            <td><%= textbook.created_at.strftime("%F %T") %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-  <div class="col-md-6">
-    <h4>最近翻过的教科书</h4>
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#ever_textbooks" aria-expanded="true" aria-controls="collapseOne">
+              最近翻过的教科书
+            </a>
+          </h4>
+        </div>
+        <div id="ever_textbooks" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+	    <% unless @ever_textbooks.length > 0 %>
+	      暂时还没有哦
+            <% else %>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -40,11 +34,122 @@
         <% end %>
       </tbody>
     </table>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#ever_lessons" aria-expanded="true" aria-controls="collapseOne">
+              最近念过的课程
+            </a>
+          </h4>
+        </div>
+        <div id="ever_lessons" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+	    <% unless @ever_lessons.length > 0 %>
+	      暂时还没有哦
+            <% else %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>课程标题</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @ever_lessons.each do |lesson| %>
+          <tr>
+            <td><%= link_to lesson.title, lesson_path(lesson) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#ever_tutors" aria-expanded="true" aria-controls="collapseOne">
+              最近看过的辅导
+            </a>
+          </h4>
+        </div>
+        <div id="ever_tutors" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+	    <% unless @ever_tutors.length > 0 %>
+	      暂时还没有哦
+            <% else %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>辅导标题</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @ever_tutors.each do |tutor| %>
+          <tr>
+            <td><%= link_to tutor.title, tutor_path(tutor) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-<div class="row">
   <div class="col-md-6">
-    <h4>我编定的课程</h4>
+    <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion2" href="#my_textbooks" aria-expanded="true" aria-controls="collapseOne">
+              我编纂的课本
+            </a>
+          </h4>
+        </div>
+        <div id="my_textbooks" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+	    <% unless @my_textbooks.length > 0 %>
+	      暂时还没有哦
+            <% else %>
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th>教科书标题</th>
+                    <th>修改时间</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% @my_textbooks.each do |textbook| %>
+                    <tr>
+                      <td><%= link_to textbook.title, textbook_path(textbook) %></td>
+                      <td><%= textbook.created_at.strftime("%F %T") %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion2" href="#my_lessons" aria-expanded="true" aria-controls="collapseOne">
+              我编定的课程
+            </a>
+          </h4>
+        </div>
+        <div id="my_lessons" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+	    <% unless @my_lessons.length > 0 %>
+	      暂时还没有哦
+            <% else %>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -61,28 +166,23 @@
         <% end %>
       </tbody>
     </table>
-  </div>
-  <div class="col-md-6">
-    <h4>最近念过的课程</h4>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>课程标题</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @ever_lessons.each do |lesson| %>
-          <tr>
-            <td><%= link_to lesson.title, lesson_path(lesson) %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-6">
-    <h4>我编排的辅导</h4>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion2" href="#my_tutors" aria-expanded="true" aria-controls="collapseOne">
+              我编排的辅导
+            </a>
+          </h4>
+        </div>
+        <div id="my_tutors" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+	    <% unless @my_tutors.length > 0 %>
+	      暂时还没有哦
+            <% else %>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -99,28 +199,23 @@
         <% end %>
       </tbody>
     </table>
-  </div>
-  <div class="col-md-6">
-    <h4>最近看过的辅导</h4>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>辅导标题</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @ever_tutors.each do |tutor| %>
-          <tr>
-            <td><%= link_to tutor.title, tutor_path(tutor) %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-6">
-    <h4>编写的练习</h4>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion2" href="#my_practices" aria-expanded="true" aria-controls="collapseOne">
+              编写的练习
+            </a>
+          </h4>
+        </div>
+        <div id="my_practices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+	    <% unless @my_practices.length > 0 %>
+	      暂时还没有哦
+            <% else %>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -137,7 +232,10 @@
         <% end %>
       </tbody>
     </table>
-  </div>
-  <div class="col-md-6">
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -44,12 +44,20 @@
 </div>
 <div class="paragragh">
   <h2><%= sanitize(@evaluation.question) %></h2>
+  <% if @evaluation.practice.picture_q_file_name %>
+    <p>附带图片</p>
+    <%= image_tag @evaluation.practice.picture_q.url, class: "img-responsive center-block"  %>
+  <% end %>
 </div>
 <hr>
 <div><p>回答：</p>
 <div class="paragragh">
   <h2><%= sanitize(@evaluation.your_answer) %></h2>
 </div>
+  <% if @evaluation.picture_ya_file_name %>
+    <p>附带图片</p>
+    <%= image_tag @evaluation.picture_ya.url, class: "img-responsive center-block"  %>
+  <% end %>
 <hr>
 <% if current_user.id == @evaluation.user_id %>
 <% if session[:tutor_id] %>

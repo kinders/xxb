@@ -160,6 +160,16 @@ class EvaluationsController < ApplicationController
     end
   end
 
+  def delete_picture_ya
+    @evaluation = Evaluation.find(session[:evaluation_id])
+    @evaluation.picture_ya = nil
+    @evaluation.save
+    respond_to do |format|
+      format.html { redirect_to :back, notice: "答题图片已经被删除" }
+      format.json { head :no_content }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_evaluation
@@ -168,6 +178,6 @@ class EvaluationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def evaluation_params
-      params.require(:evaluation).permit(:user_id, :tutor_id, :practice_id, :title, :question, :answer, :your_answer, :score, :practice_score)
+      params.require(:evaluation).permit(:user_id, :tutor_id, :practice_id, :title, :question, :answer, :your_answer, :score, :practice_score, :picture_ya)
     end
 end

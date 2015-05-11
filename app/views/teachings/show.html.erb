@@ -12,6 +12,9 @@
   <dd><%= @teaching.title %></dd>
 </dl>
 
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_teaching_path,
+            :class => 'btn btn-primary' %>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               teachings_path, :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),

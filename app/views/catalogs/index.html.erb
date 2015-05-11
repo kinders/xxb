@@ -14,7 +14,7 @@
     <% @catalogs.each do |catalog| %>
     <% catalog_lesson = Lesson.find(catalog.lesson_id) %>
       <tr>
-        <td><%= catalog.serial %></td>
+        <td><%= catalog.serial.round(2) %></td>
         <td><%= catalog_lesson.title %></td>
         <td>
 	  <%= link_to "进入学习", lesson_path(catalog_lesson), class: "btn btn-xs btn-success" %>

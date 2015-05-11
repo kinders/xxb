@@ -41,7 +41,8 @@
   <div class="control-group">
     <%= f.label "课文", :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :lesson_id, Lesson.titles, prompt: "请选择一篇课文", :class => 'form-control' %>
+      <%#<%= f.autocomplete_field :lesson_id, autocomplete_lesson_title_catalogs_path, 'data-auto-focus': :true, class: "form-control" %>
+      <%= f.select :lesson_id, Lesson.titles, prompt: "请选择一个课程", class: 'form-control' %>
     </div>
     <%= error_span(@catalog[:lesson_id]) %>
   </div>

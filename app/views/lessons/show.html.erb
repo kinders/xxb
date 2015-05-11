@@ -1,26 +1,27 @@
 <%- model_class = Lesson -%>
 <% unless current_user.has_role? :admin %> 
 
-<% if @previous_lession %>
-<%= link_to "上一篇课文", lesson_path(@previous_lession), class: 'btn btn-default' %>
+<% if @previous_lesson %>
+<%= link_to "上一篇课文", lesson_path(@previous_lesson), class: 'btn btn-default' %>
 <% end %>
-<% if @next_lession %>
-<%= link_to "下一篇课文", lesson_path(@next_lession), class: 'btn btn-default' %>
+<% if @next_lesson %>
+<%= link_to "下一篇课文", lesson_path(@next_lesson), class: 'btn btn-default' %>
 <% end %>
-<%= link_to "返回课本目录", catalogs_path, class: 'btn btn-default' %>
+<% if session[:textbook_id] %>
+  <%= link_to "返回课本目录", catalogs_path, class: 'btn btn-default' %>
+<% end %>
 
 <div class="page-header">
   <h1><%= @lesson.title %></h1>
 </div>
-  <div class="paragraph"><%= sanitize(@lesson.content) %></div>
-
+  <% if @lesson.picture_file_name %>
+    <%= image_tag @lesson.picture.url, class: "img-responsive center-block"  %>
 <hr>
-<% if @tutor %>
-  <%= link_to "标准辅导", tutor_path(@tutor), class: 'btn btn-success' %>
-<% end %>
-<%= link_to "所有教学方案", teachings_path, class: 'btn btn-default' %>
+  <% end %>
+  <div class="lesson_paragraph"><%= sanitize(@lesson.content) %></div>
 <hr>
 <% if current_user.id == @lesson.user_id  %>
+<%= link_to "我来创建新的课程", new_lesson_path, :class => 'btn btn-primary' %>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               lessons_path, :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
@@ -32,6 +33,15 @@
               :class => 'btn btn-default' %>
 <% end %>
 
+<hr>
+<% if @tutor %>
+  <%= link_to "标准辅导", tutor_path(@tutor), class: 'btn btn-success' %>
+<% end %>
+<% unless session[:discussion_id] %>
+<%= link_to "所有教学方案", teachings_path, class: 'btn btn-default' %>
+<%= link_to "我自己选择辅导", tutors_path, class: 'btn btn-default' %>
+<%= link_to "新增辅导", new_tutor_path, class: 'btn btn-default' %>
+<% end %>
 <% else %>
 
 <div class="page-header">

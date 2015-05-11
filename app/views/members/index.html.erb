@@ -1,0 +1,85 @@
+<% if current_user.has_role? :admin %>
+<%- model_class = Member -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:serial) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:student) %></th>
+      <th><%= model_class.human_attribute_name(:classroom_id) %></th>
+      <th><%= model_class.human_attribute_name(:deleted_at) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @members.each do |member| %>
+      <tr>
+        <td><%= link_to member.id, member_path(member) %></td>
+        <td><%= member.serial %></td>
+        <td><%= member.user_id %></td>
+        <td><%= member.student %></td>
+        <td><%= member.classroom_id %></td>
+        <td><%= member.deleted_at %></td>
+        <td><%=l member.created_at %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_member_path(member), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      member_path(member),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_member_path,
+            :class => 'btn btn-primary' %>
+
+<% else %>
+
+<%- model_class = Member -%>
+<div class="page-header">
+  <h3><%= @classroom.name %> 的所有成员：</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th>名字</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @members.each do |member| %>
+    <% @user = User.find(member.student) %>
+      <tr>
+        <td><%= member.serial %></td>
+        <td><%= @user.name %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_member_path(member), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      member_path(member),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_member_path,
+            :class => 'btn btn-primary' %>
+
+<% end %>

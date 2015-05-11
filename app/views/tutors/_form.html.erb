@@ -3,7 +3,7 @@
     <% if @tutor.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
       <div class="panel-heading">
-        <h3 class="panel-title"><%= pluralize(@tutor.errors.count, "error") %> prohibited this tutor from being saved:</h3>
+        <h3 class="panel-title"><%= pluralize(@tutor.errors.count, "error") %> 的原因让本辅导无法保存：</h3>
       </div>
       <div class="panel-body">
         <ul>
@@ -22,6 +22,54 @@
     </div>
     <%= error_span(@tutor[:title]) %>
   </div>
+
+  <p></p>
+
+<div class="row">
+  <% if @tutor.picture1_file_name %>
+  <div class="col-sm-6 col-md-6">
+    <div class="thumbnail">
+      <%= image_tag @tutor.picture1.url, size: "300x300" %>
+      <div class="caption">
+	<p>
+          <%= link_to "删除图片一", tutor_delete_picture1_path(@tutor), class: "btn btn-default" %>
+	</p>
+      </div>
+    </div>
+  </div>
+  <% end %>
+  <% if @tutor.picture2_file_name %>
+  <div class="col-sm-6 col-md-6">
+    <div class="thumbnail">
+      <%= image_tag @tutor.picture2.url, size: "300x300" %>
+      <div class="caption">
+	<p>
+          <%= link_to "删除图片二", tutor_delete_picture2_path(@tutor), class: "btn btn-default" %>
+	</p>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>
+
+  <div class="control-group">
+    <%= f.label "图片一", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.file_field :picture1, :class => 'form-control' %>
+    </div>
+    <%= error_span(@tutor[:picture1]) %>
+  </div>
+
+
+  <div class="control-group">
+    <%= f.label "图片二", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.file_field :picture2, :class => 'form-control' %>
+    </div>
+    <%= error_span(@tutor[:picture2]) %>
+  </div>
+
+
   <div class="control-group">
     <%= f.label "难度", :class => 'control-label' %>
     <div class="controls">
@@ -29,14 +77,17 @@
     </div>
     <%= error_span(@tutor[:difficulty]) %>
   </div>
+
   <div class="control-group">
     <%= f.label "页面", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :page, :class => 'form-control', rows: "5" %>
+      <%= f.text_area :page, :class => 'form-control', rows: "30" %>
     </div>
     <%= error_span(@tutor[:page]) %>
   </div>
+
   <% if current_user.has_role? :admin %>
+
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
@@ -44,6 +95,7 @@
     </div>
     <%= error_span(@tutor[:user_id]) %>
   </div>
+
   <div class="control-group">
     <%= f.label :lesson_id, :class => 'control-label' %>
     <div class="controls">
@@ -51,10 +103,13 @@
     </div>
     <%= error_span(@tutor[:lesson_id]) %>
   </div>
+
 <% end %>
+
 <hr>
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             tutors_path, :class => 'btn btn-default' %>
 
 <% end %>
+<hr>

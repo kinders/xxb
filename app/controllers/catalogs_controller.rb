@@ -2,6 +2,7 @@ class CatalogsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_catalog, only: [:show, :edit, :update, :destroy]
+  #autocomplete :lesson, :id, full: true, extra_data: [:title]
 
   # GET /catalogs
   # GET /catalogs.json
@@ -11,7 +12,7 @@ class CatalogsController < ApplicationController
     else
       textbook_id = session[:textbook_id]
       @textbook = Textbook.find(textbook_id)
-      @catalogs = Catalog.where(textbook_id: textbook_id)
+      @catalogs = @textbook.catalogs.order(:serial)
     end
   end
 

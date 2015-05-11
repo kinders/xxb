@@ -4,10 +4,10 @@ class MeController < ApplicationController
 
   # 用来显示用户最近的活动记录。
   def summary
-    @my_textbooks = Textbook.where(user_id: current_user.id)
-    @my_lessons = Lesson.where(user_id: current_user.id)
-    @my_tutors = Tutor.where(user_id: current_user.id)
-    @my_practices = Practice.where(user_id: current_user.id)
+    @my_textbooks = Textbook.where(user_id: current_user.id).order(created_at: :desc)
+    @my_lessons = Lesson.where(user_id: current_user.id).order(created_at: :desc)
+    @my_tutors = Tutor.where(user_id: current_user.id).order(created_at: :desc)
+    @my_practices = Practice.where(user_id: current_user.id).order(created_at: :desc)
 
     @ever_textbooks_ids = []
     his_textbook = History.where(user_id: current_user.id, modelname: "textbook").last(50)

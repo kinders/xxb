@@ -15,14 +15,13 @@
   </thead>
   <tbody>
     <% @tutors.each do |tutor| %>
-      <% @tutor_user = User.find_by(tutor.user_id) %>
       <tr>
         <td><%= link_to tutor.id, tutor_path(tutor) %></td>
         <td><%= tutor.title %></td>
         <td><%= tutor.difficulty %></td>
-        <td><%= @tutor_user.name %></td>
+        <td><%= tutor.user.name %></td>
         <td>
-          <%= link_to "进入辅导页面", tutor_path(tutor), :class => 'btn btn-xs btn-success' %>
+          <%= link_to "进入", tutor_path(tutor), :class => 'btn btn-xs btn-success' %>
 	<% if current_user.id == tutor.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_tutor_path(tutor), :class => 'btn btn-default btn-xs' %>

@@ -1,3 +1,4 @@
+<% if current_user.has_role? :admin %>
 <%- model_class = Plan -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
@@ -23,3 +24,35 @@
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
+
+<% else %>
+
+<%- model_class = Plan -%>
+<div class="page-header">
+  <h3>查看计划</h3>
+</div>
+
+<dl class="dl-horizontal">
+  <dt>序号</dt>
+  <dd><%= @plan.serail %></dd>
+  <dt>创建者</dt>
+  <dd><%= @plan.user.name %></dd>
+  <dt>所属教学方案</dt>
+  <dd><%= @plan.teaching.title %></dd>
+  <dt>所用辅导页面</dt>
+  <dd><%= @plan.tutor.title %></dd>
+</dl>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_plan_path,
+	    :class => 'btn btn-primary' %>
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              plans_path, :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_plan_path(@plan), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              plan_path(@plan),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+<% end %>

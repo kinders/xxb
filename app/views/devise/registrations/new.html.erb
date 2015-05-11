@@ -20,7 +20,7 @@
   <div class="control-group">
     <%= f.label "姓名", :class => 'control-label' %>
     <div class="controls">
-      <%= f.email_field :name, class: 'form-control' %>
+      <%= f.text_field :name, class: 'form-control' %>
     </div>
     <%= error_span(@user[:email]) %>
   </div>
@@ -31,7 +31,7 @@
     <em>(最少需要<%= @minimum_password_length %> 个字符)</em>
     <% end %><br />
     <div class="controls">
-      <%= f.email_field :password, autocomplete: "off", class: 'form-control' %>
+      <%= f.password_field :password, autocomplete: "off", class: 'form-control' %>
     </div>
     <%= error_span(@user[:email]) %>
   </div>

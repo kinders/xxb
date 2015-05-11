@@ -53,6 +53,13 @@ group :development, :test do
     gem "better_errors"
   end
 
+#  gem 'jquery-ui-rails'
+#  gem 'rails-jquery-autocomplete'
+
+  gem 'seed-fu', '~> 2.3'
+  gem 'kaminari'
+  gem 'paperclip', "~> 4.2"
+  gem 'paranoia', "~> 2.0"
 
 end
 

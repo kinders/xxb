@@ -32,11 +32,15 @@
     <% end %>
   </tbody>
 </table>
-
+<%= paginate @lessons %>
+<hr>
 <%= link_to "我来创建新的课程",
             new_lesson_path,
             :class => 'btn btn-primary' %>
-
+  <% if session[:textbook_id] %>
+    <% @textbook = Textbook.find(session[:textbook_id]) %>
+  <%= link_to "返回课本", textbook_path(@textbook), class: "btn btn-primary" %>
+<% end %>
 <% else %>
 
 <div class="page-header">

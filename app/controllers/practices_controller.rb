@@ -100,6 +100,26 @@ class PracticesController < ApplicationController
     end
   end
 
+  def delete_picture_q
+    @practice = Practice.find(session[:practice_id])
+    @practice.picture_q = nil
+    @practice.save
+    respond_to do |format|
+      format.html { redirect_to :back, notice: "问题图片已经被删除" }
+      format.json { head :no_content }
+    end
+  end
+
+  def delete_picture_a
+    @practice = Practice.find(session[:practice_id])
+    @practice.picture_a = nil
+    @practice.save
+    respond_to do |format|
+      format.html { redirect_to :back, notice: "答案图片已经被删除" }
+      format.json { head :no_content }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_practice
@@ -108,6 +128,6 @@ class PracticesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def practice_params
-      params.require(:practice).permit(:title, :question, :answer, :user_id, :tutor_id, :lesson_id, :activate, :score)
+      params.require(:practice).permit(:title, :question, :answer, :user_id, :tutor_id, :lesson_id, :activate, :score, :picture_q, :picture_a)
     end
 end

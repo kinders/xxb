@@ -5,7 +5,12 @@
 </div>
 <% else %>
 <div class="page-header">
-  <h3>为教学计划添加辅导</h3>
+  <% if session[:teaching_id] %>
+    <% teaching = Teaching.find(session[:teaching_id]) %>
+    <h3>为教学计划 <%= teaching.title %> 添加辅导页面</h3>
+  <% end %>
 </div>
 <% end %>
 <%= render :partial => 'form' %>
+<hr>
+<%= link_to "找不到想要的辅导页面？自己创建一个吧！", new_tutor_path, class: "btn btn-default" %>

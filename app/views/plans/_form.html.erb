@@ -19,14 +19,14 @@
   <div class="control-group">
     <%= f.label "序号", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :serail, :class => 'form-control' %>
+      <%= f.text_field :serial, :class => 'form-control' %>
     </div>
-    <%= error_span(@plan[:serail]) %>
+    <%= error_span(@plan[:serial]) %>
   </div>
   <div class="control-group">
     <%= f.label "辅导", :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :tutor_id, Tutor.titles, prompt: "请选择一个辅导", :class => 'form-control' %>
+      <%= f.select :tutor_id, Tutor.where(lesson_id: session[:lesson_id]).order("difficulty").collect{|tutor| [tutor.title[0,20] + "； 作者：" + tutor.user_id.to_s + "； 页面：" + tutor.page[0,30], tutor.id]}, { prompt: "请选择一个辅导", class: "form-control" } %>
     </div>
     <%= error_span(@plan[:tutor_id]) %>
   </div>
@@ -38,11 +38,11 @@
 <% else %>  <!--下面是管理员界面 -->
 
   <div class="control-group">
-    <%= f.label :serail, :class => 'control-label' %>
+    <%= f.label :serial, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :serail, :class => 'form-control' %>
+      <%= f.text_field :serial, :class => 'form-control' %>
     </div>
-    <%= error_span(@plan[:serail]) %>
+    <%= error_span(@plan[:serial]) %>
   </div>
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>

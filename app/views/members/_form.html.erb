@@ -1,0 +1,95 @@
+<% if current_user.has_role? :admin %>
+<%= form_for @member, :html => { :class => "form-horizontal member" } do |f| %>
+
+    <% if @member.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@member.errors.count, "error") %> prohibited this member from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @member.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :serial, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :serial, :class => 'form-control' %>
+    </div>
+    <%= error_span(@member[:serial]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :user_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :user_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@member[:user_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :classroom_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :classroom_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@member[:classroom_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :deleted_at, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :deleted_at, :class => 'form-control' %>
+    </div>
+    <%= error_span(@member[:deleted_at]) %>
+  </div>
+
+
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            members_path, :class => 'btn btn-default' %>
+
+<% end %>
+
+<% else %>
+
+<%= form_for @member, :html => { :class => "form-horizontal member" } do |f| %>
+
+    <% if @member.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@member.errors.count, "error") %> 让这个成员无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @member.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label '序号', :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :serial, :class => 'form-control' %>
+    </div>
+    <%= error_span(@member[:serial]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label '成员', :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :student, User.all.order("name").collect{ |user| [user.name, user.id]}, {prompt: "请选择一个用户", class: 'form-control'}  %>
+    </div>
+    <%= error_span(@member[:student]) %>
+  </div>
+  <hr>
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            members_path, :class => 'btn btn-default' %>
+
+<% end %>
+
+<% end %>

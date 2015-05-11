@@ -8,17 +8,26 @@ class PlansController < ApplicationController
   def index
     if current_user.has_role? :admin
       @plans = Plan.all
-    else
+    elsif session[:lesson_id] && session[:teaching_id]
       @lesson = Lesson.find(session[:lesson_id])
       teaching_id = session[:teaching_id]
       @teaching = Teaching.find(teaching_id)
-      @plans = Plan.where(teaching_id: teaching_id)
+      @plans = Plan.where(teaching_id: teaching_id).order('serial')
+    else
+      respond_to do |format|
+        format.html { redirect_to :back, notice: '课程或教学计划出错'}
+      end 
     end
   end
 
   # GET /plans/1
   # GET /plans/1.json
   def show
+    unless current_user.has_role? :admin
+    respond_to do |format|
+        format.html { redirect_to plans_path}
+      end 
+    end 
   end
 
   # GET /plans/new
@@ -80,6 +89,6 @@ class PlansController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def plan_params
-      params.require(:plan).permit(:serail, :user_id, :teaching_id, :tutor_id)
+      params.require(:plan).permit(:serial, :user_id, :teaching_id, :tutor_id)
     end
 end

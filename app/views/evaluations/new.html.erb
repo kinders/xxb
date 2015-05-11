@@ -5,7 +5,13 @@
 </div>
 <% else %>
 <div class="page-header">
-  <h1>小测验</h1>
+  <% if session[:lesson_id] && session[:tutor_id] %>
+    <% @lesson = Lesson.find(session[:lesson_id]) %>
+    <% @tutor = Tutor.find(session[:tutor_id]) %>
+    <h3>《<%= @lesson.title %>》 >> “<%= @tutor.title %>” >> 小测验</h3>
+  <% else %>
+    <h3>小测验</h3>
+  <% end %>
 </div>
 <% end %>
 <%= render :partial => 'form' %>

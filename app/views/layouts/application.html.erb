@@ -35,6 +35,7 @@
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
 
     <%= javascript_include_tag "application" %>
+    <%# javascript_include_tag "autocomplete-rails.js" %>
   </head>
   <body>
 
@@ -58,7 +59,10 @@
 	      <% if @point = Justice.where(evaluation_user_id: current_user.id).group(:practice_id).average(:score).values.inject(:+) %>
 		<li><%= link_to "#{@point.round(2) || 0}积分", me_point_card_path %></li>
 	      <% else %>
-	      <li><%= link_to " 0 积分", me_point_card_path %></li>
+	        <li><%= link_to " 0 积分", me_point_card_path %></li>
+              <% end %>
+              <% if session[:discussion_id] %>
+		<li><%= link_to "返回课堂", discussion_path(session[:discussion_id]) %></li>
               <% end %>
 	      <li><%= link_to "退出登录", "/users/sign_out", method: :delete %></li>
 	    <% else %>

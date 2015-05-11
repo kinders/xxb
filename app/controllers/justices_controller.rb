@@ -24,15 +24,16 @@ class JusticesController < ApplicationController
       @justice = Justice.new
     else
       @evaluation = Evaluation.find(session[:evaluation_id])
+      old_justice = Justice.find_by(evaluation_id: @evaluation.id)
       #  禁止评点自己的答卷
       if @evaluation.user_id == current_user.id
 	respond_to do |format|
 	  format.html{ redirect_to evaluation_path(@evaluation), notice: "这是自己的答卷，应请其他用户评分"}
 	end
-      elsif j = Justice.find_by(evaluation_id: @evaluation.id) && j.user_id == 1
-	respond_to do |format|
-	  format.html{ redirect_to evaluation_path(@evaluation), notice: "该答卷符合标准答案，不能更改评分"}
-	end
+      elsif old_justice && old_justice.user_id == 1 
+	  respond_to do |format|
+	    format.html{ redirect_to evaluation_path(@evaluation), notice: "该答卷符合标准答案，不能更改评分"}
+	  end
       else
         #  如果评过该答卷，则跳转到"编辑"页面中
         @justice = Justice.find_by(evaluation_id: @evaluation.id, user_id: current_user.id)

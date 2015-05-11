@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  serial: 9.99
+  user: 
+  classroom_id: 
+  deleted_at: 2015-05-08 15:45:53
+
+two:
+  serial: 9.99
+  user: 
+  classroom_id: 
+  deleted_at: 2015-05-08 15:45:53

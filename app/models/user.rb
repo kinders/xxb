@@ -4,7 +4,15 @@ class User < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
-  has_many :lesson
-  has_many :tutor
-  has_many :practice
+  has_many :textbooks
+  has_many :catalogs
+  has_many :lessons
+  has_many :teachings
+  has_many :plans
+  has_many :tutors
+  has_many :practices
+  has_many :evaluations
+  has_many :justices
+  has_many :classrooms
+  has_many :members
 end

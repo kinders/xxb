@@ -16,7 +16,7 @@
     <% @plans.each do |plan| %>
     <% plan_tutor = Tutor.find(plan.tutor_id) %>
       <tr>
-        <td><%= plan.serail %></td>
+        <td><%= plan.serial.round(2) %></td>
         <td><%= plan_tutor.title %></td>
         <td>
 	  <%= link_to "进入辅导", tutor_path(plan_tutor), class: "btn btn-xs btn-success" %>
@@ -50,7 +50,7 @@
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:serail) %></th>
+      <th><%= model_class.human_attribute_name(:serial) %></th>
       <th><%= model_class.human_attribute_name(:user_id) %></th>
       <th><%= model_class.human_attribute_name(:teaching_id) %></th>
       <th><%= model_class.human_attribute_name(:tutor_id) %></th>
@@ -62,7 +62,7 @@
     <% @plans.each do |plan| %>
       <tr>
         <td><%= link_to plan.id, plan_path(plan) %></td>
-        <td><%= plan.serail %></td>
+        <td><%= plan.serial %></td>
         <td><%= plan.user_id %></td>
         <td><%= plan.teaching_id %></td>
         <td><%= plan.tutor_id %></td>

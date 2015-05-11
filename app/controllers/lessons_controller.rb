@@ -6,7 +6,7 @@ class LessonsController < ApplicationController
   # GET /lessons
   # GET /lessons.json
   def index
-      @lessons = Lesson.all
+      @lessons = Lesson.all.page params[:page]
   end
 
   # GET /lessons/1
@@ -20,11 +20,24 @@ class LessonsController < ApplicationController
     }
     session[:lesson_id] = @lesson.id
     # 标准教学计划
-    standard_teaching = Teaching.find_by(user_id: 2, lesson_id: @lesson.id)
-    @standard_plan = Plan.find_by(teaching_id: standard_teaching)
-    # 按钮，跳转到标准辅导第一个辅导页面
-    if @standard_plan
-    @tutor = Tutor.find(@standard_plan.tutor_id)
+    if session[:discussion_id]
+      @discussion = Discussion.find(session[:discussion_id])
+      session[:teaching_id] = @discussion.teaching_id
+      if  @discussion.lesson_id == @lesson.id
+        standard_teaching = Teaching.find(session[:teaching_id])
+      else
+        standard_teaching = Teaching.find_by(user_id: 2, lesson_id: @lesson.id)
+      end
+    else
+      standard_teaching = Teaching.find_by(user_id: 2, lesson_id: @lesson.id)
+    end
+    if standard_teaching
+      session[:teaching_id] = standard_teaching.id
+      @standard_plan = Plan.where(teaching_id: standard_teaching).order("serial").first
+      # 按钮，跳转到标准辅导第一个辅导页面
+      if @standard_plan
+        @tutor = Tutor.find(@standard_plan.tutor_id)
+      end
     end
     # 生成“前一课”和“后一课”按钮
     all_catalogs = Catalog.where(textbook_id: session[:textbook_id]).order(:serial)
@@ -34,13 +47,13 @@ class LessonsController < ApplicationController
 	  @previous_lesson = nil  
 	else
 	  previous_catalog = all_catalogs[index - 1]
-	  @previous_lession = Lesson.find(previous_catalog.lesson_id)
+	  @previous_lesson = Lesson.find(previous_catalog.lesson_id)
 	end
 	if index + 1 == all_catalogs.length
-	  @next_lession = nil
+	  @next_lesson = nil
 	else
 	  next_catalog = all_catalogs[index + 1]
-	  @next_lession = Lesson.find(next_catalog.lesson_id)
+	  @next_lesson = Lesson.find(next_catalog.lesson_id)
 	end
       end
     end
@@ -97,6 +110,16 @@ class LessonsController < ApplicationController
     end
   end
 
+  def delete_picture
+    @lesson = Lesson.find(session[:lesson_id])
+    @lesson.picture = nil
+    @lesson.save
+    respond_to do |format|
+      format.html { redirect_to :back, notice: "图片已经被删除" }
+      format.json { head :no_content }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_lesson
@@ -105,6 +128,6 @@ class LessonsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def lesson_params
-      params.require(:lesson).permit(:title, :content, :user_id)
+      params.require(:lesson).permit(:title, :content, :user_id, :picture)
     end
 end

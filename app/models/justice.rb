@@ -3,4 +3,5 @@ class Justice < ActiveRecord::Base
   belongs_to :user
   belongs_to :evaluation
   validates :score, presence: true, numericality: {less_than_or_equal_to: :practice_score, greater_than_or_equal_to: 0}
+  acts_as_paranoid
 end

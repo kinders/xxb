@@ -1,9 +1,20 @@
 Rails.application.routes.draw do
 
 
+  get 'quit_discussion', to: 'discussions#quit_discussion'
+  resources :discussions do
+    delete 'end_discussion'
+  end
+
+  resources :members
+
+  resources :classrooms
+
   resources :justices
 
-  resources :evaluations
+  resources :evaluations do
+    get 'delete_picture_ya'
+  end
 
   get 'me/summary'
   get 'me/point_card'
@@ -13,13 +24,23 @@ Rails.application.routes.draw do
 
   resources :teachings
 
-  resources :catalogs
+  resources :catalogs do
+    get :autocomplete_lesson_title, on: :collection
+  end
 
   resources :textbooks
 
-  resources :practices
-  resources :tutors 
-  resources :lessons 
+  resources :practices do
+    get 'delete_picture_q'
+    get 'delete_picture_a'
+  end
+  resources :tutors do
+    get 'delete_picture1'
+    get 'delete_picture2'
+  end
+  resources :lessons do
+    get 'delete_picture'
+  end
 
   devise_for :users
   scope "/admin" do

@@ -6,8 +6,19 @@
   =require twitter-bootstrap-static/fontawesome
   */
 
+.lesson_paragraph > p:before {
+  content: counter(paragraph_counter);
+  color: green;
+  padding-right: 1.5em;
+}
+.lesson_paragraph > p {
+  font-size: 24px;
+  line-height: 40px;
+  counter-increment: paragraph_counter;
+}
+
 .paragraph > p {
   text-indent: 2em;
   font-size: 24px;
-  line-height: 38px;
+  line-height: 40px;
 }

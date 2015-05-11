@@ -38,7 +38,7 @@ class TeachingsController < ApplicationController
   # POST /teachings.json
   def create
     @teaching = Teaching.new(teaching_params)
-    @teaching.user_id = session[:user_id]
+    @teaching.user_id = current_user.id
     @teaching.lesson_id = session[:lesson_id]
 
     respond_to do |format|
