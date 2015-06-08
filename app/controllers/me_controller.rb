@@ -63,4 +63,75 @@ class MeController < ApplicationController
       end
     }
   end
+
+  def assign_homeworks
+    
+    if @teacher = Teacher.where(subject_id: 1, mentor: current_user.id).last
+      @classroom = Classroom.find(@teacher.classroom_id)
+      # 自己布置的作业
+      @homeworks = Homework.where(user_id: current_user.id).order(created_at: :desc)
+      if  @classroom.end == false
+        # 所有老师布置的全班作业
+        @class_homeworks = Homework.where.not(user_id: current_user.id).where(classroom_id: @teacher.classroom_id)
+        # 所有老师布置的个别学生作业
+        @student_homeworks = []
+        @classroom.members.each { |member|
+          h = Homework.where.not(user_id: current_user.id).where(student: member.student)#
+          if h.any?
+            @student_homeworks << h
+            @student_homeworks.flatten!
+          end
+        }
+      end
+    else # 如果是普通教师，则显示自己布置的作业
+      @homeworks = Homework.where(user_id: current_user.id).order(created_at: :desc)
+    end
+  end 
+  
+  # 显示我要完成的作业
+  def my_homeworks
+    @special_homeworks = Homework.where(student: current_user.id).order(created_at: :desc).to_a.delete_if { |hw| Observation.find_by(homework_id: hw.id, student: current_user.id) }
+    @my_classrooms = []
+    Classroom.where(end: false).each { |classroom|
+      if classroom.members.where(student: current_user.id).any?
+        @my_classrooms << classroom
+      end
+    }
+    @my_classrooms.flatten!
+    @class_homeworks = Homework.where(classroom_id: @my_classrooms).order(created_at: :desc).to_a.delete_if { |hw| Observation.find_by(homework_id: hw.id, student: current_user.id) }
+  end
+
+  # 显示当教师的班级
+  def as_a_teacher
+    @classrooms = []
+    Classroom.where(end: false).each { |classroom|
+      if classroom.teachers.where(mentor: current_user.id).any?
+        @classrooms << classroom
+      end
+    }
+    @classrooms.flatten!
+  end
+
+  # 显示当学生的班级
+  def as_a_student
+    @classrooms = []
+    Classroom.where(end: false).each { |classroom|
+      if classroom.members.where(student: current_user.id).any?
+        @classrooms << classroom
+      end
+    }
+    @classrooms.flatten!
+  end
+
+  def seed_user
+    CSV.foreach("csvfile") do |row|
+      User.create{ |u|
+	u.name = row[0].to_s
+	u.email = row[1].to_s
+	u.encrypted_password = "$2a$10$gU9lYlmq5EG4TB/S27qpAOlKavks8giogS5qt9NLrauQ58M0955Ha"  # 默认密码123456789
+	
+      }
+    end
+  end
+
 end

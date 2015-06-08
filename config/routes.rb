@@ -1,6 +1,16 @@
 Rails.application.routes.draw do
 
 
+  resources :subjects
+
+  resources :teachers
+
+  resources :observations
+
+  resources :homeworks
+
+  resources :complaints
+
   get 'quit_discussion', to: 'discussions#quit_discussion'
   resources :discussions do
     delete 'end_discussion'
@@ -19,6 +29,10 @@ Rails.application.routes.draw do
   get 'me/summary'
   get 'me/point_card'
   get 'me/justify'
+  get 'me/assign_homeworks'
+  get 'me/my_homeworks'
+  get 'me/as_a_teacher'
+  get 'me/as_a_student'
 
   resources :plans
 

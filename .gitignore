@@ -15,3 +15,8 @@
 /log/*
 !/log/.keep
 /tmp
+
+# 一些资料
+/public/system
+xxb.ods
+rvmrc

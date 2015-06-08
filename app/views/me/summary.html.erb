@@ -1,8 +1,12 @@
-<div class="page-header">
-    <h3>我的主页</h3>
-      <%= link_to "用户信息", edit_registration_path(current_user), class: "btn btn-sm btn-default" %>
+      <%= link_to "账户信息", edit_registration_path(current_user), class: "btn btn-sm btn-default" %>
       <%= link_to "查看积分", me_point_card_path, class: "btn btn-sm btn-default" %>
       <%= link_to "我来评卷", me_justify_path, class: "btn btn-sm btn-default" %>
+      <%= link_to "我布置的作业", me_assign_homeworks_path, class: "btn btn-sm btn-default" %>
+      <%= link_to "我要完成的作业", me_my_homeworks_path, class: "btn btn-sm btn-default" %>
+      <%= link_to "我任教的班级", me_as_a_teacher_path, class: "btn btn-sm btn-default" %>
+      <%= link_to "我是学生的班级", me_as_a_student_path, class: "btn btn-sm btn-default" %>
+<div class="page-header">
+    <h3>我的主页</h3>
 </div>
 <div class="row">
   <div class="col-md-6">

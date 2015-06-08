@@ -17,6 +17,10 @@ class MembersController < ApplicationController
   # GET /members/1
   # GET /members/1.json
   def show
+    session[:member_id] = @member.id
+    # 下面是未完成作业管理
+    @special_homeworks = Homework.where(student: @member.student).order(created_at: :desc).to_a.delete_if { |hw| Observation.find_by(homework_id: hw.id, student: @member.student) }
+    @class_homeworks = Homework.where(classroom_id: session[:classroom_id]).order(created_at: :desc).to_a.delete_if { |hw| Observation.find_by(homework_id: hw.id, student: @member.student) }
   end
 
   # GET /members/new

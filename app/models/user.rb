@@ -15,4 +15,9 @@ class User < ActiveRecord::Base
   has_many :justices
   has_many :classrooms
   has_many :members
+  has_many :complaints
+  has_many :homeworks
+  has_many :observations
+  has_many :teachers
+
 end

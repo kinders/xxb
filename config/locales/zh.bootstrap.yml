@@ -16,6 +16,7 @@ zh:
       destroy: "删除"
       new: "新建"
       edit: "编辑"
+      show: "详情"
     titles:
       edit: "编辑 %{model}"
       save: "保存 %{model}"

@@ -35,23 +35,26 @@
     <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
 
     <%= javascript_include_tag "application" %>
-    <%# javascript_include_tag "autocomplete-rails.js" %>
+    <%= javascript_include_tag "autocomplete-rails.js" %>
   </head>
   <body>
 
-    <div class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="container">
+        <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="/">学学半</a>
+	<a class="navbar-brand" href="/">学学半</a>
+        </div>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
-          <ul class="nav navbar-nav pull-right">
+          <ul class="nav navbar-nav">
+	    <li><%= link_to "首页", "/" %></li>
             <% if current_user %>
               <% if current_user.name %>
-		<li><%= link_to "我是 #{current_user.name} ", me_summary_path %></li>
+		<li><%= link_to "我是： #{current_user.name} ", me_summary_path %></li>
 	      <% else %>
 	        <li><%= menu_text "#{current_user.email}" %></li>
 	      <% end %>
@@ -70,19 +73,25 @@
 	      <li><%= link_to "登录", "/users/sign_in"  %></li>
 	    <% end %>
          </ul>
+         <% if current_user %>
+         <ul class="nav navbar-nav navbar-right">
+	   <li><%= link_to "建议", "#myModal", data: {toggle: "modal"}  %></li>
+         </ul>
+	 <% end %>
         </div>
       </div>
     </div>
 
-    <div class="container" style="padding-top: 50px;">
+    <div class="container" style="padding-top: 60px;">
       <div class="row">
         <div class="col-lg-8 col-lg-offset-2">
           <%= bootstrap_flash %>
           <%= yield %>
         </div>
       </div><!--/row-->
-      <div class="row" style="margin-top: 60px;">
-        <div class="col-lg-4 col-lg-offset-4">
+      <div class="row" style="margin-top: 20px;">
+        <hr>
+        <div class="col-lg-4 col-lg-offset-5" style="margin-top: 20px;">
           <footer>
             <p>学学半&copy; 2015</p>
           </footer>
@@ -90,6 +99,73 @@
       </div><!--/row-->
 
     </div> <!-- /container -->
+
+<!-- Modal -->
+<% if current_user %>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">我来给学学半提建议：</h4>
+      </div>
+      <div class="modal-body">
+<% @complaint = Complaint.new %>
+<% @complaint.url = request.url().to_s %>
+<% @complaint.user_id = current_user.id %>
+<%= form_for @complaint, :html => { :class => "form-horizontal complaint" } do |f| %>
+
+    <% if @complaint.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@complaint.errors.count, "error") %> 使这个建议无法提交:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @complaint.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <div class="controls">
+      <%= f.hidden_field :url, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:url]) %>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <%= f.hidden_field :user_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:user_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label "正文：", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :content, :class => 'form-control', rows: 5 %>
+    </div>
+    <%= error_span(@complaint[:content]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label "附图：", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.file_field :picture, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:picture_file_name]) %>
+  </div>
+      </div>
+      <div class="modal-footer">
+        <%= f.submit "提交", :class => 'btn btn-primary' %>
+<% end %>
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
 
   </body>
 </html>

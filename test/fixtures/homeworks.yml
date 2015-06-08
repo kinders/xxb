@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  classroom_id: 
+  subject: MyString
+  title: MyString
+  description: MyText
+  deleted_at: 2015-06-01 20:47:10
+
+two:
+  user_id: 
+  classroom_id: 
+  subject: MyString
+  title: MyString
+  description: MyText
+  deleted_at: 2015-06-01 20:47:10

@@ -75,7 +75,7 @@
 	<% if regist = History.where(user_id: @user.id, modelname: 'lesson', entryid: @discussion.lesson_id, created_at: @discussion.created_at..end_time).take %>
 	  <td><%= regist.created_at.strftime("%F %T") %></td>
         <% else %>
-          <td>缺席</td>
+          <td> -- </td>
         <% end %>
 	<% # 预习得分 %>
 	<%  pre_point = Justice.where(evaluation_user_id: @user.id, practice_id: @discussion.lesson.practices, created_at: @discussion.created_at.prev_month...@discussion.created_at).group(:practice_id).average(:score).values.inject(:+) %>

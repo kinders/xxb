@@ -152,14 +152,15 @@ zh-CN:
         display_entries: "显示 %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b>  共计 <b>%{total}</b>"
     actions: "可执行的操作"
     links:
-      back: "列表"
+      back: "返回列表"
       cancel: "取消"
       confirm: "你确定吗？"
       destroy: "删除"
       new: "新建"
-      edit: "编辑"
+      edit: "修改"
+      show: "详情"
     titles:
-      edit: "编辑 %{model}"
+      edit: "修改 %{model}"
       save: "保存 %{model}"
       new: "新建 %{model}"
       delete: "删除 %{model}"

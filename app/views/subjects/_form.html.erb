@@ -1,0 +1,31 @@
+<%= form_for @subject, :html => { :class => "form-horizontal subject" } do |f| %>
+
+    <% if @subject.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@subject.errors.count, "error") %> prohibited this subject from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @subject.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label "科目名称", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :name, :class => 'form-control' %>
+    </div>
+    <%= error_span(@subject[:name]) %>
+  </div>
+
+
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            subjects_path, :class => 'btn btn-default' %>
+
+<% end %>

@@ -15,4 +15,9 @@ class Lesson < ActiveRecord::Base
 
   validates :title, presence: true
   # validates :content, presence: true if "picture_file_name.nil"
+  
+  def funky_method
+    "#{self.id} #{self.title}"
+  end
+  
 end

@@ -1,0 +1,69 @@
+<% if current_user.has_role? :admin %>
+
+<%- model_class = Observation -%>
+<div class="page-header">
+  <h3><%=t '.title', :default => model_class.model_name.human.titleize %></h3>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @observation.user_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:student) %>:</strong></dt>
+  <dd><%= @observation.student %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:point) %>:</strong></dt>
+  <dd><%= @observation.point %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:mark) %>:</strong></dt>
+  <dd><%= @observation.mark %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:deleted_at) %>:</strong></dt>
+  <dd><%= @observation.deleted_at %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:homework_id) %>:</strong></dt>
+  <dd><%= @observation.homework_id %></dd>
+</dl>
+
+<%= link_to t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize),
+            new_observation_path,
+            :class => 'btn btn-primary' %>
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              observations_path, :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_observation_path(@observation), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              observation_path(@observation),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+
+<% else %>
+
+<%- model_class = Observation -%>
+<div class="page-header">
+  <h3>作业评价详情</h3>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong>作业名称:</strong></dt>
+  <dd><%= @observation.homework.title %></dd>
+  <dt><strong>作业人:</strong></dt>
+  <dd><%= User.find(@observation.student).name %></dd>
+  <dt><strong>分数:</strong></dt>
+  <dd><%= @observation.point %></dd>
+  <dt><strong>评语:</strong></dt>
+  <dd><%= @observation.mark %></dd>
+  <dt><strong>批改者:</strong></dt>
+  <dd><%= @observation.user.name %></dd>
+</dl>
+
+<%= link_to "继续评改作业",
+            new_observation_path,
+            :class => 'btn btn-primary' %>
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              observations_path, :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_observation_path(@observation), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              observation_path(@observation),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+
+<% end %>

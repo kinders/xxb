@@ -47,12 +47,11 @@
 
 <%- model_class = Classroom -%>
 <div class="page-header">
-  <h3>所有班级</h3>
+  <h3>教学楼</h3>
 </div>
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
       <th>名称</th>
       <th>创建者</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
@@ -61,11 +60,10 @@
   <tbody>
     <% @classrooms.each do |classroom| %>
       <tr>
-        <td><%= link_to classroom.id, classroom_path(classroom) %></td>
         <td><%= classroom.name %></td>
         <td><%= classroom.user.name %></td>
         <td>
-          <%= link_to '查看班级成员', classroom_path(classroom), class: 'btn btn-primary btn-xs' %>
+          <%= link_to '进入班级', classroom_path(classroom), class: 'btn btn-primary btn-xs' %>
           <% if current_user.id == classroom.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_classroom_path(classroom), :class => 'btn btn-default btn-xs' %>

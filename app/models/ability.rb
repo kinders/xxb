@@ -9,8 +9,8 @@ class Ability
       if user.has_role? :admin
         can :manage, :all
       else
-        can :manage, [Lesson, Tutor, Practice, Textbook, Catalog, Teaching, Plan, Evaluation, Justice, Classroom, Member, Discussion],  user_id: user.id
-	can :read, [Lesson, Tutor, Practice, Textbook, Catalog, Teaching, Plan, Evaluation, Justice, Classroom, Member, Discussion]
+        can :manage, [Lesson, Tutor, Practice, Textbook, Catalog, Teaching, Plan, Evaluation, Justice, Classroom, Member, Discussion, Complaint, Homework, Observation, Teacher, Subject],  user_id: user.id
+	can :read, [Lesson, Tutor, Practice, Textbook, Catalog, Teaching, Plan, Evaluation, Justice, Classroom, Member, Discussion, Complaint, Homework, Observation, Teacher, Subject]
       end
     #
     # The first argument to `can` is the action you are giving the user

@@ -68,6 +68,7 @@
   </tbody>
 </table>
 <% end %>
-
+<% if current_user.id == @textbook.user_id %>
 <%= link_to "添加一篇课文", new_catalog_path, :class => 'btn btn-primary' %>
+<% end %>
 <%= link_to "重新选择一本教科书", textbooks_path, class: "btn btn-default" %>

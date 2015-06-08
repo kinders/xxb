@@ -1,0 +1,41 @@
+<% if current_user.has_role? :admin %>
+
+<%- model_class = Observation -%>
+<div class="page-header">
+  <h3><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h3>
+</div>
+<%= render :partial => 'form' %>
+
+<% else %>
+
+<%- model_class = Observation -%>
+<%= link_to "返回作业", homework_path(session[:homework_id]), class: 'btn btn-default'%>
+<div class="page-header">
+  <h3>批改作业</h3>
+</div>
+<div class="well">
+  
+<dl class="dl-horizontal">
+  <dt><strong>老师:</strong></dt>
+  <dd><%= @homework.user.name %></dd>
+  <% if @homework.classroom_id %>
+  <dt><strong>班级:</strong></dt>
+  <dd><%= @homework.classroom.name %></dd>
+  <% end %>
+  <% if @homework.student %>
+  <dt><strong>学生:</strong></dt>
+  <dd><%= User.find(@homework.student).name %></dd>
+  <% end %>
+  <dt><strong>科目:</strong></dt>
+  <dd><%= @homework.subject.name %></dd>
+  <dt><strong>标题:</strong></dt>
+  <dd><%= @homework.title %></dd>
+  <dt><strong>详情:</strong></dt>
+  <dd><%= @homework.description %></dd>
+  <dt><strong>布置时间:</strong></dt>
+  <dd><%= @homework.created_at.strftime("%F") %></dd>
+</dl>
+</div>
+<%= render :partial => 'form' %>
+
+<% end %>

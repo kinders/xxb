@@ -53,14 +53,18 @@
 
 <% else %>
 
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_discussion_path,
+            :class => 'btn btn-default' %>
+<%= link_to "返回班级", classroom_path(@classroom), class: "btn btn-default" %>
 <%- model_class = Discussion -%>
 <div class="page-header">
-  <h3>集体学习，正在进行中……</h3>
+  <h3>集体学习，<%= @classroom.name %> <em>正在进行中……</em></h3>
 </div>
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>主持人</th>
+      <th>主讲</th>
       <th>教室</th>
       <th>课程</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
@@ -75,6 +79,36 @@
         <td>
 	  <%= link_to "参与学习", discussion_path(discussion), class: 'btn btn-xs btn-success' %>
           <% if current_user.id == discussion.user_id %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      discussion_path(discussion),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if @not_ready_discussions.first %>
+<hr>
+<h4>还未准备开的课</h4>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>主持人</th>
+      <th>教室</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @not_ready_discussions.each do |discussion| %>
+      <tr>
+        <td><%= discussion.user.name %></td>
+        <td><%= discussion.classroom.name %></td>
+        <td>
+          <% if current_user.id == discussion.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_discussion_path(discussion), :class => 'btn btn-default btn-xs' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
@@ -88,9 +122,7 @@
     <% end %>
   </tbody>
 </table>
-
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_discussion_path,
-            :class => 'btn btn-primary' %>
+<% end %>
+<hr>
 
 <% end %>

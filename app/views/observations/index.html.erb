@@ -1,0 +1,102 @@
+<% if current_user.has_role? :admin %>
+
+<%- model_class = Observation -%>
+<div class="page-header">
+  <h3><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:student) %></th>
+      <th><%= model_class.human_attribute_name(:point) %></th>
+      <th><%= model_class.human_attribute_name(:mark) %></th>
+      <th><%= model_class.human_attribute_name(:deleted_at) %></th>
+      <th><%= model_class.human_attribute_name(:homework_id) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @observations.each do |observation| %>
+      <tr>
+        <td><%= link_to observation.id, observation_path(observation) %></td>
+        <td><%= observation.user_id %></td>
+        <td><%= observation.student %></td>
+        <td><%= observation.point %></td>
+        <td><%= observation.mark %></td>
+        <td><%= observation.deleted_at %></td>
+        <td><%= observation.homework_id %></td>
+        <td><%=l observation.created_at %></td>
+        <td>
+          <%= link_to t('.show', :default => t("helpers.links.show")),
+                      observation_path(observation),
+                      :class => 'btn btn-xs btn-default' %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_observation_path(observation), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      observation_path(observation),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-default' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize),
+            new_observation_path,
+            :class => 'btn btn-primary' %>
+
+<% else %>
+
+<%- model_class = Observation -%>
+<% if session[:homework_id] %>
+<%= link_to "返回作业", homework_path(session[:homework_id]), class: 'btn btn-default' %>
+<% end %>
+<div class="page-header">
+  <h3><%= current_user.name %>作业批改记录</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th>作业标题</th>
+      <th>学生</th>
+      <th>得分</th>
+      <th>评语</th>
+      <th>评改时间</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @observations.each do |observation| %>
+      <tr>
+        <td><%= link_to observation.id, observation_path(observation) %></td>
+        <td><%= observation.homework.title %></td>
+        <td><%= User.find(observation.student).name %></td>
+        <td><%= observation.point %></td>
+        <td><%= observation.mark %></td>
+        <td><%= observation.created_at.strftime("%F") %></td>
+        <td>
+          <%= link_to t('.show', :default => t("helpers.links.show")),
+                      observation_path(observation),
+                      :class => 'btn btn-xs btn-default' %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_observation_path(observation), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      observation_path(observation),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-default' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "继续评改作业", new_observation_path, :class => 'btn btn-primary' %>
+
+<% end %>

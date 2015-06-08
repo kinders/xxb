@@ -101,14 +101,14 @@
   <% end %>
 
   <div class="control-group">
-    <%= f.label :classroom_id, :class => 'control-label' %>
+    <%= f.label "班级", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :classroom_id, Classroom.where(end: false).collect{|classroom| [classroom.name, classroom.id]}, prompt: "请选择一个班级", :class => 'form-control' %>
     </div>
     <%= error_span(@discussion[:classroom_id]) %>
   </div>
   <div class="control-group">
-    <%= f.label :textbook_id, :class => 'control-label' %>
+    <%= f.label "课本", :class => 'control-label' %>
     <div class="controls">
       <%= f.select :textbook_id, Textbook.all.collect{|textbook| [textbook.title, textbook.id]}, prompt:"请选择一个课本", :class => 'form-control' %>
     </div>
@@ -116,17 +116,17 @@
   </div>
   <% if @discussion.textbook %>
   <div class="control-group">
-    <%= f.label :lesson_id, :class => 'control-label' %>
+    <%= f.label "课文", :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :lesson_id, @discussion.textbook.catalogs.order("serial").collect{|catalog| [catalog.serial.to_i.to_s + "  " + catalog.lesson.title, catalog.lesson.id]}, prompt:"请选择一个课程", :class => 'form-control' %>
+      <%= f.select :lesson_id, @discussion.textbook.catalogs.order("serial").collect{|catalog| [catalog.serial.to_i.to_s + "  " + catalog.lesson.title, catalog.lesson.id]}, prompt:"请选择一个课文", :class => 'form-control' %>
     </div>
     <%= error_span(@discussion[:lesson_id]) %>
   </div>
   <% if @discussion.lesson_id %>
   <div class="control-group">
-    <%= f.label :teaching_id, :class => 'control-label' %>
+    <%= f.label "教学设计", :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :teaching_id, Teaching.where(lesson_id: @discussion.lesson_id).collect{|teaching| [teaching.title, teaching.id]}, prompt:"请选择一个教学方案", :class => 'form-control' %>
+      <%= f.select :teaching_id, Teaching.where(lesson_id: @discussion.lesson_id).collect{|teaching| [teaching.title, teaching.id]}, prompt:"请选择一个教学设计", :class => 'form-control' %>
     </div>
     <%= error_span(@discussion[:teaching_id]) %>
   </div>

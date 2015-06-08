@@ -1,0 +1,155 @@
+<%= link_to "返回主页", me_summary_path, class: 'btn btn-default' %>
+<% if @homeworks.any? %>
+<div class="page-header">
+  <h3>我布置的作业</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th>班级</th>
+      <th>学生</th>
+      <th>科目</th>
+      <th>标题</th>
+      <th>布置时间</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @homeworks.each do |homework| %>
+      <tr>
+        <td><%= link_to homework.id, homework_path(homework) %></td>
+        <% if homework.classroom_id %>
+          <td><%= homework.classroom.name %></td>
+        <% else %>
+          <td> - </td>
+        <% end %>
+        <% if homework.student %>
+          <td><%= User.find(homework.student).name %></td>
+        <% else %>
+          <td> - </td>
+        <% end %>
+        <td><%= homework.subject.name %></td>
+        <td><%= homework.title %></td>
+        <td><%= homework.created_at.strftime("%F") %></td>
+        <td>
+          <%= link_to "详情", homework_path(homework), class: 'btn btn-default btn-xs' %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_homework_path(homework), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      homework_path(homework),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<% if @class_homeworks %>
+<div class="page-header">
+  <h3>其他老师布置的班级作业</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th>老师</th>
+      <th>班级</th>
+      <th>学生</th>
+      <th>科目</th>
+      <th>标题</th>
+      <th>布置时间</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @class_homeworks.each do |homework| %>
+      <tr>
+        <td><%= link_to homework.id, homework_path(homework) %></td>
+        <td><%= homework.user.name %></td>
+        <% if homework.classroom_id %>
+          <td><%= homework.classroom.name %></td>
+        <% else %>
+          <td> - </td>
+        <% end %>
+        <% if homework.student %>
+          <td><%= User.find(homework.student).name %></td>
+        <% else %>
+          <td> - </td>
+        <% end %>
+        <td><%= homework.subject.name %></td>
+        <td><%= homework.title %></td>
+        <td><%= homework.created_at.strftime("%F") %></td>
+        <td>
+          <%= link_to "详情", homework_path(homework), class: 'btn btn-default btn-xs' %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_homework_path(homework), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      homework_path(homework),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<% if @student_homeworks %>
+<div class="page-header">
+  <h3>其他老师布置的个人作业</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th>老师</th>
+      <th>班级</th>
+      <th>学生</th>
+      <th>科目</th>
+      <th>标题</th>
+      <th>布置时间</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @student_homeworks.to_a.each do |homework| %>
+      <tr>
+        <td><%= homework.id %></td>
+        <td><%= homework.user.name %></td>
+        <% if homework.classroom_id %>
+          <td><%= homework.classroom.name %></td>
+        <% else %>
+          <td> - </td>
+        <% end %>
+        <% if homework.student %>
+          <td><%= User.find(homework.student).name %></td>
+        <% else %>
+          <td> - </td>
+        <% end %>
+        <td><%= homework.subject.name %></td>
+        <td><%= homework.title %></td>
+        <td><%= homework.created_at.strftime("%F") %></td>
+        <td>
+          <%= link_to "详情", homework_path(homework), class: 'btn btn-default btn-xs' %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_homework_path(homework), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      homework_path(homework),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<% unless @homeworks.any? || @class_homeworks || @student_homeworks %>
+  <div class="well">您暂时不用管理作业哦……</div>
+<% end %>

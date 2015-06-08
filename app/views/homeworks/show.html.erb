@@ -1,0 +1,132 @@
+<% if current_user.has_role? :admin %>
+
+<%- model_class = Homework -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @homework.user_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:classroom_id) %>:</strong></dt>
+  <dd><%= @homework.classroom_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:subject_id) %>:</strong></dt>
+  <dt><strong><%= model_class.human_attribute_name(:student) %>:</strong></dt>
+  <dd><%= @homework.student %></dd>
+  <dd><%= @homework.subject_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:title) %>:</strong></dt>
+  <dd><%= @homework.title %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
+  <dd><%= @homework.description %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:deleted_at) %>:</strong></dt>
+  <dd><%= @homework.deleted_at %></dd>
+</dl>
+
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              homeworks_path, :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_homework_path(@homework), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              homework_path(@homework),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+
+<% else %>
+
+<%- model_class = Homework -%>
+<% if session[:teacher_id] %>
+  <%= link_to t('.back', :default => t("helpers.links.back")),
+    homeworks_path, :class => 'btn btn-default'  %>
+<% else %>
+  <%= link_to "返回", :back, class: "btn btn-default" %>
+<% end %>
+<% if current_user.id == @homework.user_id %>
+  <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_homework_path(@homework), :class => 'btn btn-default' %>
+  <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              homework_path(@homework),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+<% end %>
+<div class="page-header">
+  <h3>查看作业详情</h3>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong>老师:</strong></dt>
+  <dd><%= @homework.user.name %></dd>
+  <% if @homework.classroom_id %>
+  <dt><strong>班级:</strong></dt>
+  <dd><%= @homework.classroom.name %></dd>
+  <% end %>
+  <% if @homework.student %>
+  <dt><strong>学生:</strong></dt>
+  <dd><%= User.find(@homework.student).name %></dd>
+  <% end %>
+  <dt><strong>科目:</strong></dt>
+  <dd><%= @homework.subject.name %></dd>
+  <dt><strong>标题:</strong></dt>
+  <dd><%= @homework.title %></dd>
+  <dt><strong>详情:</strong></dt>
+  <dd><%= @homework.description %></dd>
+  <dt><strong>布置时间:</strong></dt>
+  <dd><%= @homework.created_at.strftime("%F") %></dd>
+</dl>
+<hr>
+<div class="bg-info">作业评价</div>
+<div>
+<table class="table table-striped">
+  <%= link_to "评价", new_observation_path, class: 'btn btn-default' %>
+  <thead>
+    <tr>
+      <th>学生</th>
+      <th>得分</th>
+      <th>评语</th>
+      <th>时间</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%  @homework.observations.each do |o|  %>
+      <tr>
+        <td><%= User.find(o.student).name %></td>
+        <td><%= o.point %></td>
+        <td><%= o.mark  %></td>
+        <td><%= o.created_at.strftime("%F")  %></td>
+        <td>
+        <% if current_user.id == o.user_id %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_observation_path(o), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      observation_path(o),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        <% end %>
+        <% end %>
+      </tr>
+  </tbody>
+</table>
+</div>
+
+<% if @homework.classroom_id %>
+  <div>
+    <% fail_students = Classroom.find(@homework.classroom_id).members.collect{ |member|  member.student } %>
+    <br>
+    <% completed_students =  @homework.observations.collect { |o| o.student } %>
+    <% completed_students.each do |c_s| %>
+      <% fail_students.delete(c_s) %>
+    <% end %>
+    <div class="bg-info">未完成作业学生名单（共<%= fail_students.count %>个）：</div>
+    <% fail_students.enum_for.each_slice (10) do |students| %>
+      <% students.each do |student| %>
+        <%= User.find(student).name + ","  %>
+      <% end %>
+      <br>
+    <% end %>
+  </div>
+<% end %>
+
+  <% end %>

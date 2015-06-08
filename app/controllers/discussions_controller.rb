@@ -9,7 +9,9 @@ class DiscussionsController < ApplicationController
     if current_user.has_role? :admin
       @discussions = Discussion.all
     else
-      @Discussions = Discussion.where(end_at: nil)
+      @classroom = Classroom.find(session[:classroom_id])
+      @discussions = Discussion.where(end_at: nil, is_ready: true, classroom_id: @classroom.id)
+      @not_ready_discussions = Discussion.where(end_at: nil, is_ready: false)
     end
   end
 
@@ -43,7 +45,7 @@ class DiscussionsController < ApplicationController
     respond_to do |format|
       if @discussion.save
         unless @discussion.lesson_id
-	  format.html { render :edit, notice: "需要补充信息"}
+	  format.html { redirect_to edit_discussion_path(@discussion), notice: "第二步，选择课程"}
         else
         format.html { redirect_to @discussion, notice: '课堂已经就绪' }
         format.json { render :show, status: :created, location: @discussion }
@@ -61,9 +63,11 @@ class DiscussionsController < ApplicationController
     respond_to do |format|
       if @discussion.update(discussion_params)
         unless  @discussion.teaching_id
-	  format.html { render :edit, notice: "需要补充信息"}
+	  format.html { redirect_to edit_discussion_path(@discussion), notice: "第三步，选择教法"}
         else
-        format.html { redirect_to @discussion, notice: '课堂准备完毕' }
+        @discussion.is_ready = true
+        @discussion.save
+        format.html { redirect_to @discussion, notice: '课堂准备就绪' }
         format.json { render :show, status: :ok, location: @discussion }
         end
       else
@@ -97,7 +101,7 @@ class DiscussionsController < ApplicationController
   def quit_discussion
     session[:discussion_id] = nil
     respond_to do |format|
-      format.html { redirect_to root_path, notice: '已经从课堂中退出！' }
+      format.html { redirect_to discussions_path, notice: '已经从课堂中退出！' }
       format.json { head :no_content }
     end
   end
@@ -110,6 +114,6 @@ class DiscussionsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def discussion_params
-      params.require(:discussion).permit(:user_id, :classroom_id, :textbook_id, :lesson_id, :teaching_id, :end, :end_at, :deleted_at)
+      params.require(:discussion).permit(:user_id, :classroom_id, :textbook_id, :lesson_id, :teaching_id, :end, :end_at, :is_ready, :deleted_at)
     end
 end

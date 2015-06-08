@@ -2,7 +2,7 @@ class CatalogsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_catalog, only: [:show, :edit, :update, :destroy]
-  #autocomplete :lesson, :id, full: true, extra_data: [:title]
+  autocomplete :lesson, :title, full: true, :display_value => :funky_method, extra_data: [:id]
 
   # GET /catalogs
   # GET /catalogs.json

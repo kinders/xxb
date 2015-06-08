@@ -1,0 +1,132 @@
+<% if current_user.has_role? :admin %>
+
+<%= form_for @complaint, :html => { :class => "form-horizontal complaint" } do |f| %>
+
+    <% if @complaint.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@complaint.errors.count, "error") %> prohibited this complaint from being saved:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @complaint.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label :user_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :user_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:user_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :url, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :url, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:url]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :content, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :content, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:content]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :deleted_at, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :deleted_at, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:deleted_at]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :picture_file_name, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :picture_file_name, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:picture_file_name]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :picture_content_type, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :picture_content_type, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:picture_content_type]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :picture_file_size, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :picture_file_size, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:picture_file_size]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :picture_updated_at, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :picture_updated_at, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:picture_updated_at]) %>
+  </div>
+
+
+  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            complaints_path, :class => 'btn btn-default' %>
+
+<% end %>
+
+<% else %>
+
+<%= form_for @complaint, :html => { :class => "form-horizontal complaint" } do |f| %>
+
+    <% if @complaint.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@complaint.errors.count, "error") %> 使这个建议无法提交:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @complaint.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <%= f.label "相关页面：", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :url, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:url]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label "正文：", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :content, :class => 'form-control', rows: 5 %>
+    </div>
+    <%= error_span(@complaint[:content]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label "附图：", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.file_field :picture, :class => 'form-control' %>
+    </div>
+    <%= error_span(@complaint[:picture_file_name]) %>
+  </div>
+
+  <hr>
+  <%= f.submit "提交", :class => 'btn btn-primary' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            complaints_path, :class => 'btn btn-default' %>
+
+<% end %>
+
+<% end %>

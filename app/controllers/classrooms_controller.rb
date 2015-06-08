@@ -17,11 +17,13 @@ class ClassroomsController < ApplicationController
   # GET /classrooms/1.json
   def show
     session[:classroom_id] = @classroom.id
-    unless current_user.has_role? :admin
-      respond_to do |format|
-        format.html { redirect_to members_path }
-      end
-    end
+    @member = @classroom.members.find_by(student: current_user.id)
+    @teacher = @classroom.teachers.find_by(mentor: current_user.id)
+    #unless current_user.has_role? :admin
+      #respond_to do |format|
+        #format.html { redirect_to members_path }
+      #end
+    #end
   end
 
   # GET /classrooms/new

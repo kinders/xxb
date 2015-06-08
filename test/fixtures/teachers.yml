@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  classroom_id: 
+  mentor: 1
+  deleted_at: 2015-06-01 22:38:46
+
+two:
+  user_id: 
+  classroom_id: 
+  mentor: 1
+  deleted_at: 2015-06-01 22:38:46

@@ -1,0 +1,94 @@
+<% if current_user.has_role? :admin %>  
+
+<%- model_class = Teacher -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:classroom_id) %></th>
+      <th><%= model_class.human_attribute_name(:mentor) %></th>
+      <th><%= model_class.human_attribute_name(:subject_id) %></th>
+      <th><%= model_class.human_attribute_name(:deleted_at) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @teachers.each do |teacher| %>
+      <tr>
+        <td><%= link_to teacher.id, teacher_path(teacher) %></td>
+        <td><%= teacher.user_id %></td>
+        <td><%= teacher.classroom_id %></td>
+        <td><%= teacher.mentor %></td>
+        <td><%= teacher.subject_id %></td>
+        <td><%= teacher.deleted_at %></td>
+        <td><%=l teacher.created_at %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_teacher_path(teacher), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      teacher_path(teacher),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_teacher_path,
+            :class => 'btn btn-primary' %>
+
+<% else %>
+
+<%- model_class = Teacher -%>
+<%= link_to "返回班级", classroom_path(@classroom), :class => 'btn btn-default' %>
+<hr>
+<div class="page-header">
+  <h3><%= @classroom.name %> 的 教师团队</h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>科目</td>
+      <th>教师</th>
+      <th>参加时间</td>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @teachers.each do |teacher| %>
+      <tr>
+        <td><%= teacher.subject.name %></td>
+        <td><%= User.find(teacher.mentor).name %></td>
+        <td><%=l teacher.created_at %></td>
+        <td>
+          <%= link_to "查看", teacher_path(teacher), class: "btn btn-default btn-xs" %>
+          <% if current_user.id == teacher.user_id %>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_teacher_path(teacher), :class => 'btn btn-default btn-xs' %>
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      teacher_path(teacher),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<hr>
+
+<% if current_user.id = @classroom.user_id %>
+  <%= link_to "邀请教师", new_teacher_path, :class => 'btn btn-default' %>
+<% end %>
+
+<% end %>
