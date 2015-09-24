@@ -1,9 +1,13 @@
 <%- model_class = Evaluation -%>
 <% if current_user.has_role? :admin %>
+
 <div class="page-header">
   <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
 </div>
+
 <% else %>
+
+<%= link_to "返回", :back, class: "btn btn-default pull-right" %>
 <div class="page-header">
   <% if session[:lesson_id] && session[:tutor_id] %>
     <% @lesson = Lesson.find(session[:lesson_id]) %>
@@ -13,10 +17,13 @@
     <h3>小测验</h3>
   <% end %>
 </div>
+
 <% end %>
+
 <%= render :partial => 'form' %>
-<hr>
+
 <% unless current_user.has_role? :admin %>
-  <%= link_to "做不出来？再辅导一次吧", tutor_path(@tutor),  :class => 'btn btn-default' %>
+  <% if @tutor %>
+    <%= link_to "做不出来？再辅导一次吧", tutor_path(@tutor),  :class => 'btn btn-default pull-right' %>
+  <% end %>
 <% end %>
-<hr>

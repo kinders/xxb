@@ -15,6 +15,8 @@
   <dd><%= @evaluation.practice_id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:title) %>:</strong></dt>
   <dd><%= @evaluation.title %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:material) %>:</strong></dt>
+  <dd><%= @evaluation.material %></dd>
   <dt><strong><%= model_class.human_attribute_name(:question) %>:</strong></dt>
   <dd><%= @evaluation.question %></dd>
   <dt><strong><%= model_class.human_attribute_name(:answer) %>:</strong></dt>
@@ -38,11 +40,14 @@
               :class => 'btn btn-danger' %>
 	  
 <% else %>
-		
+
+<%= link_to "返回上页", :back, class: "btn btn-default pull-right" %>
+<%= link_to "返回题库", practices_path, class: "btn btn-default pull-right" %>
 <div class="page-header">
   <p><%= @evaluation.title %></p>
 </div>
 <div class="paragragh">
+  <h2><%= sanitize(@evaluation.material) %></h2>
   <h2><%= sanitize(@evaluation.question) %></h2>
   <% if @evaluation.practice.picture_q_file_name %>
     <p>附带图片</p>
@@ -60,19 +65,19 @@
   <% end %>
 <hr>
 <% if current_user.id == @evaluation.user_id %>
-<% if session[:tutor_id] %>
-<%= link_to "做下一道题", new_evaluation_path, :class => 'btn btn-primary' %>
-<% end %>
-<%= link_to "重做这道题", edit_evaluation_path(@evaluation), :class => 'btn btn-default' %>
-<%= link_to "查看做过的习题", evaluations_path, :class => 'btn btn-default'  %>
+  <% if session[:tutor_id] %>
+    <%= link_to "做下一道题", new_evaluation_path, :class => 'btn btn-primary' %>
+  <% end %>
+  <%= link_to "重做这道题", edit_evaluation_path(@evaluation), :class => 'btn btn-default' %>
+  <%= link_to "查看做过的习题", evaluations_path, :class => 'btn btn-default'  %>
 <% else %>
-  <%= link_to "我来评卷", new_justice_path, class: "btn btn-primary" %>
+  <%= link_to "评卷", new_justice_path, class: "btn btn-default" %>
   <%= link_to "返回待评列表", me_justify_path, class: "btn btn-default" %>
 <% end %>
 
 <% end %>
 <hr>
-<% if @justices %>
+<% if @justices.any? %>
 <h4>学友评分</h4>
 <table class="table table-striped">
   <thead>

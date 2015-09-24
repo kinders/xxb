@@ -19,6 +19,8 @@ class LessonsController < ApplicationController
       h.entryid = @lesson.id
     }
     session[:lesson_id] = @lesson.id
+    session[:tutor_id] = nil
+    session[:teaching_id] = nil
     # 标准教学计划
     if session[:discussion_id]
       @discussion = Discussion.find(session[:discussion_id])
@@ -27,6 +29,7 @@ class LessonsController < ApplicationController
         standard_teaching = Teaching.find(session[:teaching_id])
       else
         standard_teaching = Teaching.find_by(user_id: 2, lesson_id: @lesson.id)
+        @discussion_lesson = @discussion.lesson
       end
     else
       standard_teaching = Teaching.find_by(user_id: 2, lesson_id: @lesson.id)
@@ -44,17 +47,17 @@ class LessonsController < ApplicationController
     all_catalogs.each_with_index do | catalog, index |
       if @lesson.id == catalog.lesson_id
         if index - 1 < 0
-	  @previous_lesson = nil  
-	else
-	  previous_catalog = all_catalogs[index - 1]
-	  @previous_lesson = Lesson.find(previous_catalog.lesson_id)
-	end
-	if index + 1 == all_catalogs.length
-	  @next_lesson = nil
-	else
-	  next_catalog = all_catalogs[index + 1]
-	  @next_lesson = Lesson.find(next_catalog.lesson_id)
-	end
+	        @previous_lesson = nil  
+	      else
+	        previous_catalog = all_catalogs[index - 1]
+	        @previous_lesson = Lesson.find(previous_catalog.lesson_id)
+	      end
+	      if index + 1 == all_catalogs.length
+	        @next_lesson = nil
+	      else
+	        next_catalog = all_catalogs[index + 1]
+	        @next_lesson = Lesson.find(next_catalog.lesson_id)
+	      end
       end
     end
   end
@@ -74,6 +77,7 @@ class LessonsController < ApplicationController
   def create
     @lesson = Lesson.new(lesson_params)
     @lesson.user_id = current_user.id
+    @lesson.content_length = @lesson.content.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
 
     respond_to do |format|
       if @lesson.save
@@ -91,6 +95,8 @@ class LessonsController < ApplicationController
   def update
     respond_to do |format|
       if @lesson.update(lesson_params)
+        @lesson.content_length = @lesson.content.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
+        @lesson.save
         format.html { redirect_to @lesson, notice: "课程\"#{@lesson.title}\"已经更新完毕。" }
         format.json { render :show, status: :ok, location: @lesson }
       else

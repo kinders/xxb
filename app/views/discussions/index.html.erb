@@ -53,14 +53,12 @@
 
 <% else %>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_discussion_path,
-            :class => 'btn btn-default' %>
-<%= link_to "返回班级", classroom_path(@classroom), class: "btn btn-default" %>
+<%= link_to "返回班级", classroom_path(@classroom), class: "btn btn-default pull-right" %>
 <%- model_class = Discussion -%>
 <div class="page-header">
-  <h3>集体学习，<%= @classroom.name %> <em>正在进行中……</em></h3>
+  <h3><%= @classroom.name %> 的课堂学习</h3>
 </div>
+<% if @discussions.any? %>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -90,15 +88,19 @@
     <% end %>
   </tbody>
 </table>
+<% else %>
+  <div class="well">暂时没有课堂可以进入……</div>
+<% end %>
 
 <% if @not_ready_discussions.first %>
 <hr>
-<h4>还未准备开的课</h4>
+<h4>即将要开的课</h4>
 <table class="table table-striped">
   <thead>
     <tr>
       <th>主持人</th>
       <th>教室</th>
+      <th>课程</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -107,6 +109,7 @@
       <tr>
         <td><%= discussion.user.name %></td>
         <td><%= discussion.classroom.name %></td>
+        <td><%= discussion.lesson.title %></td>
         <td>
           <% if current_user.id == discussion.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

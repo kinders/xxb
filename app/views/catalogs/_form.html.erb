@@ -18,7 +18,7 @@
   <div class="control-group">
     <%= f.label "序号", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :serial, :class => 'form-control' %>
+      <%= f.text_field :serial, :class => 'form-control', tabindex: 1 %>
     </div>
     <%= error_span(@catalog[:serial]) %>
   </div>
@@ -41,15 +41,15 @@
   <div class="control-group">
     <%= f.label "课文", :class => 'control-label' %>
     <div class="controls">
-      <%= f.autocomplete_field :lesson_id, autocomplete_lesson_title_catalogs_path, 'data-auto-focus': true, class: "form-control" %>
+      <%= f.autocomplete_field :lesson_id, autocomplete_lesson_title_catalogs_path, 'data-auto-focus': true, class: "form-control", tabindex: 2 %>
       <%# f.select :lesson_id, Lesson.titles, prompt: "请选择一个课程", class: 'form-control' %>
     </div>
     <%= error_span(@catalog[:lesson_id]) %>
   </div>
 
   <hr>
-  <%= f.submit "添加这篇课文", :class => 'btn btn-primary' %>
+  <%= f.submit "添加这篇课文", :class => 'btn btn-primary', tabindex: 10 %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            catalogs_path, :class => 'btn btn-default' %>
+            catalogs_path, :class => 'btn btn-default', tabindex: 11 %>
 
 <% end %>

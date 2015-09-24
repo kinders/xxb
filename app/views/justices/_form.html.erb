@@ -18,13 +18,6 @@
   <% if current_user.has_role? :admin %>
 
   <div class="control-group">
-    <%= f.label :practice_score, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :practice_score, :class => 'form-control' %>
-    </div>
-    <%= error_span(@justice[:practice_score]) %>
-  </div>
-  <div class="control-group">
     <%= f.label :score, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :score, :class => 'form-control' %>
@@ -59,34 +52,6 @@
     </div>
     <%= error_span(@justice[:evaluation_id]) %>
   </div>
-  <div class="control-group">
-    <%= f.label :title, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :title, :class => 'form-control' %>
-    </div>
-    <%= error_span(@justice[:title]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :question, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :question, :class => 'form-control' %>
-    </div>
-    <%= error_span(@justice[:question]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :answer, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :answer, :class => 'form-control' %>
-    </div>
-    <%= error_span(@justice[:answer]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :your_answer, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :your_answer, :class => 'form-control' %>
-    </div>
-    <%= error_span(@justice[:your_answer]) %>
-  </div>
  <hr>
   <%= f.submit nil, :class => 'btn btn-primary' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
@@ -94,43 +59,53 @@
 
 <% else %>
 
-  <div class="control-group">
-    <%= f.label "题目", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :title, :class => 'form-control', disabled: :true %>
+    <p><strong>标题：</strong><%=  @evaluation.title %></p>
+    <% if @evaluation.practice.picture_q_file_name %>
+      <p><br></p>
+      <%= image_tag @evaluation.practice.picture_q, class: "img-responsive center-block" %>
+      <p><br></p>
+    <% end %>
+    <% if  @evaluation.material %>
+      <p><strong>材料：</strong></p>
+      <div class="well"><%= sanitize(@evaluation.material) %></div>
+    <% end %>
+    <p><strong>问题：</strong></p>
+    <div class="well well-sm"><%= sanitize(@evaluation.question) %></div>
+    <div class="row">
+      <div class="col-sm-6">
+        <p><strong>学友回答：</strong></p>
+        <div class="well"><%= @evaluation.your_answer %></div>
+      </div>
+      <div class="col-sm-6">
+        <p><strong>参考答案：</strong></p>
+        <div class="well"><%= @evaluation.answer %></div>
+      </div>
     </div>
-    <%= error_span(@justice[:title]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label "问题", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :question, :class => 'form-control', disabled: :true %>
+    <p><strong>题目总分：</strong><%=  @evaluation.practice_score %></p> 
+
+  <div class="row">
+    <div class="col-sm-6">
+      <% if @evaluation.practice.picture_a_file_name %>
+        <div class="col-sm-6 col-md-6">
+          <div class="thumbnail">
+            <%= image_tag @evaluation.practice.picture_a.url, size: "300x300" %>
+          </div>
+        </div>
+      <% end %>
     </div>
-    <%= error_span(@justice[:question]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label "参考答案", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :answer, :class => 'form-control', disabled: :true %>
+    <div class="col-sm-6">
+      <% if @evaluation.picture_ya_file_name %>
+        <div class="col-sm-6 col-md-6">
+          <div class="thumbnail">
+            <%= image_tag @evaluation.picture_ya.url, size: "300x300" %>
+          </div>
+        </div>
+      <% end %>
     </div>
-    <%= error_span(@justice[:answer]) %>
   </div>
+
   <div class="control-group">
-    <%= f.label "学友回答", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :your_answer, :class => 'form-control', disabled: :true %>
-    </div>
-    <%= error_span(@justice[:your_answer]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label "题目总分", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :practice_score, :class => 'form-control', disabled: :true %>
-    </div>
-    <%= error_span(@justice[:practice_score]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label "得分", :class => 'control-label' %>
+    <%= f.label "学友得分", :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :score, :class => 'form-control' %>
     </div>

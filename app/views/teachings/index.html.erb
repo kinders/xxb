@@ -1,7 +1,9 @@
 <%- model_class = Teaching -%>
 <% unless current_user.has_role? :admin %>  <!-- 普通用户界面 -->
+
+<%= link_to "返回课文", lesson_path(@lesson), class: "btn btn-default pull-right" %>
 <div class="page-header">
-  <h1>《<%= @lesson.title %>》的所有教学计划</h1>
+  <h3>《<%= @lesson.title %>》的所有教学计划</h3>
 </div>
 <table class="table table-striped">
   <thead>
@@ -34,7 +36,6 @@
 </table>
 <hr>
 <%= link_to "我也要编写一个教学计划", new_teaching_path, :class => 'btn btn-primary' %>
-<%= link_to "返回课文", lesson_path(@lesson), class: "btn btn-default" %>
 <% else %>  <!-- 管理员界面 -->
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>

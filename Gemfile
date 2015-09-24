@@ -60,7 +60,8 @@ group :development, :test do
   gem 'kaminari'
   gem 'paperclip', "~> 4.2"
   gem 'paranoia', "~> 2.0"
-
+  gem 'smarter_csv'
+  gem 'csv_builder'
 end
 
 # Use Capistrano for deployment

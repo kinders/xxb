@@ -1,4 +1,5 @@
 <%- model_class = Catalog -%>
+<%= link_to "重新选择一本教科书", textbooks_path, class: "btn btn-default pull-right" %>
 <div class="page-header">
   <h1>《<%= @textbook.title %>》的目录</h1>
 </div>
@@ -15,9 +16,9 @@
     <% catalog_lesson = Lesson.find(catalog.lesson_id) %>
       <tr>
         <td><%= catalog.serial.round(2) %></td>
-        <td><%= catalog_lesson.title %></td>
+        <td><%= link_to catalog_lesson.title, lesson_path(catalog_lesson), class: "btn-link" %></td>
         <td>
-	  <%= link_to "进入学习", lesson_path(catalog_lesson), class: "btn btn-xs btn-success" %>
+	  <%# link_to "学习", lesson_path(catalog_lesson), class: "btn btn-xs btn-success" %>
 	  <% if current_user.id == catalog.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_catalog_path(catalog), :class => 'btn btn-default btn-xs' %>
@@ -25,7 +26,7 @@
                       catalog_path(catalog),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %>
+                      :class => 'btn btn-xs btn-default' %>
           <% end %>
         </td>
       </tr>
@@ -71,4 +72,3 @@
 <% if current_user.id == @textbook.user_id %>
 <%= link_to "添加一篇课文", new_catalog_path, :class => 'btn btn-primary' %>
 <% end %>
-<%= link_to "重新选择一本教科书", textbooks_path, class: "btn btn-default" %>

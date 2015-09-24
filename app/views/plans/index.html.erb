@@ -1,6 +1,7 @@
 <%- model_class = Plan -%>
 
 <% unless current_user.has_role? :admin %>
+<%= link_to "返回课文", lesson_path(@lesson), class: "btn btn-default pull-right" %>
 <div class="page-header">
   <h3>《<%= @lesson.title %>》的“<%= @teaching.title %>”教学计划</h3>
 </div>
@@ -17,9 +18,8 @@
     <% plan_tutor = Tutor.find(plan.tutor_id) %>
       <tr>
         <td><%= plan.serial.round(2) %></td>
-        <td><%= plan_tutor.title %></td>
+        <td><%= link_to plan_tutor.title, tutor_path(plan_tutor), class: "btn-link" %></td>
         <td>
-	  <%= link_to "进入辅导", tutor_path(plan_tutor), class: "btn btn-xs btn-success" %>
           <% if current_user.id == plan.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_plan_path(plan), :class => 'btn btn-default btn-xs' %>
@@ -27,7 +27,7 @@
                       plan_path(plan),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-		      :class => 'btn btn-xs btn-danger' %>
+		      :class => 'btn btn-xs btn-default' %>
 	  <% end %>
         </td>
       </tr>
@@ -39,7 +39,6 @@
 <%= link_to "为这个教学计划添加一个辅导", new_plan_path, :class => 'btn btn-primary' %>
 <% end %>
 <%= link_to "查看其他教学", teachings_path, class: "btn btn-default" %>
-<%= link_to "返回课文", lesson_path(@lesson), class: "btn btn-default" %>
 
 <% else %>
 
@@ -85,5 +84,3 @@
             new_plan_path,
 	    :class => 'btn btn-primary' %>
 <% end %>
-<hr>
-<hr>

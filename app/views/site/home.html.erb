@@ -1,6 +1,7 @@
+<div class="jumbotron">
 <div class="row">
   <div class="col-md-6" >
-<h3>你还在这样子学习吗？</h3>
+<h4>你还在这样子学习吗？</h4>
 <ul style="font-size: 18px; line-height: 34px;">
 <li>花一段沉沉欲睡的时间</li>
 <li>在一个冷漠昏暗的教室</li>
@@ -12,12 +13,23 @@
 <div class="col-md-6">
   <h2>来<strong>学学半</strong>吧！</h2>
   <hr>
-    <h3>在这里，找到学习的自由和快乐！</h3>
+  <h3>在这里，</h3>
+  <h3>找到学习的自由和快乐！</h3>
   <hr>
-  <%= link_to "上教学楼和朋友一起听课", classrooms_url, html_options= {class: "btn btn-lg btn-success"} %>
-    <p>也可以，</p>
-    <%= link_to "去图书馆寻找心动的课本", textbooks_url, html_options= {class: "btn btn-lg btn-success"} %>
-    <p>还可以，</p>
-    <%= link_to "到教导处帮老师改卷", me_justify_path, html_options= {class: "btn btn-lg btn-info"} %>
+  </div>
+</div>
+</div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-3">
+  <%= link_to "上教学楼听课", classrooms_url, html_options= {class: "btn btn-lg btn-info"} %>
+    </div>
+    <div class="col-md-3">
+    <%= link_to "去图书馆找书", textbooks_url, html_options= {class: "btn btn-lg btn-info"} %>
+    </div>
+    <div class="col-md-3">
+    <%= link_to "到教导处改卷", me_justify_path, html_options= {class: "btn btn-lg btn-info"} %>
+    </div>
   </div>
 </div>

@@ -47,10 +47,7 @@
 <% else %>
 
 <%- model_class = Member -%>
-<% if current_user.id == @classroom.user_id %>
-<%= link_to "添加学生", new_member_path, :class => 'btn btn-primary' %>
-<% end %>
-<%= link_to "返回班级", classroom_path(@classroom), :class => 'btn btn-default' %>
+<%= link_to "返回班级", classroom_path(@classroom), :class => 'btn btn-default pull-right' %>
 <div class="page-header">
   <h3><%= @classroom.name %> 的所有成员：</h3>
 </div>
@@ -77,12 +74,36 @@
                       member_path(member),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %>
+                      :class => 'btn btn-xs btn-default' %>
           <% end %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<% if current_user.id == @classroom.user_id %>
+<%= link_to "添加学生", new_member_path, :class => 'btn btn-default' %>
+<button class="btn btn-default" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+  批量添加成员
+</button>
+<div class="collapse" id="collapseExample">
+  <div class="well">
+    <p>注意：</p>
+    <ul>
+      <li>这里添加的学生成员都将是新建的用户。如果用户已经存在，请点击上面的“添加学生”，按提示进行添加。</li>
+      <li>上传的文件必须是CVS文件，包含“序号”、“姓名”和“电子邮箱”三列。</li>
+      <li>CVS文件是一种用逗号隔开数据的文本文件，这种文件也可使用Excel等程序通过“另存为”功能自动生成。
+      <li>提交成功，则初始密码为123456789。</li>
+    </ul>
+    <%= form_tag "/members/create_members_in_batch", multipart: true, class: 'form-inline' do %>
+      <div class="control-group">
+      <%= file_field_tag "csv_file", accept: "text/csv", class: 'form-control' %>
+      <%= submit_tag "上传文件", class: 'btn btn-info form-control' %>
+    </div>
+    <% end %>
+  </div>
+</div>
+<% end %>
 
 <% end %>

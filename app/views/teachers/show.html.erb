@@ -29,7 +29,7 @@
 
 <%- model_class = Teacher -%>
 
-<%= link_to "返回教室", classroom_path(@teacher.classroom), class: "btn btn-default" %>
+<%= link_to "返回教室", classroom_path(@teacher.classroom), class: "btn btn-default pull-right" %>
 <%= link_to "查看教师团队", teachers_path, :class => 'btn btn-default'  %>
 <% if current_user == @teacher.user_id %>
   <%= link_to t('.edit', :default => t("helpers.links.edit")),
@@ -53,5 +53,7 @@
   <%= link_to "布置作业", new_homework_path, class: 'btn btn-default' %>
 <% end %>
 <%= link_to "查看作业", homeworks_path, class: 'btn btn-default' %>
+<%= link_to "添加课堂教学", new_discussion_url, class: "btn btn-default" %>
+<%= link_to "不良记录管理", badrecords_url, class: 'btn btn-default' %>
 
 <% end %>

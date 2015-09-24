@@ -72,6 +72,13 @@
   <% end %>
 
   <div class="control-group">
+    <%= f.label "这本书在书架上的序号", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :serial, :class => 'form-control' %>
+    </div>
+    <%= error_span(@textbook[:serial]) %>
+  </div>
+  <div class="control-group">
     <%= f.label "教科书的名称", :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :title, :class => 'form-control' %>
@@ -84,13 +91,6 @@
       <%= f.text_field :description, :class => 'form-control' %>
     </div>
     <%= error_span(@textbook[:description]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label "这本书在书架上的序号", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :serial, :class => 'form-control' %>
-    </div>
-    <%= error_span(@textbook[:serial]) %>
   </div>
 
   <hr>

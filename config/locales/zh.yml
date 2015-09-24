@@ -1,5 +1,61 @@
 ---
 zh-CN:
+  activerecord:
+    models:
+      badrecord: "不良记录"
+      cadre: "班干"
+      catalog: "目录"
+      classroom: "班级"
+      complaint: "建议"
+      discussion: "课堂"
+      evaluation: "评估"
+      exercise: "练习"
+      homework: "作业"
+      justice: "评价"
+      lesson: "课文"
+      member: "成员"
+      observation: "观测"
+      plan: "教案"
+      practice: "练习"
+      subject: "科目"
+      teacher: "教师"
+      teaching: "教法"
+      textbook: "课本"
+      tutor: "辅导"
+      user: "用户"
+    attributes:
+      badrecord:
+        id: "序号"
+        user_id: "管理员"
+        troublemaker: "肇事者"
+        classroom_id: "班级"
+        troubletime: "违规时间"
+        subject_id: "科目"
+        description: "描述"
+        finish: "是否完成"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      cadre:
+      catalog:
+      classroom:
+      complaint:
+      discussion:
+      evaluation:
+      exercise:
+      homework:
+      justice:
+      lesson:
+      member:
+      observation:
+      plan:
+      practice:
+      subject:
+      teacher:
+      teaching:
+      textbook:
+      tutor:
+      user:
   date:
     abbr_day_names:
     - 周日
@@ -152,11 +208,11 @@ zh-CN:
         display_entries: "显示 %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b>  共计 <b>%{total}</b>"
     actions: "可执行的操作"
     links:
-      back: "返回列表"
+      back: "列表"
       cancel: "取消"
-      confirm: "你确定吗？"
+      confirm: "你确定要删除？"
       destroy: "删除"
-      new: "新建"
+      new: "新添"
       edit: "修改"
       show: "详情"
     titles:

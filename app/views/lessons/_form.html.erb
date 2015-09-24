@@ -18,7 +18,7 @@
   <div class="control-group">
     <%= f.label "标题", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :title, :class => 'form-control' %>
+      <%= f.text_field :title, :class => 'form-control', tabindex: 11 %>
     </div>
     <%= error_span(@lesson[:title]) %>
   </div>
@@ -32,7 +32,7 @@
       <%= image_tag @lesson.picture.url, size: "300x300" %>
       <div class="caption">
 	<p>
-          <%= link_to "删除图片", lesson_delete_picture_path(@lesson), class: "btn btn-default" %>
+          <%= link_to "删除图片", lesson_delete_picture_path(@lesson), class: "btn btn-default", tabindex: 12 %>
 	</p>
       </div>
     </div>
@@ -43,7 +43,7 @@
   <div class="control-group">
     <%= f.label "图片", :class => 'control-label' %>
     <div class="controls">
-      <%= f.file_field :picture, :class => 'form-control' %>
+      <%= f.file_field :picture, :class => 'form-control', tabindex: 13 %>
     </div>
     <%= error_span(@lesson[:picture]) %>
   </div>
@@ -51,7 +51,7 @@
   <div class="control-group">
     <%= f.label "内容", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :content, :class => 'form-control', rows: "30" %>
+      <%= f.text_area :content, :class => 'form-control', rows: "30", tabindex: 14 %>
     </div>
     <%= error_span(@lesson[:content]) %>
   </div>
@@ -67,8 +67,8 @@
 <% end %>
 
 <hr>
-  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= f.submit nil, :class => 'btn btn-primary', tabindex: 51 %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            lessons_path, :class => 'btn btn-default' %>
+            lessons_path, :class => 'btn btn-default', tabindex: 52 %>
 
 <% end %>

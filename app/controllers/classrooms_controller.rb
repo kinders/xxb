@@ -19,6 +19,7 @@ class ClassroomsController < ApplicationController
     session[:classroom_id] = @classroom.id
     @member = @classroom.members.find_by(student: current_user.id)
     @teacher = @classroom.teachers.find_by(mentor: current_user.id)
+    @cadre = @classroom.cadres.find_by(member_id: @member.id) if @member
     #unless current_user.has_role? :admin
       #respond_to do |format|
         #format.html { redirect_to members_path }

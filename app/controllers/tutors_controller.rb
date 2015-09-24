@@ -26,6 +26,8 @@ class TutorsController < ApplicationController
     session[:tutor_id] = @tutor.id
     @lesson = Lesson.find_by(id: session[:lesson_id])
     @practice = Practice.find_by(tutor_id: @tutor.id)
+    @exercises = Exercise.where(tutor_id: @tutor.id)
+    # 设置教学环境
     if session[:teaching_id]
       teaching_id = session[:teaching_id]
       @plans = Plan.where(teaching_id: teaching_id).order("serial")
@@ -34,16 +36,32 @@ class TutorsController < ApplicationController
       @tutors_in_plans.each_with_index do | tutor, index |
         if tutor == @tutor.id
           if index - 1 < 0
-	    @previous_tutor = nil  
-	  else
-	    @previous_tutor = @tutors_in_plans[index - 1] 
-	  end
-	  if index + 1 == @tutors_in_plans.length
-	    @next_tutor = nil
-	  else
-	    @next_tutor = @tutors_in_plans[index + 1]
-	  end
+	          @previous_tutor = nil  
+	        else
+	          @previous_tutor = @tutors_in_plans[index - 1] 
+	        end
+	        if index + 1 == @tutors_in_plans.length
+	          @next_tutor = nil
+	        else
+	          @next_tutor = @tutors_in_plans[index + 1]
+	        end
         end
+      end
+    else
+      @tutors = Tutor.where(lesson_id: session[:lesson_id]).order('difficulty')
+      @tutors.each_with_index do | tutor, index |
+        if tutor.id == @tutor.id
+          if index - 1 < 0
+	          @previous_tutor = nil  
+	        else
+	          @previous_tutor = @tutors[index - 1] 
+	        end
+	        if index + 1 == @tutors.length
+	          @next_tutor = nil
+	        else
+	          @next_tutor = @tutors[index + 1]
+	        end
+	      end
       end
     end
   end
@@ -63,6 +81,7 @@ class TutorsController < ApplicationController
     @tutor = Tutor.new(tutor_params)
     @tutor.user_id = current_user.id
     @tutor.lesson_id = session[:lesson_id]
+    @tutor.page_length = @tutor.page.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
 
     respond_to do |format|
       if @tutor.save
@@ -80,6 +99,7 @@ class TutorsController < ApplicationController
   def update
     respond_to do |format|
       if @tutor.update(tutor_params)
+        @tutor.page_length = @tutor.page.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
         format.html { redirect_to @tutor, notice: "Tutor“#{@tutor.title}”已经更新成功" }
         format.json { render :show, status: :ok, location: @tutor }
       else
@@ -127,6 +147,6 @@ class TutorsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def tutor_params
-      params.require(:tutor).permit(:lesson_id, :title, :difficulty, :page, :user_id, :picture1, :picture2)
+      params.require(:tutor).permit(:lesson_id, :title, :difficulty, :page, :user_id, :picture1, :picture2, :proviso)
     end
 end

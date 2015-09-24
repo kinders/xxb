@@ -8,6 +8,7 @@
 <table class="table table-striped">
   <thead>
     <tr>
+      <th>序号</th>
       <th>标题</th>
       <th>问题</th>
       <th>回答</th>
@@ -17,17 +18,18 @@
   <tbody>
     <% @unjustified_evaluations.each do |evaluation| %>
       <tr>
+        <td><%= evaluation.id %></td>
         <td><%= evaluation.title %></td>
         <td><%= evaluation.question %></td>
         <td><%= evaluation.your_answer %></td>
-        <td><%= link_to "我来评卷", evaluation_path(evaluation), class: "btn btn-xs btn-primary" %></td>
+        <td><%= link_to "我来评卷", new_justice_path(evaluation_id: evaluation.id), class: "btn btn-xs btn-primary" %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
+<% if @evaluations.any? %>
 <hr>
-<hr>
-  <h4>已评答卷</h4>
+<h4>他人已评答卷</h4>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -43,9 +45,9 @@
         <td><%= evaluation.title %></td>
         <td><%= evaluation.question %></td>
         <td><%= evaluation.your_answer %></td>
-        <td><%= link_to "我接着来评卷", evaluation_path(evaluation), class: "btn btn-xs btn-success" %></td>
+        <td><%= link_to "接着来评卷", evaluation_path(evaluation), class: "btn btn-xs btn-success" %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
-<hr>
+<% end %>

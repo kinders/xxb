@@ -1,5 +1,6 @@
 <%- model_class = Evaluation -%>
 <% if current_user.has_role? :admin %>
+
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
@@ -11,6 +12,7 @@
       <th><%= model_class.human_attribute_name(:tutor_id) %></th>
       <th><%= model_class.human_attribute_name(:practice_id) %></th>
       <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:material) %></th>
       <th><%= model_class.human_attribute_name(:question) %></th>
       <th><%= model_class.human_attribute_name(:answer) %></th>
       <th><%= model_class.human_attribute_name(:your_answer) %></th>
@@ -28,6 +30,7 @@
         <td><%= evaluation.tutor_id %></td>
         <td><%= evaluation.practice_id %></td>
         <td><%= evaluation.title %></td>
+        <td><%= evaluation.material %></td>
         <td><%= evaluation.question %></td>
         <td><%= evaluation.answer %></td>
         <td><%= evaluation.your_answer %></td>
@@ -54,6 +57,9 @@
 
 <% else %>
 
+<% if @lesson %>
+  <%= link_to "返回课文", lesson_path(@lesson), class: "btn btn-default pull-right" %>
+<% end %>
 <div class="page-header">
   <h3>我最近做过的题目</h3>
 </div>
@@ -61,6 +67,7 @@
   <thead>
     <tr>
       <th>标题</th>
+      <th>材料</th>
       <th>问题</th>
       <th>我的回答</th>
       <th>我的得分</th>
@@ -72,6 +79,7 @@
     <% @evaluations.each do |evaluation| %>
       <tr>
         <td><%= evaluation.title %></td>
+        <td><%= evaluation.material %></td>
         <td><%= evaluation.question %></td>
         <td><%= evaluation.your_answer %></td>
 	<% evaluation_score = Justice.where(evaluation_id: evaluation.id).average(:score) %>

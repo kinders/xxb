@@ -9,6 +9,7 @@ class EvaluationsController < ApplicationController
     if current_user.has_role? :admin
       @evaluations = Evaluation.all
     else
+      @lesson = Lesson.find(session[:lesson_id]) if session[:lesson_id]
       @evaluations = Evaluation.where(user_id: current_user.id).order(updated_at: :desc)
     end
 
@@ -25,38 +26,63 @@ class EvaluationsController < ApplicationController
   def new
     if current_user.has_role? :admin  # 管理员
       @evaluation = Evaluation.new
-    else
-      if session[:redo_practice]      # 重做
-        @tutor = Tutor.find(session[:tutor_id])
+    else   # 普通用户
+      @lesson = Lesson.find(session[:lesson_id])
+      if params[:practice_id]
+        @practice = Practice.find(params[:practice_id])
+        session[:practice_id] = @practice.id
+        @evaluation = Evaluation.new { |e|
+          e.title = @practice.title
+          e.material = @practice.material
+          e.question = @practice.question
+          e.practice_score = @practice.score
+        }
+        if Evaluation.find_by(practice_id: @practice.id)
+          flash[:notice] = "旧题重做"
+        end
+      elsif session[:redo_practice]      ## 重做
+      # if session[:redo_practice]      ## 重做
+        @tutor = Tutor.find(session[:tutor_id]) if session[:tutor_id]
         @practice = Practice.find(session[:practice_id])
-        @evaluation = Evaluation.new
-        @evaluation.title = @practice.title
-        @evaluation.question = @practice.question
-        @evaluation.practice_score = @practice.score
+        session[:practice_id] = @practice.id
+        @evaluation = Evaluation.new { |e|
+          e.title = @practice.title
+          e.material = @practice.material
+          e.question = @practice.question
+          e.practice_score = @practice.score
+        }
         session[:redo_practice] = nil
         flash[:notice] = "旧题重做"
-      else                               # 正常
-        @tutor = Tutor.find(session[:tutor_id])
-        # 随机取出未完全答对的练习题
+      else                               ## 正常
+        @tutor = Tutor.find(session[:tutor_id]) if session[:tutor_id]
+        ### 随机取出未完全答对的练习题
         @use_practices = []
-        @practices = Practice.where(tutor_id: session[:tutor_id])
+        #### 判断是课文练习还是辅导练习，决定题目集合
+        if session[:tutor_id]
+          @practices = Practice.where(tutor_id: session[:tutor_id])
+        else
+          @practices = Practice.where(lesson_id: session[:lesson_id])
+        end
+        #### 抽出没有做过的题目
         @practices.each { | p |
           unless Evaluation.find_by(practice_id: p.id, user_id: current_user.id)
              @use_practices << p
           end
         }
         @practice = @use_practices.sample
-        # 根据取题情况进行页面的渲染
+        ### 根据取题情况进行页面的渲染
         if @practice
           session[:practice_id] = @practice.id
-          @evaluation = Evaluation.new
-          @evaluation.title = @practice.title
-          @evaluation.question = @practice.question
-          @evaluation.practice_score = @practice.score
-        else                               # 如果没有取出题目
+          @evaluation = Evaluation.new { |e|
+            e.title = @practice.title
+            e.material = @practice.material
+            e.question = @practice.question
+            e.practice_score = @practice.score
+          }
+        else              ### 如果没有取出题目
           respond_to do |format|
-            format.html { redirect_to tutor_path(@tutor), notice: "暂时没有可用的练习了。"}
-	  end
+            format.html { redirect_to :back, notice: "暂时没有可用的练习了。"}
+	        end
         end
       end
     end
@@ -64,16 +90,18 @@ class EvaluationsController < ApplicationController
 
   # GET /evaluations/1/edit
   def edit
-    # 如果答卷还没有评分，允许重做。如果已经评分，则新建评估
     unless current_user.has_role? :admin
-       @justice = Justice.find_by(evaluation: @evaluation.id)
+      @practice = Practice.find(@evaluation.practice_id)
+      # 如果答卷还没有评分，允许重做。
+      # 如果已经评分，则新建评估
+      @justice = Justice.find_by(evaluation: @evaluation.id)
       if @justice
-	session[:practice_id] = @evaluation.practice_id
- 	session[:tutor_id] = @evaluation.tutor_id
+	      session[:practice_id] = @evaluation.practice_id
+ 	      session[:lesson_id] = @evaluation.lesson_id
         session[:redo_practice] = true
         respond_to do |format|
           format.html { redirect_to new_evaluation_path, notice: '重新做题' }
-	end
+	      end
       end
     end
   end
@@ -86,31 +114,28 @@ class EvaluationsController < ApplicationController
     else
       @practice = Practice.find(session[:practice_id])
       @evaluation = Evaluation.new(evaluation_params)
-      @evaluation.tutor_id = session[:tutor_id]
+      @evaluation.lesson_id = session[:lesson_id]
       @evaluation.user_id = current_user.id
       @evaluation.practice_id = @practice.id
       @evaluation.title = @practice.title
+      @evaluation.material = @practice.material
       @evaluation.question = @practice.question
       @evaluation.answer = @practice.answer
       @evaluation.practice_score = @practice.score
     end
     respond_to do |format|
       if @evaluation.save
-      if @practice.answer == @evaluation.your_answer   # 如果答对了
+        if @practice.answer == @evaluation.your_answer   # 如果答对了
           @justice = Justice.create!(
             user_id: 1,
             evaluation_user_id: @evaluation.user_id,
-             practice_id: @evaluation.practice_id,
-	    evaluation_id:  @evaluation.id,
-	    score: @practice.score,
+            practice_id: @evaluation.practice_id,
+	          evaluation_id:  @evaluation.id,
+	          score: @evaluation.practice_score,  # 得到满分
+	          p_score: @evaluation.practice_score,
             remark: "完全正确！",
-	    title: @practice.title,
-	    question: @practice.question,
-	    answer: @practice.answer,
-	    your_answer: @evaluation.your_answer,
-	    practice_score: @practice.score
-         )
-      end
+          )
+        end
         format.html { redirect_to @evaluation, notice: '答案提交成功' }
         format.json { render :show, status: :created, location: @evaluation }
       else
@@ -125,22 +150,18 @@ class EvaluationsController < ApplicationController
   def update
     respond_to do |format|
       if @evaluation.update(evaluation_params)
-    @practice = Practice.find(@evaluation.practice_id)
-    if @practice.answer == @evaluation.your_answer
-       @justice = Justice.create(
-         user_id: 1,
-         evaluation_user_id: @evaluation.user_id,
-         practice_id: @evaluation.practice_id,
-         evaluation_id: @evaluation.id,
-         score: @practice.score,
-         remark: "完全正确！",
-         title: @practice.title,
-         question: @practice.question,
-         answer: @practice.answer,
-         your_answer: @evaluation.your_answer,
-         practice_score: @practice.score
-       )
-    end
+        @practice = Practice.find(@evaluation.practice_id)
+        if @practice.answer == @evaluation.your_answer
+          @justice = Justice.create!(
+            user_id: 1,
+            evaluation_user_id: @evaluation.user_id,
+            practice_id: @evaluation.practice_id,
+	          evaluation_id:  @evaluation.id,
+	          score: @evaluation.practice_score,  # 得到满分
+	          p_score: @evaluation.practice_score,
+            remark: "完全正确！",
+          )
+        end
         format.html { redirect_to @evaluation, notice: "答案更新成功" }
         format.json { render :show, status: :ok, location: @evaluation }
       else
@@ -178,6 +199,6 @@ class EvaluationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def evaluation_params
-      params.require(:evaluation).permit(:user_id, :tutor_id, :practice_id, :title, :question, :answer, :your_answer, :score, :practice_score, :picture_ya)
+      params.require(:evaluation).permit(:user_id, :lesson_id, :practice_id, :title, :material, :question, :answer, :your_answer, :score, :practice_score, :picture_ya)
     end
 end

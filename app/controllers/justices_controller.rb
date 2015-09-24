@@ -23,32 +23,34 @@ class JusticesController < ApplicationController
     if current_user.has_role? :admin
       @justice = Justice.new
     else
-      @evaluation = Evaluation.find(session[:evaluation_id])
+      if params[:evaluation_id]
+      evaluation_id = session[:evaluation_id] = params[:evaluation_id] 
+      else
+      evaluation_id = session[:evaluation_id] 
+      end
+      @evaluation = Evaluation.find(evaluation_id)
       old_justice = Justice.find_by(evaluation_id: @evaluation.id)
       #  禁止评点自己的答卷
       if @evaluation.user_id == current_user.id
-	respond_to do |format|
-	  format.html{ redirect_to evaluation_path(@evaluation), notice: "这是自己的答卷，应请其他用户评分"}
-	end
+	      respond_to do |format|
+	        format.html{ redirect_to evaluation_path(@evaluation), notice: "这是自己的答卷，应请其他用户评分"}
+	      end
+      # 禁止更改系统评分
       elsif old_justice && old_justice.user_id == 1 
-	  respond_to do |format|
-	    format.html{ redirect_to evaluation_path(@evaluation), notice: "该答卷符合标准答案，不能更改评分"}
-	  end
+	      respond_to do |format|
+	        format.html{ redirect_to evaluation_path(@evaluation), notice: "该答卷符合标准答案，不能更改评分"}
+	      end
       else
-        #  如果评过该答卷，则跳转到"编辑"页面中
+        ##  如果评过该答卷，则跳转到"编辑"页面中
         @justice = Justice.find_by(evaluation_id: @evaluation.id, user_id: current_user.id)
         if @justice
-	  respond_to do |format|
-	    format.html{ redirect_to edit_justice_path(@justice.id), notice: "该答卷已经评过，您可以更改之前的评价"}
-	  end
+	        respond_to do |format|
+	          format.html{ redirect_to edit_justice_path(@justice.id), notice: "该答卷已经评过，您可以更改之前的评价"}
+	        end
         else
           @justice = Justice.new
-          @justice.title = @evaluation.title
-          @justice.question = @evaluation.question
-          @justice.answer = @evaluation.answer
-          @justice.your_answer = @evaluation.your_answer
-          @justice.practice_score = @evaluation.practice_score
           @justice.practice_id = @evaluation.practice_id
+          @justice.p_score = @evaluation.practice_score
         end
       end
     end
@@ -56,6 +58,9 @@ class JusticesController < ApplicationController
 
   # GET /justices/1/edit
   def edit
+    unless current_user.has_role? :admin
+      @evaluation = Evaluation.find(@justice.evaluation_id)
+    end
   end
 
   # POST /justices
@@ -67,12 +72,8 @@ class JusticesController < ApplicationController
       @evaluation = Evaluation.find(session[:evaluation_id])
       @justice.evaluation_id = @evaluation.id
       @justice.evaluation_user_id = @evaluation.user_id
-      @justice.title = @evaluation.title
-      @justice.question = @evaluation.question
-      @justice.answer = @evaluation.answer
-      @justice.your_answer = @evaluation.your_answer
-      @justice.practice_score = @evaluation.practice_score
       @justice.practice_id = @evaluation.practice_id
+      @justice.p_score = @evaluation.practice_score
     end
     respond_to do |format|
       if @justice.save
@@ -88,9 +89,6 @@ class JusticesController < ApplicationController
   # PATCH/PUT /justices/1
   # PATCH/PUT /justices/1.json
   def update
-    unless current_user.has_role? :admin
-      @evaluation = Evaluation.find(@justice.evaluation_id)
-    end
     respond_to do |format|
       if @justice.update(justice_params)
         format.html { redirect_to @justice, notice: '评分已经更新' }
@@ -120,6 +118,6 @@ class JusticesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def justice_params
-      params.require(:justice).permit(:score, :remark, :activity, :user_id, :evaluation_id, :title, :question, :answer, :your_answer, :practice_score, :evaluation_user_id, :practice_id)
+      params.require(:justice).permit(:score, :p_score, :remark, :activity, :user_id, :evaluation_id, :evaluation_user_id, :practice_id)
     end
 end

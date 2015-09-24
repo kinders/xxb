@@ -1,6 +1,16 @@
 Rails.application.routes.draw do
 
 
+  get 'download_csv', to: "badrecords#download_csv"
+  resources :badrecords do
+    # get 'finish_badrecord', to: 'badrecords#finish_badrecord'
+    get 'finish_badrecord'
+  end
+
+  resources :cadres
+
+  resources :exercises
+
   resources :subjects
 
   resources :teachers
@@ -17,6 +27,7 @@ Rails.application.routes.draw do
   end
 
   resources :members
+  post '/members/create_members_in_batch', to: 'members#create_members_in_batch'
 
   resources :classrooms
 

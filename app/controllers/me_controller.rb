@@ -49,15 +49,19 @@ class MeController < ApplicationController
   end
   
   def justify
-    # 显示其他人的的答卷，分为未评分和已评分两类。
+    # 显示所有其他人的的答卷
     @all_evaluations = Evaluation.where.not(user_id:  current_user.id).order(updated_at: :desc)
+    # 分为未评分和别人已评分两类。
     @evaluations = []
     @unjustified_evaluations = []
     @all_evaluations.each { |evaluation|
-      if Justice.find_by(evaluation_id: evaluation.id) 
-        unless Justice.find_by(user_id: 1, evaluation_id: evaluation.id)
-          @evaluations << evaluation
-	end
+      justice = Justice.find_by(evaluation_id: evaluation.id) 
+      if justice 
+        if justice.user_id != 1 
+          if justice.user_id != current_user.id
+            @evaluations << evaluation
+          end
+	      end
       else
         @unjustified_evaluations << evaluation
       end

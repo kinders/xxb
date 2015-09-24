@@ -18,18 +18,16 @@
   <div class="control-group">
     <%= f.label "标题", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :title, :class => 'form-control' %>
+      <%= f.text_field :title, :class => 'form-control', tabindex: 1 %>
     </div>
     <%= error_span(@tutor[:title]) %>
   </div>
-
-  <p></p>
 
 <div class="row">
   <% if @tutor.picture1_file_name %>
   <div class="col-sm-6 col-md-6">
     <div class="thumbnail">
-      <%= image_tag @tutor.picture1.url, size: "300x300" %>
+      <%= image_tag @tutor.picture1.url, size: "300x300", tabindex: 2 %>
       <div class="caption">
 	<p>
           <%= link_to "删除图片一", tutor_delete_picture1_path(@tutor), class: "btn btn-default" %>
@@ -41,7 +39,7 @@
   <% if @tutor.picture2_file_name %>
   <div class="col-sm-6 col-md-6">
     <div class="thumbnail">
-      <%= image_tag @tutor.picture2.url, size: "300x300" %>
+      <%= image_tag @tutor.picture2.url, size: "300x300", tabindex: 3 %>
       <div class="caption">
 	<p>
           <%= link_to "删除图片二", tutor_delete_picture2_path(@tutor), class: "btn btn-default" %>
@@ -55,7 +53,7 @@
   <div class="control-group">
     <%= f.label "图片一", :class => 'control-label' %>
     <div class="controls">
-      <%= f.file_field :picture1, :class => 'form-control' %>
+      <%= f.file_field :picture1, :class => 'form-control', tabindex: 4 %>
     </div>
     <%= error_span(@tutor[:picture1]) %>
   </div>
@@ -64,7 +62,7 @@
   <div class="control-group">
     <%= f.label "图片二", :class => 'control-label' %>
     <div class="controls">
-      <%= f.file_field :picture2, :class => 'form-control' %>
+      <%= f.file_field :picture2, :class => 'form-control', tabindex: 5 %>
     </div>
     <%= error_span(@tutor[:picture2]) %>
   </div>
@@ -73,7 +71,7 @@
   <div class="control-group">
     <%= f.label "难度", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :difficulty, :class => 'form-control' %>
+      <%= f.text_field :difficulty, :class => 'form-control', tabindex: 6 %>
     </div>
     <%= error_span(@tutor[:difficulty]) %>
   </div>
@@ -81,10 +79,19 @@
   <div class="control-group">
     <%= f.label "页面", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :page, :class => 'form-control', rows: "30" %>
+      <%= f.text_area :page, :class => 'form-control', rows: "10", tabindex: 7 %>
     </div>
     <%= error_span(@tutor[:page]) %>
   </div>
+
+  <div class="control-group">
+    <%= f.label "提示", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :proviso, :class => 'form-control', rows: "1", tabindex: 8 %>
+    </div>
+    <%= error_span(@tutor[:proviso]) %>
+  </div>
+
 
   <% if current_user.has_role? :admin %>
 
@@ -107,9 +114,9 @@
 <% end %>
 
 <hr>
-  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= f.submit nil, :class => 'btn btn-primary', tabindex: 10 %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            tutors_path, :class => 'btn btn-default' %>
+            tutors_path, :class => 'btn btn-default', tabindex: 11 %>
 
 <% end %>
 <hr>

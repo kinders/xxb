@@ -1,5 +1,8 @@
 <%- model_class = Tutor -%>
 <% unless current_user.has_role? :admin %>
+<% if @lesson %>
+<%= link_to "返回《#{@lesson.title}》原文", lesson_path(@lesson), :class => 'btn btn-default pull-right' %>
+<% end %>
 <div class="page-header">
   <h3>所有辅导</h3>
 </div>
@@ -9,19 +12,21 @@
       <th>编号</th>
       <th>标题</th>
       <th>难度</th>
-      <th>创建者</th>
+      <th>长度</th>
+      <th>创建人</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% @tutors.each do |tutor| %>
       <tr>
-        <td><%= link_to tutor.id, tutor_path(tutor) %></td>
-        <td><%= tutor.title %></td>
+        <td><%= tutor.id %></td>
+        <td><%= link_to tutor.title, tutor_path(tutor), class: "btn-link" %></td>
         <td><%= tutor.difficulty %></td>
+        <td><%= tutor.page_length %></td>
         <td><%= tutor.user.name %></td>
         <td>
-          <%= link_to "进入", tutor_path(tutor), :class => 'btn btn-xs btn-success' %>
+          <%# link_to "进入", tutor_path(tutor), :class => 'btn btn-xs btn-success' %>
 	<% if current_user.id == tutor.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_tutor_path(tutor), :class => 'btn btn-default btn-xs' %>
@@ -40,9 +45,6 @@
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_tutor_path,
             :class => 'btn btn-primary' %>
-<% if @lesson %>
-<%= link_to "返回《#{@lesson.title}》原文", lesson_path(@lesson), :class => 'btn btn-default' %>
-<% end %>
 
 
 <% else %>
@@ -55,8 +57,10 @@
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:proviso) %></th>
       <th><%= model_class.human_attribute_name(:page) %></th>
       <th><%= model_class.human_attribute_name(:difficulty) %></th>
+      <th><%= model_class.human_attribute_name(:page_length) %></th>
       <th><%= model_class.human_attribute_name(:user_id) %></th>
       <th><%= model_class.human_attribute_name(:lesson_id) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
@@ -69,8 +73,10 @@
       <tr>
         <td><%= link_to tutor.id, tutor_path(tutor) %></td>
         <td><%= tutor.title %></td>
+        <td><%= tutor.proviso %></td>
         <td><%= tutor.page %></td>
         <td><%= tutor.difficulty %></td>
+        <td><%= tutor.page_length %></td>
         <td><%= tutor.user_id %></td>
         <td><%= tutor.lesson_id %></td>
         <td><%=l tutor.created_at %></td>

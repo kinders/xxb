@@ -16,12 +16,12 @@
     <% @textbooks.each do |textbook| %>
       <% textbook_user = User.find(textbook.user_id) %>
       <tr>
-        <td><%= textbook.serial %></td>
-        <td><%= textbook.title %></td>
+        <td><%= textbook.serial.round(2) %></td>
+        <td><%= link_to textbook.title, textbook_path(textbook), class: "btn-link" %></td>
         <td><%= textbook.description %></td>
         <td><%= textbook_user.name %></td>
         <td>
-          <%= link_to "翻翻这本书", textbook_path(textbook), class: "btn btn-xs btn-success" %>
+          <%# link_to "翻翻这本书", textbook_path(textbook), class: "btn btn-xs btn-success" %>
 	  <% if current_user.id == textbook_user.id  %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_textbook_path(textbook), :class => 'btn btn-default btn-xs' %>

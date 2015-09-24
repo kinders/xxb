@@ -11,6 +11,8 @@
   <dd><%= @tutor.user_id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:difficulty) %>:</strong></dt>
   <dd><%= @tutor.difficulty %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:proviso) %>:</strong></dt>
+  <dd><%= @tutor.proviso %></dd>
   <dt><strong><%= model_class.human_attribute_name(:page) %>:</strong></dt>
   <dd><%= @tutor.page %></dd>
 </dl>
@@ -28,63 +30,144 @@
 <% else %>
 
 <%- model_class = Tutor -%>
-<div role="tabpanel">
-
-  <!-- Nav tabs -->
-  <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#question" aria-controls="question" role="tab" data-toggle="tab">思考一下</a></li>
-    <li role="presentation"><a href="#answer" aria-controls="answer" role="tab" data-toggle="tab">查看辅导</a></li>
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="question">
-        <h1 style="font-size: 40px; line-height: 70px;"><%= @tutor.title %></h1>
-    </div>
-    <div role="tabpanel" class="tab-pane" id="answer">
-      <div class="page-header">
-        <h4><%= @tutor.title %></h4>
-      </div>
-      <% if @tutor.picture1_file_name %>
-        <%= image_tag @tutor.picture1.url, class: "img-responsive center-block"  %>
-      <% end %>
-      <% if @tutor.picture2_file_name %>
-        <%= image_tag @tutor.picture2.url, class: "img-responsive center-block"  %>
-      <% end %>
-      <hr>
-      <div class="paragraph"> <%= sanitize(@tutor.page) %> </div>
-    </div>
-      <hr>
-  </div>
-      <hr>
-</div>
-
-<% if @practice %>
-  <%= link_to "练习一下？", new_evaluation_path, class: 'btn btn-success' %>
-<%= link_to "查看练习", practices_path, class: 'btn btn-default' %>
-<% end %>
-<% unless session[:discussion_id] %>
-  <%= link_to "我来出题", new_practice_path, class: "btn btn-default" %>
-<% end %>
-  <hr>
 <% if @lesson %>
-<%= link_to "返回课文", lesson_path(@lesson), class: "btn btn-default" %>
-<% end %>
-<% if @previous_tutor != nil %>
-    <%= link_to "上一页辅导", tutor_path(@previous_tutor), class: 'btn btn-default' %>
+<%= link_to "返回课文", lesson_path(@lesson), class: "btn btn-default pull-right" %>
 <% end %>
 <% if @next_tutor != nil %>
-  <%= link_to "下一页辅导", tutor_path(@next_tutor), class: 'btn btn-default' %>
+  <%= link_to "下一页辅导", tutor_path(@next_tutor), class: 'btn btn-default pull-right' %>
+<% end %>
+<% if @previous_tutor != nil %>
+    <%= link_to "上一页辅导", tutor_path(@previous_tutor), class: 'btn btn-default pull-right' %>
+<% end %>
+<p><br></p>
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <div class="text-right"><%= @tutor.page_length %></div>
+      <h2>
+        <%= @tutor.title %>
+      </h2>
+      <% if @tutor.proviso && !@tutor.proviso.empty?%>
+        <div class="well well-sm paragraph"> <%= sanitize(@tutor.proviso) %> </div>
+      <% end %>
+      <% unless @tutor.page.blank? %>
+      <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="bg-success center-block">
+        <p class="text-center">...</p>
+      </a>
+      <% end %>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <% if @tutor.picture1_file_name %>
+          <%= image_tag @tutor.picture1.url, class: "img-responsive center-block"  %>
+        <hr>
+        <% end %>
+        <% if @tutor.picture2_file_name %>
+          <%= image_tag @tutor.picture2.url, class: "img-responsive center-block"  %>
+        <hr>
+        <% end %>
+        <div class="paragraph"> <%= sanitize(@tutor.page) %> </div>
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="bg-success center-block">
+          <p class="text-center">...</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%#<div role="tabpanel">%>
+  <%#[> Nav tabs <]%>
+  <%#<ul class="nav nav-tabs" role="tablist">%>
+    <%#<li role="presentation" class="active"><a href="#question" aria-controls="question" role="tab" data-toggle="tab">思考一下</a></li>%>
+    <%#<li role="presentation"><a href="#answer" aria-controls="answer" role="tab" data-toggle="tab">查看辅导</a></li>%>
+  <%#</ul>%>
+  <%#[> Tab panes <]%>
+  <%#<div class="tab-content">%>
+    <%#<div role="tabpanel" class="tab-pane active" id="question">%>
+      <%#<h1 style="font-size: 32px; line-height: 60px;">%>
+        <%#<%= @tutor.title %>
+      <%#</h1>%>
+      <%# if @tutor.proviso && !@tutor.proviso.empty?%>
+        <%#<div class="well paragraph">%>
+          <%# sanitize(@tutor.proviso) %>
+       <%#</div>%>
+      <%# end %>
+    <%#</div>%>
+    <%#<div role="tabpanel" class="tab-pane" id="answer">%>
+      <%#<div class="page-header">%>
+        <%#<h4>%>
+          <%# @tutor.title %>
+        <%#</h4>%>
+      <%#</div>%>
+      <%# if @tutor.proviso && !@tutor.proviso.empty?%>
+        <%#<div class="well paragraph">%>
+          <%# sanitize(@tutor.proviso) %>
+       <%#</div>%>
+      <%# end %>
+      <%# if @tutor.picture1_file_name %>
+        <%# image_tag @tutor.picture1.url, class: "img-responsive center-block"  %>
+      <%# end %>
+      <%# if @tutor.picture2_file_name %>
+        <%# image_tag @tutor.picture2.url, class: "img-responsive center-block"  %>
+      <%# end %>
+      <%#<hr>%>
+      <%#<div class="paragraph">%>
+        <%# sanitize(@tutor.page) %>
+      <%#</div>%>
+    <%#</div>%>
+  <%#</div>%>
+  <%#<hr>%>
+<%#</div> [> tabpanel <]%>
+
+<!-- 下面是配套练习的内容 -->
+<% if @exercises.any? %>
+<table class="table">
+  <thead>
+    <th>序号</th>
+    <th>标题</th>
+    <th>问题</th>
+    <th>可执行的操作</th>
+    </thead>
+  <tbody>
+    <% @exercises.each do |exercise| %>
+      <tr>
+        <td><%= exercise.serial %></td>
+        <td><%= exercise.practice.title %></td>
+        <td><%= link_to exercise.practice.question, new_evaluation_path(practice_id: exercise.practice_id), class: 'btn-link' %></td>
+        <td>
+          <% if exercise.user_id == current_user.id %>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_exercise_path(exercise), :class => 'btn btn-default btn-xs' %>
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+               exercise_path(exercise),
+               :method => :delete,
+               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+               :class => 'btn btn-xs btn-danger' %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody> 
+</table>
+<% end %>
+
+<% if @practice %>
+  <%= link_to "练习一下？", new_evaluation_path, class: 'btn btn-success pull-right' %>
+  <%= link_to "查看练习", practices_path, class: 'btn btn-default pull-right' %>
+<% end %>
+<% unless session[:discussion_id] %>
+  <%= link_to "添加练习", new_exercise_path, class: "btn btn-default pull-right" %>
+  <%= link_to "我来出题", new_practice_path, class: "btn btn-default pull-right" %>
 <% end %>
 
 <% if session[:teaching_id] %>
   <%= link_to "查看辅导的安排", plans_path, class: "btn btn-default" %>
 <% end %>
-<hr>
 <% if current_user.id == @tutor.user_id %>	    
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_tutor_path,
-	    :class => 'btn btn-primary' %>
+	    :class => 'btn btn-primary', tabindex: 1 %>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               tutors_path, :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
@@ -95,8 +178,8 @@
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-default' %>
 <% end %>
-<hr>
 <% if @other_tutors.length >= 1 %>
+<hr>
 <p>其他《<%= @tutor.title %>》页面：
 <table class="table table-striped">
   <thead>
@@ -113,7 +196,7 @@
         <td><%= tutor.user.name %></td>
         <td>
 	  <% unless tutor.id == @tutor.id %>
-          <%= link_to "进入辅导页面", tutor_path(tutor), :class => 'btn btn-xs btn-success' %>
+          <%= link_to "进入辅导页面", tutor_path(tutor), :class => 'btn btn-xs btn-default' %>
 	<% if current_user.id == tutor.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_tutor_path(tutor), :class => 'btn btn-default btn-xs' %>

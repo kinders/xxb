@@ -1,36 +1,55 @@
 <%- model_class = Practice -%>
 
 <% unless current_user.has_role? :admin %>
-
-<div class="page-header">
-  <h3>《<%= @lesson.title %>》的“<%= @tutor.title %>”的所有练习</h3>
-</div>
+  <% if @tutor %>
+    <%= link_to "返回课文", lesson_path(@lesson), class: "btn btn-default pull-right" %>
+    <%= link_to "返回辅导", tutor_path(@tutor), class: "btn btn-default pull-right" %>
+    <div class="page-header">
+      <h3>《<%= @lesson.title %>》“<%= @tutor.title %>”一节的所有练习</h3>
+    </div>
+  <% else %>
+    <%= link_to "返回课文", lesson_path(@lesson), class: "btn btn-default pull-right" %>
+    <div class="page-header">
+      <h3>《<%= @lesson.title %>》一课的所有练习</h3>
+    </div>
+  <% end %>
 <table class="table table-striped">
   <thead>
     <tr>
       <th>标题</th>
+      <th>材料</th>
       <th>问题</th>
       <th>分值</th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      <th>标签</th>
+      <th colspan="2"><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% @practices.each do |practice| %>
       <tr>
         <td><%= practice.title %></td>
-        <td><%= practice.question %></td>
+        <td><%= practice.material %></td>
+        <td><%= link_to practice.question, practice_path(practice), class: "btn-xs btn-link" %></td>
         <td><%= practice.score %></td>
+        <td><%= practice.labelname %></td>
         <td>
-<% if current_user.id == practice.user_id %>
-	  <%= link_to "查看", practice_path(practice), class: "btn btn-xs btn-default" %>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_practice_path(practice), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      practice_path(practice),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %>
-<% end %>
+          <% if e = Evaluation.find_by(practice_id: practice.id, user_id: current_user.id) %>
+            <%= link_to "重做", edit_evaluation_path(e), class: "btn btn-default" %>
+          <% else %>
+            <%= link_to "练习", new_evaluation_path(practice_id: practice), class: "btn btn-default" %>
+         <% end %>
+        </td>
+        <td>
+          <% if current_user.id == practice.user_id %>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")), 
+              edit_practice_path(practice), 
+              :class => 'btn btn-default btn-xs' %>
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")), 
+              practice_path(practice), 
+              :method => :delete, 
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, 
+              :class => 'btn btn-xs btn-default' %>
+          <% end %>
         </td>
       </tr>
     <% end %>
@@ -40,7 +59,6 @@
 <%= link_to t('.new', :default => t("helpers.links.new")),
             new_practice_path,
             :class => 'btn btn-primary' %>
-<%= link_to "返回辅导", tutor_path(@tutor), class: "btn btn-default" %>
 
 
 
@@ -54,9 +72,15 @@
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:material) %></th>
       <th><%= model_class.human_attribute_name(:question) %></th>
       <th><%= model_class.human_attribute_name(:answer) %></th>
       <th><%= model_class.human_attribute_name(:score) %></th>
+      <th><%= model_class.human_attribute_name(:labelname) %></th>
+      <th><%= model_class.human_attribute_name(:mean) %></th>
+      <th><%= model_class.human_attribute_name(:mode) %></th>
+      <th><%= model_class.human_attribute_name(:stdve) %></th>
+      <th><%= model_class.human_attribute_name(:difficulty) %></th>
       <th><%= model_class.human_attribute_name(:activate) %></th>
       <th><%= model_class.human_attribute_name(:user_id) %></th>
       <th><%= model_class.human_attribute_name(:lesson_id) %></th>
@@ -71,9 +95,15 @@
       <tr>
         <td><%= link_to practice.id, practice_path(practice) %></td>
         <td><%= practice.title %></td>
+        <td><%= practice.material %></td>
         <td><%= practice.question %></td>
         <td><%= practice.answer %></td>
         <td><%= practice.score %></td>
+        <td><%= practice.labelname %></td>
+        <td><%= practice.mean %></td>
+        <td><%= practice.mode %></td>
+        <td><%= practice.stdve %></td>
+        <td><%= practice.difficulty %></td>
         <td><%= practice.activate %></td>
         <td><%= practice.user_id %></td>
         <td><%= practice.lesson_id %></td>

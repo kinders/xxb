@@ -28,7 +28,7 @@
 <% else %>
 
 <%- model_class = Classroom -%>
-<%= link_to "返回教学楼", classrooms_path, :class => 'btn btn-default'  %>
+<%= link_to "返回教学楼", classrooms_path, :class => 'btn btn-default pull-right'  %>
 <% if current_user.id == @classroom.user_id %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_classroom_path(@classroom), :class => 'btn btn-default' %>
@@ -36,11 +36,14 @@
               classroom_path(@classroom),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
+              :class => 'btn btn-default' %>
 <% end %>
 <div class="page-header">
-  <h3><%= @classroom.name %></h3>
-<div>
+  <h3>
+    <%= @classroom.name %>
+  <small>
+  <strong>创建人:</strong>
+  <%= @classroom.user.name %>
   <strong>开班时间:</strong>
   <%= @classroom.created_at.strftime("%F") %>
   <strong>是否结束:</strong>
@@ -49,13 +52,12 @@
   <% else %>
     否
   <% end %>
-  <strong>创建人:</strong>
-  <%= @classroom.user.name %>
-</div>
+</small>
+  </h3>
 <br>
 <%= link_to "教师团队", teachers_url, class: "btn btn-xs btn-default" %>
-<%= link_to "学生花名册", members_url, class: "btn btn-xs btn-default" %>
-<%= link_to "班干团队", members_url, class: "btn btn-xs btn-default" %>
+<%= link_to "学生团队", members_url, class: "btn btn-xs btn-default" %>
+<%= link_to "班干团队", cadres_url, class: "btn btn-xs btn-default" %>
 </div>
   <div class="well"> 
   <% if @classroom.members.find_by(student: current_user.id) %>
@@ -68,12 +70,15 @@
   </div>
 <div>
   <% if @member %>
-    <%= link_to "进入课桌", member_path(@member), class: "btn btn-default" %>
+    <%= link_to "我的作业", member_path(@member), class: "btn btn-default" %>
   <% elsif @teacher %>
-    <%= link_to "进入办公桌，开始工作", teacher_path(@teacher), class: "btn btn-default" %>
+    <%= link_to "开始办公", teacher_path(@teacher), class: "btn btn-default" %>
   <% else %>
   <% end %>
-<%= link_to "集体学习", discussions_url, class: "btn btn-default" %>
+  <% if @cadre %>
+    <%= link_to "班级管理", cadre_path(@cadre), class: "btn btn-default" %>
+  <% end %>
+<%= link_to "课堂学习", discussions_url, class: "btn btn-default" %>
 </div>
 <hr>
 <hr>

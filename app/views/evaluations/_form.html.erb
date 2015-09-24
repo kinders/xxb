@@ -25,13 +25,6 @@
     <%= error_span(@evaluation[:user_id]) %>
   </div>
   <div class="control-group">
-    <%= f.label :tutor_id, :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :tutor_id, :class => 'form-control' %>
-    </div>
-    <%= error_span(@evaluation[:tutor_id]) %>
-  </div>
-  <div class="control-group">
     <%= f.label :practice_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :practice_id, :class => 'form-control' %>
@@ -44,6 +37,13 @@
       <%= f.text_field :title, :class => 'form-control' %>
     </div>
     <%= error_span(@evaluation[:title]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :material, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :material, :class => 'form-control' %>
+    </div>
+    <%= error_span(@evaluation[:material]) %>
   </div>
   <div class="control-group">
     <%= f.label :question, :class => 'control-label' %>
@@ -88,29 +88,23 @@
 
   <% else %>
 
-  <div class="control-group">
-    <%= f.label "类别", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :title, :class => 'form-control', disabled: true %>
-    </div>
-    <%= error_span(@evaluation[:title]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label "问题", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.text_field :question, :class => 'form-control', disabled: true %>
-    </div>
-    <%= error_span(@evaluation[:question]) %>
-  </div>
-  <% if @practice.picture_q_file_name %>
-  <p></p>
-    <%= image_tag @practice.picture_q, class: "img-responsive center-block" %>
-  <p></p>
-  <% end %>
+    <p><strong>标题：</strong><%= @evaluation.title || @practice.title %></p>
+    <p><strong>分值：</strong><%= @evaluation.practice_score || @practice.score %></p> 
+    <% unless @evaluation.material.blank? || @practice.material.blank? %>
+    <p><strong>材料：</strong></p>
+      <div class="well well-sm"><%= @evaluation.material || @practice.material %></div>
+    <% end %>
+    <p><strong>问题：</strong></p>
+    <div class="well well-sm"><%= @evaluation.question || @practice.question %></div>
+    <% if @practice.picture_q_file_name %>
+      <p><br></p>
+      <%= image_tag @practice.picture_q, class: "img-responsive center-block" %>
+      <p><br></p>
+    <% end %>
   <div class="control-group">
     <%= f.label "我的答案", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_area :your_answer, :class => 'form-control', rows: '5' %>
+      <%= f.text_area :your_answer, :class => 'form-control', rows: '2' %>
     </div>
     <%= error_span(@evaluation[:your_answer]) %>
   </div>
@@ -133,9 +127,9 @@
     <div class="thumbnail">
       <%= image_tag @evaluation.picture_ya.url, size: "300x300" %>
       <div class="caption">
-	<p>
+	      <p>
           <%= link_to "删除图片", evaluation_delete_picture_ya_path(@evaluation), class: "btn btn-default" %>
-	</p>
+	      </p>
       </div>
     </div>
   </div>

@@ -13,7 +13,7 @@ class HomeworksController < ApplicationController
       @teacher = Teacher.find(session[:teacher_id])
       @classroom = Classroom.find(session[:classroom_id])
       # 自己布置的作业
-      @homeworks = Homework.where(user_id: @teacher.mentor).order(created_at: :desc)
+      @homeworks = Homework.where(user_id: @teacher.mentor, classroom_id: @classroom).order(created_at: :desc)
       if @teacher.subject_id == 1
         # 所有老师布置的全班作业
         @class_homeworks = Homework.where.not(user_id: current_user.id).where(classroom_id: @teacher.classroom_id)

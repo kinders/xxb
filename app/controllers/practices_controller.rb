@@ -9,9 +9,14 @@ class PracticesController < ApplicationController
     if current_user.has_role? :admin
       @practices = Practice.all
     else
-      @lesson = Lesson.find_by(id: session[:lesson_id])
-      @tutor = Tutor.find_by(id: session[:tutor_id])
-      @practices = Practice.where(tutor_id: session[:tutor_id])
+      @lesson = Lesson.find(session[:lesson_id])
+      if session[:tutor_id]
+        @tutor = Tutor.find(session[:tutor_id])
+        @practices = Practice.where(tutor_id: @tutor.id)
+      else
+        @practices = Practice.where(lesson_id: @lesson.id)
+      end
+
     end
   end
 
@@ -30,15 +35,15 @@ class PracticesController < ApplicationController
     @practices.each_with_index do | practice, index |
       if practice == @practice
         if index - 1 < 0
-	  @previous_practice = nil  
-	else
-	  @previous_practice = @practices[index - 1] 
-	end
-	if index + 1 == @practices.length
-	  @next_practice = nil
-	else
-	  @next_practice = @practices[index + 1]
-	end
+	        @previous_practice = nil  
+	      else
+	        @previous_practice = @practices[index - 1] 
+	      end
+	      if index + 1 == @practices.length
+	        @next_practice = nil
+	      else
+	        @next_practice = @practices[index + 1]
+	      end
       end
     end
   end
@@ -128,6 +133,6 @@ class PracticesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def practice_params
-      params.require(:practice).permit(:title, :question, :answer, :user_id, :tutor_id, :lesson_id, :activate, :score, :picture_q, :picture_a)
+      params.require(:practice).permit(:title, :material, :question, :answer, :user_id, :tutor_id, :lesson_id, :activate, :score, :picture_q, :picture_a, :labelname)
     end
 end

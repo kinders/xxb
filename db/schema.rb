@@ -11,7 +11,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150604045731) do
+ActiveRecord::Schema.define(version: 20150920012926) do
+
+  create_table "badrecords", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "troublemaker"
+    t.integer  "classroom_id"
+    t.datetime "troubletime"
+    t.integer  "subject_id"
+    t.text     "description"
+    t.boolean  "finish"
+    t.datetime "deleted_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "badrecords", ["classroom_id"], name: "index_badrecords_on_classroom_id"
+  add_index "badrecords", ["deleted_at"], name: "index_badrecords_on_deleted_at"
+  add_index "badrecords", ["subject_id"], name: "index_badrecords_on_subject_id"
+  add_index "badrecords", ["user_id"], name: "index_badrecords_on_user_id"
+
+  create_table "cadres", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "position"
+    t.integer  "member_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.integer  "classroom_id"
+  end
+
+  add_index "cadres", ["classroom_id"], name: "index_cadres_on_classroom_id"
+  add_index "cadres", ["member_id"], name: "index_cadres_on_member_id"
+  add_index "cadres", ["user_id"], name: "index_cadres_on_user_id"
 
   create_table "catalogs", force: :cascade do |t|
     t.decimal  "serial"
@@ -79,7 +111,6 @@ ActiveRecord::Schema.define(version: 20150604045731) do
 
   create_table "evaluations", force: :cascade do |t|
     t.integer  "user_id"
-    t.integer  "tutor_id"
     t.integer  "practice_id"
     t.string   "title"
     t.text     "question"
@@ -94,12 +125,29 @@ ActiveRecord::Schema.define(version: 20150604045731) do
     t.integer  "picture_ya_file_size"
     t.datetime "picture_ya_updated_at"
     t.datetime "deleted_at"
+    t.integer  "lesson_id"
+    t.text     "material"
   end
 
   add_index "evaluations", ["deleted_at"], name: "index_evaluations_on_deleted_at"
+  add_index "evaluations", ["lesson_id"], name: "index_evaluations_on_lesson_id"
   add_index "evaluations", ["practice_id"], name: "index_evaluations_on_practice_id"
-  add_index "evaluations", ["tutor_id"], name: "index_evaluations_on_tutor_id"
   add_index "evaluations", ["user_id"], name: "index_evaluations_on_user_id"
+
+  create_table "exercises", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "tutor_id"
+    t.decimal  "serial"
+    t.integer  "practice_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "exercises", ["deleted_at"], name: "index_exercises_on_deleted_at"
+  add_index "exercises", ["practice_id"], name: "index_exercises_on_practice_id"
+  add_index "exercises", ["tutor_id"], name: "index_exercises_on_tutor_id"
+  add_index "exercises", ["user_id"], name: "index_exercises_on_user_id"
 
   create_table "histories", force: :cascade do |t|
     t.integer  "user_id",    null: false
@@ -136,14 +184,10 @@ ActiveRecord::Schema.define(version: 20150604045731) do
     t.integer  "evaluation_id"
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
-    t.string   "title"
-    t.text     "question"
-    t.text     "answer"
-    t.text     "your_answer"
-    t.decimal  "practice_score"
     t.integer  "evaluation_user_id"
     t.integer  "practice_id"
     t.datetime "deleted_at"
+    t.decimal  "p_score"
   end
 
   add_index "justices", ["deleted_at"], name: "index_justices_on_deleted_at"
@@ -153,8 +197,8 @@ ActiveRecord::Schema.define(version: 20150604045731) do
 
   create_table "lessons", force: :cascade do |t|
     t.string   "title"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
     t.integer  "user_id"
     t.text     "content"
     t.string   "picture_file_name"
@@ -162,6 +206,7 @@ ActiveRecord::Schema.define(version: 20150604045731) do
     t.integer  "picture_file_size"
     t.datetime "picture_updated_at"
     t.datetime "deleted_at"
+    t.integer  "content_length",       default: 0
   end
 
   add_index "lessons", ["deleted_at"], name: "index_lessons_on_deleted_at"
@@ -231,6 +276,12 @@ ActiveRecord::Schema.define(version: 20150604045731) do
     t.integer  "picture_a_file_size"
     t.datetime "picture_a_updated_at"
     t.datetime "deleted_at"
+    t.text     "material"
+    t.string   "labelname"
+    t.decimal  "mean",                   default: 0.0
+    t.decimal  "mode",                   default: 0.0
+    t.decimal  "stdve",                  default: 0.0
+    t.decimal  "difficulty",             default: 0.0
   end
 
   add_index "practices", ["deleted_at"], name: "index_practices_on_deleted_at"
@@ -302,12 +353,12 @@ ActiveRecord::Schema.define(version: 20150604045731) do
   add_index "textbooks", ["user_id"], name: "index_textbooks_on_user_id"
 
   create_table "tutors", force: :cascade do |t|
-    t.string   "title",                 null: false
-    t.decimal  "difficulty",            null: false
-    t.text     "page",                  null: false
+    t.string   "title",                             null: false
+    t.decimal  "difficulty",                        null: false
+    t.text     "page",                              null: false
     t.integer  "user_id"
-    t.datetime "created_at",            null: false
-    t.datetime "updated_at",            null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.integer  "lesson_id"
     t.string   "picture1_file_name"
     t.string   "picture1_content_type"
@@ -318,6 +369,8 @@ ActiveRecord::Schema.define(version: 20150604045731) do
     t.integer  "picture2_file_size"
     t.datetime "picture2_updated_at"
     t.datetime "deleted_at"
+    t.text     "proviso"
+    t.integer  "page_length",           default: 0
   end
 
   add_index "tutors", ["deleted_at"], name: "index_tutors_on_deleted_at"

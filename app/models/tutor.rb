@@ -2,7 +2,8 @@ class Tutor < ActiveRecord::Base
   resourcify
   belongs_to :user
   belongs_to :lesson
-  has_many :practices
+  has_many :practices, dependent: :destroy
+  has_many :exercises, dependent: :destroy
   has_attached_file :picture1
   has_attached_file :picture2
   validates_attachment_file_name :picture1, :matches => [/png\Z/, /jpe?g\Z/]

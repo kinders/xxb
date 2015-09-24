@@ -46,6 +46,7 @@
 <% else %>
 
 <%- model_class = Classroom -%>
+<%= link_to '返回首页', '/', class: 'btn btn-default pull-right' %>
 <div class="page-header">
   <h3>教学楼</h3>
 </div>
@@ -60,10 +61,9 @@
   <tbody>
     <% @classrooms.each do |classroom| %>
       <tr>
-        <td><%= classroom.name %></td>
+        <td><%= link_to classroom.name, classroom_path(classroom), class: 'btn btn-link btn-xs' %></td>
         <td><%= classroom.user.name %></td>
         <td>
-          <%= link_to '进入班级', classroom_path(classroom), class: 'btn btn-primary btn-xs' %>
           <% if current_user.id == classroom.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_classroom_path(classroom), :class => 'btn btn-default btn-xs' %>
@@ -79,7 +79,7 @@
   </tbody>
 </table>
 
-<%= link_to t('.new', :default => t("helpers.links.new")),
+<%= link_to '创建班级',
             new_classroom_path,
-            :class => 'btn btn-primary' %>
+            :class => 'btn btn-default btn-xs' %>
 <% end %>

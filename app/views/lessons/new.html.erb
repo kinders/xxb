@@ -4,5 +4,6 @@
 </div>
 <%= render :partial => 'form' %>
 <% if session[:textbook_id] %>
+  <hr>
   <%= link_to "返回教科书目录", catalogs_path, class: "btn btn-default" %>
 <% end %>

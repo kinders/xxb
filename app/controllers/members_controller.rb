@@ -11,16 +11,20 @@ class MembersController < ApplicationController
     else
       @classroom = Classroom.find(session[:classroom_id])
       @members = @classroom.members.order(:serial)
+      session[:member_id] = nil
     end
   end
 
   # GET /members/1
   # GET /members/1.json
   def show
+    @classroom = Classroom.find(session[:classroom_id])
     session[:member_id] = @member.id
     # 下面是未完成作业管理
     @special_homeworks = Homework.where(student: @member.student).order(created_at: :desc).to_a.delete_if { |hw| Observation.find_by(homework_id: hw.id, student: @member.student) }
     @class_homeworks = Homework.where(classroom_id: session[:classroom_id]).order(created_at: :desc).to_a.delete_if { |hw| Observation.find_by(homework_id: hw.id, student: @member.student) }
+    # 下面是未完成的不良记录
+    @my_badrecords = Badrecord.where(troublemaker: current_user.id, classroom_id: @classroom.id, finish: nil)
   end
 
   # GET /members/new
@@ -72,6 +76,38 @@ class MembersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to members_url, notice: '成员已被删除！' }
       format.json { head :no_content }
+    end
+  end
+
+  def create_members_in_batch
+    begin
+    name =  current_user.name + Time.now.to_s
+    directory = "public/members_import"
+    path = File.join(directory, name)
+    File.open(path, "wb") { |f| f.write(params[:csv_file].read) }
+    data = SmarterCSV.process(path) do |allline|
+      allline.each do |line|
+        u = User.new 
+        u.email = line[:电子邮箱]
+        u.password = "123456789"
+        u.name = line[:姓名]
+        u.save!
+        Member.create(
+          classroom_id: session[:classroom_id],
+          user_id: current_user.id,
+          serial: line[:序号],
+          student: u.id)
+      end
+    end
+    respond_to do |format|
+      format.html { redirect_to members_url, notice: '成功导入数据！' }
+      format.json { head :no_content }
+    end
+    rescue 
+    respond_to do |format|
+      format.html { redirect_to members_url, notice: '导入数据失败，请修改CSV文件后重新尝试！' }
+      format.json { head :no_content }
+    end
     end
   end
 

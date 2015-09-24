@@ -25,6 +25,13 @@
     <%= error_span(@practice[:title]) %>
   </div>
   <div class="control-group">
+    <%= f.label :material, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :material, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:material]) %>
+  </div>
+  <div class="control-group">
     <%= f.label :question, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :question, :class => 'form-control' %>
@@ -73,6 +80,41 @@
     </div>
     <%= error_span(@practice[:score]) %>
   </div>
+  <div class="control-group">
+    <%= f.label :labelname, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :labelname, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:labelname]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :mean, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :mean, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:mean]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :mode, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :mode, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:mode]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :stdve, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :stdve, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:stdve]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :difficulty, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :difficulty, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:difficulty]) %>
+  </div>
 
   <hr>
   <%= f.submit nil, :class => 'btn btn-primary' %>
@@ -80,6 +122,14 @@
             practices_path, :class => 'btn btn-default' %>
 
 <% else %>  <!-- 普通用户界面 -->
+
+  <div class="control-group">
+    <%= f.label "标签", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :labelname, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:labelname]) %>
+  </div>
 
   <div class="control-group">
     <%= f.label "标题", :class => 'control-label' %>
@@ -90,9 +140,17 @@
   </div>
 
   <div class="control-group">
+    <%= f.label :"材料", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_area :material, :class => 'form-control', rows: 3 %>
+    </div>
+    <%= error_span(@practice[:material]) %>
+  </div>
+
+  <div class="control-group">
     <%= f.label :"问题", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :question, :class => 'form-control' %>
+      <%= f.text_area :question, :class => 'form-control', rows: 3 %>
     </div>
     <%= error_span(@practice[:question]) %>
   </div>
@@ -108,7 +166,7 @@
   <div class="control-group">
     <%= f.label :"答案", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :answer, :class => 'form-control' %>
+      <%= f.text_area :answer, :class => 'form-control', rows: 3 %>
     </div>
     <%= error_span(@practice[:answer]) %>
   </div>

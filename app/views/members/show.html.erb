@@ -43,65 +43,76 @@
 <% end %>
 <% if session[:discussion_id] %>
 <% @discussion = Discussion.find(session[:discussion_id]) %>
-<%= link_to "返回课堂", discussion_path(@discussion), class: "btn btn-default" %>
+<%= link_to "返回课堂", discussion_path(@discussion), class: "btn btn-default pull-right" %>
 <% else %>
-  <%= link_to "返回花名册", members_path, class: 'btn btn-default' %>
+  <%= link_to "返回花名册", members_path, class: 'btn btn-default pull-right' %>
+  <%= link_to "返回班级", classroom_path(@classroom), :class => 'btn btn-default pull-right' %>
 <% end %>
 <hr>
+<div class="page-header">
+  <% if current_user.id == @member.student %>
+    <h3>我 在<%= @member.classroom.name %> 的书桌</h3>
+  <% else %>
+    <h3><%= User.find(@member.student.to_i).name %> 在 <%= @member.classroom.name %> 的书桌</h3>
+  <% end %>
+</div>
+
+<%# 如果已经进入了课堂学习，则出示学习概览 %>
 <% if session[:discussion_id] %>
   <p><b><%= @member.classroom.name %></b> >> <b>《<%= @discussion.lesson.title %>》</b>
   </p>
   <% student = User.find(@member.student) %>
-<h3><%= @member.serial.round() %>号 <%= student.name %> 的学习进度</h3>
-<% @plans = Plan.where(teaching_id: @discussion.teaching_id).order('serial') %>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>序号</th>
-      <th>辅导</th>
-      <th>学习时间</th>
-      <th>总分</th>
-      <th>得分</th>
-      <th>得分率</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @plans.each do |plan| %>
+  <h3><%= @member.serial.round() %>号 <%= student.name %> 的学习进度</h3>
+  <% @plans = Plan.where(teaching_id: @discussion.teaching_id).order('serial') %>
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td><%= plan.serial.round(2) %></td>
-        <td><%= plan.tutor.title %></td>
-	<% # 是否进入界面 %>
-        <% end_time = @discussion.end_at || Time.now %>
-	<% if regist = History.where(user_id: student.id, modelname: 'tutor', entryid: plan.tutor_id, created_at: @discussion.created_at..end_time).take %>
-	  <td><%= regist.created_at.strftime("%F %T") %></td>
-        <% else %>
-          <td>--</td>
-        <% end %>
-	<% # 总分 %>
-	<% if tutor_point = plan.tutor.practices.sum(:score) %>
-	  <td><%= tutor_point %></td>
-	<% else %>
-	   <td>0.0</td>
-        <% end %>
-        <% # 得分 %>
-	<% if owned_point = Justice.where(evaluation_user_id: student.id, practice_id: plan.tutor.practices).group(:practice_id).average(:score).values.inject(:+) %>
-	  <td><%= owned_point.round(2) %></td>
-	<% else %>
-	   <td>0.0</td>
-        <% end %>
-        <% # 得分率 %>
-	<% if  owned_point == nil %>
-	  <td>-</td>
-	<% else %>
-	  <% rate = owned_point / tutor_point * 100 %>
-	  <td><%= rate.to_s(:percentage, precision: 0) %></td>
-	<% end %>
+        <th>序号</th>
+        <th>辅导</th>
+        <th>学习时间</th>
+        <th>总分</th>
+        <th>得分</th>
+        <th>得分率</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @plans.each do |plan| %>
+        <tr>
+          <td><%= plan.serial.round(2) %></td>
+          <td><%= plan.tutor.title %></td>
+	        <% # 是否进入界面 %>
+          <% end_time = @discussion.end_at || Time.now %>
+	        <% if regist = History.where(user_id: student.id, modelname: 'tutor', entryid: plan.tutor_id, created_at: @discussion.created_at..end_time).take %>
+	          <td><%= regist.created_at.strftime("%F %T") %></td>
+          <% else %>
+            <td>--</td>
+          <% end %>
+	        <% # 总分 %>
+	        <% if tutor_point = plan.tutor.practices.sum(:score) %>
+	          <td><%= tutor_point %></td>
+	        <% else %>
+	          <td>0.0</td>
+          <% end %>
+          <% # 得分 %>
+	        <% if owned_point = Justice.where(evaluation_user_id: student.id, practice_id: plan.tutor.practices).group(:practice_id).average(:score).values.inject(:+) %>
+	          <td><%= owned_point.round(2) %></td>
+	        <% else %>
+	           <td>0.0</td>
+          <% end %>
+          <% # 得分率 %>
+	        <% if  owned_point == nil %>
+	          <td>-</td>
+	        <% else %>
+	          <% rate = owned_point / tutor_point * 100 %>
+	        <td><%= rate.to_s(:percentage, precision: 0) %></td>
+	        <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 <% end %>
 
+<%# 下面显示要完成的作业 %>
 <% if @class_homeworks.any? %>
 <div class="page-header">
   <h3>老师布置的班级作业</h3>
@@ -174,5 +185,30 @@
   <div class="well">暂时没有个人作业……</div>
 <% end %>
 
+<% if @my_badrecords.any? %>
+<table class="table table-striped">
+  <caption class="text-center">我的不良记录</caption>
+  <thead>
+    <tr>
+      <th><%= Badrecord.human_attribute_name(:id) %></th>
+      <th><%= Badrecord.human_attribute_name(:troubletime) %></th>
+      <th><%= Badrecord.human_attribute_name(:subject_id) %></th>
+      <th><%= Badrecord.human_attribute_name(:description) %></th>
+      <th><%= Badrecord.human_attribute_name(:user_id) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @my_badrecords.each do |badrecord| %>
+      <tr>
+        <td><%= link_to badrecord.id, badrecord_path(badrecord) %></td>
+        <td><%= badrecord.troubletime.strftime("%F") %></td>
+        <td><%= badrecord.subject.name %></td>
+        <td><%= badrecord.description %></td>
+        <td><%= badrecord.user.name %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
 
 <% end %>
