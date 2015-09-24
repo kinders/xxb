@@ -51,49 +51,49 @@
         </div>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav">
-	    <li><%= link_to "首页", "/" %></li>
+	          <li><%= link_to "首页", "/" %></li>
             <% if current_user %>
-              <% if current_user.name %>
-		<li><%= link_to "我是： #{current_user.name} ", me_summary_path %></li>
-	      <% else %>
-	        <li><%= menu_text "#{current_user.email}" %></li>
-	      <% end %>
-
-	      <% if @point = Justice.where(evaluation_user_id: current_user.id).group(:practice_id).average(:score).values.inject(:+) %>
-		<li><%= link_to "#{@point.round(2) || 0}积分", me_point_card_path %></li>
-	      <% else %>
-	        <li><%= link_to " 0 积分", me_point_card_path %></li>
-              <% end %>
-              <% if session[:discussion_id] %>
-		<li><%= link_to "返回课堂", discussion_path(session[:discussion_id]) %></li>
-              <% end %>
-	      <li><%= link_to "退出登录", "/users/sign_out", method: :delete %></li>
-	    <% else %>
-              <li><%= link_to "注册", "/users/sign_up"  %></li>
-	      <li><%= link_to "登录", "/users/sign_in"  %></li>
-	    <% end %>
+	            <li><%= link_to "建议", "#myModal", data: {toggle: "modal"}  %></li>
+            <% end %>
          </ul>
-         <% if current_user %>
          <ul class="nav navbar-nav navbar-right">
-	   <li><%= link_to "建议", "#myModal", data: {toggle: "modal"}  %></li>
-         </ul>
-	 <% end %>
+           <% if current_user %>
+            <% if current_user.name %>
+		          <li><%= link_to "我是： #{current_user.name} ", me_summary_path %></li>
+	          <% else %>
+	            <li><%= menu_text "#{current_user.email}" %></li>
+	          <% end %>
+
+	          <% if @point = Justice.where(evaluation_user_id: current_user.id).group(:practice_id).average(:score).values.inject(:+) %>
+		          <li><%= link_to "#{@point.round(2) || 0}积分", me_point_card_path %></li>
+	          <% else %>
+	            <li><%= link_to " 0 积分", me_point_card_path %></li>
+            <% end %>
+            <% if session[:discussion_id] %>
+		          <li><%= link_to "返回课堂", discussion_path(session[:discussion_id]) %></li>
+            <% end %>
+	          <li><%= link_to "退出登录", "/users/sign_out", method: :delete %></li>
+	        <% else %>
+            <li><%= link_to "注册", "/users/sign_up"  %></li>
+	          <li><%= link_to "登录", "/users/sign_in"  %></li>
+	        <% end %>
+        </ul>
         </div>
       </div>
     </div>
 
-    <div class="container" style="padding-top: 60px;">
+    <div class="container-fluid" style="padding-top: 60px;">
       <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
+        <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
           <%= bootstrap_flash %>
           <%= yield %>
         </div>
       </div><!--/row-->
       <div class="row" style="margin-top: 20px;">
         <hr>
-        <div class="col-lg-4 col-lg-offset-5" style="margin-top: 20px;">
+        <div class="col-xs-4 col-xs-offset-4 cols-sm-4 col-sm-offset-4 col-md-4 col-md-offset-4">
           <footer>
-            <p>学学半&copy; 2015</p>
+            <p class="text-center">学学半&copy; 2015</p>
           </footer>
         </div>
       </div><!--/row-->
@@ -110,10 +110,10 @@
         <h4 class="modal-title" id="myModalLabel">我来给学学半提建议：</h4>
       </div>
       <div class="modal-body">
-<% @complaint = Complaint.new %>
-<% @complaint.url = request.url().to_s %>
-<% @complaint.user_id = current_user.id %>
-<%= form_for @complaint, :html => { :class => "form-horizontal complaint" } do |f| %>
+        <% @complaint = Complaint.new %>
+        <% @complaint.url = request.url().to_s %>
+        <% @complaint.user_id = current_user.id %>
+        <%= form_for @complaint, :html => { :class => "form-horizontal complaint" } do |f| %>
 
     <% if @complaint.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
