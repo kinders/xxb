@@ -1,0 +1,152 @@
+<% if current_user.has_role? :admin %>
+
+<%- model_class = Badrecord -%>
+<div class="page-header">
+  <h3><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:troublemaker) %></th>
+      <th><%= model_class.human_attribute_name(:classroom_id) %></th>
+      <th><%= model_class.human_attribute_name(:troubletime) %></th>
+      <th><%= model_class.human_attribute_name(:subject_id) %></th>
+      <th><%= model_class.human_attribute_name(:description) %></th>
+      <th><%= model_class.human_attribute_name(:finish) %></th>
+      <th><%= model_class.human_attribute_name(:deleted_at) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @badrecords.each do |badrecord| %>
+      <tr>
+        <td><%= link_to badrecord.id, badrecord_path(badrecord) %></td>
+        <td><%= badrecord.user_id %></td>
+        <td><%= badrecord.troublemaker %></td>
+        <td><%= badrecord.classroom_id %></td>
+        <td><%= badrecord.troubletime %></td>
+        <td><%= badrecord.subject_id %></td>
+        <td><%= badrecord.description %></td>
+        <td><%= badrecord.finish %></td>
+        <td><%= badrecord.deleted_at %></td>
+        <td><%=l badrecord.created_at %></td>
+        <td>
+          <%= link_to t('.show', :default => t("helpers.links.show")),
+                      badrecord_path(badrecord),
+                      :class => 'btn btn-xs btn-default' %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_badrecord_path(badrecord), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      badrecord_path(badrecord),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-default' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize),
+            new_badrecord_path,
+            :class => 'btn btn-primary' %>
+
+<% else %>
+
+  <%= link_to "返回班级", classroom_url(@classroom), class: 'btn btn-default pull-right' %>
+<%- model_class = Badrecord -%>
+<div class="page-header">
+  <h3><%=t '.title', :default => model_class.model_name.human.titleize %></h3>
+</div>
+
+<% if @badrecords_by_me.any? %>
+<table class="table table-striped">
+  <caption class="text-center">我管理的不良记录</caption>
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:troublemaker) %></th>
+      <th><%= model_class.human_attribute_name(:troubletime) %></th>
+      <th><%= model_class.human_attribute_name(:subject_id) %></th>
+      <th><%= model_class.human_attribute_name(:description) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @badrecords_by_me.each do |badrecord| %>
+      <tr>
+        <td><%= link_to badrecord.id, badrecord_path(badrecord) %></td>
+        <td><%= User.find(badrecord.troublemaker).name %></td>
+        <td><%= badrecord.troubletime.strftime("%F") %></td>
+        <td><%= badrecord.subject.name %></td>
+        <td><%= badrecord.description %></td>
+        <td>
+          <%= link_to "抹平",
+                      badrecord_finish_badrecord_path(badrecord),
+                      :data => { :confirm =>  "您确定要抹平 #{User.find(badrecord.troublemaker).name} 这条不良记录？" },
+                      :class => 'btn btn-xs btn-default' %>
+          <%= link_to t('.show', :default => t("helpers.links.show")),
+                      badrecord_path(badrecord),
+                      :class => 'btn btn-xs btn-default' %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_badrecord_path(badrecord), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      badrecord_path(badrecord),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-default' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<hr>
+<% end %>
+
+<% if @class_badrecords.any? %>
+<table class="table table-striped">
+  <caption class="text-center">班级的不良记录</caption>
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:troublemaker) %></th>
+      <th><%= model_class.human_attribute_name(:troubletime) %></th>
+      <th><%= model_class.human_attribute_name(:subject_id) %></th>
+      <th><%= model_class.human_attribute_name(:description) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @class_badrecords.each do |badrecord| %>
+      <tr>
+        <td><%= link_to badrecord.id, badrecord_path(badrecord) %></td>
+        <td><%= User.find(badrecord.troublemaker).name %></td>
+        <td><%= badrecord.troubletime.strftime("%F") %></td>
+        <td><%= badrecord.subject.name %></td>
+        <td><%= badrecord.description %></td>
+        <td>
+          <%= link_to t('.show', :default => t("helpers.links.show")),
+                      badrecord_path(badrecord),
+                      :class => 'btn btn-xs btn-default' %>
+          <%= link_to "抹平",
+                      badrecord_finish_badrecord_path(badrecord),
+                      :data => { :confirm =>  "您确定要抹平 #{User.find(badrecord.troublemaker).name} 这条不良记录？" },
+                      :class => 'btn btn-xs btn-default' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= link_to "下载csv文件", "/download_csv.csv", class: "btn btn-default pull-right" %>
+<% end %>
+
+
+
+<%= link_to t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize),
+            new_badrecord_path,
+            :class => 'btn btn-primary' %>
+
+<% end %>

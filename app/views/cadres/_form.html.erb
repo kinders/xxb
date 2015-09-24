@@ -1,0 +1,95 @@
+<% if current_user.has_role? :admin %>
+<%= form_for @cadre, :html => { :class => "form-horizontal cadre" } do |f| %>
+
+    <% if @cadre.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@cadre.errors.count, "error") %> 使得这个 cadre 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @cadre.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :user_id, :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.text_field :user_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@cadre[:user_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :position, :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.text_field :position, :class => 'form-control' %>
+    </div>
+    <%= error_span(@cadre[:position]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :member_id, :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.text_field :member_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@cadre[:member_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :deleted_at, :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.text_field :deleted_at, :class => 'form-control' %>
+    </div>
+    <%= error_span(@cadre[:deleted_at]) %>
+  </div>
+
+
+  <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            cadres_path, :class => 'btn btn-default' %>
+
+<% end %>
+
+<% else %><%# 以下是一般用户界面 %>
+
+<%= form_for @cadre, :html => { :class => "form-horizontal cadre" } do |f| %>
+
+    <% if @cadre.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@cadre.errors.count, "error") %> 使得这个 cadre 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @cadre.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label "名字", :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.select :member_id, @classroom.members.collect{ |m| [m.serial.to_s + " " + User.find(m.student).name.to_s, m.id]}, {prompt: "请选择一个成员"}, {class: 'form-control'}  %>
+    </div>
+    <%= error_span(@cadre[:member_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label "职位", :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.text_field :position, :class => 'form-control' %>
+    </div>
+    <%= error_span(@cadre[:position]) %>
+  </div>
+
+
+  <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            cadres_path, :class => 'btn btn-default' %>
+
+<% end %>
+<% end %>

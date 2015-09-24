@@ -1,0 +1,80 @@
+<% if current_user.has_role? :admin %>
+
+<%- model_class = Badrecord -%>
+<div class="page-header">
+  <h3><%=t '.title', :default => model_class.model_name.human.titleize %></h3>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @badrecord.user_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:troublemaker) %>:</strong></dt>
+  <dd><%= @badrecord.troublemaker %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:classroom_id) %>:</strong></dt>
+  <dd><%= @badrecord.classroom_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:troubletime) %>:</strong></dt>
+  <dd><%= @badrecord.troubletime %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:subject_id) %>:</strong></dt>
+  <dd><%= @badrecord.subject_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
+  <dd><%= @badrecord.description %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:finish) %>:</strong></dt>
+  <dd><%= @badrecord.finish %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:deleted_at) %>:</strong></dt>
+  <dd><%= @badrecord.deleted_at %></dd>
+</dl>
+
+<%= link_to t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize),
+            new_badrecord_path,
+            :class => 'btn btn-primary' %>
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              badrecords_path, :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_badrecord_path(@badrecord), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              badrecord_path(@badrecord),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+
+<% else %>
+
+<%- model_class = Badrecord -%>
+<div class="page-header">
+  <h3><%=t '.title', :default => model_class.model_name.human.titleize %></h3>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @badrecord.user.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:troublemaker) %>:</strong></dt>
+  <dd><%= User.find(@badrecord.troublemaker).name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:classroom_id) %>:</strong></dt>
+  <dd><%= @badrecord.classroom.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:troubletime) %>:</strong></dt>
+  <dd><%= @badrecord.troubletime.strftime("%F") %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:subject_id) %>:</strong></dt>
+  <dd><%= @badrecord.subject.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
+  <dd><%= @badrecord.description %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:finish) %>:</strong></dt>
+  <dd><%= @badrecord.finish %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:deleted_at) %>:</strong></dt>
+  <dd><%= @badrecord.deleted_at %></dd>
+</dl>
+
+<%= link_to t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize),
+            new_badrecord_path,
+            :class => 'btn btn-primary' %>
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              badrecords_path, :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_badrecord_path(@badrecord), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              badrecord_path(@badrecord),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+
+
+<% end %>

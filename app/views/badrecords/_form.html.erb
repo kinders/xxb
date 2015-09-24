@@ -1,0 +1,57 @@
+<%= form_for @badrecord, :html => { :class => "form-horizontal badrecord" } do |f| %>
+
+    <% if @badrecord.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@badrecord.errors.count, "error") %> 使得这个 badrecord 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @badrecord.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :troublemaker, :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%# f.collection_check_boxes :troublemaker, @classroom.members, :student, :id, :class => 'form-control' %>
+      <%= f.collection_check_boxes :troublemaker, @classroom.members.collect { |m| [m.student, m.serial.to_s + " " + User.find(m.student).name]}, :first, :last, class: 'form-control' do |b| %>
+        <div class="col-sm-3">
+          <%= b.label + b.check_box  %>
+        </div>
+      <% end %>
+    </div>
+    <%= error_span(@badrecord[:troublemaker]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :troubletime, :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.date_select :troubletime, :class => 'form-control' %>
+    </div>
+    <%= error_span(@badrecord[:troubletime]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :subject_id, :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.select :subject_id, Subject.all.collect { |s| [s.name, s.id]}, :class => 'form-control' %>
+    </div>
+    <%= error_span(@badrecord[:subject_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :description, :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.text_field :description, :class => 'form-control' %>
+    </div>
+    <%= error_span(@badrecord[:description]) %>
+  </div>
+
+
+  <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            badrecords_path, :class => 'btn btn-default' %>
+
+<% end %>

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  position: MyString
+  member_id: 
+  deleted_at: 2015-09-19 12:08:27
+
+two:
+  user_id: 
+  position: MyString
+  member_id: 
+  deleted_at: 2015-09-19 12:08:27

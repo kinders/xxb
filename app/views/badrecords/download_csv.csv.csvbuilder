@@ -1,0 +1,4 @@
+csv << ["序号", "学生", "违规时间", "科目", "详细情况", "负责人"]
+@class_badrecords.each do |badrecord|
+  csv << [badrecord.id, User.find(badrecord.troublemaker).name, badrecord.troubletime.strftime("%F"), badrecord.subject.name, badrecord.description, badrecord.user.name]
+end

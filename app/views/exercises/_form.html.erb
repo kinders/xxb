@@ -1,0 +1,103 @@
+<% unless current_user.has_role? :admin %>
+
+<%= form_for @exercise, :html => { :class => "form-horizontal exercise" } do |f| %>
+
+    <% if @exercise.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@exercise.errors.count, "error") %> 使得这个 exercise 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @exercise.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+  <div class="form-group">
+    <%= f.label '序号', :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.text_field :serial, :class => 'form-control', style: 'width: 80%' %>
+    </div>
+    <%= error_span(@exercise[:serial]) %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label '练习', :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.select :practice_id, Practice.where(lesson_id: @exercise.tutor.lesson_id).collect {|p| [p.id.to_s + p.title[0,40] + "." + p.question[0, 20] + "；" + p.user.name] }, {prompt: "请选择一道习题"},  { :class => 'form-control', style: 'width: 80%' } %>
+    </div>
+    <%= error_span(@exercise[:practice_id]) %>
+  </div>
+
+  <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            tutor_path(@exercise.tutor_id), :class => 'btn btn-default' %>
+
+<% end %>
+
+<% else %>
+
+<%= form_for @exercise, :html => { :class => "form-horizontal exercise" } do |f| %>
+
+    <% if @exercise.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@exercise.errors.count, "error") %> 使得这个 exercise 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @exercise.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :user_id, :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.text_field :user_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@exercise[:user_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :tutor_id, :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.text_field :tutor_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@exercise[:tutor_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :serial, :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.text_field :serial, :class => 'form-control' %>
+    </div>
+    <%= error_span(@exercise[:serial]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :practice_id, :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.text_field :practice_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@exercise[:practice_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :deleted_at, :class => 'control-label col-sm-2' %>
+    <div class="controls cols-sm-10">
+      <%= f.text_field :deleted_at, :class => 'form-control' %>
+    </div>
+    <%= error_span(@exercise[:deleted_at]) %>
+  </div>
+
+
+  <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
+            exercises_path, :class => 'btn btn-default' %>
+
+<% end %>
+
+<% end %>

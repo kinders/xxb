@@ -1,0 +1,68 @@
+<% if current_user.has_role? :admin %>
+
+<%- model_class = Exercise -%>
+<div class="page-header">
+  <h3><%=t '.title', :default => model_class.model_name.human.titleize %></h3>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @exercise.user_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:tutor_id) %>:</strong></dt>
+  <dd><%= @exercise.tutor_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:serial) %>:</strong></dt>
+  <dd><%= @exercise.serial %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:practice_id) %>:</strong></dt>
+  <dd><%= @exercise.practice_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:deleted_at) %>:</strong></dt>
+  <dd><%= @exercise.deleted_at %></dd>
+</dl>
+
+<%= link_to t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize),
+            new_exercise_path,
+            :class => 'btn btn-primary' %>
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              exercises_path, :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_exercise_path(@exercise), :class => 'btn btn-default' %>
+<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+              exercise_path(@exercise),
+              :method => 'delete',
+              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+              :class => 'btn btn-danger' %>
+
+<% else %>
+
+<%- model_class = Exercise -%>
+<%= link_to "返回", :back, class: 'btn btn-default pull-right' %>
+<%= link_to "返回辅导", tutors_path(@exercise.tutor_id), class: 'btn btn-default pull-right' %>
+<div class="page-header">
+  <h3><%=t '.title', :default => model_class.model_name.human.titleize %></h3>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @exercise.user_id.to_s + "," + @exercise.user.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:tutor_id) %>:</strong></dt>
+  <dd><%= @exercise.tutor_id.to_s + "," + @exercise.tutor.title %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:serial) %>:</strong></dt>
+  <dd><%= @exercise.serial %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:practice_id) %>:</strong></dt>
+  <dd><%= @exercise.practice_id.to_s + "," + @exercise.practice.question %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:deleted_at) %>:</strong></dt>
+  <dd><%= @exercise.deleted_at %></dd>
+</dl>
+
+<%= link_to t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize),
+            new_exercise_path,
+            :class => 'btn btn-primary' %>
+<%= link_to t('.back', :default => t("helpers.links.back")),
+              tutor_path(@exercise.tutor_id), :class => 'btn btn-default'  %>
+<%= link_to t('.edit', :default => t("helpers.links.edit")),
+              edit_exercise_path(@exercise), :class => 'btn btn-default' %>
+<%#<%= link_to t('.destroy', :default => t("helpers.links.destroy")),%>
+              <%#exercise_path(@exercise),%>
+              <%#:method => 'delete',%>
+              <%#:data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },%>
+              <%#:class => 'btn btn-danger' %>
+<% end %>
