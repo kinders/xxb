@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  deleted_at: 2015-10-07 21:53:24
+
+two:
+  user_id: 
+  deleted_at: 2015-10-07 21:53:24

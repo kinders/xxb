@@ -1,0 +1,123 @@
+<% if current_user.has_role? :admin %>
+
+<%- model_class = Card -%>
+<div class="page-header">
+  <h3><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:practice_id) %></th>
+      <th><%= model_class.human_attribute_name(:cardbox_id) %></th>
+      <th><%= model_class.human_attribute_name(:sequence) %></th>
+      <th><%= model_class.human_attribute_name(:serial) %></th>
+      <th><%= model_class.human_attribute_name(:degree) %></th>
+      <th><%= model_class.human_attribute_name(:nexttime) %></th>
+      <th><%= model_class.human_attribute_name(:foul) %></th>
+      <th><%= model_class.human_attribute_name(:count) %></th>
+      <th><%= model_class.human_attribute_name(:deleted_at) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cards.each do |card| %>
+      <tr>
+        <td><%= link_to card.id, card_path(card) %></td>
+        <td><%= card.user_id %></td>
+        <td><%= card.practice_id %></td>
+        <td><%= card.cardbox_id %></td>
+        <td><%= card.serial %></td>
+        <td><%= card.sequence %></td>
+        <td><%= card.degree %></td>
+        <td><%= card.nexttime %></td>
+        <td><%= card.foul %></td>
+        <td><%= card.count %></td>
+        <td><%= card.deleted_at %></td>
+        <td><%=l card.created_at %></td>
+        <td>
+          <%= link_to t('.show', :default => t("helpers.links.show")),
+                      card_path(card),
+                      :class => 'btn btn-xs btn-default' %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_card_path(card), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      card_path(card),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-default' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize),
+            new_card_path,
+            :class => 'btn btn-primary' %>
+
+
+<% else %>
+
+<%- model_class = Card -%>
+
+<!-- index -->
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to "翻", cardbox_turn_cards_path(@cardbox), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "练习 翻 卡片" %>
+      <%= link_to t('.new', :default => t("helpers.links.new")), new_card_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), cardboxes_url, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.cardbox")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="page-header">
+  <h3>
+    “<%= @cardbox.name %>”里的<%=t '.title', :default => model_class.model_name.human.titleize %>
+  </h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:serial) %></th>
+      <th><%= model_class.human_attribute_name(:practice_id) %></th>
+      <th><%= model_class.human_attribute_name(:degree) %></th>
+      <th><%= model_class.human_attribute_name(:nexttime) %></th>
+      <th><%= model_class.human_attribute_name(:foul) %></th>
+      <th><%= model_class.human_attribute_name(:count) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cards.each do |card| %>
+      <tr>
+        <td><%= card.serial.round(5) %></td>
+        <td><%=link_to card.practice.question, card_path(card)%></td>
+        <td><%= card.degree %></td>
+        <td><%= card.nexttime.strftime("%F %R") %></td>
+        <td><%= card.foul %></td>
+        <td><%= card.count %></td>
+        <td>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_card_path(card), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      card_path(card),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<% end %>

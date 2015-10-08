@@ -1,0 +1,127 @@
+<% if current_user.has_role? :admin %>
+
+<%- model_class = Cardbox -%>
+<div class="page-header">
+  <h3><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:share) %></th>
+      <th><%= model_class.human_attribute_name(:deleted_at) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cardboxes.each do |cardbox| %>
+      <tr>
+        <td><%= link_to cardbox.id, cardbox_path(cardbox) %></td>
+        <td><%= cardbox.user_id %></td>
+        <td><%= cardbox.name %></td>
+        <td><%= cardbox.share %></td>
+        <td><%= cardbox.deleted_at %></td>
+        <td><%=l cardbox.created_at %></td>
+        <td>
+          <%= link_to t('.show', :default => t("helpers.links.show")),
+                      cardbox_path(cardbox),
+                      :class => 'btn btn-xs btn-default' %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_cardbox_path(cardbox), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      cardbox_path(cardbox),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-default' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize),
+            new_cardbox_path,
+            :class => 'btn btn-primary' %>
+
+<% else %>
+
+
+<%- model_class = Cardbox -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.new', :default => t("helpers.links.new")), new_cardbox_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), me_summary_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', default: t("helpers.titles.up"), :model => t("activerecord.models.me")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+<div class="page-header">
+  <h3>我的<%=t '.title', :default => model_class.model_name.human.titleize %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:share) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @cardboxes.each do |cardbox| %>
+      <tr>
+        <td><%= cardbox.id %></td>
+        <td><%= cardbox.user.name %></td>
+        <td><%= link_to cardbox.name, cardbox_path(cardbox) %></td>
+        <td><%= cardbox.share %></td>
+        <td>
+          <%= link_to "翻", cardbox_turn_cards_path(cardbox), class: 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "练习翻卡片" %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_cardbox_path(cardbox), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      cardbox_path(cardbox),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<hr>
+<div class="page-header">
+  <h3>与我共享的卡片盒</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @share_cardboxes.each do |cardbox| %>
+      <tr>
+        <td><%= cardbox.id %></td>
+        <td><%= cardbox.user.name %></td>
+        <td><%= link_to cardbox.name, cardbox_path(cardbox) %></td>
+        <td>
+          <%= link_to "复制", cardbox_copy_cardbox_for_me_path(cardbox), class: 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "将这个卡片盒、里面的卡片复制给自己" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<% end %>
