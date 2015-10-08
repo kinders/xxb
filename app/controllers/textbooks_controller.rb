@@ -2,6 +2,7 @@ class TextbooksController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_textbook, only: [:show, :edit, :update, :destroy]
+  before_action :be_a_master, except: [:index, :show]
 
   # GET /textbooks
   # GET /textbooks.json
@@ -88,5 +89,11 @@ class TextbooksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def textbook_params
       params.require(:textbook).permit(:title, :description, :serial, :user_id)
+    end
+
+    def be_a_master
+      unless Master.find_by(user_id: current_user.id)
+        redirect_to :back, notice: "对不起，您暂时还没有老师的身份来进行操作。"
+      end
     end
 end

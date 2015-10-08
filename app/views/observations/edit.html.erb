@@ -1,5 +1,53 @@
+<% if current_user.has_role? :admin %>
+
 <%- model_class = Observation -%>
 <div class="page-header">
   <h3><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h3>
 </div>
 <%= render :partial => 'form' %>
+
+<% else %>
+
+<%- model_class = Observation -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.back', :default => t("helpers.links.back")), observations_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', :default => [:"helpers.titles.back"], :model => model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %></h3>
+</div>
+
+<div class="well">
+<dl class="dl-horizontal">
+  <dt><strong>老师:</strong></dt>
+  <dd><%= @observation.homework.user.name %></dd>
+  <% if @observation.homework.classroom_id %>
+  <dt><strong>班级:</strong></dt>
+  <dd><%= @observation.homework.classroom.name %></dd>
+  <% end %>
+  <% if @observation.homework.student %>
+  <dt><strong>学生:</strong></dt>
+  <dd><%= User.find(@observation.homework.student).name %></dd>
+  <% end %>
+  <dt><strong>科目:</strong></dt>
+  <dd><%= @observation.homework.subject.name %></dd>
+  <dt><strong>标题:</strong></dt>
+  <dd><%= @observation.homework.title %></dd>
+  <dt><strong>详情:</strong></dt>
+  <dd><%= @observation.homework.description %></dd>
+  <dt><strong>布置时间:</strong></dt>
+  <dd><%= @observation.homework.created_at.strftime("%F") %></dd>
+</dl>
+</div>
+
+<%= render :partial => 'form' %>
+
+<% end %>

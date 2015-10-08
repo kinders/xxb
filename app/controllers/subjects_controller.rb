@@ -2,6 +2,7 @@ class SubjectsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_subject, only: [:show, :edit, :update, :destroy]
+  before_action :be_a_master, except: [:index, :show]
 
   # GET /subjects
   # GET /subjects.json
@@ -74,4 +75,11 @@ class SubjectsController < ApplicationController
     def subject_params
       params.require(:subject).permit(:name, :user_id, :deleted_at)
     end
+
+    def be_a_master
+      unless Master.find_by(user_id: current_user.id)
+        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      end
+    end
+
 end

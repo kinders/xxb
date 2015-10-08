@@ -2,6 +2,7 @@ class PracticesController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_practice, only: [:show, :edit, :update, :destroy]
+  before_action :be_a_master, except: [:index, :show]
 
   # GET /practices
   # GET /practices.json
@@ -30,8 +31,8 @@ class PracticesController < ApplicationController
     }
     session[:practice_id] = @practice.id
     @lesson = Lesson.find_by(id: @practice.lesson_id)
-    @tutor = Tutor.find_by(id: @practice.tutor_id)
-    @practices = Practice.where(tutor_id: session[:tutor_id])
+    #@tutor = Tutor.find_by(id: @practice.tutor_id)
+    @practices = Practice.where(lesson_id: session[:lesson_id])
     @practices.each_with_index do | practice, index |
       if practice == @practice
         if index - 1 < 0
@@ -64,7 +65,6 @@ class PracticesController < ApplicationController
     unless current_user.has_role? :admin
     @practice.user_id = current_user.id
     @practice.lesson_id = session[:lesson_id]
-    @practice.tutor_id = session[:tutor_id]
     @practice.score = (@practice.answer.to_s.length.to_f / 10).ceil
     end
     respond_to do |format|
@@ -135,4 +135,11 @@ class PracticesController < ApplicationController
     def practice_params
       params.require(:practice).permit(:title, :material, :question, :answer, :user_id, :tutor_id, :lesson_id, :activate, :score, :picture_q, :picture_a, :labelname)
     end
+
+    def be_a_master
+      unless Master.find_by(user_id: current_user.id)
+        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      end
+    end
+
 end

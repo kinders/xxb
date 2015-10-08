@@ -14,7 +14,7 @@
       </div>
     </div>
   <% end %>
-
+  <% unless params[:action] == 'edit' %>
   <div class="form-group">
     <%= f.label :troublemaker, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
@@ -27,23 +27,24 @@
     </div>
     <%= error_span(@badrecord[:troublemaker]) %>
   </div>
+<% end %>
   <div class="form-group">
     <%= f.label :troubletime, :class => 'control-label col-sm-2' %>
-    <div class="controls cols-sm-10">
+    <div class="controls col-sm-10">
       <%= f.date_select :troubletime, :class => 'form-control' %>
     </div>
     <%= error_span(@badrecord[:troubletime]) %>
   </div>
   <div class="form-group">
     <%= f.label :subject_id, :class => 'control-label col-sm-2' %>
-    <div class="controls cols-sm-10">
+    <div class="controls col-sm-10">
       <%= f.select :subject_id, Subject.all.collect { |s| [s.name, s.id]}, :class => 'form-control' %>
     </div>
     <%= error_span(@badrecord[:subject_id]) %>
   </div>
   <div class="form-group">
     <%= f.label :description, :class => 'control-label col-sm-2' %>
-    <div class="controls cols-sm-10">
+    <div class="controls col-sm-10">
       <%= f.text_field :description, :class => 'form-control' %>
     </div>
     <%= error_span(@badrecord[:description]) %>

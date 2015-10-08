@@ -2,6 +2,7 @@ class ObservationsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_observation, only: [:show, :edit, :update, :destroy]
+  before_action :be_a_master, except: [:index, :show]
 
   # GET /observations
   # GET /observations.json
@@ -91,4 +92,11 @@ class ObservationsController < ApplicationController
     def observation_params
       params.require(:observation).permit(:user_id, :student, :point, :mark, :deleted_at, :homework_id)
     end
+
+    def be_a_master
+      unless Master.find_by(user_id: current_user.id)
+        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      end
+    end
+
 end

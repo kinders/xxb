@@ -2,6 +2,7 @@ class DiscussionsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_discussion, only: [:show, :edit, :update, :destroy]
+  before_action :be_a_master, except: [:index, :show]
 
   # GET /discussions
   # GET /discussions.json
@@ -40,6 +41,7 @@ class DiscussionsController < ApplicationController
     @discussion = Discussion.new(discussion_params)
     unless current_user.has_role? :admin
       @discussion.user_id = current_user.id
+      @discussion.classroom_id = session[:classroom_id]
     end
 
     respond_to do |format|
@@ -116,4 +118,11 @@ class DiscussionsController < ApplicationController
     def discussion_params
       params.require(:discussion).permit(:user_id, :classroom_id, :textbook_id, :lesson_id, :teaching_id, :end, :end_at, :is_ready, :deleted_at)
     end
+
+    def be_a_master
+      unless Master.find_by(user_id: current_user.id)
+        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      end
+    end
+
 end

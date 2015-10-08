@@ -1,9 +1,32 @@
+<% if current_user.has_role? :admin %>
+
 <%- model_class = Lesson -%>
 <div class="page-header">
   <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
 </div>
 <%= render :partial => 'form' %>
-<% if session[:textbook_id] %>
-  <hr>
-  <%= link_to "返回教科书目录", catalogs_path, class: "btn btn-default" %>
+
+<% else %>
+
+<%- model_class = Lesson -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.back', :default => t("helpers.links.back")), lessons_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', :default => [:"helpers.titles.back"], :model => model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if session[:textbook_id] %>
+      <%= link_to t('.up', :default => t("helpers.links.up")), textbook_url(session[:textbook_id]), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.textbook")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+     <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
+</div>
+<%= render :partial => 'form' %>
+
 <% end %>

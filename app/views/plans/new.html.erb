@@ -1,16 +1,33 @@
 <%- model_class = Plan -%>
 <% if current_user.has_role? :admin %>
+
 <div class="page-header">
   <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
 </div>
-<% else %>
-<div class="page-header">
-  <% if session[:teaching_id] %>
-    <% teaching = Teaching.find(session[:teaching_id]) %>
-    <h3>为教学计划 <%= teaching.title %> 添加辅导页面</h3>
-  <% end %>
-</div>
-<% end %>
 <%= render :partial => 'form' %>
-<hr>
-<%= link_to "找不到想要的辅导页面？自己创建一个吧！", new_tutor_path, class: "btn btn-default" %>
+
+<% else %>
+
+<% teaching = Teaching.find(session[:teaching_id]) %>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.back', :default => t("helpers.links.back")), plans_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', :default => [:"helpers.titles.back"], :model => model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), teaching_url(teaching), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.teaching")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+    <h3>为教法“ <%= teaching.title %>” 添加辅导教案</h3>
+</div>
+
+<%= render :partial => 'form' %>
+<br>
+<p class="text-danger">找不到想要的辅导页面？<%= link_to "自己创建一个吧！", new_tutor_path %></p>
+
+<% end %>

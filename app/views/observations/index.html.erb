@@ -53,9 +53,24 @@
 <% else %>
 
 <%- model_class = Observation -%>
-<% if session[:homework_id] %>
-<%= link_to "返回作业", homework_path(session[:homework_id]), class: 'btn btn-default' %>
-<% end %>
+
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.new', :default => t("helpers.links.new")), new_observation_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if session[:homework_id] %>
+      <%= link_to t('.up', :default => t("helpers.links.up")), homework_path(session[:homework_id]), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.homework")) %>
+      <% end %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+
+
 <div class="page-header">
   <h3><%= current_user.name %>作业批改记录</h3>
 </div>
@@ -74,29 +89,24 @@
   <tbody>
     <% @observations.each do |observation| %>
       <tr>
-        <td><%= link_to observation.id, observation_path(observation) %></td>
-        <td><%= observation.homework.title %></td>
+        <td><%= observation.id %></td>
+        <td><%= link_to observation.homework.title, observation_path(observation)%></td>
         <td><%= User.find(observation.student).name %></td>
         <td><%= observation.point %></td>
         <td><%= observation.mark %></td>
         <td><%= observation.created_at.strftime("%F") %></td>
         <td>
-          <%= link_to t('.show', :default => t("helpers.links.show")),
-                      observation_path(observation),
-                      :class => 'btn btn-xs btn-default' %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_observation_path(observation), :class => 'btn btn-default btn-xs' %>
+                      edit_observation_path(observation), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       observation_path(observation),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-default' %>
+                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<%= link_to "继续评改作业", new_observation_path, :class => 'btn btn-primary' %>
 
 <% end %>

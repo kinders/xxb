@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150920012926) do
+ActiveRecord::Schema.define(version: 20151008015804) do
 
   create_table "badrecords", force: :cascade do |t|
     t.integer  "user_id"
@@ -24,6 +24,8 @@ ActiveRecord::Schema.define(version: 20150920012926) do
     t.datetime "deleted_at"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
+    t.integer  "finish_man"
+    t.datetime "finish_time"
   end
 
   add_index "badrecords", ["classroom_id"], name: "index_badrecords_on_classroom_id"
@@ -44,6 +46,38 @@ ActiveRecord::Schema.define(version: 20150920012926) do
   add_index "cadres", ["classroom_id"], name: "index_cadres_on_classroom_id"
   add_index "cadres", ["member_id"], name: "index_cadres_on_member_id"
   add_index "cadres", ["user_id"], name: "index_cadres_on_user_id"
+
+  create_table "cardboxes", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.boolean  "share",      default: false
+  end
+
+  add_index "cardboxes", ["deleted_at"], name: "index_cardboxes_on_deleted_at"
+  add_index "cardboxes", ["user_id"], name: "index_cardboxes_on_user_id"
+
+  create_table "cards", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "practice_id"
+    t.integer  "cardbox_id"
+    t.decimal  "serial"
+    t.integer  "degree",      default: 0
+    t.datetime "nexttime"
+    t.integer  "foul",        default: 0
+    t.integer  "count",       default: 0
+    t.datetime "deleted_at"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.integer  "sequence"
+  end
+
+  add_index "cards", ["cardbox_id"], name: "index_cards_on_cardbox_id"
+  add_index "cards", ["deleted_at"], name: "index_cards_on_deleted_at"
+  add_index "cards", ["practice_id"], name: "index_cards_on_practice_id"
+  add_index "cards", ["user_id"], name: "index_cards_on_user_id"
 
   create_table "catalogs", force: :cascade do |t|
     t.decimal  "serial"
@@ -211,6 +245,16 @@ ActiveRecord::Schema.define(version: 20150920012926) do
 
   add_index "lessons", ["deleted_at"], name: "index_lessons_on_deleted_at"
   add_index "lessons", ["user_id"], name: "index_lessons_on_user_id"
+
+  create_table "masters", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "masters", ["deleted_at"], name: "index_masters_on_deleted_at"
+  add_index "masters", ["user_id"], name: "index_masters_on_user_id"
 
   create_table "members", force: :cascade do |t|
     t.decimal  "serial"

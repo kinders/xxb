@@ -1,11 +1,23 @@
 <%- model_class = Lesson -%>
+
 <% unless current_user.has_role? :admin %>
-  <% if session[:textbook_id] %>
-    <% @textbook = Textbook.find(session[:textbook_id]) %>
-  <%= link_to "返回课本", textbook_path(@textbook), class: "btn btn-default pull-right" %>
-<% end %>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.new', :default => t("helpers.links.new")), new_lesson_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if session[:textbook_id] %>
+      <%= link_to t('.up', :default => t("helpers.links.up")), textbook_url(session[:textbook_id]), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.textbook")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+     <% end %>
+    </div>
+  </div>
+</div>
+
 <div class="page-header">
-  <h1>查看所有课程</h1>
+  <h3>查看所有课程</h3>
 </div>
 <table class="table table-striped">
   <thead>
@@ -19,17 +31,16 @@
     <% @lessons.each do |lesson| %>
       <tr>
         <td><%= lesson.id %></td>
-        <td><%= lesson.title %></td>
+        <td><%= link_to lesson.title, lesson_path(lesson) %></td>
         <td>
-          <%= link_to "进入课程", lesson_path(lesson), class: 'btn btn-xs btn-success' %>
 	  <% if  current_user.id == lesson.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_lesson_path(lesson), :class => 'btn btn-default btn-xs' %>
+                      edit_lesson_path(lesson), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       lesson_path(lesson),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-		      :class => 'btn btn-xs btn-default' %>
+		      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
 	  <% end %>
         </td>
       </tr>
@@ -38,9 +49,7 @@
 </table>
 <%= paginate @lessons %>
 <hr>
-<%= link_to "我来创建新的课程",
-            new_lesson_path,
-            :class => 'btn btn-primary' %>
+
 <% else %>
 
 <div class="page-header">

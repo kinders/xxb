@@ -36,6 +36,43 @@
 <% else %>
 
 <%- model_class = Observation -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 管理功能 -->
+    <div class="btn-group" role="group" arial-label="manage">
+      <% if current_user.id == @observation.user_id  %>
+        <%= link_to t('.new', :default => t("helpers.links.new")), new_observation_path, :class => 'btn btn-default', tabindex: 51, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+        <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_observation_path(@observation), :class => 'btn btn-default', tabindex: 52, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
+        <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+          observation_path(@observation),
+          :method => 'delete',
+          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+          :class => 'btn btn-default', tabindex: 53, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
+      <% end %>
+      <%= link_to t('.back', :default => t("helpers.links.back")),
+        observations_path, :class => 'btn btn-default', tabindex: 54, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', :default => [:"helpers.titles.back"], :model => model_class.model_name.human.titleize)  %>
+    </div>
+<%#
+   <!-- 附加功能 -->
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li role="separator" class="divider"></li>
+        <li>
+        </li>
+      </ul>
+    </div>
+%>
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), homework_url(@observation.homework_id), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.homework")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
 <div class="page-header">
   <h3>作业评价详情</h3>
 </div>
@@ -52,18 +89,5 @@
   <dt><strong>批改者:</strong></dt>
   <dd><%= @observation.user.name %></dd>
 </dl>
-
-<%= link_to "继续评改作业",
-            new_observation_path,
-            :class => 'btn btn-primary' %>
-<%= link_to t('.back', :default => t("helpers.links.back")),
-              observations_path, :class => 'btn btn-default'  %>
-<%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_observation_path(@observation), :class => 'btn btn-default' %>
-<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              observation_path(@observation),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
 
 <% end %>

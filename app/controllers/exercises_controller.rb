@@ -2,11 +2,17 @@ class ExercisesController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_exercise, only: [:show, :edit, :update, :destroy]
+  before_action :be_a_master, except: [:index, :show]
 
   # GET /exercises
   # GET /exercises.json
   def index
-    @exercises = Exercise.all
+    if current_user.has_role? :admin 
+      @exercises = Exercise.all
+    else
+      @tutor = Tutor.find(session[:tutor_id])
+      @exercises = Exercise.where(tutor_id: @tutor.id)
+    end
   end
 
   # GET /exercises/1
@@ -85,4 +91,11 @@ class ExercisesController < ApplicationController
     def exercise_params
       params.require(:exercise).permit(:user_id, :tutor_id, :serial, :practice_id)
     end
+
+    def be_a_master
+      unless Master.find_by(user_id: current_user.id)
+        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      end
+    end
+
 end

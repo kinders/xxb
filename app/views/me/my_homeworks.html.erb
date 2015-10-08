@@ -1,8 +1,21 @@
-<%= link_to "返回主页", me_summary_path, class: 'btn btn-default' %>
-<% if @class_homeworks.any? %>
-<div class="page-header">
-  <h3>老师布置的班级作业</h3>
+<%- model_class = Homework -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.up', :default => t("helpers.links.up")), me_summary_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.me")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
 </div>
+
+<div class="page-header">
+  <h3>我要完成的班级作业</h3>
+</div>
+<% if @class_homeworks.any? %>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -12,21 +25,17 @@
       <th>科目</th>
       <th>标题</th>
       <th>布置时间</th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% @class_homeworks.each do |homework| %>
       <tr>
-        <td><%= link_to homework.id, homework_path(homework) %></td>
+        <td><%= homework.id %></td>
         <td><%= homework.user.name %></td>
         <td><%= homework.classroom.name %></td>
         <td><%= homework.subject.name %></td>
-        <td><%= homework.title %></td>
+        <td><%= link_to homework.title, homework_path(homework) %></td>
         <td><%= homework.created_at.strftime("%F") %></td>
-        <td>
-          <%= link_to "详情", homework_path(homework), class: 'btn btn-default btn-xs' %>
-        </td>
       </tr>
     <% end %>
   </tbody>
@@ -37,7 +46,7 @@
 
 <% if @special_homeworks.any? %>
 <div class="page-header">
-  <h3>老师布置的个人作业</h3>
+  <h3>我要完成的个人作业</h3>
 </div>
 <table class="table table-striped">
   <thead>
@@ -48,7 +57,6 @@
       <th>科目</th>
       <th>标题</th>
       <th>布置时间</th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
@@ -58,11 +66,8 @@
         <td><%= homework.user.name %></td>
         <td><%= User.find(homework.student).name %></td>
         <td><%= homework.subject.name %></td>
-        <td><%= homework.title %></td>
+        <td><%= link_to homework.title, homework_path(homework) %></td>
         <td><%= homework.created_at.strftime("%F") %></td>
-        <td>
-          <%= link_to "详情", homework_path(homework), class: 'btn btn-default btn-xs' %>
-        </td>
       </tr>
     <% end %>
   </tbody>

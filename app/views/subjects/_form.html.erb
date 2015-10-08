@@ -15,16 +15,16 @@
     </div>
   <% end %>
 
-  <div class="control-group">
-    <%= f.label "科目名称", :class => 'control-label' %>
-    <div class="controls">
+  <div class="form-group">
+    <%= f.label "科目名称", :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
       <%= f.text_field :name, :class => 'form-control' %>
     </div>
     <%= error_span(@subject[:name]) %>
   </div>
 
 
-  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             subjects_path, :class => 'btn btn-default' %>
 

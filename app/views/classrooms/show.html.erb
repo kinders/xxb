@@ -1,4 +1,5 @@
 <% if current_user.has_role? :admin %>
+
 <%- model_class = Classroom -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
@@ -28,16 +29,48 @@
 <% else %>
 
 <%- model_class = Classroom -%>
-<%= link_to "返回教学楼", classrooms_path, :class => 'btn btn-default pull-right'  %>
-<% if current_user.id == @classroom.user_id %>
-<%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_classroom_path(@classroom), :class => 'btn btn-default' %>
-<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              classroom_path(@classroom),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-default' %>
-<% end %>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 管理功能 -->
+    <div class="btn-group" role="group" arial-label="manage">
+      <% if current_user.id == @classroom.user_id  %>
+        <%= link_to t('.new', :default => t("helpers.links.new")), new_classroom_path, :class => 'btn btn-default', tabindex: 51, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+        <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_classroom_path(@classroom), :class => 'btn btn-default', tabindex: 52, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
+        <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+          classroom_path(@classroom),
+          :method => 'delete',
+          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+          :class => 'btn btn-default', tabindex: 53, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
+      <% end %>
+      <%= link_to t('.back', :default => t("helpers.links.back")),
+        classrooms_path, :class => 'btn btn-default', tabindex: 54, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', :default => [:"helpers.titles.back"], :model => model_class.model_name.human.titleize)  %>
+    </div>
+   <!-- 附加功能 -->
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <%= link_to "教师团队", teachers_url %>
+        </li>
+        <li>
+          <%= link_to "学生团队", members_url %>
+        </li>
+        <li>
+          <%= link_to "班干团队", cadres_url %>
+        </li>
+      </ul>
+    </div>
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), classrooms_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "返回 教学楼" %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
 <div class="page-header">
   <h3>
     <%= @classroom.name %>
@@ -55,16 +88,13 @@
 </small>
   </h3>
 <br>
-<%= link_to "教师团队", teachers_url, class: "btn btn-xs btn-default" %>
-<%= link_to "学生团队", members_url, class: "btn btn-xs btn-default" %>
-<%= link_to "班干团队", cadres_url, class: "btn btn-xs btn-default" %>
 </div>
   <div class="well"> 
   <% if @classroom.members.find_by(student: current_user.id) %>
     <%= current_user.name %> 同学，<em>欢迎您回来！</em>
   <% elsif @classroom.teachers.find_by(mentor: current_user.id) %>
     <%= current_user.name %> 老师，<em>欢迎您回来！</em>
-    <% else %>
+  <% else %>
     <%= current_user.name %>，<em>欢迎您参观！</em>
   <% end %>
   </div>

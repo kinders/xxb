@@ -1,3 +1,5 @@
+<% if current_user.has_role? :admin %>
+
 <%- model_class = Textbook -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %>:<%= @textbook.title %></h1>
@@ -5,7 +7,6 @@
 <div class="paragraph">
   <p><%= @textbook.description %></p>
 </div>
-<% if current_user.has_role? :admin %>
 <hr>
 <hr>
 <dl class="dl-horizontal">
@@ -18,12 +19,35 @@
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
   <dd><%= @textbook.user_id %></dd>
 </dl>
-<% end %>
+
+<% else %>
+
+<%- model_class = Textbook -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.titleize %>:<%= @textbook.title %></h1>
+</div>
+<div class="paragraph">
+  <p><%= @textbook.description %></p>
+</div>
+<hr>
+<hr>
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:title) %>:</strong></dt>
+  <dd><%= @textbook.title %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
+  <dd><%= @textbook.description %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:serial) %>:</strong></dt>
+  <dd><%= @textbook.serial %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @textbook.user_id %></dd>
+</dl>
+
 <hr>
 <%= link_to "进入目录", catalogs_path, class: "btn btn-primary" %>
 <%= link_to "我还要新编一本教科书", new_textbook_path, :class => 'btn btn-primary' %>
 <%= link_to t('.back', :default => t("helpers.links.back")),
               textbooks_path, :class => 'btn btn-default'  %>
+
 <% if current_user.id == @textbook.user_id %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
               edit_textbook_path(@textbook), :class => 'btn btn-default' %>
@@ -32,4 +56,6 @@
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>
+<% end %>
+
 <% end %>

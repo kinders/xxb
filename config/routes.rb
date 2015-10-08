@@ -1,6 +1,18 @@
 Rails.application.routes.draw do
 
 
+  resources :masters
+
+  resources :cards do
+    get 'well_done'
+    get 'try_again'
+  end
+
+  resources :cardboxes do
+    get 'turn_cards'
+    get 'copy_cardbox_for_me'
+  end
+
   get 'download_csv', to: "badrecords#download_csv"
   resources :badrecords do
     # get 'finish_badrecord', to: 'badrecords#finish_badrecord'

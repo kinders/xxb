@@ -27,8 +27,11 @@ class HomeworksController < ApplicationController
           end
         }
       end
+    # 如果是学生或参观者，可以显示本班级所有作业
+    elsif session[:classroom_id]
+      @homeworks = Homework.where(classroom_id: session[:classroom_id]).order(created_at: :desc)
     else
-      @homeworks = Homework.all.order(created_at: :desc)
+      @homeworks = Homework.new
     end
   end
 
@@ -40,7 +43,15 @@ class HomeworksController < ApplicationController
 
   # GET /homeworks/new
   def new
-    @homework = Homework.new
+    if current_user.has_role? :admin 
+      @homework = Homework.new
+    elsif session[:teacher_id]
+      @teacher = Teacher.find(session[:teacher_id])
+      @homework = Homework.new
+    else
+      flash[:notice] = "您的权限不足，请您联系班主任。"
+      redirect_to :back
+    end
   end
 
   # GET /homeworks/1/edit
@@ -98,4 +109,11 @@ class HomeworksController < ApplicationController
     def homework_params
       params.require(:homework).permit(:user_id, :classroom_id, :subject_id, :title, :description, :deleted_at, :student)
     end
+
+    def be_a_master
+      unless Master.find_by(user_id: current_user.id)
+        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      end
+    end
+
 end

@@ -1,7 +1,23 @@
 <%- model_class = Catalog -%>
-<%= link_to "重新选择一本教科书", textbooks_path, class: "btn btn-default pull-right" %>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <% if current_user.id == @textbook.user_id %>
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.new', :default => t("helpers.links.new")), new_catalog_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+    </div>
+    <% end %>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), textbooks_url, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.textbook")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+
+
 <div class="page-header">
-  <h1>《<%= @textbook.title %>》的目录</h1>
+  <h3>《<%= @textbook.title %>》目录</h3>
 </div>
 <table class="table table-striped">
   <thead>
@@ -21,18 +37,19 @@
 	  <%# link_to "学习", lesson_path(catalog_lesson), class: "btn btn-xs btn-success" %>
 	  <% if current_user.id == catalog.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_catalog_path(catalog), :class => 'btn btn-default btn-xs' %>
+                      edit_catalog_path(catalog), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       catalog_path(catalog),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-default' %>
+                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
           <% end %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
 <% if current_user.has_role? :admin %>
 <table class="table table-striped">
   <thead>
@@ -69,6 +86,4 @@
   </tbody>
 </table>
 <% end %>
-<% if current_user.id == @textbook.user_id %>
-<%= link_to "添加一篇课文", new_catalog_path, :class => 'btn btn-primary' %>
-<% end %>
+

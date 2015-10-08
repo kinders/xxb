@@ -2,6 +2,7 @@ class LessonsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_lesson, only: [:show, :edit, :update, :destroy]
+  before_action :be_a_master, except: [:index, :show]
 
   # GET /lessons
   # GET /lessons.json
@@ -136,4 +137,11 @@ class LessonsController < ApplicationController
     def lesson_params
       params.require(:lesson).permit(:title, :content, :user_id, :picture)
     end
+
+    def be_a_master
+      unless Master.find_by(user_id: current_user.id)
+        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      end
+    end
+
 end

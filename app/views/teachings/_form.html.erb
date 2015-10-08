@@ -45,16 +45,15 @@
 
   <% else %>
 
-  <div class="control-group">
-    <%= f.label "教学方案的名称", :class => 'control-label' %>
-    <div class="controls">
+  <div class="form-group">
+    <%= f.label "名称", :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
       <%= f.text_field :title, :class => 'form-control' %>
     </div>
     <%= error_span(@teaching[:title]) %>
   </div>
 
-  <hr>
-  <%= f.submit "保存该教学方案", :class => 'btn btn-primary' %>
+  <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             teachings_path, :class => 'btn btn-default' %>
   <% end %>

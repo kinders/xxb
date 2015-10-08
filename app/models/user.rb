@@ -21,5 +21,7 @@ class User < ActiveRecord::Base
   has_many :observations
   has_many :teachers
   has_many :exercises
+  has_many :cardboxes
+  has_many :cards
 
 end

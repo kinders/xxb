@@ -2,6 +2,7 @@ class MembersController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_member, only: [:show, :edit, :update, :destroy]
+  before_action :be_a_master, except: [:index, :show]
 
   # GET /members
   # GET /members.json
@@ -24,7 +25,7 @@ class MembersController < ApplicationController
     @special_homeworks = Homework.where(student: @member.student).order(created_at: :desc).to_a.delete_if { |hw| Observation.find_by(homework_id: hw.id, student: @member.student) }
     @class_homeworks = Homework.where(classroom_id: session[:classroom_id]).order(created_at: :desc).to_a.delete_if { |hw| Observation.find_by(homework_id: hw.id, student: @member.student) }
     # 下面是未完成的不良记录
-    @my_badrecords = Badrecord.where(troublemaker: current_user.id, classroom_id: @classroom.id, finish: nil)
+    @my_badrecords = Badrecord.where(troublemaker: @member.student, classroom_id: @classroom.id, finish: nil)
   end
 
   # GET /members/new
@@ -121,4 +122,12 @@ class MembersController < ApplicationController
     def member_params
       params.require(:member).permit(:serial, :user_id, :classroom_id, :deleted_at, :student)
     end
+
+  before_action :be_a_master, except: [:index, :show]
+    def be_a_master
+      unless Master.find_by(user_id: current_user.id)
+        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      end
+    end
+
 end

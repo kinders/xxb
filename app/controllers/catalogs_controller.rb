@@ -1,5 +1,6 @@
 class CatalogsController < ApplicationController
   before_action :authenticate_user!
+  before_action :be_a_master, except: [:index, :show]
   load_and_authorize_resource
   before_action :set_catalog, only: [:show, :edit, :update, :destroy]
   autocomplete :lesson, :title, full: true, :display_value => :funky_method, extra_data: [:id]
@@ -82,4 +83,11 @@ class CatalogsController < ApplicationController
     def catalog_params
       params.require(:catalog).permit(:serial, :user_id, :textbook_id, :lesson_id)
     end
+
+    def be_a_master
+      unless Master.find_by(user_id: current_user.id)
+        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      end
+    end
+
 end

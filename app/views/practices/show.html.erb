@@ -1,20 +1,55 @@
 <%- model_class = Practice -%>
 
-<%#<div class="page-header">%>
-  <% if @tutor %>
-    <%= link_to "返回课文", lesson_path(@lesson), class: "btn btn-default pull-right" %>
-    <%= link_to "返回辅导", tutor_path(@tutor), class: "btn btn-default pull-right" %>
-    <div class="page-header">
-      <h5>《<%= @lesson.title %>》“<%= @tutor.title %>”一节的练习</h5>
-    </div>
-  <% else %>
-    <%= link_to "返回课文", lesson_path(@lesson), class: "btn btn-default pull-right" %>
-    <div class="page-header">
-      <h5>《<%= @lesson.title %>》的练习</h5>
-    </div>
-  <% end %>
-<%#</div>%>
 
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 管理功能 -->
+    <div class="btn-group" role="group" arial-label="manage">
+      <% if current_user.id == @practice.user_id  %>
+        <%= link_to t('.new', :default => t("helpers.links.new")), new_practice_path, :class => 'btn btn-default', tabindex: 51, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+        <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_practice_path(@practice), :class => 'btn btn-default', tabindex: 52, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
+        <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+          practice_path(@practice),
+          :method => 'delete',
+          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+          :class => 'btn btn-default', tabindex: 53, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
+      <% end %>
+      <%= link_to t('.back', :default => t("helpers.links.back")),
+        practices_path, :class => 'btn btn-default', tabindex: 54, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', :default => [:"helpers.titles.back"], :model => model_class.model_name.human.titleize)  %>
+    </div>
+   <!-- 附加功能 -->
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <%= link_to "在卡片盒中添加本习题", "#myCard", data: {toggle: "modal"}  %>
+        </li>
+        <li>
+          <%= link_to "管理卡片盒", cardboxes_url %>
+        </li>
+      </ul>
+    </div>
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if @previous_practice %>
+        <%= link_to t('.previous', :default => t("helpers.links.previous")), practice_path(@previous_practice), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.previous', default: t("helpers.titles.previous"), :model => t("activerecord.models.practice")) %>
+      <% end %>
+      <% if @next_practice %>
+        <%= link_to t('.next', :default => t("helpers.links.next")), practice_path(@next_practice), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.next', default: t("helpers.titles.next"), :model => t("activerecord.models.practice")) %>
+      <% end %>
+      <% if session[:textbook_id] %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), lesson_url(@lesson), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.lesson")) %>
+      <% end %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+    <h5>《<%= @lesson.title %>》一课的练习</h5>
+</div>
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-success">
@@ -49,28 +84,70 @@
   </div>
 </div>
 
-<hr>
-<% if @previous_practice != nil %>
-    <%= link_to "上一个练习", practice_path(@previous_practice), class: 'btn btn-default' %>
+
+<!-- Modal -->
+<% if current_user %>
+<div class="modal fade" id="myCard" tabindex="-1" role="dialog" aria-labelledby="myCardLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myCardLabel">添加到这个卡片盒中：</h4>
+      </div>
+      <div class="modal-body">
+        <% @card = Card.new %>
+        <% @card.user_id = current_user.id %>
+        <% @card.practice_id = @practice.id %>
+        <%= form_for @card, :html => { :class => "form-horizontal card" } do |f| %>
+
+    <% if @card.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@card.errors.count, "error") %> 使这个卡片无法提交:</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @card.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <div class="controls">
+      <%= f.hidden_field :user_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@card[:user_id]) %>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <%= f.hidden_field :practice_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@card[:practice_id]) %>
+  </div>
+  <div class="control-group">
+    <%= f.label :cardbox_id, :class => 'control-label col-md-2' %>
+    <div class="controls">
+      <%= f.select :cardbox_id, Cardbox.where(user_id: current_user.id).collect{ |cardbox| [cardbox.name, cardbox.id]}, {:class => 'form-control col-md-4'} %>
+    </div>
+    <%= error_span(@card[:cardbox_id]) %>
+  </div>
+      </div>
+      <div class="modal-footer">
+        <p class="text-left"><b>提示：</b>若点击“提交”后没有反应，可刷新网页再点击“提交”。</p>
+        <%= f.submit "提交", :class => 'btn btn-primary' %>
 <% end %>
-<% if @next_practice != nil %>
-  <%= link_to "下一个练习", practice_path(@next_practice), class: 'btn btn-default' %>
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+      </div>
+    </div>
+  </div>
+</div>
 <% end %>
-<%= link_to t('.new', :default => t("helpers.links.new")),
-            new_practice_path,
-            :class => 'btn btn-default' %>
-<%= link_to t('.back', :default => t("helpers.links.back")),
-              practices_path, :class => 'btn btn-default'  %>
-	    <% if current_user.id == @practice.user_id %>
-<%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_practice_path(@practice), :class => 'btn btn-default' %>
-<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              practice_path(@practice),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-	      :class => 'btn btn-default' %>
-	    <% end %>
+
 <% if current_user.has_role? :admin %>
+
 <hr>
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
@@ -82,4 +159,5 @@
   <dt><strong><%= model_class.human_attribute_name(:activate) %>:</strong></dt>
   <dd><%= @practice.activate %></dd>
 </dl>
+
 <% end %>

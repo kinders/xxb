@@ -17,56 +17,56 @@
     </div>
   <% end %>
 
-  <div class="control-group">
+  <div class="form-group">
     <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
     <%= error_span(@discussion[:user_id]) %>
   </div>
-  <div class="control-group">
+  <div class="form-group">
     <%= f.label :classroom_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :classroom_id, :class => 'form-control' %>
     </div>
     <%= error_span(@discussion[:classroom_id]) %>
   </div>
-  <div class="control-group">
+  <div class="form-group">
     <%= f.label :textbook_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :textbook_id, :class => 'form-control' %>
     </div>
     <%= error_span(@discussion[:textbook_id]) %>
   </div>
-  <div class="control-group">
+  <div class="form-group">
     <%= f.label :lesson_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :lesson_id, :class => 'form-control' %>
     </div>
     <%= error_span(@discussion[:lesson_id]) %>
   </div>
-  <div class="control-group">
+  <div class="form-group">
     <%= f.label :teaching_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :teaching_id, :class => 'form-control' %>
     </div>
     <%= error_span(@discussion[:teaching_id]) %>
   </div>
-  <div class="control-group">
+  <div class="form-group">
     <%= f.label :end, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :end, :class => 'form-control' %>
     </div>
     <%= error_span(@discussion[:end]) %>
   </div>
-  <div class="control-group">
+  <div class="form-group">
     <%= f.label :end_at, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :end_at, :class => 'form-control' %>
     </div>
     <%= error_span(@discussion[:end_at]) %>
   </div>
-  <div class="control-group">
+  <div class="form-group">
     <%= f.label :deleted_at, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :deleted_at, :class => 'form-control' %>
@@ -100,33 +100,26 @@
     </div>
   <% end %>
 
-  <div class="control-group">
-    <%= f.label "班级", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.select :classroom_id, Classroom.where(end: false).collect{|classroom| [classroom.name, classroom.id]}, prompt: "请选择一个班级", :class => 'form-control' %>
-    </div>
-    <%= error_span(@discussion[:classroom_id]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label "课本", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.select :textbook_id, Textbook.all.collect{|textbook| [textbook.title, textbook.id]}, prompt:"请选择一个课本", :class => 'form-control' %>
+  <div class="form-group">
+    <%= f.label "课本", :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.select :textbook_id, Textbook.all.collect{|textbook| [textbook.title, textbook.id]}, { prompt:"请选择一个课本"}, {:class => 'form-control'} %>
     </div>
     <%= error_span(@discussion[:textbook_id]) %>
   </div>
   <% if @discussion.textbook %>
-  <div class="control-group">
-    <%= f.label "课文", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.select :lesson_id, @discussion.textbook.catalogs.order("serial").collect{|catalog| [catalog.serial.to_i.to_s + "  " + catalog.lesson.title, catalog.lesson.id]}, prompt:"请选择一个课文", :class => 'form-control' %>
+  <div class="form-group">
+    <%= f.label "课文", :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.select :lesson_id, @discussion.textbook.catalogs.order("serial").collect{|catalog| [catalog.serial.to_i.to_s + "  " + catalog.lesson.title, catalog.lesson.id]}, { prompt:"请选择一个课文"}, {:class => 'form-control'} %>
     </div>
     <%= error_span(@discussion[:lesson_id]) %>
   </div>
   <% if @discussion.lesson_id %>
-  <div class="control-group">
-    <%= f.label "教学设计", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.select :teaching_id, Teaching.where(lesson_id: @discussion.lesson_id).collect{|teaching| [teaching.title, teaching.id]}, prompt:"请选择一个教学设计", :class => 'form-control' %>
+  <div class="form-group">
+    <%= f.label "教学设计", :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.select :teaching_id, Teaching.where(lesson_id: @discussion.lesson_id).collect{|teaching| [teaching.title, teaching.id]}, { prompt:"请选择一个教学设计"}, {:class => 'form-control' } %>
     </div>
     <%= error_span(@discussion[:teaching_id]) %>
   </div>

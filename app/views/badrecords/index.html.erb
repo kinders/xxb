@@ -15,6 +15,8 @@
       <th><%= model_class.human_attribute_name(:subject_id) %></th>
       <th><%= model_class.human_attribute_name(:description) %></th>
       <th><%= model_class.human_attribute_name(:finish) %></th>
+      <th><%= model_class.human_attribute_name(:finish_man) %></th>
+      <th><%= model_class.human_attribute_name(:finish_time) %></th>
       <th><%= model_class.human_attribute_name(:deleted_at) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
@@ -31,7 +33,9 @@
         <td><%= badrecord.subject_id %></td>
         <td><%= badrecord.description %></td>
         <td><%= badrecord.finish %></td>
-        <td><%= badrecord.deleted_at %></td>
+        <td><%= User.find(badrecord.finish_man) %></td>
+        <td><%=l badrecord.finish_time %></td>
+        <td><%=l badrecord.deleted_at %></td>
         <td><%=l badrecord.created_at %></td>
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
@@ -56,15 +60,28 @@
 
 <% else %>
 
-  <%= link_to "返回班级", classroom_url(@classroom), class: 'btn btn-default pull-right' %>
 <%- model_class = Badrecord -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.new', :default => t("helpers.links.new")), new_badrecord_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), classroom_url(@classroom), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', default: t("helpers.titles.back"), :model => t("activerecord.models.classroom")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+
 <div class="page-header">
   <h3><%=t '.title', :default => model_class.model_name.human.titleize %></h3>
 </div>
 
 <% if @badrecords_by_me.any? %>
 <table class="table table-striped">
-  <caption class="text-center">我管理的不良记录</caption>
+  <caption class="text-center h4">我管理的不良记录</caption>
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
@@ -78,26 +95,23 @@
   <tbody>
     <% @badrecords_by_me.each do |badrecord| %>
       <tr>
-        <td><%= link_to badrecord.id, badrecord_path(badrecord) %></td>
-        <td><%= User.find(badrecord.troublemaker).name %></td>
+        <td><%= badrecord.id %></td>
+        <td><%= link_to Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).serial.to_i.to_s + " " + User.find(badrecord.troublemaker).name, member_path(Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).id) %></td>
         <td><%= badrecord.troubletime.strftime("%F") %></td>
         <td><%= badrecord.subject.name %></td>
-        <td><%= badrecord.description %></td>
+        <td><%= link_to badrecord.description, badrecord_path(badrecord) %></td>
         <td>
-          <%= link_to "抹平",
+          <%= link_to "抹",
                       badrecord_finish_badrecord_path(badrecord),
                       :data => { :confirm =>  "您确定要抹平 #{User.find(badrecord.troublemaker).name} 这条不良记录？" },
-                      :class => 'btn btn-xs btn-default' %>
-          <%= link_to t('.show', :default => t("helpers.links.show")),
-                      badrecord_path(badrecord),
-                      :class => 'btn btn-xs btn-default' %>
+                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "抹平 不良记录" %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_badrecord_path(badrecord), :class => 'btn btn-default btn-xs' %>
+                      edit_badrecord_path(badrecord), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       badrecord_path(badrecord),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-default' %>
+                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
         </td>
       </tr>
     <% end %>
@@ -108,7 +122,7 @@
 
 <% if @class_badrecords.any? %>
 <table class="table table-striped">
-  <caption class="text-center">班级的不良记录</caption>
+  <caption class="text-center h4">班级的不良记录</caption>
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
@@ -122,31 +136,25 @@
   <tbody>
     <% @class_badrecords.each do |badrecord| %>
       <tr>
-        <td><%= link_to badrecord.id, badrecord_path(badrecord) %></td>
-        <td><%= User.find(badrecord.troublemaker).name %></td>
+        <td><%= badrecord.id %></td>
+        <td><%= link_to Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).serial.to_i.to_s + " " + User.find(badrecord.troublemaker).name, member_path(Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).id) %></td>
         <td><%= badrecord.troubletime.strftime("%F") %></td>
         <td><%= badrecord.subject.name %></td>
-        <td><%= badrecord.description %></td>
+        <td><%= link_to badrecord.description, badrecord_path(badrecord) %></td>
         <td>
-          <%= link_to t('.show', :default => t("helpers.links.show")),
-                      badrecord_path(badrecord),
-                      :class => 'btn btn-xs btn-default' %>
-          <%= link_to "抹平",
+          <%= link_to "抹",
                       badrecord_finish_badrecord_path(badrecord),
                       :data => { :confirm =>  "您确定要抹平 #{User.find(badrecord.troublemaker).name} 这条不良记录？" },
-                      :class => 'btn btn-xs btn-default' %>
+                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "抹平 不良记录" %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-<%= link_to "下载csv文件", "/download_csv.csv", class: "btn btn-default pull-right" %>
+<%= link_to "下载csv文件（全班的不良记录）", "/download_csv.csv", class: "btn btn-default pull-right" %>
 <% end %>
 
 
 
-<%= link_to t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize),
-            new_badrecord_path,
-            :class => 'btn btn-primary' %>
 
 <% end %>

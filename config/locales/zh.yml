@@ -4,6 +4,8 @@ zh-CN:
     models:
       badrecord: "不良记录"
       cadre: "班干"
+      cardbox: "卡片盒"
+      card: "卡片"
       catalog: "目录"
       classroom: "班级"
       complaint: "建议"
@@ -13,10 +15,12 @@ zh-CN:
       homework: "作业"
       justice: "评价"
       lesson: "课文"
+      me: "我的主页"
       member: "成员"
-      observation: "观测"
+      observation: "批改"
       plan: "教案"
       practice: "练习"
+      site: "网站首页"
       subject: "科目"
       teacher: "教师"
       teaching: "教法"
@@ -37,6 +41,22 @@ zh-CN:
         created_at: "创建时间"
         updated_at: "更新时间"
       cadre:
+      cardbox:
+        id: "序号"
+        user_id: "拥有者"
+        name: "名称"
+        share: "是否共享"
+      card:
+        id: "序号"
+        user_id: "拥有者"
+        practice_id: "卡片内容"
+        cardbox_id: "卡片盒"
+        sequence: "顺序"
+        serial: "复习顺序"
+        degree: "复习级别"
+        nexttime: "下次复习时间"
+        foul: "逾期"
+        count: "总复习次数"
       catalog:
       classroom:
       complaint:
@@ -206,26 +226,35 @@ zh-CN:
           other: "显示<b>所有 %{count}个</b> %{entry_name}"
       more_pages:
         display_entries: "显示 %{entry_name} <b>%{first}&nbsp;-&nbsp;%{last}</b>  共计 <b>%{total}</b>"
-    actions: "可执行的操作"
+    actions: "操作"
     links:
-      back: "列表"
+      back: "≡"
       cancel: "取消"
       confirm: "你确定要删除？"
-      destroy: "删除"
-      new: "新添"
-      edit: "修改"
+      destroy: "-"
+      edit: "↔"
+      new: "+"
       show: "详情"
+      up: "↑"
+      retreat: "←"
+      previous: "⇐"
+      next: "⇒"
     titles:
       edit: "修改 %{model}"
       save: "保存 %{model}"
-      new: "新建 %{model}"
+      new: "新添 %{model}"
       delete: "删除 %{model}"
+      back: "返回 %{model} 列表"
+      up: "返回 %{model}"
+      retreat: "原路返回上一页面"
+      previous: "上一 %{model}"
+      next: "下一 %{model}"
     select:
-      prompt: 请选择
+      prompt: "请选择"
     submit:
-      create: 新增%{model}
-      submit: 保存%{model}
-      update: 更新%{model}
+      create: "新添 %{model}"
+      submit: "保存 %{model}"
+      update: "更新 %{model}"
   number:
     currency:
       format:

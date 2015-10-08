@@ -32,23 +32,49 @@
 
 <%- model_class = Member -%>
 
-<% if current_user.id == @member.user_id %>
-<%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_member_path(@member), :class => 'btn btn-default' %>
-<%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              member_path(@member),
-              :method => 'delete',
-              :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-              :class => 'btn btn-danger' %>
-<% end %>
-<% if session[:discussion_id] %>
-<% @discussion = Discussion.find(session[:discussion_id]) %>
-<%= link_to "返回课堂", discussion_path(@discussion), class: "btn btn-default pull-right" %>
-<% else %>
-  <%= link_to "返回花名册", members_path, class: 'btn btn-default pull-right' %>
-  <%= link_to "返回班级", classroom_path(@classroom), :class => 'btn btn-default pull-right' %>
-<% end %>
-<hr>
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 管理功能 -->
+    <div class="btn-group" role="group" arial-label="manage">
+      <% if current_user.id == @member.user_id  %>
+        <%= link_to t('.new', :default => t("helpers.links.new")), new_member_path, :class => 'btn btn-default', tabindex: 51, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+        <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_member_path(@member), :class => 'btn btn-default', tabindex: 52, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
+        <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+          member_path(@member),
+          :method => 'delete',
+          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+          :class => 'btn btn-default', tabindex: 53, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
+      <% end %>
+      <%= link_to t('.back', :default => t("helpers.links.back")),
+        members_path, :class => 'btn btn-default', tabindex: 54, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', :default => [:"helpers.titles.back"], :model => model_class.model_name.human.titleize)  %>
+    </div>
+<%#
+   <!-- 附加功能 -->
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li role="separator" class="divider"></li>
+        <li>
+        </li>
+      </ul>
+    </div>
+%>
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if session[:discussion_id] %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), discussion_path(session[:discussion_id]), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.discussion")) %>
+      <% elsif current_user.id == @member.student %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), classroom_path(@classroom), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.classroom")) %>
+      <% else %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), members_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.member")) %>
+      <% end %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
 <div class="page-header">
   <% if current_user.id == @member.student %>
     <h3>我 在<%= @member.classroom.name %> 的书桌</h3>
@@ -114,10 +140,8 @@
 
 <%# 下面显示要完成的作业 %>
 <% if @class_homeworks.any? %>
-<div class="page-header">
-  <h3>老师布置的班级作业</h3>
-</div>
 <table class="table table-striped">
+  <h4>老师布置的班级作业</h4>
   <thead>
     <tr>
       <th>序号</th>
@@ -126,7 +150,6 @@
       <th>科目</th>
       <th>标题</th>
       <th>布置时间</th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
@@ -136,11 +159,8 @@
         <td><%= homework.user.name %></td>
         <td><%= homework.classroom.name %></td>
         <td><%= homework.subject.name %></td>
-        <td><%= homework.title %></td>
+        <td><%= link_to homework.title, homework_path(homework) %></td>
         <td><%= homework.created_at.strftime("%F") %></td>
-        <td>
-          <%= link_to "详情", homework_path(homework), class: 'btn btn-default btn-xs' %>
-        </td>
       </tr>
     <% end %>
   </tbody>
@@ -162,7 +182,6 @@
       <th>科目</th>
       <th>标题</th>
       <th>布置时间</th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
@@ -172,11 +191,8 @@
         <td><%= homework.user.name %></td>
         <td><%= User.find(homework.student).name %></td>
         <td><%= homework.subject.name %></td>
-        <td><%= homework.title %></td>
+        <td><%= link_to homework.title, homework_path(homework) %></td>
         <td><%= homework.created_at.strftime("%F") %></td>
-        <td>
-          <%= link_to "详情", homework_path(homework), class: 'btn btn-default btn-xs' %>
-        </td>
       </tr>
     <% end %>
   </tbody>
@@ -205,10 +221,27 @@
         <td><%= badrecord.subject.name %></td>
         <td><%= badrecord.description %></td>
         <td><%= badrecord.user.name %></td>
+        <td>
+          <% if current_user.id == Classroom.find(session[:classroom_id]).user_id  || current_user.id == badrecord.user_id %>
+          <%= link_to "抹",
+                      badrecord_finish_badrecord_path(badrecord),
+                      :data => { :confirm =>  "您确定要抹平 #{User.find(badrecord.troublemaker).name} 这条不良记录？" },
+                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "抹平 不良记录" %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_badrecord_path(badrecord), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      badrecord_path(badrecord),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
+<% else %>
+  <div class="well">暂时没有不良记录……</div>
 <% end %>
 
 <% end %>

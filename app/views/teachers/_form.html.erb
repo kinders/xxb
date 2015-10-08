@@ -17,37 +17,37 @@
     </div>
   <% end %>
 
-  <div class="control-group">
-    <%= f.label :user_id, :class => 'control-label' %>
-    <div class="controls">
+  <div class="form-group">
+    <%= f.label :user_id, :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
     <%= error_span(@teacher[:user_id]) %>
   </div>
-  <div class="control-group">
-    <%= f.label :classroom_id, :class => 'control-label' %>
-    <div class="controls">
+  <div class="form-group">
+    <%= f.label :classroom_id, :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
       <%= f.text_field :classroom_id, :class => 'form-control' %>
     </div>
     <%= error_span(@teacher[:classroom_id]) %>
   </div>
-  <div class="control-group">
-    <%= f.label :mentor, :class => 'control-label' %>
-    <div class="controls">
+  <div class="form-group">
+    <%= f.label :mentor, :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
       <%= f.text_field :mentor, :class => 'form-control' %>
     </div>
     <%= error_span(@teacher[:mentor]) %>
   </div>
-  <div class="control-group">
-    <%= f.label :subject_id, :class => 'control-label' %>
-    <div class="controls">
+  <div class="form-group">
+    <%= f.label :subject_id, :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
       <%= f.text_field :subject_id, :class => 'form-control' %>
     </div>
     <%= error_span(@teacher[:subject_id]) %>
   </div>
-  <div class="control-group">
-    <%= f.label :deleted_at, :class => 'control-label' %>
-    <div class="controls">
+  <div class="form-group">
+    <%= f.label :deleted_at, :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, :class => 'form-control' %>
     </div>
     <%= error_span(@teacher[:deleted_at]) %>
@@ -79,24 +79,23 @@
     </div>
   <% end %>
 
-  <div class="control-group">
-    <%= f.label "教师", :class => 'control-label' %>
-    <div class="controls">
+  <div class="form-group">
+    <%= f.label "教师", :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
       <%= f.select :mentor, User.all.order("name").collect{ |user| [user.id.to_s + " " + user.name.to_s, user.id]}, {prompt: "请选择一个用户"}, {class: 'form-control'}  %>
     </div>
     <%= error_span(@teacher[:mentor]) %>
   </div>
-  <div class="control-group">
-    <%= f.label "科目", :class => 'control-label' %>
-    <div class="controls">
+  <div class="form-group">
+    <%= f.label "科目", :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
       <%= f.select :subject_id, Subject.all.collect{ |item| [item.name, item.id]}, {prompt: "请选择一个科目"}, {class: 'form-control'}  %>
     </div>
     <%= error_span(@teacher[:subject_id]) %>
   </div>
 
-  <hr>
 
-  <%= f.submit nil, :class => 'btn btn-primary' %>
+  <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             teachers_path, :class => 'btn btn-default' %>
 

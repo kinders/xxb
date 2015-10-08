@@ -4,6 +4,8 @@ en:
     models:
       badrecord:
       cadre:
+      cardbox:
+      card:
       catalog:
       classroom:
       complaint:
@@ -37,6 +39,20 @@ en:
         created_at:
         updated_at:
       cadre:
+      cardbox:
+        id:
+        user_id:
+        name:
+      card:
+        id:
+        user_id:
+        practice_id:
+        cardbox_id:
+        serial:
+        degree:
+        nexttime:
+        foul:
+        count:
       catalog:
       classroom:
       complaint:

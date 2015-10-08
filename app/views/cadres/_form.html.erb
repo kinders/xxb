@@ -18,28 +18,28 @@
 
   <div class="form-group">
     <%= f.label :user_id, :class => 'control-label col-sm-2' %>
-    <div class="controls cols-sm-10">
+    <div class="controls col-sm-10">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
     <%= error_span(@cadre[:user_id]) %>
   </div>
   <div class="form-group">
     <%= f.label :position, :class => 'control-label col-sm-2' %>
-    <div class="controls cols-sm-10">
+    <div class="controls col-sm-10">
       <%= f.text_field :position, :class => 'form-control' %>
     </div>
     <%= error_span(@cadre[:position]) %>
   </div>
   <div class="form-group">
     <%= f.label :member_id, :class => 'control-label col-sm-2' %>
-    <div class="controls cols-sm-10">
+    <div class="controls col-sm-10">
       <%= f.text_field :member_id, :class => 'form-control' %>
     </div>
     <%= error_span(@cadre[:member_id]) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, :class => 'control-label col-sm-2' %>
-    <div class="controls cols-sm-10">
+    <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, :class => 'form-control' %>
     </div>
     <%= error_span(@cadre[:deleted_at]) %>
@@ -73,14 +73,14 @@
 
   <div class="form-group">
     <%= f.label "名字", :class => 'control-label col-sm-2' %>
-    <div class="controls cols-sm-10">
+    <div class="controls col-sm-10">
       <%= f.select :member_id, @classroom.members.collect{ |m| [m.serial.to_s + " " + User.find(m.student).name.to_s, m.id]}, {prompt: "请选择一个成员"}, {class: 'form-control'}  %>
     </div>
     <%= error_span(@cadre[:member_id]) %>
   </div>
   <div class="form-group">
     <%= f.label "职位", :class => 'control-label col-sm-2' %>
-    <div class="controls cols-sm-10">
+    <div class="controls col-sm-10">
       <%= f.text_field :position, :class => 'form-control' %>
     </div>
     <%= error_span(@cadre[:position]) %>

@@ -1,7 +1,33 @@
-     <%= link_to "返回主页", me_summary_path,  class: "btn btn-sm btn-default" %>
-     <%= link_to "我要评卷", me_justify_path,  class: "btn btn-sm btn-default" %>
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+   <!-- 附加功能 -->
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+         <%= link_to "查看做过的试题", evaluations_path %>
+        </li>
+        <li role="separator" class="divider"></li>
+        <li>
+         <%= link_to "我要评卷", me_justify_path %>
+        </li>
+        <li>
+          <%= link_to "查看我评过的卷子", justices_path %>
+        </li>
+      </ul>
+    </div>
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), me_summary_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.me")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
 <div class="page-header">
-    <h3> 积分，当然还不嫌多啦！<%= link_to "加油，我有信心当学霸！", textbooks_path, class: "btn btn-sm btn-success" %><h3>
+    <h3> 积分，当然还不嫌多啦！<%= link_to "加油，我有信心当学霸，看书去！", textbooks_path, class: "btn btn-sm btn-success" %><h3>
 </div>
   <h4>积分详情</h4>
 <table class="table table-striped">
@@ -23,5 +49,3 @@
     <% end %>
   </tbody>
 </table>
-     <%= link_to "查看做过的试题", evaluations_path,  class: "btn btn-sm btn-default" %>
-     <hr>

@@ -6,6 +6,7 @@ class Practice < ActiveRecord::Base
   has_many :evaluations, dependent: :destroy
   has_many :justices, dependent: :destroy
   has_many :exercises, dependent: :destroy
+  has_many :cards, dependent: :destroy
 
   has_attached_file :picture_q
   validates_attachment_file_name :picture_q, :matches => [/png\Z/, /jpe?g\Z/]
@@ -15,5 +16,5 @@ class Practice < ActiveRecord::Base
   validates_attachment_content_type :picture_a, :content_type => /\Aimage\/.*\Z/
 
   acts_as_paranoid
-  validates :title, presence: true
+  validates :title, :lesson_id, presence: true
 end

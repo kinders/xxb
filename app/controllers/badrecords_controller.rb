@@ -10,9 +10,9 @@ class BadrecordsController < ApplicationController
       @badrecords = Badrecord.all
     else
       @classroom = Classroom.find(session[:classroom_id])
-      @badrecords_by_me = Badrecord.where(user_id: current_user.id, classroom_id: @classroom.id, finish: nil) # 管理
+      @badrecords_by_me = Badrecord.where(user_id: current_user.id, classroom_id: @classroom.id, finish: nil).order(:troublemaker) # 管理
       if @classroom.teachers.find_by(mentor: current_user.id)  # 教师
-        @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil)
+        @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil).order(:troublemaker)
       else
         @class_badrecords = []  # 为了在视图中统一使用any?方法。
       end
@@ -70,6 +70,7 @@ class BadrecordsController < ApplicationController
   # PATCH/PUT /badrecords/1
   # PATCH/PUT /badrecords/1.json
   def update
+    @classroom = Classroom.find(session[:classroom_id])  if session[:classroom_id]
     respond_to do |format|
       if @badrecord.update(badrecord_params)
         format.html { redirect_to @badrecord, notice: 'Badrecord was successfully updated.' }
@@ -94,16 +95,18 @@ class BadrecordsController < ApplicationController
   # GET /badrecords/1/finish_badrecord
   def finish_badrecord
     @badrecord = Badrecord.find(params[:badrecord_id])
+    @badrecord.finish_man = current_user.id
+    @badrecord.finish_time = Time.now
     @badrecord.update(finish: true)
     respond_to do |format|
-      format.html { redirect_to badrecords_url, notice: '成功抹平一条不良记录。' }
+      format.html { redirect_to :back, notice: '成功抹平一条不良记录。' }
       format.json { head :no_content }
     end
   end
 
   def download_csv
     @classroom = Classroom.find(session[:classroom_id])
-    @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil)
+    @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil).order(:troublemaker)
     @output_encoding = "UTF-8"
     respond_to do |format|
       format.csv # make sure you have action_name.csv.csvbuilder template in place
@@ -118,6 +121,6 @@ class BadrecordsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def badrecord_params
-      params.require(:badrecord).permit(:user_id, {troublemaker: []}, :classroom_id, :troubletime, :subject_id, :description, :finish, :deleted_at)
+      params.require(:badrecord).permit(:user_id, {troublemaker: []}, :classroom_id, :troubletime, :subject_id, :description, :finish, :finish_man, :finish_time, :deleted_at)
     end
 end

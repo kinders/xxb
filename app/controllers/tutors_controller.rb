@@ -2,6 +2,7 @@ class TutorsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_tutor, only: [:show, :edit, :update, :destroy]
+  before_action :be_a_master, except: [:index, :show]
 
   # GET /tutors
   # GET /tutors.json
@@ -25,7 +26,7 @@ class TutorsController < ApplicationController
     @other_tutors = Tutor.where(lesson_id: session[:lesson_id], title: @tutor.title).where.not(id: @tutor.id)
     session[:tutor_id] = @tutor.id
     @lesson = Lesson.find_by(id: session[:lesson_id])
-    @practice = Practice.find_by(tutor_id: @tutor.id)
+    #@practice = Practice.find_by(tutor_id: @tutor.id)
     @exercises = Exercise.where(tutor_id: @tutor.id)
     # 设置教学环境
     if session[:teaching_id]
@@ -149,4 +150,11 @@ class TutorsController < ApplicationController
     def tutor_params
       params.require(:tutor).permit(:lesson_id, :title, :difficulty, :page, :user_id, :picture1, :picture2, :proviso)
     end
+
+    def be_a_master
+      unless Master.find_by(user_id: current_user.id)
+        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      end
+    end
+
 end

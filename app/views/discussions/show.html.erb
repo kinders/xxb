@@ -36,20 +36,39 @@
 
 <% else %>
 
-<hr>
 <%- model_class = Discussion -%>
-<p>课堂 > <strong>教师：</strong><%= @discussion.user.name %> ;  <strong>班级：</strong><%= @discussion.classroom.name %> </p>
-<p>学习 > <strong>课本：</strong> <%= @discussion.textbook.title %> ; <strong>课程：</strong> <%= @discussion.lesson.title %> ; <strong>计划：</strong> <%= @discussion.teaching.title %> </p>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 管理功能 -->
+    <div class="btn-group" role="group" arial-label="manage">
+      <%= link_to "进", lesson_path(@discussion.lesson_id), class: 'btn btn-default', tabindex: 50, "data-toggle": "tooltip", "data-placement": "bottom", title: "开始学习课文" %>
+      <% if current_user.id == @discussion.user_id  %>
+        <%= link_to t('.new', :default => t("helpers.links.new")), new_discussion_path, :class => 'btn btn-default', tabindex: 51, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+        <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_discussion_path(@discussion), :class => 'btn btn-default', tabindex: 52, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
+        <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+          discussion_path(@discussion),
+          :method => 'delete',
+          :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+          :class => 'btn btn-default', tabindex: 53, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
+        <%= link_to "结", discussion_end_discussion_path(@discussion), :method => 'delete', :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, class: 'btn btn-default', tabindex: 54, "data-toggle": "tooltip", "data-placement": "bottom", title: "结束本次授课"   %>
+      <% end %>
+      <%= link_to t('.back', :default => t("helpers.links.back")),
+        discussions_path, :class => 'btn btn-default', tabindex: 55, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', :default => [:"helpers.titles.back"], :model => model_class.model_name.human.titleize)  %>
+      <%= link_to '退', quit_discussion_path, :class => 'btn btn-default', tabindex: 56, "data-toggle": "tooltip", "data-placement": "bottom", title: "退出课堂"   %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
 <hr>
-<%= link_to "进入学习", lesson_path(@discussion.lesson_id), class: 'btn btn-primary' %>
-<%= link_to '选择其他课堂', discussions_path, :class => 'btn btn-default'  %>
-<%= link_to '退出课堂', quit_discussion_path, :class => 'btn btn-default'  %>
-<% if current_user.id == @discussion.user_id %>
-  <%= link_to "结束本次授课", discussion_end_discussion_path(@discussion), :method => 'delete', :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, class: 'btn btn-default' %>
-<% end %>
+<p>课堂 > <strong>教师：</strong><%= @discussion.user.name %> ;  <strong>班级：</strong><%= @discussion.classroom.name %> </p>
+<p>学习 > <strong>课本：</strong> <%= @discussion.textbook.title %> ; <strong>课程：</strong> <%= @discussion.lesson.title %> ; <strong>教法：</strong> <%= @discussion.teaching.title %> </p>
 <hr>
 
-  <h3>进度看板：</h3>
+<h3>进度看板：</h3>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -59,46 +78,43 @@
       <th>预习</th>
       <th>学习</th>
       <th>总分</th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% all_getted_point = 0 %>
     <% @member = @discussion.classroom.members.order(:serial) %>
     <% @member.each do |member| %>
-    <% @user = User.find(member.student) %>
+      <% @user = User.find(member.student) %>
       <tr>
         <td><%= member.serial.to_i %></td>
-        <td><%= @user.name %></td>
-	<% # 是否进入界面 %>
+        <td><%=link_to @user.name, member_path(member)  %></td>
+	      <% # 是否进入界面 %>
         <% end_time = @discussion.end_at || Time.now %>
-	<% if regist = History.where(user_id: @user.id, modelname: 'lesson', entryid: @discussion.lesson_id, created_at: @discussion.created_at..end_time).take %>
-	  <td><%= regist.created_at.strftime("%F %T") %></td>
+	      <% if regist = History.where(user_id: @user.id, modelname: 'lesson', entryid: @discussion.lesson_id, created_at: @discussion.created_at..end_time).take %>
+	        <td><%= regist.created_at.strftime("%F %T") %></td>
         <% else %>
           <td> -- </td>
         <% end %>
-	<% # 预习得分 %>
-	<%  pre_point = Justice.where(evaluation_user_id: @user.id, practice_id: @discussion.lesson.practices, created_at: @discussion.created_at.prev_month...@discussion.created_at).group(:practice_id).average(:score).values.inject(:+) %>
+	      <% # 预习得分 %>
+	      <%  pre_point = Justice.where(evaluation_user_id: @user.id, practice_id: @discussion.lesson.practices, created_at: @discussion.created_at.prev_month...@discussion.created_at).group(:practice_id).average(:score).values.inject(:+) %>
         <% pre_point  ||= 0 %>
-	<td><%= pre_point.round(2) %> 分</td>
-	<% # 学习得分 %>
-	<%  post_point = Justice.where(evaluation_user_id: @user.id, practice_id: @discussion.lesson.practices, created_at: @discussion.created_at...DateTime.now).group(:practice_id).average(:score).values.inject(:+) %>
+	      <td><%= pre_point.round(2) %> 分</td>
+	      <% # 学习得分 %>
+	      <%  post_point = Justice.where(evaluation_user_id: @user.id, practice_id: @discussion.lesson.practices, created_at: @discussion.created_at...DateTime.now).group(:practice_id).average(:score).values.inject(:+) %>
         <% post_point  ||= 0 %>
-	<td><%= post_point.round(2) %> 分</td>
-	<% # 总得分 %>
-	<% lesson_point = pre_point.to_f + post_point.to_f %>
-	<td><%= lesson_point.round(2) %> 分</td>
-	<% all_getted_point += lesson_point %>
-        <td>
-          <%= link_to "查看详情", member_path(member), :class => 'btn btn-default btn-xs' %>
-        </td>
+	      <td><%= post_point.round(2) %> 分</td>
+	      <% # 总得分 %>
+	      <% lesson_point = pre_point.to_f + post_point.to_f %>
+	      <td><%= lesson_point.round(2) %> 分</td>
+	      <% all_getted_point += lesson_point %>
       </tr>
     <% end %>
   </tbody>
 </table>
 <hr>
 <h4>成绩统计</h4>
-<p><b>习题总分：</b><%= all_point = @discussion.lesson.practices.sum(:score) %>； 
+<p>
+  <b>习题总分：</b><%= all_point = @discussion.lesson.practices.sum(:score) %>； 
   <b>班级总得分：</b><%= all_getted_point  %>；
   <% all_getted_point_rate = (all_getted_point / @member.count) / all_point * 100 %>
   <b>班级平均得分率：</b><%= all_getted_point_rate.to_s(:percentage, precision: 2) %>

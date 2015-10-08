@@ -4,11 +4,12 @@ class MeController < ApplicationController
 
   # 用来显示用户最近的活动记录。
   def summary
+    # 自己制作的资料：课本，课程，辅导，练习
     @my_textbooks = Textbook.where(user_id: current_user.id).order(created_at: :desc)
     @my_lessons = Lesson.where(user_id: current_user.id).order(created_at: :desc)
     @my_tutors = Tutor.where(user_id: current_user.id).order(created_at: :desc)
     @my_practices = Practice.where(user_id: current_user.id).order(created_at: :desc)
-
+    # 最近看过的资料：课本
     @ever_textbooks_ids = []
     his_textbook = History.where(user_id: current_user.id, modelname: "textbook").last(50)
     his_textbook.each {|h| @ever_textbooks_ids << h.entryid }
@@ -20,6 +21,7 @@ class MeController < ApplicationController
     }
     @ever_textbooks.uniq!
 
+    # 最近看过的资料：课程
     @ever_lessons_ids = []
     his_lessons = History.where(user_id: current_user.id, modelname: "lesson").last(50)
     his_lessons.each {|h| @ever_lessons_ids << h.entryid }
@@ -31,6 +33,7 @@ class MeController < ApplicationController
     }
     @ever_lessons.uniq!
 
+    # 最近看过的资料：辅导
     @ever_tutors_ids = []
     his_tutors = History.where(user_id: current_user.id, modelname: "tutor").last(50)
     his_tutors.each {|h| @ever_tutors_ids << h.entryid }
@@ -41,6 +44,8 @@ class MeController < ApplicationController
       end
     }
     @ever_tutors.uniq!
+    # 玩过的卡片盒
+    @my_cardboxes = Cardbox.where(user_id: current_user.id)
   end
 
   # 用来展示测试和积分。

@@ -1,5 +1,7 @@
 <%- model_class = Justice -%>
+
 <% if current_user.has_role? :admin %>
+
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
@@ -48,14 +50,27 @@
 
 <% else %>
 
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.new', :default => t("helpers.links.new")), me_justify_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "接着评卷" %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), me_justify_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "返回 待评卷 列表" %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+
+
 <div class="page-header">
-  <h1>我评过的答卷</h1>
+  <h3>我评过的答卷</h3>
 </div>
 <table class="table table-striped">
   <thead>
     <tr>
       <th>题目</th>
-      <th>材料</th>
       <th>问题</th>
       <th>答题</th>
       <th>评分</th>
@@ -67,26 +82,22 @@
     <% @justices.each do |justice| %>
       <tr>
         <td><%= justice.evaluation.title %></td>
-        <td><%= justice.evaluation.material %></td>
-        <td><%= justice.evaluation.question %></td>
+        <td><%= link_to justice.evaluation.question, justice_path(justice) %></td>
         <td><%= justice.evaluation.your_answer %></td>
         <td><%= justice.score %></td>
         <td><%= justice.remark %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_justice_path(justice), :class => 'btn btn-default btn-xs' %>
+                      edit_justice_path(justice), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       justice_path(justice),
                       :method => :delete,
                       :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %>
+                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<%= link_to "接着评卷", me_justify_path, :class => 'btn btn-primary' %>
-<hr>
 <% end %>
-<hr>
