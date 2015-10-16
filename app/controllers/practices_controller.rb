@@ -125,6 +125,39 @@ class PracticesController < ApplicationController
     end
   end
 
+  def create_practices_in_batch
+    begin
+      name =  current_user.name + Time.now.to_s
+      directory = "public/data_import"
+      path = File.join(directory, name)
+      File.open(path, "wb") { |f| f.write(params[:csv_file].read) }
+      data = SmarterCSV.process(path) do |allline|
+        allline.each do |line|
+          p = Practice.new 
+          p.user_id = current_user.id
+          p.lesson_id = session[:lesson_id]
+          p.labelname = line[:标签]
+          p.title = line[:标题]
+          p.material = line[:材料]
+          p.question = line[:问题]
+          p.answer = line[:答案]
+          p.score = line[:分值] || (p.answer.to_s.length.to_f / 10).ceil
+          p.save!
+        end
+      end
+      respond_to do |format|
+        format.html { redirect_to practices_url, notice: '成功导入数据！' }
+        format.json { head :no_content }
+      end
+    rescue 
+      File.delete(path)
+      respond_to do |format|
+        format.html { redirect_to practices_url, notice: '导入数据失败，请修改CSV文件后重新尝试！' }
+        format.json { head :no_content }
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_practice

@@ -73,7 +73,7 @@ class BadrecordsController < ApplicationController
     @classroom = Classroom.find(session[:classroom_id])  if session[:classroom_id]
     respond_to do |format|
       if @badrecord.update(badrecord_params)
-        format.html { redirect_to @badrecord, notice: 'Badrecord was successfully updated.' }
+        format.html { redirect_to badrecords_url, notice: 'Badrecord was successfully updated.' }
         format.json { render :show, status: :ok, location: @badrecord }
       else
         format.html { render :edit }

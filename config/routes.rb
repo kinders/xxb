@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     get 'well_done'
     get 'try_again'
   end
+  post '/cards/add_all_to_cardbox', to: 'cards#add_all_to_cardbox'
 
   resources :cardboxes do
     get 'turn_cards'
@@ -71,12 +72,15 @@ Rails.application.routes.draw do
     get 'delete_picture_q'
     get 'delete_picture_a'
   end
+  post '/practices/create_practices_in_batch', to: 'practices#create_practices_in_batch'
+
   resources :tutors do
     get 'delete_picture1'
     get 'delete_picture2'
   end
   resources :lessons do
     get 'delete_picture'
+    get 'easy_teaching'
   end
 
   devise_for :users

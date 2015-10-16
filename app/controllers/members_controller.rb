@@ -82,33 +82,34 @@ class MembersController < ApplicationController
 
   def create_members_in_batch
     begin
-    name =  current_user.name + Time.now.to_s
-    directory = "public/members_import"
-    path = File.join(directory, name)
-    File.open(path, "wb") { |f| f.write(params[:csv_file].read) }
-    data = SmarterCSV.process(path) do |allline|
-      allline.each do |line|
-        u = User.new 
-        u.email = line[:电子邮箱]
-        u.password = "123456789"
-        u.name = line[:姓名]
-        u.save!
-        Member.create(
-          classroom_id: session[:classroom_id],
-          user_id: current_user.id,
-          serial: line[:序号],
-          student: u.id)
+      name =  current_user.name + Time.now.to_s
+      directory = "public/data_import"
+      path = File.join(directory, name)
+      File.open(path, "wb") { |f| f.write(params[:csv_file].read) }
+      data = SmarterCSV.process(path) do |allline|
+        allline.each do |line|
+          u = User.new 
+          u.email = line[:电子邮箱]
+          u.password = "123456789"
+          u.name = line[:姓名]
+          u.save!
+          Member.create(
+            classroom_id: session[:classroom_id],
+            user_id: current_user.id,
+            serial: line[:序号],
+            student: u.id)
+        end
       end
-    end
-    respond_to do |format|
-      format.html { redirect_to members_url, notice: '成功导入数据！' }
-      format.json { head :no_content }
-    end
+      respond_to do |format|
+        format.html { redirect_to members_url, notice: '成功导入数据！' }
+        format.json { head :no_content }
+      end
     rescue 
-    respond_to do |format|
-      format.html { redirect_to members_url, notice: '导入数据失败，请修改CSV文件后重新尝试！' }
-      format.json { head :no_content }
-    end
+      File.delete(path)
+      respond_to do |format|
+        format.html { redirect_to members_url, notice: '导入数据失败，请修改CSV文件后重新尝试！' }
+        format.json { head :no_content }
+      end
     end
   end
 

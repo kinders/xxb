@@ -63,10 +63,15 @@
         <li>
           <%= link_to "添加教案", new_teaching_path %>
         </li>
+        <li>
+          <%= link_to "快速生成简易教案", lesson_easy_teaching_path(@lesson) %>
+        </li>
       </ul>
     </div>
     <% else %>
+      <% if @tutor %>
       <%= link_to "辅导", tutor_path(@tutor), class: 'btn btn-default' %>
+      <% end %>
     <% end %>
     <!-- 导航按钮 -->
     <div class="btn-group pull-right" role="btn-group" arial-label="navigation">

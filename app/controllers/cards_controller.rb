@@ -152,6 +152,37 @@ class CardsController < ApplicationController
     end
   end
 
+  # 在习题 的 index 界面中，将所有习题添加到卡片盒中。
+  def add_all_to_cardbox
+    begin
+      @lesson = Lesson.find(session[:lesson_id])
+      @lesson.practices.each do | practice |
+        card = Card.new
+        card.user_id = current_user.id
+        card.practice_id = practice.id
+        card.cardbox_id = params[:cardbox_id]
+        if Card.where(cardbox_id: card_params[:cardbox_id]).any?
+          card.sequence = Card.where(cardbox_id: card_params[:cardbox_id]).order(:sequence).last.sequence + 1
+        else
+          card.sequence = 1
+        end
+        card.serial = @card.sequence.to_f + @card.sequence.to_f / 10000
+        card.nexttime = Time.now
+        card.save
+      end
+      respond_to do |format|
+        format.html { redirect_to :back, notice: '成功将所有习题添加到卡片。' }
+        format.json { render :show, status: :created, location: @card }
+      end
+    rescue 
+      respond_to do |format|
+        format.html { redirect_to :back, notice: '卡片添加失败，请到卡片盒中检查哪些习题没有添加。' }
+        format.json { render json: @card.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_card

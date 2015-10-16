@@ -127,6 +127,24 @@ class LessonsController < ApplicationController
     end
   end
 
+  def easy_teaching
+    @lesson = Lesson.find(params[:lesson_id])
+    teaching = Teaching.create { |t|
+      t.user_id = current_user.id
+      t.lesson_id = @lesson.id
+      t.title = "简易教法" + Time.now.strftime("%F %T")
+    }
+    @lesson.tutors.order(:difficulty).each_with_index { |tutor, index|
+      plan = Plan.create { |p|
+        p.user_id = current_user.id
+        p.teaching_id = teaching.id
+        p.tutor_id = tutor.id
+        p.serial = index
+      }
+    }
+    redirect_to :back, notice: "#{teaching.title}已经成功创建。"
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_lesson
