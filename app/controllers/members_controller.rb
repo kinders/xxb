@@ -26,6 +26,9 @@ class MembersController < ApplicationController
     @class_homeworks = Homework.where(classroom_id: session[:classroom_id]).order(created_at: :desc).to_a.delete_if { |hw| Observation.find_by(homework_id: hw.id, student: @member.student) }
     # 下面是未完成的不良记录
     @my_badrecords = Badrecord.where(troublemaker: @member.student, classroom_id: @classroom.id, finish: nil)
+    # 下面是已经完成的不良记录
+    @my_done_badrecords = Badrecord.where(troublemaker: @member.student, classroom_id: @classroom.id, finish: true)
+
   end
 
   # GET /members/new

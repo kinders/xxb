@@ -113,4 +113,39 @@
 <hr>
 <hr>
 
+<% if @class_badrecords.any? %>
+<table class="table table-striped">
+  <caption class="text-center h4">班级的不良记录</caption>
+  <thead>
+    <tr>
+      <th><%= Badrecord.human_attribute_name(:id) %></th>
+      <th><%= Badrecord.human_attribute_name(:troublemaker) %></th>
+      <th><%= Badrecord.human_attribute_name(:troubletime) %></th>
+      <th><%= Badrecord.human_attribute_name(:subject_id) %></th>
+      <th><%= Badrecord.human_attribute_name(:description) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @class_badrecords.each do |badrecord| %>
+      <tr>
+        <td><%= badrecord.id %></td>
+        <td><%= link_to Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).serial.to_i.to_s + " " + User.find(badrecord.troublemaker).name, member_path(Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).id) %></td>
+        <td><%= badrecord.troubletime.strftime("%F") %></td>
+        <td><%= badrecord.subject.name %></td>
+        <td><%= link_to badrecord.description, badrecord_path(badrecord) %></td>
+        <td>
+          <%= link_to "抹",
+                      badrecord_finish_badrecord_path(badrecord),
+                      :data => { :confirm =>  "您确定要抹平 #{User.find(badrecord.troublemaker).name} 的 #{badrecord.id} 这条不良记录？" },
+                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "抹平 不良记录" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= link_to "下载csv文件（全班的不良记录）", "/download_csv.csv", class: "btn btn-default pull-right" %>
+<% end %>
+
+
 <% end %>

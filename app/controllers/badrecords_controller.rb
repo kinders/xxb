@@ -10,13 +10,10 @@ class BadrecordsController < ApplicationController
       @badrecords = Badrecord.all
     else
       @classroom = Classroom.find(session[:classroom_id])
-      @badrecords_by_me = Badrecord.where(user_id: current_user.id, classroom_id: @classroom.id, finish: nil).order(:troublemaker) # 管理
-      if @classroom.teachers.find_by(mentor: current_user.id)  # 教师
-        @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil).order(:troublemaker)
-      else
-        @class_badrecords = []  # 为了在视图中统一使用any?方法。
-      end
-      # 自己的不良记录列表移动到member模块。
+      # 自己管理的不良记录
+      @badrecords_by_me = Badrecord.where(user_id: current_user.id, classroom_id: @classroom.id, finish: nil, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker) 
+      # 班级的不良记录移动到classroom的show模块。
+      # 自己的不良记录列表移动到member的show模块。
     end
   end
 
@@ -106,7 +103,8 @@ class BadrecordsController < ApplicationController
 
   def download_csv
     @classroom = Classroom.find(session[:classroom_id])
-    @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil).order(:troublemaker)
+    @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)
+    @filename = "#{@classroom.name}不良记录#{Time.now.to_formatted_s(:number)}.csv"
     @output_encoding = "UTF-8"
     respond_to do |format|
       format.csv # make sure you have action_name.csv.csvbuilder template in place

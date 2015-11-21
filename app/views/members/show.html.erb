@@ -225,8 +225,10 @@
           <% if current_user.id == Classroom.find(session[:classroom_id]).user_id  || current_user.id == badrecord.user_id %>
           <%= link_to "抹",
                       badrecord_finish_badrecord_path(badrecord),
-                      :data => { :confirm =>  "您确定要抹平 #{User.find(badrecord.troublemaker).name} 这条不良记录？" },
+                      :data => { :confirm =>  "您确定要抹平 #{User.find(badrecord.troublemaker).name} 的 #{badrecord.id.to_s} 这条不良记录？" },
                       :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "抹平 不良记录" %>
+          <% end %>
+          <% if current_user.id == badrecord.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_badrecord_path(badrecord), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
@@ -236,6 +238,38 @@
                       :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
           <% end %>
         </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% else %>
+  <div class="well">暂时没有不良记录……</div>
+<% end %>
+
+<% if @my_done_badrecords.any? %>
+<table class="table table-striped">
+  <caption class="text-center">我已完成的不良记录</caption>
+  <thead>
+    <tr>
+      <th><%= Badrecord.human_attribute_name(:id) %></th>
+      <th><%= Badrecord.human_attribute_name(:troubletime) %></th>
+      <th><%= Badrecord.human_attribute_name(:subject_id) %></th>
+      <th><%= Badrecord.human_attribute_name(:description) %></th>
+      <th><%= Badrecord.human_attribute_name(:user_id) %></th>
+      <th><%= Badrecord.human_attribute_name(:finish_man) %></th>
+      <th><%= Badrecord.human_attribute_name(:finish_time) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @my_done_badrecords.each do |badrecord| %>
+      <tr>
+        <td><%= link_to badrecord.id, badrecord_path(badrecord) %></td>
+        <td><%= badrecord.troubletime.strftime("%F") %></td>
+        <td><%= badrecord.subject.name %></td>
+        <td><%= badrecord.description %></td>
+        <td><%= badrecord.user.name %></td>
+        <td><%= User.find(badrecord.finish_man).name %></td>
+        <td><%= badrecord.finish_time.strftime("%F") %></td>
       </tr>
     <% end %>
   </tbody>

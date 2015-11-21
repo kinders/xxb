@@ -76,6 +76,7 @@ class CardboxesController < ApplicationController
 
   def turn_cards
     @cardbox = Cardbox.find(params[:cardbox_id])
+    session[:cardbox_id] = @cardbox.id
     Card.where(cardbox_id: @cardbox.id).order(:serial).each { |card|
       if card.nexttime < Time.now  && card.degree < 10
         @next_card = card
@@ -85,7 +86,9 @@ class CardboxesController < ApplicationController
     if @next_card
       redirect_to @next_card 
     else
-      flash[:notice] = "《#{@cardbox.name}》卡片盒里暂时没有需要复习的卡片"
+      @next_time = Card.where(cardbox_id: @cardbox.id).order(:nexttime).first.nexttime
+      flash[:notice] = "《#{@cardbox.name}》的下一轮复习时间为 #{@next_time}！"
+      #flash[:notice] = "《#{@cardbox.name}》卡片盒里暂时没有需要复习的卡片"
       redirect_to cardboxes_url
     end
   end

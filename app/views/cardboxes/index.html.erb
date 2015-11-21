@@ -81,7 +81,13 @@
         <td><%= cardbox.id %></td>
         <td><%= cardbox.user.name %></td>
         <td><%= link_to cardbox.name, cardbox_path(cardbox) %></td>
-        <td><%= cardbox.share %></td>
+        <td>
+          <% if cardbox.share %>
+          共享
+        <% else %>
+          不共享
+        <% end %>
+      </td>
         <td>
           <%= link_to "翻", cardbox_turn_cards_path(cardbox), class: 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "练习翻卡片" %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_cardbox_path(cardbox), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
@@ -116,7 +122,7 @@
         <td><%= cardbox.user.name %></td>
         <td><%= link_to cardbox.name, cardbox_path(cardbox) %></td>
         <td>
-          <%= link_to "复制", cardbox_copy_cardbox_for_me_path(cardbox), class: 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "将这个卡片盒、里面的卡片复制给自己" %>
+          <%= button_to "我要一盒", cardbox_copy_cardbox_for_me_path(cardbox), class: 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "将这个卡片盒、里面的卡片复制给自己" %>
         </td>
       </tr>
     <% end %>

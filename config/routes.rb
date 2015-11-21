@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   resources :cardboxes do
     get 'turn_cards'
-    get 'copy_cardbox_for_me'
+    post 'copy_cardbox_for_me'
   end
 
   get 'download_csv', to: "badrecords#download_csv"

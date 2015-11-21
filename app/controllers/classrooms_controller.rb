@@ -21,6 +21,24 @@ class ClassroomsController < ApplicationController
     @member = @classroom.members.find_by(student: current_user.id)
     @teacher = @classroom.teachers.find_by(mentor: current_user.id)
     @cadre = @classroom.cadres.find_by(member_id: @member.id) if @member
+    # 班级的不良记录
+    #if @classroom.teachers.find_by(mentor: current_user.id)  # 教师
+    #  @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)
+    #else
+    #  @class_badrecords = []  # 为了在视图中统一使用any?方法。
+    #end
+    # 班级的不良记录
+    ## 如果是班主任
+    if @classroom.user_id == current_user.id
+      @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)
+    ## 如果是科任教师
+    elsif @classroom.teachers.find_by(mentor: current_user.id)
+      @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil, subject_id: @classroom.teachers.find_by(mentor: current_user.id).subject_id, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)
+    ## 如果是其他人
+    else
+      @class_badrecords = []  # 为了在视图中统一使用any?方法。
+    end
+    
     #unless current_user.has_role? :admin
       #respond_to do |format|
         #format.html { redirect_to members_path }

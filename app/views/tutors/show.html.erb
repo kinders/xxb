@@ -87,10 +87,10 @@
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">
     <div class="panel-heading" role="tab" id="headingOne">
-      <div class="text-right"><%= @tutor.page_length %></div>
       <h2>
         <%= @tutor.title %>
       </h2>
+      <div class="text-right"><%= @tutor.page_length %></div>
       <% if @tutor.proviso && !@tutor.proviso.empty?%>
         <div class="well well-sm paragraph"> <%= sanitize(@tutor.proviso) %> </div>
       <% end %>
@@ -200,9 +200,12 @@
 </div>
 <% end %>
 
+<!-- 下面是同名的辅导 -->
 <% if @other_tutors.length >= 1 %>
-<hr>
-<p>其他《<%= @tutor.title %>》页面：
+<button class="btn btn-default btn-xs" type="button" data-toggle="collapse" data-target="#samenametutors" aria-expanded="false" aria-controls="exercise zone">
+其他《<%= @tutor.title %>》页面：
+</button>
+<div class="collapse" id="samenametutors">
 <table class="table table-striped">
   <thead>
     <tr>
@@ -229,6 +232,7 @@
     <% end %>
   </tbody>
 </table>
+</div>
 
 <% end %>
 

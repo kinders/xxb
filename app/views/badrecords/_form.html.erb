@@ -19,7 +19,7 @@
     <%= f.label :troublemaker, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%# f.collection_check_boxes :troublemaker, @classroom.members, :student, :id, :class => 'form-control' %>
-      <%= f.collection_check_boxes :troublemaker, @classroom.members.collect { |m| [m.student, m.serial.to_s + " " + User.find(m.student).name]}, :first, :last, class: 'form-control' do |b| %>
+      <%= f.collection_check_boxes :troublemaker, @classroom.members.order(:serial).collect { |m| [m.student, m.serial.to_s + " " + User.find(m.student).name]}, :first, :last, class: 'form-control' do |b| %>
         <div class="col-sm-3">
           <%= b.label + b.check_box  %>
         </div>
@@ -38,7 +38,17 @@
   <div class="form-group">
     <%= f.label :subject_id, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
+      <% teachers = Teacher.where(classroom_id: session[:classroom_id], mentor: current_user.id) %>
+      <% unless teachers.any? %>
+        <% cadre = Cadre.find_by(classroom_id: session[:classroom_id], member_id: Member.find_by(student: current_user.id).id) %>
+      <% end %>
+      <% if teachers.any? %>
+        <%= f.select :subject_id, teachers.collect { |t| [t.subject.name, t.subject_id]}, :class => 'form-control' %>
+      <% elsif cadre %>
+        <%= f.select :subject_id, Subject.all.collect {|s| [s.name, s.id] if cadre.position.match(s.name)}.compact, :class => 'form-control' %>
+      <% else %>
       <%= f.select :subject_id, Subject.all.collect { |s| [s.name, s.id]}, :class => 'form-control' %>
+      <% end %>
     </div>
     <%= error_span(@badrecord[:subject_id]) %>
   </div>

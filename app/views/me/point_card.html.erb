@@ -27,7 +27,14 @@
 </div>
 
 <div class="page-header">
-    <h3> 积分，当然还不嫌多啦！<%= link_to "加油，我有信心当学霸，看书去！", textbooks_path, class: "btn btn-sm btn-success" %><h3>
+  <h3> 
+	          <% if @point = Justice.where(evaluation_user_id: current_user.id).group(:practice_id).average(:score).values.inject(:+) %>
+		          <%= "#{@point.round(2) || 0}积分" %>
+	          <% else %>
+	             0 积分
+            <% end %>
+  </h3>
+            积分，当然还不嫌多啦！<%= link_to "加油，我有信心当学霸，看书去！", textbooks_path, class: "btn btn-sm btn-success" %>
 </div>
   <h4>积分详情</h4>
 <table class="table table-striped">

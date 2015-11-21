@@ -53,7 +53,7 @@
           <ul class="nav navbar-nav">
 	          <li><%= link_to "首页", "/" %></li>
             <% if current_user %>
-	            <li><%= link_to "建议", "#myModal", data: {toggle: "modal"}  %></li>
+	            <li><%= link_to "建议", "#mySuggestion", data: {toggle: "modal"}  %></li>
             <% end %>
          </ul>
          <ul class="nav navbar-nav navbar-right">
@@ -64,11 +64,6 @@
 	            <li><%= menu_text "#{current_user.email}" %></li>
 	          <% end %>
 
-	          <% if @point = Justice.where(evaluation_user_id: current_user.id).group(:practice_id).average(:score).values.inject(:+) %>
-		          <li><%= link_to "#{@point.round(2) || 0}积分", me_point_card_path %></li>
-	          <% else %>
-	            <li><%= link_to " 0 积分", me_point_card_path %></li>
-            <% end %>
             <% if session[:discussion_id] %>
 		          <li><%= link_to "返回课堂", discussion_path(session[:discussion_id]) %></li>
             <% end %>
@@ -102,7 +97,7 @@
 
 <!-- Modal -->
 <% if current_user %>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="mySuggestion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
