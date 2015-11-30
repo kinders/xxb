@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  member_id: 
+  score: 9.99
+  classgroupscore_id: 
+  deleted_at: 2015-11-30 10:07:09
+
+two:
+  user_id: 
+  member_id: 
+  score: 9.99
+  classgroupscore_id: 
+  deleted_at: 2015-11-30 10:07:09

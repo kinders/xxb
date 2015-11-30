@@ -1,6 +1,22 @@
 Rails.application.routes.draw do
 
 
+  resources :classpersonscores
+
+  resources :classgroupscores
+
+  resources :players
+
+  resources :teams do
+    post 'join_team'
+    post 'exit_team'
+  end
+
+  resources :sectionalizations do
+    get 'choose_sectionalization'
+  end
+  get '/reset_sectionalization', to: 'sectionalizations#reset_sectionalization'
+
   resources :masters
 
   resources :cards do
@@ -43,6 +59,7 @@ Rails.application.routes.draw do
   post '/members/create_members_in_batch', to: 'members#create_members_in_batch'
 
   resources :classrooms
+  get '/quit_classroom', to: 'classrooms#quit_classroom'
 
   resources :justices
 

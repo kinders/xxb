@@ -23,5 +23,8 @@ class User < ActiveRecord::Base
   has_many :exercises
   has_many :cardboxes
   has_many :cards
+  has_many :sectionalizations
+  has_many :teams
+  has_many :players
 
 end

@@ -8,9 +8,12 @@ all_student = []
   csv << [Member.find_by(classroom_id: @classroom.id, student: maker.troublemaker).serial.to_i.to_s + " " + User.find(maker.troublemaker).name]
   all_student <<  Member.find_by(classroom_id: @classroom.id, student: maker.troublemaker).serial.to_i.to_s + " " + User.find(maker.troublemaker).name
   csv << ["违规时间", "科目", "详细情况", "序号", "负责人", "签字通过"]
+  i = 0
   @class_badrecords.where(troublemaker: maker.troublemaker).each do |badrecord|
     csv << [badrecord.troubletime.strftime("%F"), badrecord.subject.name, badrecord.description, badrecord.id, badrecord.user.name]
+    i = i + 1
   end
+  csv << ["共 "+ i.to_s + " 条记录"]
   csv << []
 end
 

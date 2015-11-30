@@ -1,0 +1,119 @@
+<% if current_user.has_role? :admin %>
+
+<%= form_for @classgroupscore, html: { class: "form-horizontal classgroupscore" } do |f| %>
+
+    <% if @classgroupscore.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@classgroupscore.errors.count, "error") %> 使得这个 classgroupscore 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @classgroupscore.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :user_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :user_id, class: 'form-control' %>
+    </div>
+    <%= error_span(@classgroupscore[:user_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :team_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :team_id, class: 'form-control' %>
+    </div>
+    <%= error_span(@classgroupscore[:team_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :score, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :score, class: 'form-control' %>
+    </div>
+    <%= error_span(@classgroupscore[:score]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :domain, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :domain, class: 'form-control' %>
+    </div>
+    <%= error_span(@classgroupscore[:domain]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :memo, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :memo, class: 'form-control' %>
+    </div>
+    <%= error_span(@classgroupscore[:memo]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :deleted_at, class: 'form-control' %>
+    </div>
+    <%= error_span(@classgroupscore[:deleted_at]) %>
+  </div>
+
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            classgroupscores_path, class: 'btn btn-default' %>
+
+<% end %>
+
+<% else %>
+
+<%= form_for @classgroupscore, html: { class: "form-horizontal classgroupscore" } do |f| %>
+
+    <% if @classgroupscore.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@classgroupscore.errors.count, "error") %> 使得这个 classgroupscore 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @classgroupscore.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="control-group">
+    <div class="controls">
+      <%= f.hidden_field :domain, :class => 'form-control' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <%= f.hidden_field :user_id, :class => 'form-control' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <%= f.hidden_field :team_id, :class => 'form-control' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :score, :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.number_field :score, :class => 'form-control' %>
+    </div>
+    <%= error_span(@classgroupscore[:score]) %>
+  </div>
+
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            classgroupscores_path, class: 'btn btn-default' %>
+
+<% end %>
+
+<% end %> 

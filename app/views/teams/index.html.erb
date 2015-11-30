@@ -1,0 +1,174 @@
+<% if current_user.has_role? :admin %>
+
+<%- model_class = Team -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.new', default: t("helpers.links.new")), 
+        new_team_path,
+        class: 'btn btn-default', 
+        tabindex: 21,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%=t '.title', default: model_class.model_name.human.pluralize.titleize %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:sectionalization_id) %></th>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:deleted_at) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', default: t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @teams.each do |team| %>
+      <tr>
+        <td><%= link_to team.id, team_path(team) %></td>
+        <td><%= team.user_id %></td>
+        <td><%= team.sectionalization_id %></td>
+        <td><%= team.name %></td>
+        <td><%= team.deleted_at %></td>
+        <td><%= team.created_at.strftime("%F") %></td>
+        <td>
+          <%= link_to t('.edit', default: t("helpers.links.edit")),
+            edit_team_path(team), class: 'btn btn-default btn-xs',
+            "data-toggle": "tooltip", 
+            "data-placement": "bottom", 
+            title: t('.edit', default: [:"helpers.titles.edit"], model: model_class.model_name.human.titleize) %>
+          <%= link_to t('.destroy', default: t("helpers.links.destroy")),
+            team_path(team),
+            method: :delete,
+            data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
+            class: 'btn btn-xs btn-default', 
+            "data-toggle": "tooltip", 
+            "data-placement": "bottom", 
+            title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% else %>
+
+<%- model_class = Team -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <% if current_user.id == @sectionalization.user_id %>
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.new', default: t("helpers.links.new")), 
+        new_team_path,
+        class: 'btn btn-default', 
+        tabindex: 21,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
+    </div>
+    <% end %>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), 
+        sectionalizations_url, 
+        class: 'btn btn-default', 
+        tabindex: 70,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.sectionalization")) %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3>分组方案：<%= @sectionalization.name %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th>小组成员列表</th>
+      <th><%=t '.actions', default: t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @teams.each do |team| %>
+      <tr>
+        <td><%= team.id %></td>
+        <td><%= link_to team.name, team_path(team) %></td>
+        <% this_team_players = team.players.order(:member_id) %>
+        <td><%= this_team_players.collect{|p|p.member.serial.to_s + " " + User.find(p.member.student).name}.join(", ") %> （共 <%= this_team_players.count %> 人）</th>
+        <td>
+          <% if @i_am_the_member %>
+            <% unless @i_am_the_member.players.find_by(team_id: @sectionalization.teams) %>
+              <%= button_to "加",
+                team_join_team_path(team.id),
+                class: 'btn btn-default btn-xs',
+                "data-toggole": "tooltip",
+                "data-placement": "bottom",
+                title: "加入“#{team.name}”小组" %>
+            <% end %> 
+            <% if @i_am_the_member.players.find_by(team_id: team.id, user_id: current_user) %>
+              <%= button_to "退",
+                team_exit_team_path(team.id),
+                class: 'btn btn-default btn-xs',
+                "data-toggole": "tooltip",
+                "data-placement": "bottom",
+                title: "退出“#{team.name}”小组" %>
+            <% end %>
+          <% end %>
+          <% if team.user_id == current_user.id %>
+          <%= link_to t('.edit', default: t("helpers.links.edit")),
+            edit_team_path(team), class: 'btn btn-default btn-xs',
+            "data-toggle": "tooltip", 
+            "data-placement": "bottom", 
+            title: t('.edit', default: [:"helpers.titles.edit"], model: model_class.model_name.human.titleize) %>
+          <%= link_to t('.destroy', default: t("helpers.links.destroy")),
+            team_path(team),
+            method: :delete,
+            data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
+            class: 'btn btn-xs btn-default', 
+            "data-toggle": "tooltip", 
+            "data-placement": "bottom", 
+            title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% no_team_members = Member.where(classroom_id: session[:classroom_id]).collect{|m| m.serial.to_s + " " + User.find(m.student).name unless m.players.find_by(team_id: @sectionalization.teams)}.compact.join(", ") %>
+<% unless no_team_members == "" %>
+  <hr>
+  <h4>还没进入分组的同学的名单：</h4>
+  <p><%= no_team_members %></p>
+<% end %>
+
+<% end %>

@@ -61,6 +61,14 @@
         <li>
           <%= link_to "班干团队", cadres_url %>
         </li>
+        <li>
+          <%= link_to "小组合作", sectionalizations_url %>
+        </li>
+        <% if @sectionalization %>
+        <li>
+          <%= link_to "合作得分", classgroupscores_url %>
+        </li>
+        <% end %>
       </ul>
     </div>
     <!-- 导航按钮 -->
@@ -110,7 +118,63 @@
   <% end %>
 <%= link_to "课堂学习", discussions_url, class: "btn btn-default" %>
 </div>
+
+<% if session[:sectionalization_id] %>
 <hr>
+<table class="table table-striped">
+  <caption class="text-center h4">小组合作学习得分榜</caption>
+  <thead>
+    <tr>
+      <th><%= Team.human_attribute_name(:name) %></th>
+      <th>本日得分</th>
+      <th>本周得分</th>
+      <th>本月得分</th>
+      <th>累计得分</th>
+      <th><%= Player.human_attribute_name(:member_id) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sectionalization.teams.each do |team| %>
+      <tr>
+        <td><%= team.name %></td>
+        <td><%= team.classgroupscores.where(created_at: Time.now.beginning_of_day .. Time.now).collect{|groupscore| groupscore.score}.inject(:+) %></td>
+        <td><%= team.classgroupscores.where(created_at: DateTime.now.all_week).collect{|groupscore| groupscore.score}.inject(:+) %></td>
+        <td><%= team.classgroupscores.where(created_at: DateTime.now.all_month).collect{|groupscore| groupscore.score}.inject(:+) %></td>
+        <td><%= team.classgroupscores.collect{|groupscore| groupscore.score}.inject(:+) %></td>
+        <% this_team_players = team.players.order(:member_id) %>
+        <td><%= this_team_players.collect{|p|p.member.serial.to_s + " " + User.find(p.member.student).name}.join(", ") %> （共 <%= this_team_players.count %> 人）</th>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+
+<hr>
+<table class="table table-striped">
+  <caption class="text-center h4">小组合作学习个人得分榜</caption>
+  <thead>
+    <tr>
+      <th>学生序号</th>
+      <th>学生姓名</th>
+      <th>本日得分</th>
+      <th>本周得分</th>
+      <th>本月得分</th>
+      <th>累计得分</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @classroom.members.order(:serial).each do |member| %>
+      <tr>
+        <td><%= member.serial %></td>
+        <td><%= User.find(member.student).name %></td>
+        <td><%= member.classpersonscores.where(created_at: Time.now.beginning_of_day .. Time.now).collect{|personscore| personscore.score}.inject(:+) %></td>
+        <td><%= member.classpersonscores.where(created_at: DateTime.now.all_week).collect{|personscore| personscore.score}.inject(:+) %></td>
+        <td><%= member.classpersonscores.where(created_at: DateTime.now.all_month).collect{|personscore| personscore.score}.inject(:+) %></td>
+        <td><%= member.classpersonscores.collect{|personscore| personscore.score}.inject(:+) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 <hr>
 
 <% if @class_badrecords.any? %>

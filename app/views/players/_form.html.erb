@@ -1,0 +1,101 @@
+<% if current_user.has_role? :admin %>
+
+<%= form_for @player, html: { class: "form-horizontal player" } do |f| %>
+
+    <% if @player.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@player.errors.count, "error") %> 使得这个 player 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @player.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :user_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :user_id, class: 'form-control' %>
+    </div>
+    <%= error_span(@player[:user_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :team_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :team_id, class: 'form-control' %>
+    </div>
+    <%= error_span(@player[:team_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :member_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :member_id, class: 'form-control' %>
+    </div>
+    <%= error_span(@player[:member_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :deleted_at, class: 'form-control' %>
+    </div>
+    <%= error_span(@player[:deleted_at]) %>
+  </div>
+
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            players_path, class: 'btn btn-default' %>
+
+<% end %>
+
+<% else %>
+
+<%= form_for @player, html: { class: "form-horizontal player" } do |f| %>
+
+    <% if @player.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@player.errors.count, "error") %> 使得这个 player 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @player.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :member_id, class: 'control-label col-sm-2' %>
+    <% if params[:action] == 'new' %>
+    <div class="controls col-sm-10">
+      <%# f.select :member_id, Member.where(classroom_id: session[:classroom_id]).order(:serial).collect {|member| [member.serial.to_s + " " + User.find(member.student).name, member.id] unless member.players.find_by(team_id: Sectionalization.find(session[:sectionalization_id]).teams) }.compact, {prompt: "请选择一个用户"}, {class: 'form-control'} %>
+      <%= f.collection_check_boxes :member_id, Member.where(classroom_id: session[:classroom_id]).order(:serial).collect {|member| [member.id, member.serial.to_s + " " + User.find(member.student).name] unless member.players.find_by(team_id: Sectionalization.find(session[:sectionalization_id]).teams) }.compact, :first, :last, class: 'form-control' do |m| %>
+        <div class="col-sm-3">
+          <%= m.label + m.check_box  %>
+        </div>
+      <% end %>
+    </div>
+    <% else %>
+    <div class="controls col-sm-10">
+      <%= f.select :member_id, Member.where(classroom_id: session[:classroom_id]).order(:serial).collect {|member| [member.serial.to_s + " " + User.find(member.student).name, member.id] }, {prompt: "请选择一个用户"}, {class: 'form-control'} %>
+    </div>
+    <% end %>
+    <%= error_span(@player[:member_id]) %>
+  </div>
+
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            players_path, class: 'btn btn-default' %>
+
+<% end %>
+
+<% end %>

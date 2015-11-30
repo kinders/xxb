@@ -64,6 +64,17 @@
 	            <li><%= menu_text "#{current_user.email}" %></li>
 	          <% end %>
 
+            <% if session[:classroom_id] %>
+              <% @classroom = Classroom.find(session[:classroom_id]) %>
+              <li><%= link_to @classroom.name, classroom_url(@classroom) %></li>
+              <li><%= link_to "退出班级", quit_classroom_path %></li>
+              <% if session[:sectionalization_id] %>
+                <li><%= link_to "小组评价", "#classgroupscore", data: {toggle: "modal"}  %></li>
+                <li><%= link_to "重新分组", reset_sectionalization_path  %></li>
+              <% elsif Sectionalization.find_by(classroom_id: @classroom.id) %>
+                <li><%= link_to "选择分组", "#choosesectionalization", data: {toggle: "modal"} %></li>
+              <% end %>
+            <% end %>
             <% if session[:discussion_id] %>
 		          <li><%= link_to "返回课堂", discussion_path(session[:discussion_id]) %></li>
             <% end %>
@@ -95,7 +106,7 @@
 
     </div> <!-- /container -->
 
-<!-- Modal -->
+<!-- Modal 建议-->
 <% if current_user %>
 <div class="modal fade" id="mySuggestion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -162,6 +173,75 @@
   </div>
 </div>
 <% end %>
+<!-- Modal 建议结束-->
+
+<!-- Modal 评价小组活动-->
+<% if session[:classroom_id] %>
+<% if session[:sectionalization_id] %>
+<div class="modal fade" id="classgroupscore" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">小组评分：</h4>
+      </div>
+      <div class="modal-body">
+        <% @classgroupscore = Classgroupscore.new %>
+        <% @classgroupscore.domain = request.url().to_s %>
+        <% @classgroupscore.user_id = current_user.id %>
+        <%= form_for @classgroupscore, :html => { :class => "form-horizontal complaint" } do |f| %>
+
+  <div class="control-group">
+    <div class="controls">
+      <%= f.hidden_field :domain, :class => 'form-control' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <div class="controls">
+      <%= f.hidden_field :user_id, :class => 'form-control' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :team_id, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.select :team_id, Team.where(sectionalization_id: session[:sectionalization_id]).collect{|team|[team.name, team.id]}, {prompt: "请选择一个小组"}, :class => 'form-control' %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :score, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.number_field :score, :class => 'form-control' %>
+    </div>
+  </div>
+      </div>
+      <div class="modal-footer">
+        <p class="text-left"><b>提示：</b>若点击“提交”后没有反应，可刷新网页再点击“提交”。</p>
+        <%= f.submit "提交", :class => 'btn btn-primary' %>
+<% end %>
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+      </div>
+    </div>
+  </div>
+</div>
+<% else %>
+<div class="modal fade" id="choosesectionalization" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">请选择分组方案：</h4>
+      </div>
+      <div class="modal-body">
+        <% @classroom.sectionalizations.each do | sectionalization | %>
+          <%= link_to sectionalization.name, sectionalization_choose_sectionalization_path(sectionalization.id), class: "btn btn-default" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<% end %>
+<% end %>
+<!-- Modal 小组评价结束-->
 
   </body>
 </html>

@@ -8,6 +8,8 @@ zh-CN:
       card: "卡片"
       catalog: "目录"
       classroom: "班级"
+      classgroupscore: "课堂小组得分"
+      classpersonscore: "课堂个人得分"
       complaint: "建议"
       discussion: "课堂"
       evaluation: "评估"
@@ -19,17 +21,20 @@ zh-CN:
       member: "成员"
       observation: "批改"
       plan: "教案"
+      player: "小组成员"
       practice: "练习"
+      sectionalization: "分组方案"
       site: "网站首页"
       subject: "科目"
       teacher: "教师"
       teaching: "教法"
+      team: "小组"
       textbook: "课本"
       tutor: "辅导"
       user: "用户"
     attributes:
       badrecord:
-        id: "序号"
+        id: "标识号"
         user_id: "管理员"
         troublemaker: "肇事者"
         classroom_id: "班级"
@@ -44,12 +49,12 @@ zh-CN:
         updated_at: "更新时间"
       cadre:
       cardbox:
-        id: "序号"
+        id: "标识号"
         user_id: "拥有者"
         name: "名称"
         share: "是否共享"
       card:
-        id: "序号"
+        id: "标识号"
         user_id: "拥有者"
         practice_id: "卡片内容"
         cardbox_id: "卡片盒"
@@ -59,8 +64,27 @@ zh-CN:
         nexttime: "下次复习时间"
         foul: "逾期"
         count: "总复习次数"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
       catalog:
       classroom:
+      classgroupscore:
+        id: "标识号"
+        user_id: "评分人"
+        team_id: "被评小组"
+        score: "得分"
+        domain: "页面"
+        memo: "备注个人信息"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
+      classpersonscore:
+        id: "标识号"
+        user_id: "评分人"
+        member_id: "被评学员"
+        score: "得分"
+        classgroupscore_id: "小组评分记录"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
       complaint:
       discussion:
       evaluation:
@@ -71,10 +95,31 @@ zh-CN:
       member:
       observation:
       plan:
+      player:
+        id: "标识号"
+        user_id: "创建者"
+        team_id: "所属小组"
+        member_id: "小组成员"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
       practice:
+      sectionalization:
+        id: "标识号"
+        user_id: "创建者"
+        classroom_id: "班级"
+        name: "分组方案名称"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
       subject:
       teacher:
       teaching:
+      team:
+        id: "标识号"
+        user_id: "创建者"
+        sectionalization_id: "所属分组方案"
+        name: "小组名称"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
       textbook:
       tutor:
       user:

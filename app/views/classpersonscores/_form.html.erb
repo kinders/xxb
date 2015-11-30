@@ -1,0 +1,59 @@
+<%= form_for @classpersonscore, html: { class: "form-horizontal classpersonscore" } do |f| %>
+
+    <% if @classpersonscore.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@classpersonscore.errors.count, "error") %> 使得这个 classpersonscore 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @classpersonscore.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :user_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :user_id, class: 'form-control' %>
+    </div>
+    <%= error_span(@classpersonscore[:user_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :member_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :member_id, class: 'form-control' %>
+    </div>
+    <%= error_span(@classpersonscore[:member_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :score, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :score, class: 'form-control' %>
+    </div>
+    <%= error_span(@classpersonscore[:score]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :classgroupscore_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :classgroupscore_id, class: 'form-control' %>
+    </div>
+    <%= error_span(@classpersonscore[:classgroupscore_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :deleted_at, class: 'form-control' %>
+    </div>
+    <%= error_span(@classpersonscore[:deleted_at]) %>
+  </div>
+
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            classpersonscores_path, class: 'btn btn-default' %>
+
+<% end %>

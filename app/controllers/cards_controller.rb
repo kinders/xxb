@@ -95,6 +95,12 @@ class CardsController < ApplicationController
     @cardbox = Cardbox.find(session[:cardbox_id])  # 从会话中获取卡片盒号码
     @card = Card.find(session[:card_id])           # 从会话中获取卡片号码
     interval = [10,  20,  40,  180,  480,  720,  1440,  2880,  4320,  11520,  21600]   # 定义学习间隔，单位为分钟
+    # 记录足迹
+    # history = History.create { |h| 
+    #   h.user_id = current_user.id
+    #   h.modelname = "card"
+    #   h.entryid = @card.id
+    # }
     # 修改本卡信息
     if @card.nexttime > Time.now   ## 如果时间还没到，则什么都不做，这个if后面的逻辑是指时间到来了。
     elsif @card.degree == 0        ## 如果级别为0
@@ -142,6 +148,12 @@ class CardsController < ApplicationController
     @card.count += 1                             # 将复习次数加一
     @card.serial += 5                            # 复习顺序加五
     @card.save!
+    # 记录足迹
+    # history = History.create { |h| 
+    #   h.user_id = current_user.id
+    #   h.modelname = "card"
+    #   h.entryid = @card.id
+    # }
     Card.where(cardbox_id: @cardbox.id).order(:serial).each { |card|
       if card.nexttime < Time.now  && card.degree < 10
         @next_card = card

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151008015804) do
+ActiveRecord::Schema.define(version: 20151130020709) do
 
   create_table "badrecords", force: :cascade do |t|
     t.integer  "user_id"
@@ -93,6 +93,36 @@ ActiveRecord::Schema.define(version: 20151008015804) do
   add_index "catalogs", ["lesson_id"], name: "index_catalogs_on_lesson_id"
   add_index "catalogs", ["textbook_id"], name: "index_catalogs_on_textbook_id"
   add_index "catalogs", ["user_id"], name: "index_catalogs_on_user_id"
+
+  create_table "classgroupscores", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "team_id"
+    t.decimal  "score"
+    t.string   "domain"
+    t.string   "memo"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "classgroupscores", ["deleted_at"], name: "index_classgroupscores_on_deleted_at"
+  add_index "classgroupscores", ["team_id"], name: "index_classgroupscores_on_team_id"
+  add_index "classgroupscores", ["user_id"], name: "index_classgroupscores_on_user_id"
+
+  create_table "classpersonscores", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "member_id"
+    t.decimal  "score"
+    t.integer  "classgroupscore_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "classpersonscores", ["classgroupscore_id"], name: "index_classpersonscores_on_classgroupscore_id"
+  add_index "classpersonscores", ["deleted_at"], name: "index_classpersonscores_on_deleted_at"
+  add_index "classpersonscores", ["member_id"], name: "index_classpersonscores_on_member_id"
+  add_index "classpersonscores", ["user_id"], name: "index_classpersonscores_on_user_id"
 
   create_table "classrooms", force: :cascade do |t|
     t.string   "name"
@@ -300,6 +330,20 @@ ActiveRecord::Schema.define(version: 20151008015804) do
   add_index "plans", ["tutor_id"], name: "index_plans_on_tutor_id"
   add_index "plans", ["user_id"], name: "index_plans_on_user_id"
 
+  create_table "players", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "team_id"
+    t.integer  "member_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "players", ["deleted_at"], name: "index_players_on_deleted_at"
+  add_index "players", ["member_id"], name: "index_players_on_member_id"
+  add_index "players", ["team_id"], name: "index_players_on_team_id"
+  add_index "players", ["user_id"], name: "index_players_on_user_id"
+
   create_table "practices", force: :cascade do |t|
     t.string   "title"
     t.text     "question"
@@ -344,6 +388,19 @@ ActiveRecord::Schema.define(version: 20151008015804) do
   add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
   add_index "roles", ["name"], name: "index_roles_on_name"
 
+  create_table "sectionalizations", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "classroom_id"
+    t.string   "name"
+    t.datetime "deleted_at"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "sectionalizations", ["classroom_id"], name: "index_sectionalizations_on_classroom_id"
+  add_index "sectionalizations", ["deleted_at"], name: "index_sectionalizations_on_deleted_at"
+  add_index "sectionalizations", ["user_id"], name: "index_sectionalizations_on_user_id"
+
   create_table "subjects", force: :cascade do |t|
     t.string   "name"
     t.datetime "deleted_at"
@@ -382,6 +439,19 @@ ActiveRecord::Schema.define(version: 20151008015804) do
   add_index "teachings", ["deleted_at"], name: "index_teachings_on_deleted_at"
   add_index "teachings", ["lesson_id"], name: "index_teachings_on_lesson_id"
   add_index "teachings", ["user_id"], name: "index_teachings_on_user_id"
+
+  create_table "teams", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "sectionalization_id"
+    t.string   "name"
+    t.datetime "deleted_at"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+  end
+
+  add_index "teams", ["deleted_at"], name: "index_teams_on_deleted_at"
+  add_index "teams", ["sectionalization_id"], name: "index_teams_on_sectionalization_id"
+  add_index "teams", ["user_id"], name: "index_teams_on_user_id"
 
   create_table "textbooks", force: :cascade do |t|
     t.string   "title"

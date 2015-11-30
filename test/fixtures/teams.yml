@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  sectionalization_id: 
+  name: MyString
+  deleted_at: 2015-11-26 23:24:30
+
+two:
+  user_id: 
+  sectionalization_id: 
+  name: MyString
+  deleted_at: 2015-11-26 23:24:30

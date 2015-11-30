@@ -21,6 +21,22 @@ class MembersController < ApplicationController
   def show
     @classroom = Classroom.find(session[:classroom_id])
     session[:member_id] = @member.id
+    # 下面生成下一同学和上一同学
+    @members = @classroom.members.order(:serial)
+    @members.each_with_index do |member, index|
+      if member.id == @member.id
+        if index == 0
+	        @previous_member = nil  
+	      else
+	        @previous_member = @members[index - 1] 
+	      end
+	      if index + 1 == @members.length
+	        @next_member = nil
+	      else
+	        @next_member = @members[index + 1]
+	      end
+      end
+    end
     # 下面是未完成作业管理
     @special_homeworks = Homework.where(student: @member.student).order(created_at: :desc).to_a.delete_if { |hw| Observation.find_by(homework_id: hw.id, student: @member.student) }
     @class_homeworks = Homework.where(classroom_id: session[:classroom_id]).order(created_at: :desc).to_a.delete_if { |hw| Observation.find_by(homework_id: hw.id, student: @member.student) }

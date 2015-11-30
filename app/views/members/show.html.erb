@@ -63,6 +63,12 @@
 %>
     <!-- 导航按钮 -->
     <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if @previous_member %>
+        <%= link_to t('.previous', :default => t("helpers.links.previous")), member_path(@previous_member), class: 'btn btn-default', tabindex: 81, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.previous', default: t("helpers.titles.previous"), :model => t("activerecord.models.member")) %>
+      <% end %>
+      <% if @next_member %>
+        <%= link_to t('.next', :default => t("helpers.links.next")), member_path(@next_member), class: 'btn btn-default', tabindex: 82, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.next', default: t("helpers.titles.next"), :model => t("activerecord.models.member")) %>
+      <% end %>
       <% if session[:discussion_id] %>
         <%= link_to t('.up', :default => t("helpers.links.up")), discussion_path(session[:discussion_id]), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.discussion")) %>
       <% elsif current_user.id == @member.student %>
@@ -79,8 +85,9 @@
   <% if current_user.id == @member.student %>
     <h3>我 在<%= @member.classroom.name %> 的书桌</h3>
   <% else %>
-    <h3><%= User.find(@member.student.to_i).name %> 在 <%= @member.classroom.name %> 的书桌</h3>
+    <h3><%= @member.serial.to_s %> <%= User.find(@member.student.to_i).name %> 在 <%= @member.classroom.name %> 的书桌</h3>
   <% end %>
+    <p>我的小组合作得分：<%= @member.classpersonscores.collect{|personscore|personscore.score}.inject(:+) %></p>
 </div>
 
 <%# 如果已经进入了课堂学习，则出示学习概览 %>
@@ -203,7 +210,7 @@
 
 <% if @my_badrecords.any? %>
 <table class="table table-striped">
-  <caption class="text-center">我的不良记录</caption>
+  <caption class="text-center">我的不良记录（共<%=@my_badrecords.count %>条）</caption>
   <thead>
     <tr>
       <th><%= Badrecord.human_attribute_name(:id) %></th>
@@ -248,7 +255,7 @@
 
 <% if @my_done_badrecords.any? %>
 <table class="table table-striped">
-  <caption class="text-center">我已完成的不良记录</caption>
+  <caption class="text-center">我已完成的不良记录（共<%=@my_done_badrecords.count %>条）</caption>
   <thead>
     <tr>
       <th><%= Badrecord.human_attribute_name(:id) %></th>

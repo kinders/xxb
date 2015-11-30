@@ -2,7 +2,7 @@ class DiscussionsController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_discussion, only: [:show, :edit, :update, :destroy]
-  before_action :be_a_master, except: [:index, :show]
+  before_action :be_a_master, except: [:index, :show, :quit_discussion]
 
   # GET /discussions
   # GET /discussions.json

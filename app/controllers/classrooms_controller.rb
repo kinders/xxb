@@ -21,6 +21,7 @@ class ClassroomsController < ApplicationController
     @member = @classroom.members.find_by(student: current_user.id)
     @teacher = @classroom.teachers.find_by(mentor: current_user.id)
     @cadre = @classroom.cadres.find_by(member_id: @member.id) if @member
+    @sectionalization = Sectionalization.find(session[:sectionalization_id]) if session[:sectionalization_id]
     # 班级的不良记录
     #if @classroom.teachers.find_by(mentor: current_user.id)  # 教师
     #  @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)
@@ -97,6 +98,12 @@ class ClassroomsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def quit_classroom
+    session[:classroom_id] = nil
+    redirect_to "/", notice: "您已经从班级中退出"
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

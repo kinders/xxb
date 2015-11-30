@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  team_id: 
+  score: 9.99
+  domain: MyString
+  memo: MyString
+  deleted_at: 2015-11-30 10:04:55
+
+two:
+  user_id: 
+  team_id: 
+  score: 9.99
+  domain: MyString
+  memo: MyString
+  deleted_at: 2015-11-30 10:04:55
