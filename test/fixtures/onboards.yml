@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  begin_at: 2015-12-06 00:07:04
+  expire_at: 2015-12-06 00:07:04
+  end_at: 2015-12-06 00:07:04
+  remote_ip: MyString
+  http_user_agent: MyString
+  deleted_at: 2015-12-06 00:07:04
+
+two:
+  user_id: 
+  begin_at: 2015-12-06 00:07:04
+  expire_at: 2015-12-06 00:07:04
+  end_at: 2015-12-06 00:07:04
+  remote_ip: MyString
+  http_user_agent: MyString
+  deleted_at: 2015-12-06 00:07:04

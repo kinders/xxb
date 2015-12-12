@@ -1,0 +1,57 @@
+<%- model_class = Withdraw -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%# link_to t('.new', default: t("helpers.links.new")), 
+        new_withdraw_path,
+        class: 'btn btn-default', 
+        tabindex: 21,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), 
+        receipts_path, 
+        class: 'btn btn-default', 
+        tabindex: 70,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.receipt")) %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%=t '.title', default: model_class.model_name.human.titleize %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:money) %></th>
+      <th><%= model_class.human_attribute_name(:memo) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @withdraws.each do |withdraw| %>
+      <tr>
+        <td><%= withdraw.id %></td>
+        <td><%= withdraw.user.id %>_<%= withdraw.user.name %></td>
+        <td><%= withdraw.money %></td>
+        <td><%= withdraw.memo %></td>
+        <td><%= withdraw.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

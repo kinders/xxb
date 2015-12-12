@@ -1,0 +1,30 @@
+<%= form_for @cashier, html: { class: "form-horizontal cashier" } do |f| %>
+
+    <% if @cashier.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@cashier.errors.count, "error") %> 使得这个 cashier 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @cashier.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :user_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.select :user_id, User.all.collect{|u| [u.id.to_s + "_" + u.name + "_" + u.email]}, {prompt: "请选择一个用户"}, {class: 'form-control'} %>
+    </div>
+    <%= error_span(@cashier[:user_id]) %>
+  </div>
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            cashiers_path, class: 'btn btn-default' %>
+
+<% end %>

@@ -12,19 +12,22 @@ class CadresController < ApplicationController
     else
       @classroom = Classroom.find(session[:classroom_id])
       @cadres = Cadre.where(classroom_id: session[:classroom_id])
+    session[:cadre_id] = nil
     end
   end
 
   # GET /cadres/1
   # GET /cadres/1.json
   def show
+    session[:cadre_id] = @cadre.id
     @classroom = Classroom.find(session[:classroom_id])
   end
 
   # GET /cadres/new
   def new
-    @cadre = Cadre.new
     @classroom = Classroom.find(session[:classroom_id])
+    @cadre = Cadre.new
+    @cadre.classroom_id = session[:classroom_id]
   end
 
   # GET /cadres/1/edit
@@ -82,7 +85,7 @@ class CadresController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def cadre_params
-      params.require(:cadre).permit(:user_id, :position, :member_id, :classroom_id, :deleted_at)
+      params.require(:cadre).permit(:user_id, :position, :member_id, :classroom_id, :team_id, :deleted_at)
     end
 
     def be_a_master

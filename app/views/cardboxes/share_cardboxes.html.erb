@@ -1,0 +1,42 @@
+<%- model_class = Cardbox -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), cardboxes_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', default: t("helpers.titles.up"), :model => t("activerecord.models.cardbox")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3>共享卡片盒中心</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th>卡片数量</th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @share_cardboxes.each do |cardbox| %>
+      <tr>
+        <td><%= cardbox.id %></td>
+        <td><%= cardbox.user.name %></td>
+        <td><%= link_to cardbox.name, cardbox_path(cardbox) %></td>
+        <td><%= cardbox.cards.count %></td>
+        <td>
+          <% if cardbox.user_id == current_user.id %>
+            <%= button_to "再来一盒", cardbox_copy_cardbox_for_me_path(cardbox), class: 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "将这个卡片盒和里面的卡片再复制一次给自己" %>
+          <% else %>
+            <%= button_to "我要一盒", cardbox_copy_cardbox_for_me_path(cardbox), class: 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "将这个卡片盒和里面的卡片复制给自己" %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

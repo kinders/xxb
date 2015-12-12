@@ -1,0 +1,44 @@
+<%- model_class = Onboard -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%= @user.name %>的<%=t '.title', default: model_class.model_name.human.titleize %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th><%= model_class.human_attribute_name(:begin_at) %></th>
+      <th><%= model_class.human_attribute_name(:expire_at) %></th>
+      <th><%= model_class.human_attribute_name(:end_at) %></th>
+      <th><%= model_class.human_attribute_name(:remote_ip) %></th>
+      <th><%= model_class.human_attribute_name(:http_user_agent) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @onboards.reverse.each_with_index do |onboard, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= onboard.begin_at %></td>
+        <td><%= onboard.expire_at %></td>
+        <td><%= onboard.end_at %></td>
+        <td><%= onboard.remote_ip %></td>
+        <td><%= onboard.http_user_agent %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= paginate @onboards %>

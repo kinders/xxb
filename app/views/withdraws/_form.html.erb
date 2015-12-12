@@ -1,0 +1,38 @@
+<%= form_for @withdraw, html: { class: "form-horizontal withdraw" } do |f| %>
+
+    <% if @withdraw.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@withdraw.errors.count, "error") %> 使得这个 withdraw 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @withdraw.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :money, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :money, class: 'form-control' %>
+    </div>
+    <%= error_span(@withdraw[:money]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :memo, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :memo, class: 'form-control' %>
+    </div>
+    <%= error_span(@withdraw[:memo]) %>
+  </div>
+
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            withdraws_path, class: 'btn btn-default' %>
+
+<% end %>

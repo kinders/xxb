@@ -1,0 +1,37 @@
+<%= form_for @receipt, html: { class: "form-horizontal receipt" } do |f| %>
+
+    <% if @receipt.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@receipt.errors.count, "error") %> 使得这个 receipt 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @receipt.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :cashier, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.select :cashier, User.where(is_vip: nil).collect{|u| [u.id.to_s + " " + u.name + " " + u.email]}, { prompt: "请选择一个用户"}, {class: 'form-control'} %>
+    </div>
+    <%= error_span(@receipt[:user_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :money, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.number_field :money, class: 'form-control' %>
+    </div>
+    <%= error_span(@receipt[:money]) %>
+  </div>
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            receipts_path, class: 'btn btn-default' %>
+
+<% end %>

@@ -1,0 +1,92 @@
+<%- model_class = Withdraw -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 管理功能 -->
+    <div class="btn-group" role="group" arial-label="manage">
+      <% if current_user.id == @withdraw.user_id  %>
+        <%= link_to t('.new', default:  t("helpers.links.new")), 
+          new_withdraw_path,
+          class:  'btn btn-default', 
+          tabindex: 21, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
+        <%= link_to t('.edit', default: t("helpers.links.edit")), 
+          edit_withdraw_path(@withdraw),
+          class: 'btn btn-default', 
+          tabindex: 22, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.edit', default: [:"helpers.titles.edit"], model: model_class.model_name.human.titleize) %>
+        <%= link_to t('.destroy', default: t("helpers.links.destroy")),
+          withdraw_path(@withdraw),
+          method: 'delete',
+          data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
+          class: 'btn btn-default', 
+          tabindex: 23, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
+      <% end %>
+      <%= link_to t('.back', default: t("helpers.links.back")),
+        withdraws_path,
+        class: 'btn btn-default', 
+        tabindex: 24, 
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.back', default: [:"helpers.titles.back"], model: model_class.model_name.human.titleize)  %>
+    </div>
+   <!-- 附加功能 -->
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+        </li>
+        <li role="separator" class="divider"></li>
+      </ul>
+    </div>
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if @previous_withdraw %>
+        <%= link_to t('.previous', default: t("helpers.links.previous")), 
+          withdraw_path(@previous_withdraw), 
+          class: 'btn btn-default', 
+          tabindex: 61, 
+          "data-toggle": "tooltip", "data-placement": "bottom", 
+          title: t('.previous', default: t("helpers.titles.previous"), model: t("activerecord.models.withdraw")) %>
+      <% end %>
+      <% if @next_withdraw %>
+        <%= link_to t('.next', default: t("helpers.links.next")), 
+          withdraw_path(@next_withdraw), 
+          class: 'btn btn-default', 
+          tabindex: 62, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.next', default: t("helpers.titles.next"), model: t("activerecord.models.withdraw")) %>
+      <% end %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81, 
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%=t '.title', default: model_class.model_name.human.titleize %></h3>
+</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @withdraw.user_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:money) %>:</strong></dt>
+  <dd><%= @withdraw.money %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:memo) %>:</strong></dt>
+  <dd><%= @withdraw.memo %></dd>
+</dl>

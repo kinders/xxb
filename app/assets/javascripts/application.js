@@ -15,5 +15,6 @@
 //= require jquery-ui/autocomplete
 //= require autocomplete-rails
 //= require twitter/bootstrap
+//= require tinymce
 //= require turbolinks
 //= require_tree .

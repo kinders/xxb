@@ -119,97 +119,133 @@
 <%= link_to "课堂学习", discussions_url, class: "btn btn-default" %>
 </div>
 
-<% if session[:sectionalization_id] %>
-<hr>
-<table class="table table-striped">
-  <caption class="text-center h4">小组合作学习得分榜</caption>
-  <thead>
-    <tr>
-      <th><%= Team.human_attribute_name(:name) %></th>
-      <th>本日得分</th>
-      <th>本周得分</th>
-      <th>本月得分</th>
-      <th>累计得分</th>
-      <th><%= Player.human_attribute_name(:member_id) %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @sectionalization.teams.each do |team| %>
-      <tr>
-        <td><%= team.name %></td>
-        <td><%= team.classgroupscores.where(created_at: Time.now.beginning_of_day .. Time.now).collect{|groupscore| groupscore.score}.inject(:+) %></td>
-        <td><%= team.classgroupscores.where(created_at: DateTime.now.all_week).collect{|groupscore| groupscore.score}.inject(:+) %></td>
-        <td><%= team.classgroupscores.where(created_at: DateTime.now.all_month).collect{|groupscore| groupscore.score}.inject(:+) %></td>
-        <td><%= team.classgroupscores.collect{|groupscore| groupscore.score}.inject(:+) %></td>
-        <% this_team_players = team.players.order(:member_id) %>
-        <td><%= this_team_players.collect{|p|p.member.serial.to_s + " " + User.find(p.member.student).name}.join(", ") %> （共 <%= this_team_players.count %> 人）</th>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<% end %>
-
-<hr>
-<table class="table table-striped">
-  <caption class="text-center h4">小组合作学习个人得分榜</caption>
-  <thead>
-    <tr>
-      <th>学生序号</th>
-      <th>学生姓名</th>
-      <th>本日得分</th>
-      <th>本周得分</th>
-      <th>本月得分</th>
-      <th>累计得分</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @classroom.members.order(:serial).each do |member| %>
-      <tr>
-        <td><%= member.serial %></td>
-        <td><%= User.find(member.student).name %></td>
-        <td><%= member.classpersonscores.where(created_at: Time.now.beginning_of_day .. Time.now).collect{|personscore| personscore.score}.inject(:+) %></td>
-        <td><%= member.classpersonscores.where(created_at: DateTime.now.all_week).collect{|personscore| personscore.score}.inject(:+) %></td>
-        <td><%= member.classpersonscores.where(created_at: DateTime.now.all_month).collect{|personscore| personscore.score}.inject(:+) %></td>
-        <td><%= member.classpersonscores.collect{|personscore| personscore.score}.inject(:+) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
 <hr>
 
-<% if @class_badrecords.any? %>
-<table class="table table-striped">
-  <caption class="text-center h4">班级的不良记录</caption>
-  <thead>
-    <tr>
-      <th><%= Badrecord.human_attribute_name(:id) %></th>
-      <th><%= Badrecord.human_attribute_name(:troublemaker) %></th>
-      <th><%= Badrecord.human_attribute_name(:troubletime) %></th>
-      <th><%= Badrecord.human_attribute_name(:subject_id) %></th>
-      <th><%= Badrecord.human_attribute_name(:description) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @class_badrecords.each do |badrecord| %>
-      <tr>
-        <td><%= badrecord.id %></td>
-        <td><%= link_to Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).serial.to_i.to_s + " " + User.find(badrecord.troublemaker).name, member_path(Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).id) %></td>
-        <td><%= badrecord.troubletime.strftime("%F") %></td>
-        <td><%= badrecord.subject.name %></td>
-        <td><%= link_to badrecord.description, badrecord_path(badrecord) %></td>
-        <td>
-          <%= link_to "抹",
-                      badrecord_finish_badrecord_path(badrecord),
-                      :data => { :confirm =>  "您确定要抹平 #{User.find(badrecord.troublemaker).name} 的 #{badrecord.id} 这条不良记录？" },
-                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "抹平 不良记录" %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<%= link_to "下载csv文件（全班的不良记录）", "/download_csv.csv", class: "btn btn-default pull-right" %>
-<% end %>
-
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <% if session[:sectionalization_id] %>
+  <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#cooperation_group_scores" aria-expanded="true" aria-controls="collapseOne">
+          小组合作学习当前分组得分榜
+        </a>
+      </h4>
+    </div>
+    <div id="cooperation_group_scores" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th><%= Team.human_attribute_name(:name) %></th>
+              <th>本日得分</th>
+              <th>本周得分</th>
+              <th>本月得分</th>
+              <th>累计得分</th>
+              <th><%= Player.human_attribute_name(:member_id) %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @sectionalization.teams.each do |team| %>
+              <tr>
+                <td><%= team.name %></td>
+                <td><%= team.classgroupscores.where(created_at: Time.now.beginning_of_day .. Time.now).collect{|groupscore| groupscore.score}.inject(:+) %></td>
+                <td><%= team.classgroupscores.where(created_at: DateTime.now.all_week).collect{|groupscore| groupscore.score}.inject(:+) %></td>
+                <td><%= team.classgroupscores.where(created_at: DateTime.now.all_month).collect{|groupscore| groupscore.score}.inject(:+) %></td>
+                <td><%= team.classgroupscores.collect{|groupscore| groupscore.score}.inject(:+) %></td>
+                <% this_team_players = team.players.order(:member_id) %>
+                <td><%= this_team_players.collect{|p|p.member.serial.to_s + " " + User.find(p.member.student).name}.join(", ") %> （共 <%= this_team_players.count %> 人）</th>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <% end %>
+  <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#cooperation_scores" aria-expanded="true" aria-controls="collapseOne">
+          小组合作学习个人得分榜
+        </a>
+      </h4>
+    </div>
+    <div id="cooperation_scores" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>学生序号</th>
+              <th>学生姓名</th>
+              <th>本日得分</th>
+              <th>本周得分</th>
+              <th>本月得分</th>
+              <th>累计得分</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @classroom.members.order(:serial).each do |member| %>
+              <tr>
+                <td><%= member.serial %></td>
+                <td><%= User.find(member.student).name %></td>
+                <td><%= member.classpersonscores.where(created_at: Time.now.beginning_of_day .. Time.now).collect{|personscore| personscore.score}.inject(:+) %></td>
+                <td><%= member.classpersonscores.where(created_at: DateTime.now.all_week).collect{|personscore| personscore.score}.inject(:+) %></td>
+                <td><%= member.classpersonscores.where(created_at: DateTime.now.all_month).collect{|personscore| personscore.score}.inject(:+) %></td>
+                <td><%= member.classpersonscores.collect{|personscore| personscore.score}.inject(:+) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <% if @class_badrecords.any? %>
+  <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#class_badrecords" aria-expanded="true" aria-controls="collapseOne">
+          班级的不良记录（共<%= @class_badrecords.count %>条）
+        </a>
+      </h4>
+    </div>
+    <div id="class_badrecords" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <table class="table table-striped">
+          <caption class="text-center h4"></caption>
+          <thead>
+            <tr>
+              <th><%= Badrecord.human_attribute_name(:id) %></th>
+              <th><%= Badrecord.human_attribute_name(:troublemaker) %></th>
+              <th><%= Badrecord.human_attribute_name(:troubletime) %></th>
+              <th><%= Badrecord.human_attribute_name(:subject_id) %></th>
+              <th><%= Badrecord.human_attribute_name(:description) %></th>
+              <th><%=t '.actions', :default => t("helpers.actions") %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @class_badrecords.each do |badrecord| %>
+              <tr>
+                <td><%= badrecord.id %></td>
+                <td><%= link_to Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).serial.to_i.to_s + " " + User.find(badrecord.troublemaker).name, member_path(Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).id) %></td>
+                <td><%= badrecord.troubletime.strftime("%F") %></td>
+                <td><%= badrecord.subject.name %></td>
+                <td><%= link_to badrecord.description, badrecord_path(badrecord) %></td>
+                <td>
+                  <%= link_to "抹",
+                              badrecord_finish_badrecord_path(badrecord),
+                              :data => { :confirm =>  "您确定要抹平 #{User.find(badrecord.troublemaker).name} 的 #{badrecord.id} 这条不良记录？" },
+                              :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "抹平 不良记录" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <hr>
+        <%= link_to "下载csv文件（全班的不良记录）", "/download_csv.csv", class: "btn btn-default pull-right" %>
+      </div>
+    </div>
+  </div>
+  <% end %>
+</div>
 
 <% end %>

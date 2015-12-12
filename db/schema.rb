@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151130020709) do
+ActiveRecord::Schema.define(version: 20151209152158) do
 
   create_table "badrecords", force: :cascade do |t|
     t.integer  "user_id"
@@ -41,10 +41,12 @@ ActiveRecord::Schema.define(version: 20151130020709) do
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
     t.integer  "classroom_id"
+    t.integer  "team_id"
   end
 
   add_index "cadres", ["classroom_id"], name: "index_cadres_on_classroom_id"
   add_index "cadres", ["member_id"], name: "index_cadres_on_member_id"
+  add_index "cadres", ["team_id"], name: "index_cadres_on_team_id"
   add_index "cadres", ["user_id"], name: "index_cadres_on_user_id"
 
   create_table "cardboxes", force: :cascade do |t|
@@ -78,6 +80,16 @@ ActiveRecord::Schema.define(version: 20151130020709) do
   add_index "cards", ["deleted_at"], name: "index_cards_on_deleted_at"
   add_index "cards", ["practice_id"], name: "index_cards_on_practice_id"
   add_index "cards", ["user_id"], name: "index_cards_on_user_id"
+
+  create_table "cashiers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "cashiers", ["deleted_at"], name: "index_cashiers_on_deleted_at"
+  add_index "cashiers", ["user_id"], name: "index_cashiers_on_user_id"
 
   create_table "catalogs", force: :cascade do |t|
     t.decimal  "serial"
@@ -315,6 +327,21 @@ ActiveRecord::Schema.define(version: 20151130020709) do
   add_index "observations", ["homework_id"], name: "index_observations_on_homework_id"
   add_index "observations", ["user_id"], name: "index_observations_on_user_id"
 
+  create_table "onboards", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "begin_at"
+    t.datetime "expire_at"
+    t.datetime "end_at"
+    t.string   "remote_ip"
+    t.string   "http_user_agent"
+    t.datetime "deleted_at"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "onboards", ["deleted_at"], name: "index_onboards_on_deleted_at"
+  add_index "onboards", ["user_id"], name: "index_onboards_on_user_id"
+
   create_table "plans", force: :cascade do |t|
     t.decimal  "serial"
     t.integer  "user_id"
@@ -376,6 +403,22 @@ ActiveRecord::Schema.define(version: 20151130020709) do
   add_index "practices", ["lesson_id"], name: "index_practices_on_lesson_id"
   add_index "practices", ["tutor_id"], name: "index_practices_on_tutor_id"
   add_index "practices", ["user_id"], name: "index_practices_on_user_id"
+
+  create_table "receipts", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "active_time_before_charge"
+    t.integer  "money"
+    t.integer  "time_length"
+    t.integer  "active_time_after_charge"
+    t.integer  "cashier"
+    t.datetime "deleted_at"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.integer  "balance"
+  end
+
+  add_index "receipts", ["deleted_at"], name: "index_receipts_on_deleted_at"
+  add_index "receipts", ["user_id"], name: "index_receipts_on_user_id"
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
@@ -505,9 +548,13 @@ ActiveRecord::Schema.define(version: 20151130020709) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
+    t.integer  "active_time",            default: 0
+    t.boolean  "is_vip"
   end
 
+  add_index "users", ["active_time"], name: "index_users_on_active_time"
   add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["is_vip"], name: "index_users_on_is_vip"
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
   create_table "users_roles", id: false, force: :cascade do |t|
@@ -516,5 +563,17 @@ ActiveRecord::Schema.define(version: 20151130020709) do
   end
 
   add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
+
+  create_table "withdraws", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "money"
+    t.string   "memo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "deleted_at"
+  end
+
+  add_index "withdraws", ["deleted_at"], name: "index_withdraws_on_deleted_at"
+  add_index "withdraws", ["user_id"], name: "index_withdraws_on_user_id"
 
 end

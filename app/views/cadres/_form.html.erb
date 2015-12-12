@@ -38,6 +38,13 @@
     <%= error_span(@cadre[:member_id]) %>
   </div>
   <div class="form-group">
+    <%= f.label :team_id, :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :team_id, :class => 'form-control' %>
+    </div>
+    <%= error_span(@cadre[:team_id]) %>
+  </div>
+  <div class="form-group">
     <%= f.label :deleted_at, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, :class => 'form-control' %>
@@ -84,6 +91,17 @@
       <%= f.text_field :position, :class => 'form-control' %>
     </div>
     <%= error_span(@cadre[:position]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label "管辖范围", :class => 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <% all_teams = [] %>
+      <% @classroom.sectionalizations.each do |s| %>
+        <%  s.teams.collect{|t| all_teams << [t.name, t.id]} %>
+      <% end %>
+      <%= f.select :team_id, all_teams, {prompt: "请选择一个小组，默认为全班"}, {:class => 'form-control'} %>
+    </div>
+    <%= error_span(@cadre[:team_id]) %>
   </div>
 
 

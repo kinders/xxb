@@ -2,6 +2,7 @@ class MastersController < ApplicationController
   before_action :authenticate_user!
   load_and_authorize_resource
   before_action :set_master, only: [:show, :edit, :update, :destroy]
+  before_action :is_admin
 
   # GET /masters
   # GET /masters.json
@@ -73,4 +74,12 @@ class MastersController < ApplicationController
     def master_params
       params.require(:master).permit(:user_id, :deleted_at)
     end
+
+  # 只有管理员才能进行master的相关操作
+    def is_admin
+      unless current_user.id == 1
+        redirect_to :back, notice: "您没有权限。"
+      end
+    end
+
 end

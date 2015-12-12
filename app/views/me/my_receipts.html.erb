@@ -1,0 +1,55 @@
+<%- model_class = Receipt -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), 
+        me_summary_path, 
+        class: 'btn btn-default', 
+        tabindex: 70,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.me")) %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%=t '.title', default: model_class.model_name.human.titleize %></h3>
+  <h4>本次登录可用时间：<%= @active_time %> 秒（<%= (@active_time / 86400).to_i %>天<%= (@active_time % 86400) / 3600 %>小时<%= (@active_time % 3600) / 60 %>分钟） </h4>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:money) %></th>
+      <th><%= model_class.human_attribute_name(:time_length) %></th>
+      <th><%= model_class.human_attribute_name(:active_time_before_charge) %></th>
+      <th><%= model_class.human_attribute_name(:active_time_after_charge) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @receipts.each_with_index do |receipt, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= receipt.user.name %></td>
+        <td><%= receipt.money %>元</td>
+        <td><%= receipt.time_length / 60 %>分钟</td>
+        <td><%= (receipt.active_time_before_charge / 86400).to_i %>天<%= (receipt.active_time_before_charge % 86400) / 3600 %>小时<%= (receipt.active_time_before_charge % 3600) / 60 %>分钟</td>
+        <td><%= (receipt.active_time_after_charge / 86400).to_i %>天<%= (receipt.active_time_after_charge % 86400) / 3600 %>小时<%= (receipt.active_time_after_charge % 3600) / 60 %>分钟</td>
+        <td><%= receipt.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @receipts %>

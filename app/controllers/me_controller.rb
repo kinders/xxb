@@ -4,12 +4,7 @@ class MeController < ApplicationController
 
   # 用来显示用户最近的活动记录。
   def summary
-    # 自己制作的资料：课本，课程，辅导，练习
-    @my_textbooks = Textbook.where(user_id: current_user.id).order(created_at: :desc)
-    @my_lessons = Lesson.where(user_id: current_user.id).order(created_at: :desc)
-    @my_tutors = Tutor.where(user_id: current_user.id).order(created_at: :desc)
-    @my_practices = Practice.where(user_id: current_user.id).order(created_at: :desc)
-    # 最近看过的资料：课本
+    ## 最近看过的资料：课本
     @ever_textbooks_ids = []
     his_textbook = History.where(user_id: current_user.id, modelname: "textbook").last(50)
     his_textbook.each {|h| @ever_textbooks_ids << h.entryid }
@@ -20,8 +15,7 @@ class MeController < ApplicationController
       end
     }
     @ever_textbooks.uniq!
-
-    # 最近看过的资料：课程
+    ## 最近看过的资料：课程
     @ever_lessons_ids = []
     his_lessons = History.where(user_id: current_user.id, modelname: "lesson").last(50)
     his_lessons.each {|h| @ever_lessons_ids << h.entryid }
@@ -32,8 +26,7 @@ class MeController < ApplicationController
       end
     }
     @ever_lessons.uniq!
-
-    # 最近看过的资料：辅导
+    ## 最近看过的资料：辅导
     @ever_tutors_ids = []
     his_tutors = History.where(user_id: current_user.id, modelname: "tutor").last(50)
     his_tutors.each {|h| @ever_tutors_ids << h.entryid }
@@ -44,8 +37,22 @@ class MeController < ApplicationController
       end
     }
     @ever_tutors.uniq!
-    # 玩过的卡片盒
-    @my_cardboxes = Cardbox.where(user_id: current_user.id)
+    ## 最近玩过的卡片盒
+    @my_cardboxes = Cardbox.where(user_id: current_user.id).last(10)
+  end
+
+  # 我的付款记录
+  def my_receipts
+    @active_time = current_user.active_time
+    @receipts = Receipt.where(cashier: current_user.id).page params[:page]
+  end
+
+  def teacher_office
+    # 自己制作的资料：课本，课程，辅导，练习
+    @my_textbooks = Textbook.where(user_id: current_user.id).order(created_at: :desc)
+    @my_lessons = Lesson.where(user_id: current_user.id).order(created_at: :desc)
+    @my_tutors = Tutor.where(user_id: current_user.id).order(created_at: :desc)
+    @my_practices = Practice.where(user_id: current_user.id).order(created_at: :desc)
   end
 
   # 用来展示测试和积分。
@@ -135,10 +142,9 @@ class MeController < ApplicationController
   def seed_user
     CSV.foreach("csvfile") do |row|
       User.create{ |u|
-	u.name = row[0].to_s
-	u.email = row[1].to_s
-	u.encrypted_password = "$2a$10$gU9lYlmq5EG4TB/S27qpAOlKavks8giogS5qt9NLrauQ58M0955Ha"  # 默认密码123456789
-	
+	      u.name = row[0].to_s
+	      u.email = row[1].to_s
+	      u.encrypted_password = "$2a$10$gU9lYlmq5EG4TB/S27qpAOlKavks8giogS5qt9NLrauQ58M0955Ha"  # 默认密码123456789
       }
     end
   end

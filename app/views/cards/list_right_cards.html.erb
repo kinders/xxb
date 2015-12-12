@@ -1,0 +1,51 @@
+<%- model_class = Card -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), 
+        cardboxes_url, 
+        class: 'btn btn-default', 
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.cardbox")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), 
+        :back, 
+        :class => 'btn btn-default', 
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="page-header">
+  <h3>
+    今天答对的卡片：<strong><%= @right_today_cards.count %>张</strong>！
+  </h3>
+</div>
+<% if @right_today_cards.any? %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th><%= model_class.human_attribute_name(:practice_id) %></th>
+      <th><%= model_class.human_attribute_name(:updated_at) %></th>
+      <th><%= model_class.human_attribute_name(:degree) %></th>
+      <th><%= model_class.human_attribute_name(:nexttime) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @right_today_cards.each_with_index do |card, i| %>
+      <tr>
+        <td><%= i + 1  %></td>
+        <td><%=link_to card.practice.question, card_path(card)%></td>
+        <td><%= card.updated_at.strftime("%T") %></td>
+        <td><%= card.degree %></td>
+        <td><%= card.nexttime.strftime("%R") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

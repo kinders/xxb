@@ -23,12 +23,6 @@ class ClassroomsController < ApplicationController
     @cadre = @classroom.cadres.find_by(member_id: @member.id) if @member
     @sectionalization = Sectionalization.find(session[:sectionalization_id]) if session[:sectionalization_id]
     # 班级的不良记录
-    #if @classroom.teachers.find_by(mentor: current_user.id)  # 教师
-    #  @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)
-    #else
-    #  @class_badrecords = []  # 为了在视图中统一使用any?方法。
-    #end
-    # 班级的不良记录
     ## 如果是班主任
     if @classroom.user_id == current_user.id
       @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)

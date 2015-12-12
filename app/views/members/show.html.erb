@@ -254,8 +254,21 @@
 <% end %>
 
 <% if @my_done_badrecords.any? %>
+<div class="row">
+  <div class="col-md-12">
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion" href="#ever_textbooks" aria-expanded="true" aria-controls="collapseOne">
+              我已完成的不良记录（共<%= @my_done_badrecords.count %>条）
+            </a>
+          </h4>
+        </div>
+        <div id="ever_textbooks" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+
 <table class="table table-striped">
-  <caption class="text-center">我已完成的不良记录（共<%=@my_done_badrecords.count %>条）</caption>
   <thead>
     <tr>
       <th><%= Badrecord.human_attribute_name(:id) %></th>
@@ -281,8 +294,15 @@
     <% end %>
   </tbody>
 </table>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <% else %>
-  <div class="well">暂时没有不良记录……</div>
+  <div class="well">暂时没有已经完成的不良记录……</div>
 <% end %>
 
 <% end %>

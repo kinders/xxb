@@ -20,9 +20,11 @@ zh-CN:
       me: "我的主页"
       member: "成员"
       observation: "批改"
+      onboard: "在线记录"
       plan: "教案"
       player: "小组成员"
       practice: "练习"
+      receipt: "充值记录"
       sectionalization: "分组方案"
       site: "网站首页"
       subject: "科目"
@@ -32,6 +34,7 @@ zh-CN:
       textbook: "课本"
       tutor: "辅导"
       user: "用户"
+      withdraw: "结款"
     attributes:
       badrecord:
         id: "标识号"
@@ -53,6 +56,9 @@ zh-CN:
         user_id: "拥有者"
         name: "名称"
         share: "是否共享"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
+        updated_at: "更新时间"
       card:
         id: "标识号"
         user_id: "拥有者"
@@ -66,6 +72,7 @@ zh-CN:
         count: "总复习次数"
         deleted_at: "删除时间"
         created_at: "创建时间"
+        updated_at: "更新时间"
       catalog:
       classroom:
       classgroupscore:
@@ -77,6 +84,7 @@ zh-CN:
         memo: "备注个人信息"
         deleted_at: "删除时间"
         created_at: "创建时间"
+        updated_at: "更新时间"
       classpersonscore:
         id: "标识号"
         user_id: "评分人"
@@ -85,6 +93,7 @@ zh-CN:
         classgroupscore_id: "小组评分记录"
         deleted_at: "删除时间"
         created_at: "创建时间"
+        updated_at: "更新时间"
       complaint:
       discussion:
       evaluation:
@@ -94,6 +103,17 @@ zh-CN:
       lesson:
       member:
       observation:
+      onboard:
+        id: "标识号"
+        user_id: "创建者"
+        begin_at: "上线时间"
+        expire_at: "逾期时间"
+        end_at: "下线时间"
+        remote_ip: "用户地址"
+        http_user_agent: "用户设备"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
+        updated_at: "更新时间"
       plan:
       player:
         id: "标识号"
@@ -102,7 +122,20 @@ zh-CN:
         member_id: "小组成员"
         deleted_at: "删除时间"
         created_at: "创建时间"
+        updated_at: "更新时间"
       practice:
+      receipt:
+        id: "标识号"
+        user_id: "收款员"
+        active_time_before_charge: "充值前可用时间"
+        money: "充值金额"
+        balance: "余额"
+        time_length: "充值时长"
+        active_time_after_charge: "充值后可用时间"
+        cashier: "充值用户"
+        deleted_at: "删除时间"
+        created_at: "充值时间"
+        updated_at: "更新时间"
       sectionalization:
         id: "标识号"
         user_id: "创建者"
@@ -110,6 +143,7 @@ zh-CN:
         name: "分组方案名称"
         deleted_at: "删除时间"
         created_at: "创建时间"
+        updated_at: "更新时间"
       subject:
       teacher:
       teaching:
@@ -120,9 +154,18 @@ zh-CN:
         name: "小组名称"
         deleted_at: "删除时间"
         created_at: "创建时间"
+        updated_at: "更新时间"
       textbook:
       tutor:
       user:
+      withdraw:
+        id: "标识号"
+        user_id: "结款人"
+        money: "金额"
+        memo: "备注"
+        deleted_at: "删除时间"
+        created_at: "结款时间"
+        updated_at: "更新时间"
   date:
     abbr_day_names:
     - 周日

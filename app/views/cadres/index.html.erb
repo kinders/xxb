@@ -10,6 +10,7 @@
       <th><%= model_class.human_attribute_name(:user_id) %></th>
       <th><%= model_class.human_attribute_name(:position) %></th>
       <th><%= model_class.human_attribute_name(:classroom_id) %></th>
+      <th><%= model_class.human_attribute_name(:team_id) %></th>
       <th><%= model_class.human_attribute_name(:member_id) %></th>
       <th><%= model_class.human_attribute_name(:deleted_at) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
@@ -23,6 +24,7 @@
         <td><%= cadre.user_id %></td>
         <td><%= cadre.position %></td>
         <td><%= cadre.classroom_id %></td>
+        <td><%= cadre.team_id %></td>
         <td><%= cadre.member_id %></td>
         <td><%= cadre.deleted_at %></td>
         <td><%=l cadre.created_at %></td>
@@ -73,6 +75,7 @@
     <tr>
       <th>名字</th>
       <th>职位</th>
+      <th>所辖范围</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -81,6 +84,7 @@
       <tr>
         <td><%= User.find(cadre.member.student).name %></td>
         <td><%= link_to cadre.position, cadre_path(cadre) %></td>
+        <td><%= cadre.team_id ?  cadre.team.name + "小组" : "全班" %></td>
         <td>
           <% if current_user.id == @classroom.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

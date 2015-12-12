@@ -1,12 +1,13 @@
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
+  # 加密键
   # The secret key used by Devise. Devise uses this key to generate
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
   # config.secret_key = '8d60da718076d3e88514105794431058dda3f8ede068ea57100a0d05936db9d33b33db530434eecf8d2452b386e104fcfb952e021cde29d26ab96c5ad661bcd3'
 
-  # ==> Mailer Configuration
+  # ==> Mailer Configuration  发送邮件配置
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
@@ -15,13 +16,13 @@ Devise.setup do |config|
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
 
-  # ==> ORM configuration
+  # ==> ORM configuration   对象记录映射配置
   # Load and configure the ORM. Supports :active_record (default) and
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
   require 'devise/orm/active_record'
 
-  # ==> Configuration for any authentication mechanism
+  # ==> Configuration for any authentication mechanism 认证机制配置
   # Configure which keys are used when authenticating a user. The default is
   # just :email. You can configure it to use [:username, :subdomain], so for
   # authenticating a user, both parameters are required. Remember that those
@@ -85,7 +86,7 @@ Devise.setup do |config|
   # from the server. You can disable this option at your own risk.
   # config.clean_up_csrf_token_on_authentication = true
 
-  # ==> Configuration for :database_authenticatable
+  # ==> Configuration for :database_authenticatable  数据库认证配置
   # For bcrypt, this is the cost for hashing the password and defaults to 10. If
   # using other encryptors, it sets how many times you want the password re-encrypted.
   #
@@ -99,7 +100,7 @@ Devise.setup do |config|
   # Setup a pepper to generate the encrypted password.
   # config.pepper = 'f99c4e326363bbb27bbc6e6915cdd85d28a2fce4c0779b32c1fd6e53342d9294bc5e8ff5e0f320094330818771b2e55b6e7a614ab29c1c3a84ecdec1a5ce9758'
 
-  # ==> Configuration for :confirmable
+  # ==> Configuration for :confirmable   注册改密的确认模块配置
   # A period that the user is allowed to access the website even without
   # confirming their account. For instance, if set to 2.days, the user will be
   # able to access the website for two days without confirming their account,
@@ -124,7 +125,7 @@ Devise.setup do |config|
   # Defines which key will be used when confirming an account
   # config.confirmation_keys = [ :email ]
 
-  # ==> Configuration for :rememberable
+  # ==> Configuration for :rememberable  用户持续配置
   # The time the user will be remembered without asking for credentials again.
   # config.remember_for = 2.weeks
 
@@ -138,7 +139,7 @@ Devise.setup do |config|
   # secure: true in order to force SSL only cookies.
   # config.rememberable_options = {}
 
-  # ==> Configuration for :validatable
+  # ==> Configuration for :validatable   字段验证配置
   # Range for password length.
   config.password_length = 8..128
 
@@ -147,7 +148,7 @@ Devise.setup do |config|
   # to give user feedback and not to assert the e-mail validity.
   # config.email_regexp = /\A[^@]+@[^@]+\z/
 
-  # ==> Configuration for :timeoutable
+  # ==> Configuration for :timeoutable   有效登录时间配置
   # The time you want to timeout the user session without activity. After this
   # time the user will be asked for credentials again. Default is 30 minutes.
   # config.timeout_in = 30.minutes
@@ -155,7 +156,7 @@ Devise.setup do |config|
   # If true, expires auth token on session timeout.
   # config.expire_auth_token_on_timeout = false
 
-  # ==> Configuration for :lockable
+  # ==> Configuration for :lockable   账户锁定配置
   # Defines which strategy will be used to lock an account.
   # :failed_attempts = Locks an account after a number of failed attempts to sign in.
   # :none            = No lock strategy. You should handle locking by yourself.
@@ -181,7 +182,7 @@ Devise.setup do |config|
   # Warn on the last attempt before the account is locked.
   # config.last_attempt_warning = true
 
-  # ==> Configuration for :recoverable
+  # ==> Configuration for :recoverable   修改配置
   #
   # Defines which key will be used when recovering the password for an account
   # config.reset_password_keys = [ :email ]
@@ -191,7 +192,7 @@ Devise.setup do |config|
   # change their passwords.
   config.reset_password_within = 6.hours
 
-  # ==> Configuration for :encryptable
+  # ==> Configuration for :encryptable  加密配置
   # Allow you to use another encryption algorithm besides bcrypt (default). You can use
   # :sha1, :sha512 or encryptors from others authentication tools as :clearance_sha1,
   # :authlogic_sha512 (then you should set stretches above to 20 for default behavior)
@@ -201,7 +202,7 @@ Devise.setup do |config|
   # Require the `devise-encryptable` gem when using anything other than bcrypt
   # config.encryptor = :sha512
 
-  # ==> Scopes configuration
+  # ==> Scopes configuration   域配置
   # Turn scoped views on. Before rendering "sessions/new", it will first check for
   # "users/sessions/new". It's turned off by default because it's slower if you
   # are using only default views.
@@ -215,7 +216,7 @@ Devise.setup do |config|
   # only the current scope. By default, Devise signs out all scopes.
   # config.sign_out_all_scopes = true
 
-  # ==> Navigation configuration
+  # ==> Navigation configuration   导航配置
   # Lists the formats that should be treated as navigational. Formats like
   # :html, should redirect to the sign in page when the user does not have
   # access, but formats like :xml or :json, should return 401.
@@ -229,12 +230,12 @@ Devise.setup do |config|
   # The default HTTP method used to sign out a resource. Default is :delete.
   config.sign_out_via = :delete
 
-  # ==> OmniAuth
+  # ==> OmniAuth     第三方认证配置
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
 
-  # ==> Warden configuration
+  # ==> Warden configuration   warden配置
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
   #
@@ -243,7 +244,7 @@ Devise.setup do |config|
   #   manager.default_strategies(scope: :user).unshift :some_external_strategy
   # end
 
-  # ==> Mountable engine configurations
+  # ==> Mountable engine configurations  可加载引擎配置
   # When using Devise inside an engine, let's call it `MyEngine`, and this engine
   # is mountable, there are some extra configurations to be taken into account.
   # The following options are available, assuming the engine is mounted as:

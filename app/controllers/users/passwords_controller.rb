@@ -1,4 +1,5 @@
 class Users::PasswordsController < Devise::PasswordsController
+  skip_before_action :check_user_active_time
   # GET /resource/password/new
   # def new
   #   super

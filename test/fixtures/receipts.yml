@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  active_time_before_charge: 1
+  money: 1
+  time_length: 1
+  active_time_after_charge: 1
+  cashier: 1
+  deleted_at: 2015-12-06 18:16:24
+
+two:
+  user_id: 
+  active_time_before_charge: 1
+  money: 1
+  time_length: 1
+  active_time_after_charge: 1
+  cashier: 1
+  deleted_at: 2015-12-06 18:16:24

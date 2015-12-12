@@ -3,7 +3,8 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable, :validatable,
+         :timeoutable
   has_many :textbooks
   has_many :catalogs
   has_many :lessons
@@ -26,5 +27,11 @@ class User < ActiveRecord::Base
   has_many :sectionalizations
   has_many :teams
   has_many :players
+  has_many :onboards
+  has_many :receipts
+  has_many :cashiers
+  has_many :withdraws
+
+  validates :active_time,  numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
 end

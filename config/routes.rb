@@ -1,6 +1,18 @@
 Rails.application.routes.draw do
 
 
+  resources :withdraws
+
+  resources :cashiers
+
+  resources :receipts
+  get 'person_receipts', to: "receipts#person_receipts"
+  get 'person_onboards', to: "receipts#person_onboards"
+  get 'who_online', to: "receipts#who_online"
+  get 'off_onboard', to: "receipts#off_onboard"
+
+  resources :onboards
+
   resources :classpersonscores
 
   resources :classgroupscores
@@ -22,13 +34,16 @@ Rails.application.routes.draw do
   resources :cards do
     get 'well_done'
     get 'try_again'
+    get 'pass_card'
   end
   post '/cards/add_all_to_cardbox', to: 'cards#add_all_to_cardbox'
+  get '/list_right_cards', to: 'cards#list_right_cards'
 
   resources :cardboxes do
     get 'turn_cards'
     post 'copy_cardbox_for_me'
   end
+  get '/share_cardboxes', to: 'cardboxes#share_cardboxes'
 
   get 'download_csv', to: "badrecords#download_csv"
   resources :badrecords do
@@ -67,13 +82,16 @@ Rails.application.routes.draw do
     get 'delete_picture_ya'
   end
 
+  get '/hello' => "me#summary", as: :user_root
   get 'me/summary'
+  get 'me/teacher_office'
   get 'me/point_card'
   get 'me/justify'
   get 'me/assign_homeworks'
   get 'me/my_homeworks'
   get 'me/as_a_teacher'
   get 'me/as_a_student'
+  get 'me/my_receipts'
 
   resources :plans
 
@@ -100,10 +118,14 @@ Rails.application.routes.draw do
     get 'easy_teaching'
   end
 
-  devise_for :users
+  devise_for :users, controllers: { sessions: "users/sessions" }
+
   scope "/admin" do
     resources :users
   end
+  post "set_vip_user", to: "users#set_vip_user"
+  post "set_normal_user", to: "users#set_normal_user"
+  post "reset_password", to: "users#reset_password"
 
   root 'site#home'
 

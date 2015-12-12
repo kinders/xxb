@@ -1,3 +1,4 @@
+<% if current_user.has_role? :admin %>
 
 <div class="container col-xs-11 col-sm-10 col-md-8 affix">
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
@@ -8,8 +9,26 @@
       </button>
       <ul class="dropdown-menu">
         <li>
-          <%= link_to "账户信息", edit_registration_path(current_user) %>
+          <%= link_to "修改账户信息", edit_registration_path(current_user) %>
         </li>
+        <li>
+          <%= link_to "查看充值记录", me_my_receipts_path %>
+        </li>
+        <li>
+          <%= link_to "查看上线记录", onboards_path %>
+        </li>
+        <% if Cashier.find_by(user_id: current_user.id) %>
+        <li role="separator" class="divider"></li>
+        <li>
+          <%= link_to "收银台", receipts_path %>
+        </li>
+        <% end %>
+        <% if Master.find_by(user_id: current_user.id) %>
+        <li role="separator" class="divider"></li>
+        <li>
+          <%= link_to "进入我的办公室", me_teacher_office_path %>
+        </li>
+        <% end %>
         <li role="separator" class="divider"></li>
         <li>
           <%= link_to "查看积分", me_point_card_path %>
@@ -19,25 +38,82 @@
         </li>
         <li role="separator" class="divider"></li>
         <li>
-         <%= link_to "我要评卷", me_justify_path %>
-        </li>
-        <li>
-          <%= link_to "查看我评过的卷子", justices_path %>
+          <%= link_to "我要完成的作业", me_my_homeworks_path %>
         </li>
         <li role="separator" class="divider"></li>
+      </ul>
+    </div>
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), "/", class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.site")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+
+<div class="page-header">
+    <h3>我是系统管理员</h3>
+    <h4>——运筹帷幄之中，决胜千里之外</h4>
+</div>
+<div class="btn-group btn-group-justified" role="group" aria-label="admin-task">
+  <div class="btn-group" role="group">
+    <%= link_to "用户管理", users_path, class: 'btn btn-default' %>
+  </div>
+  <div class="btn-group" role="group">
+    <%= link_to "教师管理", masters_path, class: 'btn btn-default' %>
+  </div>
+  <div class="btn-group" role="group">
+    <%= link_to "出纳管理", cashiers_path, class: 'btn btn-default' %>
+  </div>
+  <div class="btn-group" role="group">
+    <%= link_to "建议管理", complaints_path, class: 'btn btn-default' %>
+  </div>
+</div>
+
+<% else %>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+   <!-- 附加功能 -->
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
         <li>
-          <%= link_to "我布置的作业", me_assign_homeworks_path %>
+          <%= link_to "修改账户信息", edit_registration_path(current_user) %>
         </li>
+        <li>
+          <%= link_to "查看充值记录", me_my_receipts_path %>
+        </li>
+        <li>
+          <%= link_to "查看上线记录", onboards_path %>
+        </li>
+        <% if Cashier.find_by(user_id: current_user.id) %>
+        <li role="separator" class="divider"></li>
+        <li>
+          <%= link_to "收银台", receipts_path %>
+        </li>
+        <% end %>
+        <% if Master.find_by(user_id: current_user.id) %>
+        <li role="separator" class="divider"></li>
+        <li>
+          <%= link_to "进入我的办公室", me_teacher_office_path %>
+        </li>
+        <% end %>
+        <li role="separator" class="divider"></li>
+        <li>
+          <%= link_to "查看积分", me_point_card_path %>
+        </li>
+        <li>
+          <%= link_to "查看做过的试题", evaluations_path %>
+        </li>
+        <li role="separator" class="divider"></li>
         <li>
           <%= link_to "我要完成的作业", me_my_homeworks_path %>
         </li>
         <li role="separator" class="divider"></li>
-        <li>
-          <%= link_to "我任教的班级", me_as_a_teacher_path %>
-        </li>
-        <li>
-          <%= link_to "我是学生的班级", me_as_a_student_path %>
-        </li>
       </ul>
     </div>
     <!-- 导航按钮 -->
@@ -51,270 +127,136 @@
 
 <div class="page-header">
     <h3>我的主页</h3>
+    <%= link_to "去班里学习！", me_as_a_student_path, class: "btn btn-default" %>
 </div>
-<div class="row">
-  <div class="col-md-6">
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-      <div class="panel panel-info">
-        <div class="panel-heading" role="tab" id="headingOne">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#ever_textbooks" aria-expanded="true" aria-controls="collapseOne">
-              最近翻过的教科书
-            </a>
-          </h4>
-        </div>
-        <div id="ever_textbooks" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-          <div class="panel-body">
-	    <% unless @ever_textbooks.length > 0 %>
-	      暂时还没有哦
-            <% else %>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>教科书标题</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @ever_textbooks.each do |textbook| %>
-          <tr>
-            <td><%= link_to textbook.title, textbook_path(textbook) %></td>
-          </tr>
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#ever_textbooks" aria-expanded="true" aria-controls="collapseOne">
+          最近翻过的教科书
+        </a>
+      </h4>
+    </div>
+    <div id="ever_textbooks" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <% unless @ever_textbooks.length > 0 %>
+          暂时还没有哦
+        <% else %>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>教科书标题</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @ever_textbooks.reverse.each do |textbook| %>
+                <tr>
+                  <td><%= link_to textbook.title, textbook_path(textbook) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
         <% end %>
-      </tbody>
-    </table>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      <div class="panel panel-info">
-        <div class="panel-heading" role="tab" id="headingOne">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#ever_lessons" aria-expanded="true" aria-controls="collapseOne">
-              最近念过的课程
-            </a>
-          </h4>
-        </div>
-        <div id="ever_lessons" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-          <div class="panel-body">
-	    <% unless @ever_lessons.length > 0 %>
-	      暂时还没有哦
-            <% else %>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>课程标题</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @ever_lessons.each do |lesson| %>
-          <tr>
-            <td><%= link_to lesson.title, lesson_path(lesson) %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      <div class="panel panel-info">
-        <div class="panel-heading" role="tab" id="headingOne">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#ever_tutors" aria-expanded="true" aria-controls="collapseOne">
-              最近看过的辅导
-            </a>
-          </h4>
-        </div>
-        <div id="ever_tutors" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-          <div class="panel-body">
-	    <% unless @ever_tutors.length > 0 %>
-	      暂时还没有哦
-            <% else %>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>辅导标题</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @ever_tutors.each do |tutor| %>
-          <tr>
-            <td><%= link_to tutor.title, tutor_path(tutor) %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      <div class="panel panel-info">
-        <div class="panel-heading" role="tab" id="headingOne">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion" href="#my_cardboxes" aria-expanded="true" aria-controls="collapseOne">
-              最近玩过的卡片盒
-            </a>
-          </h4>
-        </div>
-        <div id="my_cardboxes" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
-          <div class="panel-body">
-	    <% unless @my_cardboxes.length > 0 %>
-	      暂时还没有哦
-            <% else %>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>卡片盒</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @my_cardboxes.each do |cardbox| %>
-          <tr>
-            <td><%= link_to cardbox.name, cardbox_path(cardbox) %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-            <% end %>
-          </div>
-        </div>
       </div>
     </div>
   </div>
-  <div class="col-md-6">
-    <div class="panel-group" id="accordion2" role="tablist" aria-multiselectable="true">
-      <div class="panel panel-info">
-        <div class="panel-heading" role="tab" id="headingOne">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion2" href="#my_textbooks" aria-expanded="true" aria-controls="collapseOne">
-              我编纂的课本
-            </a>
-          </h4>
-        </div>
-        <div id="my_textbooks" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-          <div class="panel-body">
-	    <% unless @my_textbooks.length > 0 %>
-	      暂时还没有哦
-            <% else %>
-              <table class="table table-striped">
-                <thead>
-                  <tr>
-                    <th>教科书标题</th>
-                    <th>修改时间</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <% @my_textbooks.each do |textbook| %>
-                    <tr>
-                      <td><%= link_to textbook.title, textbook_path(textbook) %></td>
-                      <td><%= textbook.created_at.strftime("%F %T") %></td>
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
-            <% end %>
-          </div>
-        </div>
-      </div>
-      <div class="panel panel-info">
-        <div class="panel-heading" role="tab" id="headingOne">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion2" href="#my_lessons" aria-expanded="true" aria-controls="collapseOne">
-              我编定的课程
-            </a>
-          </h4>
-        </div>
-        <div id="my_lessons" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-          <div class="panel-body">
-	    <% unless @my_lessons.length > 0 %>
-	      暂时还没有哦
-            <% else %>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>课程标题</th>
-          <th>修改时间</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @my_lessons.each do |lesson| %>
-          <tr>
-            <td><%= link_to lesson.title, lesson_path(lesson) %></td>
-            <td><%= lesson.created_at.strftime("%F %T") %></td>
-          </tr>
+  <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#ever_lessons" aria-expanded="true" aria-controls="collapseOne">
+          最近念过的课程
+        </a>
+      </h4>
+    </div>
+    <div id="ever_lessons" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+	      <% unless @ever_lessons.length > 0 %>
+	        暂时还没有哦
+        <% else %>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>课程标题</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @ever_lessons.reverse.each do |lesson| %>
+                <tr>
+                  <td><%= link_to lesson.title, lesson_path(lesson) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
         <% end %>
-      </tbody>
-    </table>
-            <% end %>
-          </div>
-        </div>
       </div>
-      <div class="panel panel-info">
-        <div class="panel-heading" role="tab" id="headingOne">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion2" href="#my_tutors" aria-expanded="true" aria-controls="collapseOne">
-              我编排的辅导
-            </a>
-          </h4>
-        </div>
-        <div id="my_tutors" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-          <div class="panel-body">
-	    <% unless @my_tutors.length > 0 %>
-	      暂时还没有哦
-            <% else %>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>辅导标题</th>
-          <th>修改时间</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @my_tutors.each do |tutor| %>
-          <tr>
-            <td><%= link_to tutor.title, tutor_path(tutor) %></td>
-            <td><%= tutor.created_at.strftime("%F %T") %></td>
-          </tr>
+    </div>
+  </div>
+  <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#ever_tutors" aria-expanded="true" aria-controls="collapseOne">
+          最近看过的辅导
+        </a>
+      </h4>
+    </div>
+    <div id="ever_tutors" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+	      <% unless @ever_tutors.length > 0 %>
+	        暂时还没有哦
+        <% else %>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>辅导标题</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @ever_tutors.reverse.each do |tutor| %>
+                <tr>
+                  <td><%= tutor.title %></td>
+                  <td><%# link_to tutor.title, tutor_path(tutor) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
         <% end %>
-      </tbody>
-    </table>
-            <% end %>
-          </div>
-        </div>
       </div>
-      <div class="panel panel-info">
-        <div class="panel-heading" role="tab" id="headingOne">
-          <h4 class="panel-title">
-            <a data-toggle="collapse" data-parent="#accordion2" href="#my_practices" aria-expanded="true" aria-controls="collapseOne">
-              编写的练习
-            </a>
-          </h4>
-        </div>
-        <div id="my_practices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-          <div class="panel-body">
-	    <% unless @my_practices.length > 0 %>
-	      暂时还没有哦
-            <% else %>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>练习标题</th>
-          <th>修改时间</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @my_practices.each do |practice| %>
-          <tr>
-            <td><%= link_to practice.title, practice_path(practice) %></td>
-            <td><%= practice.created_at.strftime("%F %T") %></td>
-          </tr>
+    </div>
+  </div>
+  <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#my_cardboxes" aria-expanded="true" aria-controls="collapseOne">
+          最近玩过的卡片盒
+        </a>
+      </h4>
+    </div>
+    <div id="my_cardboxes" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+         <% unless @my_cardboxes.length > 0 %>
+	        暂时还没有哦
+        <% else %>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>卡片盒</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @my_cardboxes.reverse.each do |cardbox| %>
+                <tr>
+                  <td><%= link_to cardbox.name, cardbox_path(cardbox) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
         <% end %>
-      </tbody>
-    </table>
-            <% end %>
-          </div>
-        </div>
       </div>
     </div>
   </div>
 </div>
+
+
+<% end %>

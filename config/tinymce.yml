@@ -1,0 +1,10 @@
+language: zh_CN
+toolbar:
+  - undo redo | copy cut paste | formatselect | bold underline subscript superscript | forecolor backcolor | alignleft aligncenter alignright | bullist | numlist | removeformat | fullscreen
+plugins:
+  - advlist
+  - code
+  - link
+  - table
+  - textcolor
+  - fullscreen

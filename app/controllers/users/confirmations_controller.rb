@@ -1,4 +1,5 @@
 class Users::ConfirmationsController < Devise::ConfirmationsController
+  skip_before_action :check_user_active_time
   # GET /resource/confirmation/new
   # def new
   #   super

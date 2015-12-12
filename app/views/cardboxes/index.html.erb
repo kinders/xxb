@@ -56,6 +56,16 @@
     <div class="btn-group" role="btn-group" arial-label="manage">
       <%= link_to t('.new', :default => t("helpers.links.new")), new_cardbox_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
     </div>
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="60" >
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><%= link_to "查看今天的成绩", list_right_cards_path, tabindex: 61 %></li>
+        <li role="separator" class="divider"></li>
+        <li><%= link_to "共享卡片盒中心", share_cardboxes_path, tabindex: 62 %></li>
+      </ul>
+    </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <%= link_to t('.up', :default => t("helpers.links.up")), me_summary_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', default: t("helpers.titles.up"), :model => t("activerecord.models.me")) %>
       <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
@@ -71,16 +81,23 @@
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:user_id) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
+      <th>得分</th>
+      <th>得分率</th>
       <th><%= model_class.human_attribute_name(:share) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
+    <% total_degree = 0 %>
     <% @cardboxes.each do |cardbox| %>
       <tr>
         <td><%= cardbox.id %></td>
         <td><%= cardbox.user.name %></td>
         <td><%= link_to cardbox.name, cardbox_path(cardbox) %></td>
+        <% cardbox_degree = cardbox.cards.sum(:degree) %>
+        <% total_degree += cardbox_degree %>
+        <td><%= cardbox_degree  %></td>
+        <td><%= (cardbox.cards.average(:degree)*10).round(2) %> %</td>
         <td>
           <% if cardbox.share %>
           共享
@@ -101,33 +118,5 @@
     <% end %>
   </tbody>
 </table>
-
-<hr>
-<div class="page-header">
-  <h3>与我共享的卡片盒</h3>
-</div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= model_class.human_attribute_name(:id) %></th>
-      <th><%= model_class.human_attribute_name(:user_id) %></th>
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @share_cardboxes.each do |cardbox| %>
-      <tr>
-        <td><%= cardbox.id %></td>
-        <td><%= cardbox.user.name %></td>
-        <td><%= link_to cardbox.name, cardbox_path(cardbox) %></td>
-        <td>
-          <%= button_to "我要一盒", cardbox_copy_cardbox_for_me_path(cardbox), class: 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "将这个卡片盒、里面的卡片复制给自己" %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-
+<h4>我的总分：<%= total_degree %></h4>
 <% end %>

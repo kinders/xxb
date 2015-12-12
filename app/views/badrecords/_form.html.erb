@@ -14,20 +14,30 @@
       </div>
     </div>
   <% end %>
+
   <% unless params[:action] == 'edit' %>
   <div class="form-group">
     <%= f.label :troublemaker, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
-      <%# f.collection_check_boxes :troublemaker, @classroom.members, :student, :id, :class => 'form-control' %>
+      <% cadre = Cadre.find(session[:cadre_id]) if session[:cadre_id] %>
+      <% if cadre && cadre.team_id %>
+        <% all_members = cadre.team.players.collect{|p| p.member} %>
+      <%= f.collection_check_boxes :troublemaker, all_members.any? ? all_members.order(:serial).collect { |m| [m.student, m.serial.to_s + " " + User.find(m.student).name]} : [], :first, :last, class: 'form-control' do |b| %>
+        <div class="col-sm-3">
+          <%= b.label + b.check_box  %>
+      <% end %>
+      <% else %>
       <%= f.collection_check_boxes :troublemaker, @classroom.members.order(:serial).collect { |m| [m.student, m.serial.to_s + " " + User.find(m.student).name]}, :first, :last, class: 'form-control' do |b| %>
         <div class="col-sm-3">
           <%= b.label + b.check_box  %>
         </div>
       <% end %>
+      <% end %>
     </div>
     <%= error_span(@badrecord[:troublemaker]) %>
   </div>
-<% end %>
+  <% end %>
+
   <div class="form-group">
     <%= f.label :troubletime, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
@@ -35,6 +45,7 @@
     </div>
     <%= error_span(@badrecord[:troubletime]) %>
   </div>
+
   <div class="form-group">
     <%= f.label :subject_id, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
@@ -45,13 +56,21 @@
       <% if teachers.any? %>
         <%= f.select :subject_id, teachers.collect { |t| [t.subject.name, t.subject_id]}, :class => 'form-control' %>
       <% elsif cadre %>
-        <%= f.select :subject_id, Subject.all.collect {|s| [s.name, s.id] if cadre.position.match(s.name)}.compact, :class => 'form-control' %>
+        <% cadre_subject = Subject.all.collect {|s| [s.name, s.id] if cadre.position.match(s.name)}.compact %>
+        <% all_subject = Subject.all.collect { |s| [s.name, s.id]} %>
+        <% if cadre_subject.any? %>
+          <% cadre_subjects = cadre_subject %>
+        <% else %>
+          <% cadre_subjects = all_subject %>
+        <% end %>
+        <%= f.select :subject_id, cadre_subjects, :class => 'form-control' %>
       <% else %>
       <%= f.select :subject_id, Subject.all.collect { |s| [s.name, s.id]}, :class => 'form-control' %>
       <% end %>
     </div>
     <%= error_span(@badrecord[:subject_id]) %>
   </div>
+
   <div class="form-group">
     <%= f.label :description, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
@@ -59,7 +78,6 @@
     </div>
     <%= error_span(@badrecord[:description]) %>
   </div>
-
 
   <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

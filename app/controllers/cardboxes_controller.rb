@@ -9,7 +9,6 @@ class CardboxesController < ApplicationController
     if current_user.has_role? :admin
       @cardboxes = Cardbox.all
     else
-      @share_cardboxes = Cardbox.where.not(user_id: current_user.id).where(share: true)
       @cardboxes = Cardbox.where(user_id: current_user.id)
     end
   end
@@ -74,10 +73,16 @@ class CardboxesController < ApplicationController
     end
   end
 
+
+  def share_cardboxes
+    @share_cardboxes = Cardbox.where(share: true)
+  end
+
   def turn_cards
     @cardbox = Cardbox.find(params[:cardbox_id])
     session[:cardbox_id] = @cardbox.id
-    Card.where(cardbox_id: @cardbox.id).order(:serial).each { |card|
+    all_cards = Card.where(cardbox_id: @cardbox.id)
+    all_cards.order(:serial).each { |card|
       if card.nexttime < Time.now  && card.degree < 10
         @next_card = card
       end
@@ -86,9 +91,12 @@ class CardboxesController < ApplicationController
     if @next_card
       redirect_to @next_card 
     else
-      @next_time = Card.where(cardbox_id: @cardbox.id).order(:nexttime).first.nexttime
-      flash[:notice] = "《#{@cardbox.name}》的下一轮复习时间为 #{@next_time}！"
-      #flash[:notice] = "《#{@cardbox.name}》卡片盒里暂时没有需要复习的卡片"
+      if  all_cards.collect{|card| card.degree }.uniq == [10]
+      flash[:notice] = "《#{@cardbox.name}》里已经没有卡片需要复习了！"
+      else
+        @next_time = all_cards.where("nexttime > ?", Time.now ).order(:nexttime).first.nexttime
+      flash[:notice] = "恭喜！《#{@cardbox.name}》本轮复习结束，下一轮复习时间为 #{@next_time.strftime("%F %R")}！"
+      end
       redirect_to cardboxes_url
     end
   end

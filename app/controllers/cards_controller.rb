@@ -94,49 +94,38 @@ class CardsController < ApplicationController
   def well_done
     @cardbox = Cardbox.find(session[:cardbox_id])  # 从会话中获取卡片盒号码
     @card = Card.find(session[:card_id])           # 从会话中获取卡片号码
-    interval = [10,  20,  40,  180,  480,  720,  1440,  2880,  4320,  11520,  21600]   # 定义学习间隔，单位为分钟
+    interval = [10,  20,  40,  180,  360,  720,  1440,  2880,  5760,  11520,  21600]   # 定义学习间隔，单位为分钟：
+    # 10分钟，20分钟，40分钟，3小时，6小时，12小时，24小时（1天），48小时（2天），72小时（4天），8天，15天
+    interval_str = ["10分钟", "20分钟", "40分钟", "3小时", "6小时", "12小时", "24小时（1天）", "48小时（2天）", "72小时（4天）", "8天", "15天"]
     # 记录足迹
-    # history = History.create { |h| 
-    #   h.user_id = current_user.id
-    #   h.modelname = "card"
-    #   h.entryid = @card.id
-    # }
+    history = History.create { |h| 
+      h.user_id = current_user.id
+      h.modelname = "card"
+      h.entryid = @card.id
+    }
     # 修改本卡信息
-    if @card.nexttime > Time.now   ## 如果时间还没到，则什么都不做，这个if后面的逻辑是指时间到来了。
+    if @card.nexttime > Time.now   ## 如果时间还没到，则什么只是推迟下次复习的时间。就是说，这次学习没有效果。这个if后面的逻辑是指时间到来了。
+      @card.nexttime = Time.now + interval[@card.degree - 1] * 60  ### 下次复习时间
     elsif @card.degree == 0        ## 如果级别为0
       @card.nexttime = Time.now + interval[@card.degree] * 60  ### 下次复习时间
       @card.degree += 1                                        ### 下次复习级别
-      @card.serial += 10                                       ### 下次复习顺序
+      @card.serial = @cardbox.cards.order(:serial).first(10).last.serial + 1    ### 下次复习顺序
     elsif @card.degree == 10       ## 如果级别为10并且顺序小于二万，嘿嘿，要是复习了兩千次，恐怕就是一个bug了，可是谁会复习兩千次还没有过关呢？等等，这个卡片应该去不出来吧？所以这个判断多余了吧？
       @card.serial += 20000  if @card.serial < 20000      ### 下次复习顺序
-    elsif Time.now - @card.nexttime > interval[@card.degree + 1] * 60 && @card.foul < 10   ## 如果复习时超过了限制并且次数在10以内
-      @card.nexttime = Time.now + interval[@card.degree] * 60   ### 下次复习时间
+    elsif Time.now - @card.nexttime > interval[@card.degree + 1] * 60 && @card.foul < 3   ## 如果复习时超过了限制并且在3次以内。个人觉得超时还答对是个好事，为什么要加以惩罚呢？
+      @card.nexttime = Time.now + interval[@card.degree - 1] * 60   ### 下次复习时间
       @card.foul += 1                                           ### 标记本次复习时间超出规定
-      @card.serial += 10                                        ### 将下次复习顺序调整为十张卡片之后
+      @card.serial = @cardbox.cards.order(:serial).first(10).last.serial + 1            ### 将下次复习顺序调整为十张卡片之后
     else                           ## 如果以上情况都不是
       @card.nexttime = Time.now + interval[@card.degree] * 60   ### 下次复习时间
       @card.foul = 0                                            ### 标记本次复习时间合乎规则
       @card.degree += 1                                         ### 下次复习级别
-      @card.serial += 10                                        ### 下次复习顺序
+      @card.serial = @cardbox.cards.order(:serial).first(10).last.serial + 1                                         ### 下次复习顺序
     end
     @card.count += 1
     @card.save!
-    # 按卡片的serial的顺序、遍历卡片盒，取出到了时间的下一张卡片
-    # @next_card = Card.where.not("nexttime > #{Time.now}").where(cardbox_id: session[:cardbox_id], user_id: current_user.id).order(:serial).first
-    Card.where(cardbox_id: @cardbox.id).order(:serial).each { |card|
-      if card.nexttime < Time.now  && card.degree < 10
-        @next_card = card
-      end
-      break if @next_card
-    }
-    if @next_card
-      redirect_to @next_card 
-    else
-      @next_time = Card.where(cardbox_id: @cardbox.id).order(:nexttime).first.nexttime
-      flash[:notice] = "《#{@cardbox.name}》的下一轮复习时间为 #{@next_time}！"
-      #flash[:notice] = "《#{@cardbox.name}》卡片盒里暂时没有需要复习的卡片"
-      redirect_to cardboxes_url
-    end
+    flash[:notice] = "真棒！下次复习安排在#{interval_str[@card.degree-1]}之后。"
+    get_card(@cardbox.id)
   end
 
   # GET  /cards/1/try_again
@@ -146,7 +135,7 @@ class CardsController < ApplicationController
     @card.degree -= 1 unless @card.degree == 0   # 首先是降低复习级别
     @card.nexttime = Time.now                    # 马上安排下次复习
     @card.count += 1                             # 将复习次数加一
-    @card.serial += 5                            # 复习顺序加五
+    @card.serial = @cardbox.cards.order(:serial).first(4).last.serial + 1                            # 复习顺序加五
     @card.save!
     # 记录足迹
     # history = History.create { |h| 
@@ -154,21 +143,30 @@ class CardsController < ApplicationController
     #   h.modelname = "card"
     #   h.entryid = @card.id
     # }
-    Card.where(cardbox_id: @cardbox.id).order(:serial).each { |card|
-      if card.nexttime < Time.now  && card.degree < 10
-        @next_card = card
-      end
-      break if @next_card
-    }
-    if @next_card
-      redirect_to @next_card 
-    else
-      @next_time = Card.where(cardbox_id: @cardbox.id).order(:nexttime).first.nexttime
-      flash[:notice] = "《#{@cardbox.name}》的下一轮复习时间为 #{@next_time}！"
-      #flash[:notice] = "《#{@cardbox.name}》卡片盒里暂时没有需要复习的卡片"
-      redirect_to cardboxes_url
-    end
+    get_card(@cardbox.id)
+    flash[:notice] = "没关系！不就再复习一次嘛。"
   end
+
+  # get /cards/1/pass_card
+  def pass_card
+    @cardbox = Cardbox.find(session[:cardbox_id])
+    @card = Card.find(params[:card_id])
+    @card.update(degree: 10)
+    # 记录足迹
+    history = History.create { |h| 
+      h.user_id = current_user.id
+      h.modelname = "card"
+      h.entryid = @card.id
+    }
+    get_card(@cardbox.id)
+  end
+
+  # get /cards/list_right_cards
+  def list_right_cards
+    right_today_history = History.where(user_id: current_user.id, modelname: "card", created_at: Time.now.beginning_of_day .. Time.now).collect{|h|h.entryid}.uniq
+    @right_today_cards = Card.where(id: right_today_history)
+  end
+
 
   # 在习题 的 index 界面中，将所有习题添加到卡片盒中。
   def add_all_to_cardbox
@@ -202,6 +200,33 @@ class CardsController < ApplicationController
 
 
   private
+
+    # 按卡片的serial的顺序、遍历卡片盒，取出到了时间的下一张卡片
+    def get_card(cardbox_id)
+
+      @cardbox_id = cardbox_id
+      all_cards = Card.where(cardbox_id: @cardbox_id)
+      all_cards.order(:serial).each { |card|
+        if card.nexttime < Time.now  && card.degree < 10
+          @next_card = card
+        end
+        break if @next_card
+      }
+      if @next_card
+        redirect_to @next_card 
+      else
+        if  all_cards.collect{|card| card.degree }.uniq == [10]
+        flash[:notice] = "《#{@cardbox.name}》里已经没有卡片值得复习了！"
+        else
+        @next_time = all_cards.where("nexttime > ?", Time.now ).order(:nexttime).first.nexttime
+        flash[:notice] << "恭喜！《#{@cardbox.name}》本轮复习结束，下一轮复习时间为 #{@next_time.strftime("%F %R")}。"
+        end
+        redirect_to cardboxes_url
+      end
+    end
+
+
+
     # Use callbacks to share common setup or constraints between actions.
     def set_card
       @card = Card.find(params[:id])
