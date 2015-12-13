@@ -1,65 +1,83 @@
 == 学学半 README
 
 “学学半”是用 ruby on rails 开发的一套教学站点。
+* 可以部署于个人电脑中，通过小型的家用路由器，教师和学生可通过多种电子设备（如电脑，手机，平板）进行交互。
+* 可以部署于学校服务器中，通过覆盖全校的路由器，供全校师生共同使用，教师之间学生之间可以共享数据资源。
+* 可以部署于云端，通过互联网，服务于世界各地的用户。
+
 这个站点包含三个模块：内容管理模块，教学管理模块，登录计费模块。
 
 内容管理模块包含如下功能：
 
 * 创建教科书
-* 为教科书添加课文
 * 创建课文内容
+* 为教科书添加课文
 * 为课文内容添加辅导页面
 * 为课文内容添加习题
 * 为课文内容添加某种教学方式（有效组织辅导页面）
 * 按教学方式安排辅导页面和习题
-* 利用习题进行卡片式的学习和测试
+* 根据习题进行卡片学习和测试
 * 使用习题进行练习
-* 对练习结果进行评价
+* 评价练习结果
 
 教学管理模块包含如下功能：
 
 * 创建班级
-* 为班级添加学生、班干和教师
+* 为班级添加学生、班干和各科教师
 * 对学生进行各种分组
 * 对小组进行评价
 * 对班级进行教学
 * 布置作业，对作业进行评价
 * 班干和教师可对学生的不良记录进行登记和消除
 
-收费模块
+登录计费模块
 * 用户登录管理，可区分计时用户和特别不计时用户
-* 计算普通用户的登录时间，到期时强制下线
-* 收费管理，收款续时。
+* 根据计时用户的登录时间，逾期强制下线，充值续时
+* 收费管理，出纳现金管理。
 
-=== 学学半 TODO
+===  TODO
 
 * 用户社交（主要是信息交流，不考虑博文留言）
-* 学伴管理
-* 学长付费辅导
+* 学伴管理。
+* 学长辅导付费模式。（这是淘宝模式啊）
+* 图片。应考虑硬盘空间。
+* 多媒体。应考虑硬盘空间。
 
+===  一般信息
 
-=== 学学半 一般信息
+1. 系统要求(System dependencies)：
 
 * Ubuntu 14.04
 * Ruby 2.0.0
 * Rails 4.2.0
 
-* System dependencies
+2. 配置(Configuration)
 
-* Configuration
+* 暂无。
 
-* Database creation
+3. 创建数据库(Database creation)
 
-* Database initialization
+* 参见xxb.ods。
 
-* How to run the test suite
+4. 初始化数据库 (Database initialization)
 
-* Services (job queues, cache servers, search engines, etc.)
+* 暂无。
 
-* Deployment instructions
+5. 代码测试 (How to run the test suite)
 
-* ...
+* 内伤啊！
 
+6. 服务(Services (job queues, cache servers, search engines, etc.))
 
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+* 暂无。
+* 部署在云端时，应该启用Mailer，并补充代码
+
+7. 部署(Deployment instructions)
+
+* 推荐使用Passenger和Nginx
+
+===  版权
+
+* 许可证：GPLv3。
+* 需要其他许可证的可与本作者联系。
+
