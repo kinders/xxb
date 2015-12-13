@@ -61,14 +61,18 @@
         <li>
           <%= link_to "班干团队", cadres_url %>
         </li>
+        <li role="seperator" class="divider"></li>
         <li>
-          <%= link_to "小组合作", sectionalizations_url %>
+          <%= link_to "小组合作方案", sectionalizations_url %>
         </li>
         <% if @sectionalization %>
         <li>
           <%= link_to "合作得分", classgroupscores_url %>
         </li>
         <% end %>
+        <li role="seperator" class="divider"></li>
+        <li><%= link_to "班级不良记录", class_badrecords_path %></li>
+        <li><%= link_to "已完成的不良记录", class_finish_badrecords_path %></li>
       </ul>
     </div>
     <!-- 导航按钮 -->
@@ -97,7 +101,7 @@
   </h3>
 <br>
 </div>
-  <div class="well"> 
+<div class="well"> 
   <% if @classroom.members.find_by(student: current_user.id) %>
     <%= current_user.name %> 同学，<em>欢迎您回来！</em>
   <% elsif @classroom.teachers.find_by(mentor: current_user.id) %>
@@ -105,7 +109,7 @@
   <% else %>
     <%= current_user.name %>，<em>欢迎您参观！</em>
   <% end %>
-  </div>
+</div>
 <div>
   <% if @member %>
     <%= link_to "我的作业", member_path(@member), class: "btn btn-default" %>
@@ -199,53 +203,6 @@
       </div>
     </div>
   </div>
-  <% if @class_badrecords.any? %>
-  <div class="panel panel-info">
-    <div class="panel-heading" role="tab" id="headingOne">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#class_badrecords" aria-expanded="true" aria-controls="collapseOne">
-          班级的不良记录（共<%= @class_badrecords.count %>条）
-        </a>
-      </h4>
-    </div>
-    <div id="class_badrecords" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-      <div class="panel-body">
-        <table class="table table-striped">
-          <caption class="text-center h4"></caption>
-          <thead>
-            <tr>
-              <th><%= Badrecord.human_attribute_name(:id) %></th>
-              <th><%= Badrecord.human_attribute_name(:troublemaker) %></th>
-              <th><%= Badrecord.human_attribute_name(:troubletime) %></th>
-              <th><%= Badrecord.human_attribute_name(:subject_id) %></th>
-              <th><%= Badrecord.human_attribute_name(:description) %></th>
-              <th><%=t '.actions', :default => t("helpers.actions") %></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @class_badrecords.each do |badrecord| %>
-              <tr>
-                <td><%= badrecord.id %></td>
-                <td><%= link_to Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).serial.to_i.to_s + " " + User.find(badrecord.troublemaker).name, member_path(Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).id) %></td>
-                <td><%= badrecord.troubletime.strftime("%F") %></td>
-                <td><%= badrecord.subject.name %></td>
-                <td><%= link_to badrecord.description, badrecord_path(badrecord) %></td>
-                <td>
-                  <%= link_to "抹",
-                              badrecord_finish_badrecord_path(badrecord),
-                              :data => { :confirm =>  "您确定要抹平 #{User.find(badrecord.troublemaker).name} 的 #{badrecord.id} 这条不良记录？" },
-                              :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "抹平 不良记录" %>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-        <hr>
-        <%= link_to "下载csv文件（全班的不良记录）", "/download_csv.csv", class: "btn btn-default pull-right" %>
-      </div>
-    </div>
-  </div>
-  <% end %>
 </div>
 
 <% end %>

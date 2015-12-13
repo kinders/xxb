@@ -1,0 +1,63 @@
+<%- model_class = Classroom -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 附加功能 -->
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" tabindex="61", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <%= link_to "查看未销的不良记录", class_badrecords_path %>
+        </li>
+      </ul>
+    </div>
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), classroom_path(session[:classroom_id]), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "返回 班级" %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+
+<% if @class_finish_badrecords.any? %>
+<div class="page-header">
+  <h3>
+    <%= @classroom.name %> 已完成的不良记录（共<%= @class_finish_badrecords.count %>条）
+  </h3>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= Badrecord.human_attribute_name(:id) %></th>
+      <th><%= Badrecord.human_attribute_name(:troublemaker) %></th>
+      <th><%= Badrecord.human_attribute_name(:troubletime) %></th>
+      <th><%= Badrecord.human_attribute_name(:subject_id) %></th>
+      <th><%= Badrecord.human_attribute_name(:description) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @class_finish_badrecords.each do |badrecord| %>
+      <tr>
+        <td><%= badrecord.id %></td>
+        <td><%= link_to Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).serial.to_i.to_s + " " + User.find(badrecord.troublemaker).name, member_path(Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).id) %></td>
+        <td><%= badrecord.troubletime.strftime("%F") %></td>
+        <td><%= badrecord.subject.name %></td>
+        <td><%= link_to badrecord.description, badrecord_path(badrecord) %></td>
+        <td>
+          <%= link_to "还原",
+                      badrecord_restore_badrecord_path(badrecord),
+                      :data => { :confirm =>  "您确定要还原 #{User.find(badrecord.troublemaker).name} 的 #{badrecord.id} 这条不良记录？" },
+                      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "还原 不良记录" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% else %>
+  <div class="well">您还不是班级的老师，无法查看全班的记录</div>
+<% end %>

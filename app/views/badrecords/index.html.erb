@@ -81,7 +81,7 @@
 
 <% if @badrecords_by_me.any? %>
 <table class="table table-striped">
-  <caption class="text-center h4">我管理的不良记录</caption>
+  <caption class="text-center h4">我管理的不良记录（共<%= @badrecords_by_me.count %>条）</caption>
   <thead>
     <tr>
       <th><%= model_class.human_attribute_name(:id) %></th>
@@ -119,6 +119,44 @@
   </tbody>
 </table>
 <hr>
+<% end %>
+
+<% if @badrecords_finish_by_me.any? %>
+  <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#collapseBadrecordFinshByMe" aria-expanded="false" aria-controls="collapseBadrecordFinshByMe">
+    查看我抹平的不良记录
+  </button>
+  <div class="collapse" id="collapseBadrecordFinshByMe" >
+    <table class="table table-striped">
+      <caption class="text-center h4">我抹平的不良记录（共<%= @badrecords_finish_by_me.count %>条）</caption>
+      <thead>
+        <tr>
+          <th><%= model_class.human_attribute_name(:id) %></th>
+          <th><%= model_class.human_attribute_name(:troublemaker) %></th>
+          <th><%= model_class.human_attribute_name(:troubletime) %></th>
+          <th><%= model_class.human_attribute_name(:subject_id) %></th>
+          <th><%= model_class.human_attribute_name(:description) %></th>
+          <th><%=t '.actions', :default => t("helpers.actions") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @badrecords_finish_by_me.each do |badrecord| %>
+          <tr>
+            <td><%= badrecord.id %></td>
+            <td><%= link_to Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).serial.to_i.to_s + " " + User.find(badrecord.troublemaker).name, member_path(Member.find_by(classroom_id: @classroom.id, student: badrecord.troublemaker).id) %></td>
+            <td><%= badrecord.troubletime.strftime("%F") %></td>
+            <td><%= badrecord.subject.name %></td>
+            <td><%= link_to badrecord.description, badrecord_path(badrecord) %></td>
+            <td>
+              <%= link_to "还原",
+                badrecord_restore_badrecord_path(badrecord),
+                :data => { :confirm =>  "您确定要还原 #{User.find(badrecord.troublemaker).name} 这条不良记录？" },
+                :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "还原 不良记录" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 <% end %>
 
 <% end %>

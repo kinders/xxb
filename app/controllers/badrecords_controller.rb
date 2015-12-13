@@ -12,7 +12,8 @@ class BadrecordsController < ApplicationController
       @classroom = Classroom.find(session[:classroom_id])
       # 自己管理的不良记录
       @badrecords_by_me = Badrecord.where(user_id: current_user.id, classroom_id: @classroom.id, finish: nil, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker) 
-      # 班级的不良记录移动到classroom的show模块。
+      @badrecords_finish_by_me = Badrecord.where(user_id: current_user.id, classroom_id: @classroom.id, finish: true, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker) 
+      # 班级的不良记录移动到classroom的class_badrecords模块。
       # 自己的不良记录列表移动到member的show模块。
     end
   end
@@ -97,6 +98,16 @@ class BadrecordsController < ApplicationController
     @badrecord.update(finish: true)
     respond_to do |format|
       format.html { redirect_to :back, notice: '成功抹平一条不良记录。' }
+      format.json { head :no_content }
+    end
+  end
+
+  # GET /badrecords/1/restore_badrecord
+  def restore_badrecord
+    @badrecord = Badrecord.find(params[:badrecord_id])
+    @badrecord.update(finish_man: nil, finish_time: nil, finish: nil)
+    respond_to do |format|
+      format.html { redirect_to :back, notice: '还原了一条不良记录。' }
       format.json { head :no_content }
     end
   end

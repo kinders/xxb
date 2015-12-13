@@ -49,6 +49,7 @@ Rails.application.routes.draw do
   resources :badrecords do
     # get 'finish_badrecord', to: 'badrecords#finish_badrecord'
     get 'finish_badrecord'
+    get 'restore_badrecord'
   end
 
   resources :cadres
@@ -75,6 +76,8 @@ Rails.application.routes.draw do
 
   resources :classrooms
   get '/quit_classroom', to: 'classrooms#quit_classroom'
+  get '/class_badrecords', to: 'classrooms#class_badrecords'
+  get '/class_finish_badrecords', to: 'classrooms#class_finish_badrecords'
 
   resources :justices
 

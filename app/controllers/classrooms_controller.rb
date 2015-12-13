@@ -22,17 +22,6 @@ class ClassroomsController < ApplicationController
     @teacher = @classroom.teachers.find_by(mentor: current_user.id)
     @cadre = @classroom.cadres.find_by(member_id: @member.id) if @member
     @sectionalization = Sectionalization.find(session[:sectionalization_id]) if session[:sectionalization_id]
-    # 班级的不良记录
-    ## 如果是班主任
-    if @classroom.user_id == current_user.id
-      @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)
-    ## 如果是科任教师
-    elsif @classroom.teachers.find_by(mentor: current_user.id)
-      @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil, subject_id: @classroom.teachers.find_by(mentor: current_user.id).subject_id, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)
-    ## 如果是其他人
-    else
-      @class_badrecords = []  # 为了在视图中统一使用any?方法。
-    end
     
     #unless current_user.has_role? :admin
       #respond_to do |format|
@@ -96,6 +85,37 @@ class ClassroomsController < ApplicationController
   def quit_classroom
     session[:classroom_id] = nil
     redirect_to "/", notice: "您已经从班级中退出"
+  end
+
+  # 班级的不良记录
+  def class_badrecords
+    @classroom = Classroom.find(session[:classroom_id])
+    ## 如果是班主任
+    if @classroom.teachers.where(mentor: current_user.id).collect{|t|t.subject_id}.sort.first == 1
+      @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)
+    ## 如果是科任教师
+    elsif @classroom.teachers.find_by(mentor: current_user.id)
+      @class_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: nil, subject_id: @classroom.teachers.where(mentor: current_user.id).collect{|t|t.subject_id}, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)
+    ## 如果是其他人
+    else
+      @class_badrecords = []  # 为了在视图中统一使用any?方法。
+    end
+  end
+
+
+  # 班级已经完成的不良记录
+  def class_finish_badrecords
+    @classroom = Classroom.find(session[:classroom_id])
+    ## 如果是班主任
+    if @classroom.teachers.where(mentor: current_user.id).collect{|t|t.subject_id}.sort.first == 1
+      @class_finish_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: true, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)
+    ## 如果是科任教师
+    elsif @classroom.teachers.find_by(mentor: current_user.id)
+      @class_finish_badrecords = Badrecord.where(classroom_id: @classroom.id, finish: true, subject_id: @classroom.teachers.where(mentor: current_user.id).collect{|t|t.subject_id}, troublemaker: @classroom.members.map{|m|m.student}).order(:troublemaker)
+    ## 如果是其他人
+    else
+      @class_finish_badrecords = []  # 为了在视图中统一使用any?方法。
+    end
   end
 
 

@@ -278,6 +278,7 @@
       <th><%= Badrecord.human_attribute_name(:user_id) %></th>
       <th><%= Badrecord.human_attribute_name(:finish_man) %></th>
       <th><%= Badrecord.human_attribute_name(:finish_time) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
@@ -290,6 +291,15 @@
         <td><%= badrecord.user.name %></td>
         <td><%= User.find(badrecord.finish_man).name %></td>
         <td><%= badrecord.finish_time.strftime("%F") %></td>
+        <td>
+          <% if badrecord.finish_man == current_user.id %>
+          <%= link_to "还原", badrecord_restore_badrecord_path(badrecord), 
+            :data => { :confirm =>  "您确定要还原 #{User.find(badrecord.troublemaker).name} 的 #{badrecord.id.to_s} 这条不良记录？" },
+            :class => 'btn btn-xs btn-default', 
+            "data-toggle": "tooltip", 
+            "data-placement": "bottom", 
+            title: "还原 不良记录" %>
+          <% end %>
       </tr>
     <% end %>
   </tbody>

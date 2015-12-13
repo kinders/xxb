@@ -82,7 +82,7 @@
   <div class="form-group">
     <%= f.label "教师", :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
-      <%= f.select :mentor, User.all.order("name").collect{ |user| [user.id.to_s + " " + user.name.to_s, user.id]}, {prompt: "请选择一个用户"}, {class: 'form-control'}  %>
+      <%= f.select :mentor, User.all.collect{ |user| [user.id.to_s + " " + user.name.to_s, user.id]}, {prompt: "请选择一个用户"}, {class: 'form-control'}  %>
     </div>
     <%= error_span(@teacher[:mentor]) %>
   </div>
