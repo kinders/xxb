@@ -22,17 +22,21 @@
       <% cadre = Cadre.find(session[:cadre_id]) if session[:cadre_id] %>
       <% if cadre && cadre.team_id %>
         <% all_members = cadre.team.players.collect{|p| p.member} %>
-      <%= f.collection_check_boxes :troublemaker, all_members.any? ? all_members.order(:serial).collect { |m| [m.student, m.serial.to_s + " " + User.find(m.student).name]} : [], :first, :last, class: 'form-control' do |b| %>
-        <div class="col-sm-3">
-          <%= b.label + b.check_box  %>
-      <% end %>
+        <%= f.collection_check_boxes :troublemaker, all_members.any? ? all_members.order(:serial).collect { |m| [m.student, m.serial.to_s + " " + User.find(m.student).name]} : [], :first, :last, class: 'form-control' do |b| %>
+          <div class="col-sm-3">
+            <%= b.label + b.check_box  %>
+          </div>
+        <% end %>
       <% else %>
-      <%= f.collection_check_boxes :troublemaker, @classroom.members.order(:serial).collect { |m| [m.student, m.serial.to_s + " " + User.find(m.student).name]}, :first, :last, class: 'form-control' do |b| %>
-        <div class="col-sm-3">
-          <%= b.label + b.check_box  %>
-        </div>
+        <%= f.collection_check_boxes :troublemaker, @classroom.members.order(:serial).collect { |m| [m.student, m.serial.to_s + " " + User.find(m.student).name]}, :first, :last, class: 'form-control' do |b| %>
+          <div class="col-sm-3">
+            <%= b.label + b.check_box  %>
+          </div>
+        <% end %>
       <% end %>
-      <% end %>
+      <label>全选/不选</label>
+      <input type="checkbox" id="checkbox_select_all" />
+      <label>（提示：全选操作无效时可刷新页面）</label>
     </div>
     <%= error_span(@badrecord[:troublemaker]) %>
   </div>
