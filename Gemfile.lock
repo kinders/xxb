@@ -49,6 +49,9 @@ GEM
       columnize (= 0.9.0)
       rb-readline (= 0.5.2)
     cancancan (1.10.1)
+    ckeditor (4.1.5)
+      cocaine
+      orm_adapter (~> 0.5.0)
     climate_control (0.0.3)
       activesupport (>= 3.0)
     cocaine (0.5.7)
@@ -207,6 +210,7 @@ DEPENDENCIES
   better_errors
   byebug
   cancancan
+  ckeditor
   coffee-rails (~> 4.1.0)
   csv_builder
   devise

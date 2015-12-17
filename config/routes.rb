@@ -130,7 +130,10 @@ Rails.application.routes.draw do
   post "set_normal_user", to: "users#set_normal_user"
   post "reset_password", to: "users#reset_password"
 
+  mount Ckeditor::Engine => '/ckeditor'
+
   root 'site#home'
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

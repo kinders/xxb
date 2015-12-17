@@ -27,6 +27,7 @@ class CardboxesController < ApplicationController
   # GET /cardboxes/new
   def new
     @cardbox = Cardbox.new
+    @cardbox.lesson_id = session[:lesson_id] if session[:lesson_id]
   end
 
   # GET /cardboxes/1/edit

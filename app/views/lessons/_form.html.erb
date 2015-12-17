@@ -52,8 +52,10 @@
     <%= f.label "内容", :class => 'control-label' %>
     <div class="controls">
       <%# f.text_area :content, :class => 'form-control', rows: "30", tabindex: 14 %>
-      <%= f.text_area :content, :class => 'tinymce form-control', rows: "30", tabindex: 14   %>
-      <%= tinymce %>
+      <%# f.text_area :content, :class => 'tinymce form-control', rows: "30", tabindex: 14   %>
+      <%= cktext_area :lesson, :content, :rows => 10, :ckeditor => {:uiColor => '#AADC6E', :toolbar => 'mini'} %>
+
+      <%# tinymce %>
     </div>
     <%= error_span(@lesson[:content]) %>
   </div>

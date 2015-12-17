@@ -63,7 +63,7 @@ end
   gem 'paranoia', "~> 2.0"
   gem 'smarter_csv'
   gem 'csv_builder'
-  # gem 'ckeditor'
+  gem 'ckeditor'
   gem 'tinymce-rails'
   gem 'tinymce-rails-langs'
 

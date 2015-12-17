@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151209152158) do
+ActiveRecord::Schema.define(version: 20151216134746) do
 
   create_table "badrecords", force: :cascade do |t|
     t.integer  "user_id"
@@ -56,9 +56,11 @@ ActiveRecord::Schema.define(version: 20151209152158) do
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
     t.boolean  "share",      default: false
+    t.integer  "lesson_id"
   end
 
   add_index "cardboxes", ["deleted_at"], name: "index_cardboxes_on_deleted_at"
+  add_index "cardboxes", ["lesson_id"], name: "index_cardboxes_on_lesson_id"
   add_index "cardboxes", ["user_id"], name: "index_cardboxes_on_user_id"
 
   create_table "cards", force: :cascade do |t|
@@ -105,6 +107,22 @@ ActiveRecord::Schema.define(version: 20151209152158) do
   add_index "catalogs", ["lesson_id"], name: "index_catalogs_on_lesson_id"
   add_index "catalogs", ["textbook_id"], name: "index_catalogs_on_textbook_id"
   add_index "catalogs", ["user_id"], name: "index_catalogs_on_user_id"
+
+  create_table "ckeditor_assets", force: :cascade do |t|
+    t.string   "data_file_name",               null: false
+    t.string   "data_content_type"
+    t.integer  "data_file_size"
+    t.integer  "assetable_id"
+    t.string   "assetable_type",    limit: 30
+    t.string   "type",              limit: 30
+    t.integer  "width"
+    t.integer  "height"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable"
+  add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type"
 
   create_table "classgroupscores", force: :cascade do |t|
     t.integer  "user_id"
