@@ -55,6 +55,8 @@
           <%= link_to "添加习题", new_practice_path %>
         </li>
         <li role="separator" class="divider"></li>
+        <li><%= link_to "使用卡片盒练习", cardboxes_path %>
+        <li role="separator" class="divider"></li>
         <% unless @lesson.teachings.empty? %>
         <li>
           <%= link_to "教案列表", teachings_path  %>

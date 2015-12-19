@@ -114,6 +114,7 @@
     </div>
   <% end %>
 
+  <% unless session[:cardbox_id] %>
   <div class="form-group">
     <%= f.label :cardbox_id, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
@@ -121,6 +122,7 @@
     </div>
     <%= error_span(@card[:cardbox_id]) %>
   </div>
+  <% end %>
   <div class="form-group">
     <%= f.label :sequence, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">

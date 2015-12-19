@@ -127,7 +127,10 @@
 
 <div class="page-header">
     <h3>我的主页</h3>
-    <%= link_to "去班里学习！", me_as_a_student_path, class: "btn btn-default" %>
+    <%= link_to "去教室里学习！", me_as_a_student_path, class: "btn btn-default" %>
+    <%= link_to "上教学楼找班", classrooms_url, class: "btn btn-default" %>
+    <%= link_to "到图书馆找书", textbooks_url, class: "btn btn-default" %>
+    <%= link_to "跑教导处改卷", me_justify_path, class: "btn btn-default" %>
 </div>
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">

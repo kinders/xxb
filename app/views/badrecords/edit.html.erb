@@ -22,7 +22,7 @@
 </div>
 
 <div class="page-header">
-  <h3><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %>：<%= User.find(@badrecord.troublemaker).name %></h3>
+  <h3><%=t '.title', :default => [:'helpers.titles.edit', 'Edit %{model}'], :model => model_class.model_name.human.titleize %>：<%= Member.find_by(classroom_id: @classroom.id, student: @badrecord.troublemaker).serial.to_i.to_s + " " + User.find(@badrecord.troublemaker).name %></h3>
 </div>
 <%= render :partial => 'form' %>
 

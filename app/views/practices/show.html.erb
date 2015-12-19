@@ -1,6 +1,5 @@
 <%- model_class = Practice -%>
 
-
 <div class="container col-xs-11 col-sm-10 col-md-8 affix">
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
     <!-- 管理功能 -->
@@ -94,53 +93,55 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
         <h4 class="modal-title" id="myCardLabel">添加到这个卡片盒中：</h4>
       </div>
-      <div class="modal-body">
-        <% @card = Card.new %>
-        <% @card.user_id = current_user.id %>
-        <% @card.practice_id = @practice.id %>
-        <%= form_for @card, :html => { :class => "form-horizontal card" } do |f| %>
 
-    <% if @card.errors.any? %>
-    <div id="error_expl" class="panel panel-danger">
-      <div class="panel-heading">
-        <h3 class="panel-title"><%= pluralize(@card.errors.count, "error") %> 使这个卡片无法提交:</h3>
-      </div>
-      <div class="panel-body">
-        <ul>
-        <% @card.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-        </ul>
-      </div>
-    </div>
-  <% end %>
+      <% @card = Card.new %>
+      <% @card.user_id = current_user.id %>
+      <% @card.practice_id = @practice.id %>
+      <%= form_for @card, :html => { :class => "form-horizontal card" } do |f| %>
 
-  <div class="control-group">
-    <div class="controls">
-      <%= f.hidden_field :user_id, :class => 'form-control' %>
-    </div>
-    <%= error_span(@card[:user_id]) %>
-  </div>
-  <div class="control-group">
-    <div class="controls">
-      <%= f.hidden_field :practice_id, :class => 'form-control' %>
-    </div>
-    <%= error_span(@card[:practice_id]) %>
-  </div>
-  <div class="control-group">
-    <%= f.label :cardbox_id, :class => 'control-label col-md-2' %>
-    <div class="controls">
-      <%= f.select :cardbox_id, Cardbox.where(user_id: current_user.id).collect{ |cardbox| [cardbox.name, cardbox.id]}, {:class => 'form-control col-md-4'} %>
-    </div>
-    <%= error_span(@card[:cardbox_id]) %>
-  </div>
-      </div>
-      <div class="modal-footer">
-        <p class="text-left"><b>提示：</b>若点击“提交”后没有反应，可刷新网页再点击“提交”。</p>
-        <%= f.submit "提交", :class => 'btn btn-primary' %>
-<% end %>
-        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
-      </div>
+        <div class="modal-body">
+          <% if @card.errors.any? %>
+            <div id="error_expl" class="panel panel-danger">
+              <div class="panel-heading">
+                <h3 class="panel-title"><%= pluralize(@card.errors.count, "error") %> 使这个卡片无法提交:</h3>
+              </div>
+              <div class="panel-body">
+                <ul>
+                <% @card.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+                </ul>
+              </div>
+            </div>
+          <% end %>
+
+          <div class="control-group">
+            <div class="controls">
+              <%= f.hidden_field :user_id, :class => 'form-control' %>
+            </div>
+            <%= error_span(@card[:user_id]) %>
+          </div>
+          <div class="control-group">
+            <div class="controls">
+              <%= f.hidden_field :practice_id, :class => 'form-control' %>
+            </div>
+            <%= error_span(@card[:practice_id]) %>
+          </div>
+          <div class="control-group">
+            <%= f.label :cardbox_id, :class => 'control-label col-md-2' %>
+            <div class="controls">
+              <%= f.select :cardbox_id, Cardbox.where(user_id: current_user.id, lesson_id: session[:lesson_id]).collect{ |cardbox| [cardbox.name, cardbox.id]}, {prompt: "请选择一个卡片盒"}, {:class => 'form-control col-md-4'} %>
+            </div>
+            <%= error_span(@card[:cardbox_id]) %>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <p class="text-left"><b>提示：</b>若点击“提交”后没有反应，可刷新网页再点击“提交”。</p>
+          <%= f.submit "提交", :class => 'btn btn-primary' %>
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button> 
+        </div>
+      <% end %> <!-- form_for -->
     </div>
   </div>
 </div>

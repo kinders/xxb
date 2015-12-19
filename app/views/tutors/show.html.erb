@@ -61,11 +61,18 @@
           <li>
           <%= link_to "查看辅导的安排", plans_path, tabindex: 61 %>
           </li>
+          <li role="separator" class="divider"></li>
           <% end %>
-          <% unless session[:discussion_id] %>
           <li>
-            <%= link_to "为辅导添加习题", new_exercise_path, tabindex: 62 %>
+          <%= link_to "随机练习", new_evaluation_path %>
           </li>
+          <% unless session[:discussion_id] %>
+          <% if current_user.id == @tutor.user_id  %>
+          <li>
+            <%= link_to "为辅导添加习题", new_many_exercises_path, tabindex: 62 %>
+            <%= link_to "管理辅导的习题", exercises_path, tabindex: 63 %>
+          </li>
+          <% end %>
           <% end %>
       </ul>
     </div>
@@ -88,6 +95,11 @@
     <div class="panel-heading" role="tab" id="headingOne">
       <h2>
         <%= @tutor.title %>
+        <% if @exercises.any? %>
+          <button class="btn btn-xs btn-default" type="button" data-toggle="collapse" data-target="#exercisezone" aria-expanded="false" aria-controls="exercise zone">
+            查看/隐藏 习题
+          </button>
+        <% end %>
       </h2>
       <div class="text-right"><%= @tutor.page_length %></div>
       <% if @tutor.proviso && !@tutor.proviso.empty?%>
@@ -164,9 +176,6 @@
 
 <!-- 下面是配套练习的内容 -->
 <% if @exercises.any? %>
-<button class="btn btn-default" type="button" data-toggle="collapse" data-target="#exercisezone" aria-expanded="false" aria-controls="exercise zone">
-  显示/隐藏习题
-</button>
 <div class="collapse" id="exercisezone">
 <table class="table">
   <thead>
@@ -180,18 +189,8 @@
       <tr>
         <td><%= exercise.serial %></td>
         <td><%= exercise.practice.title %></td>
-        <td><%= link_to exercise.practice.question, new_evaluation_path(practice_id: exercise.practice_id), class: 'btn-link' %></td>
-        <td>
-          <% if exercise.user_id == current_user.id %>
-            <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_exercise_path(exercise), :class => 'btn btn-default btn-xs', tabindex: 52, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
-            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-               exercise_path(exercise),
-               :method => :delete,
-               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-               :class => 'btn btn-xs btn-default', tabindex: 53, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
-          <% end %>
-        </td>
+        <td><%= exercise.practice.question %></td>
+        <td><%= link_to "做题", new_evaluation_path(practice_id: exercise.practice_id), class: 'btn btn-xs btn-default' %></td>
       </tr>
     <% end %>
   </tbody> 

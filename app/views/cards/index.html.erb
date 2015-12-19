@@ -63,12 +63,13 @@
 
 <%- model_class = Card -%>
 
-<!-- index -->
 <div class="container col-xs-11 col-sm-10 col-md-8 affix">
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
     <div class="btn-group" role="btn-group" arial-label="manage">
+      <% if @cards.any? %>
       <%= link_to "翻", cardbox_turn_cards_path(@cardbox), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "练习 翻 卡片" %>
-      <%= link_to t('.new', :default => t("helpers.links.new")), new_card_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+      <% end %>
+      <%= link_to t('.new', :default => t("helpers.links.new")), practices_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
     </div>
     <div class="btn-group" role="btn-group" arial-label="operation">
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="60" >

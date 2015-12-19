@@ -52,12 +52,27 @@
         <div class="navbar-collapse collapse navbar-responsive-collapse">
           <ul class="nav navbar-nav">
 	          <li><%= link_to "首页", "/" %></li>
-            <% if current_user %>
-	            <li><%= link_to "建议", "#mySuggestion", data: {toggle: "modal"}  %></li>
-            <% end %>
+              <% if session[:textbook_id] %>
+                <li><%= link_to "图书馆", textbooks_path %></li>
+                <% @textbook = Textbook.find(session[:textbook_id]) %>
+                <li><%= link_to @textbook.title, textbook_path(@textbook) %>
+                <% if session[:lesson_id] %>
+                  <% @lesson = Lesson.find(session[:lesson_id]) %>
+                  <li><%= link_to @lesson.title, lesson_path(@lesson) %>
+                  <% if session[:tutor_id] %>
+                    <% @tutor = Tutor.find(session[:tutor_id]) %>
+                    <li><%= link_to @tutor.title, tutor_path(@tutor) %>
+                  <% end %>
+                <% end %>
+                <% if session[:cardbox_id] %>
+                  <% @cardbox = Cardbox.find(session[:cardbox_id]) %>
+                  <li><%= link_to @cardbox.name, cardbox_path(@cardbox) %>
+                <% end %>
+              <% end %>
          </ul>
          <ul class="nav navbar-nav navbar-right">
            <% if current_user %>
+	          <li><%= link_to "建议", "#mySuggestion", data: {toggle: "modal"}  %></li>
             <% if current_user.name %>
 		          <li><%= link_to "我是： #{current_user.name} ", me_summary_path %></li>
 	          <% else %>

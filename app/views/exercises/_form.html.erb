@@ -24,6 +24,7 @@
     <%= error_span(@exercise[:serial]) %>
   </div>
 
+  <% if params[:action] == 'new' %>
   <div class="form-group">
     <%= f.label '练习', :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
@@ -31,10 +32,11 @@
     </div>
     <%= error_span(@exercise[:practice_id]) %>
   </div>
+  <% end %>
 
   <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            tutor_path(@exercise.tutor_id), :class => 'btn btn-default' %>
+            exercises_url, :class => 'btn btn-default' %>
 
 <% end %>
 

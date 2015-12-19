@@ -10,7 +10,14 @@
 </div>
 
 <div class="page-header">
-  <h3>共享卡片盒中心</h3>
+  <% if @lesson %>
+    <h3>《<%= @lesson.title %>》一课的共享卡片盒</h3>
+  <% elsif @textbook %>
+    <h3>《<%= @textbook.title %>》一书的共享卡片盒</h3>
+  <% else %>
+    <h3>共享卡片盒中心</h3>
+  <% end %>
+  <h3></h3>
 </div>
 <table class="table table-striped">
   <thead>

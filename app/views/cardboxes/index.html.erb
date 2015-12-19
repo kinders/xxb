@@ -69,13 +69,25 @@
       </ul>
     </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
-      <%= link_to t('.up', :default => t("helpers.links.up")), me_summary_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', default: t("helpers.titles.up"), :model => t("activerecord.models.me")) %>
+      <% if @lesson %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), lesson_path(@lesson), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', default: t("helpers.titles.up"), :model => t("activerecord.models.lesson")) %>
+      <% elsif @textbook %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), textbook_path(@textbook), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', default: t("helpers.titles.up"), :model => t("activerecord.models.textbook")) %>
+      <% else %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), me_summary_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', default: t("helpers.titles.up"), :model => t("activerecord.models.me")) %>
+      <% end %>
       <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
     </div>
   </div>
 </div>
 <div class="page-header">
-  <h3>我的<%=t '.title', :default => model_class.model_name.human.titleize %></h3>
+  <% if @lesson %>
+    <h3>《<%= @lesson.title %>》一课的卡片盒</h3>
+  <% elsif @textbook %>
+    <h3>《<%= @textbook.title %>》一书的卡片盒</h3>
+  <% else %>
+    <h3>我的<%=t '.title', :default => model_class.model_name.human.titleize %></h3>
+  <% end %>
 </div>
 <table class="table table-striped">
   <thead>
@@ -83,7 +95,9 @@
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:user_id) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
+      <% unless @lesson %>
       <th><%= model_class.human_attribute_name(:lesson_id) %></th>
+      <% end %>
       <th>得分</th>
       <th>得分率</th>
       <th><%= model_class.human_attribute_name(:share) %></th>
@@ -97,7 +111,9 @@
         <td><%= cardbox.id %></td>
         <td><%= cardbox.user.name %></td>
         <td><%= link_to cardbox.name, cardbox_path(cardbox) %></td>
-        <td><%= cardbox.lesson.title %></td>
+        <% unless @lesson %>
+        <td><%= cardbox.lesson.title if cardbox.lesson_id %></td>
+        <% end %>
         <% cardbox_degree = cardbox.cards.sum(:degree) %>
         <% total_degree += cardbox_degree %>
         <td><%= cardbox_degree  %></td>
@@ -110,7 +126,9 @@
         <% end %>
       </td>
         <td>
+          <% if cardbox.cards.any? %>
           <%= link_to "翻", cardbox_turn_cards_path(cardbox), class: 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "练习翻卡片" %>
+          <% end %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_cardbox_path(cardbox), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                       cardbox_path(cardbox),
