@@ -6,8 +6,15 @@ class CardboxesController < ApplicationController
   # GET /cardboxes
   # GET /cardboxes.json
   def index
+    session[:cardbox_id] = nil
     if current_user.has_role? :admin
       @cardboxes = Cardbox.all
+    elsif session[:lesson_id]
+      @lesson = Lesson.find(session[:lesson_id])
+      @cardboxes = Cardbox.where(user_id: current_user.id, lesson_id: @lesson.id) 
+    elsif session[:textbook_id]
+      @textbook = Textbook.find(session[:textbook_id])
+      @cardboxes = Cardbox.where(user_id: current_user.id, lesson_id: @textbook.catalogs.map{|c|c.lesson.id}) 
     else
       @cardboxes = Cardbox.where(user_id: current_user.id)
     end
@@ -76,8 +83,17 @@ class CardboxesController < ApplicationController
 
 
   def share_cardboxes
+    if session[:lesson_id]
+      @lesson = Lesson.find(session[:lesson_id])
+      @share_cardboxes = Cardbox.where(share: true, lesson_id: @lesson.id)
+    elsif session[:textbook_id]
+      @textbook = Textbook.find(session[:textbook_id])
+      @share_cardboxes = Cardbox.where(share: true, lesson_id: @textbook.catalogs.map{|c|c.lesson.id})
+    else
     @share_cardboxes = Cardbox.where(share: true)
+    end
   end
+
 
   def turn_cards
     @cardbox = Cardbox.find(params[:cardbox_id])
@@ -107,6 +123,7 @@ class CardboxesController < ApplicationController
     @my_cardbox = Cardbox.create {|cardbox|
       cardbox.user_id = current_user.id
       cardbox.name = @cardbox.name
+      cardbox.lesson_id = @cardbox.lesson_id
       cardbox.share = false
     }
     @cardbox.cards.each { |card|
@@ -131,6 +148,6 @@ class CardboxesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def cardbox_params
-      params.require(:cardbox).permit(:user_id, :name, :deleted_at, :share)
+      params.require(:cardbox).permit(:user_id, :name, :deleted_at, :share, :lesson_id)
     end
 end

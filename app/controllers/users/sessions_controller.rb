@@ -39,7 +39,7 @@ class Users::SessionsController < Devise::SessionsController
       o.http_user_agent = request.env['HTTP_USER_AGENT']
     }
     onboard.save
-    flash[:notice] << "您上次登录时间为#{last_onboard.begin_at}。如果您并没有在时间登录，请与系统管理员联系！"
+    flash[:notice] << "您上次登录时间为#{last_onboard.begin_at}。如果您并没有在时间登录，请与系统管理员联系！"  if last_onboard
   end
 
   # DELETE /resource/sign_out

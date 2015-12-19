@@ -36,7 +36,7 @@ Rails.application.routes.draw do
     get 'try_again'
     get 'pass_card'
   end
-  post '/cards/add_all_to_cardbox', to: 'cards#add_all_to_cardbox'
+  post '/cards/add_to_cardbox', to: 'cards#add_to_cardbox'
   get '/list_right_cards', to: 'cards#list_right_cards'
 
   resources :cardboxes do
@@ -55,6 +55,11 @@ Rails.application.routes.draw do
   resources :cadres
 
   resources :exercises
+  get "/new_many_exercises", to: 'exercises#new_many_exercises'
+  post "/add_many_practices", to: 'exercises#add_many_practices'
+  post "/import_exercises_from_cardbox", to: "exercises#import_exercises_from_cardbox"
+  get "/export_exercises_to_cardbox", to: "exercises#export_exercises_to_cardbox"
+
 
   resources :subjects
 

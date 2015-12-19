@@ -27,7 +27,7 @@ class TutorsController < ApplicationController
     session[:tutor_id] = @tutor.id
     @lesson = Lesson.find_by(id: session[:lesson_id])
     #@practice = Practice.find_by(tutor_id: @tutor.id)
-    @exercises = Exercise.where(tutor_id: @tutor.id)
+    @exercises = Exercise.where(tutor_id: @tutor.id).order(:serial)
     # 设置教学环境
     if session[:teaching_id]
       teaching_id = session[:teaching_id]

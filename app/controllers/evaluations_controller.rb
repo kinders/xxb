@@ -27,8 +27,9 @@ class EvaluationsController < ApplicationController
     if current_user.has_role? :admin  # 管理员
       @evaluation = Evaluation.new
     else   # 普通用户
-      @lesson = Lesson.find(session[:lesson_id])
-      if params[:practice_id]
+      @lesson = Lesson.find(session[:lesson_id]) if session[:lesson_id]
+      @tutor = Tutor.find(session[:tutor_id]) if session[:tutor_id]
+      if params[:practice_id] ## 如果指定了哪道习题
         @practice = Practice.find(params[:practice_id])
         session[:practice_id] = @practice.id
         @evaluation = Evaluation.new { |e|
@@ -37,12 +38,10 @@ class EvaluationsController < ApplicationController
           e.question = @practice.question
           e.practice_score = @practice.score
         }
-        if Evaluation.find_by(practice_id: @practice.id)
+        if Evaluation.find_by(practice_id: @practice.id, user_id: current_user.id)
           flash[:notice] = "旧题重做"
         end
-      elsif session[:redo_practice]      ## 重做
-      # if session[:redo_practice]      ## 重做
-        @tutor = Tutor.find(session[:tutor_id]) if session[:tutor_id]
+      elsif session[:redo_practice]      ## 如果没有指定练习，但存在重做标记（这是由edit方法自动重定向过来的）。
         @practice = Practice.find(session[:practice_id])
         session[:practice_id] = @practice.id
         @evaluation = Evaluation.new { |e|
@@ -53,15 +52,14 @@ class EvaluationsController < ApplicationController
         }
         session[:redo_practice] = nil
         flash[:notice] = "旧题重做"
-      else                               ## 正常
-        @tutor = Tutor.find(session[:tutor_id]) if session[:tutor_id]
+      else ## 正常情况下
         ### 随机取出未完全答对的练习题
         @use_practices = []
         #### 判断是课文练习还是辅导练习，决定题目集合
-        if session[:tutor_id]
-          @practices = Practice.where(tutor_id: session[:tutor_id])
+        if @tutor
+          @practices = @tutor.exercises.map{|exercise|Practice.find(exercise.practice_id)}
         else
-          @practices = Practice.where(lesson_id: session[:lesson_id])
+          @practices = Practice.where(lesson_id: @lesson.id)
         end
         #### 抽出没有做过的题目
         @practices.each { | p |

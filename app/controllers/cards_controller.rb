@@ -169,10 +169,11 @@ class CardsController < ApplicationController
 
 
   # 在习题 的 index 界面中，将所有习题添加到卡片盒中。
-  def add_all_to_cardbox
+  def add_to_cardbox
     begin
-      @lesson = Lesson.find(session[:lesson_id])
-      @lesson.practices.each do | practice |
+      # @lesson = Lesson.find(session[:lesson_id])
+      # @lesson.practices.each do | practice |
+      Practice.where(id: params[:practice_id]).each do | practice |
         card = Card.new
         card.user_id = current_user.id
         card.practice_id = practice.id
@@ -187,7 +188,7 @@ class CardsController < ApplicationController
         card.save
       end
       respond_to do |format|
-        format.html { redirect_to :back, notice: '成功将所有习题添加到卡片。' }
+        format.html { redirect_to cardbox_path(params[:cardbox_id]), notice: '成功将所有习题添加到卡片盒中。' }
         format.json { render :show, status: :created, location: @card }
       end
     rescue 
@@ -234,7 +235,7 @@ class CardsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def card_params
-      params.require(:card).permit(:user_id, :practice_id, :cardbox_id, :sequence, :serial, :degree, :nexttime, :foul, :count, :deleted_at)
+      params.require(:card).permit(:user_id, :practice_id, {practice_id: []}, :cardbox_id, :sequence, :serial, :degree, :nexttime, :foul, :count, :deleted_at)
       # user_id      用户
       # practice_id  练习题
       # cardbox_id   卡片盒

@@ -8,6 +8,7 @@ class TextbooksController < ApplicationController
   # GET /textbooks.json
   def index
     @textbooks = Textbook.all.order(:serial)
+    session[:textbook_id] = nil
   end
 
   # GET /textbooks/1
@@ -19,6 +20,7 @@ class TextbooksController < ApplicationController
       h.entryid = @textbook.id
     }
     session[:textbook_id] = @textbook.id
+    session[:lesson_id] = nil
     unless current_user.has_role? :admin
       respond_to do |format|
         format.html { redirect_to catalogs_path }

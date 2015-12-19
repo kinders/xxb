@@ -37,20 +37,27 @@ class BadrecordsController < ApplicationController
   # POST /badrecords
   # POST /badrecords.json
   def create
-    badrecord_params[:troublemaker].to_a.each { |p|
-      next if p == ""
-      @badrecord = Badrecord.new { |b|
-        b.troublemaker = p
-        b.user_id = current_user.id
-        b.classroom_id = session[:classroom_id] if session[:classroom_id]
-        b.troubletime = Time.new(badrecord_params["troubletime(1i)"], badrecord_params["troubletime(2i)"], badrecord_params["troubletime(3i)"])
-        b.subject_id = badrecord_params[:subject_id]
-        b.description = badrecord_params[:description]
+    begin
+      badrecord_params[:troublemaker].to_a.each { |p|
+        next if p == ""
+        @badrecord = Badrecord.new { |b|
+          b.troublemaker = p
+          b.user_id = current_user.id
+          b.classroom_id = session[:classroom_id] if session[:classroom_id]
+          b.troubletime = Time.new(badrecord_params["troubletime(1i)"], badrecord_params["troubletime(2i)"], badrecord_params["troubletime(3i)"])
+          b.subject_id = badrecord_params[:subject_id]
+          b.description = badrecord_params[:description]
+        }
+        @badrecord.save!
       }
-      @badrecord.save!
-    }
-    respond_to do |format|
-        format.html { redirect_to badrecords_url, notice: '成功添加不良记录' }
+      respond_to do |format|
+          format.html { redirect_to badrecords_url, notice: '成功添加不良记录' }
+      end
+    rescue 
+      respond_to do |format|
+        format.html { redirect_to :back, notice: '不良记录添加失败，请先检查哪些记录没有添加。' }
+        format.json { render json: @card.errors, status: :unprocessable_entity }
+      end
     end
 =begin
     respond_to do |format|
