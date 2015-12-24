@@ -10,6 +10,7 @@ class TutorsController < ApplicationController
     if current_user.has_role? :admin
       @tutors = Tutor.all
     else
+      session[:tutor_id] = nil
       @lesson = Lesson.find_by(id: session[:lesson_id])
       @tutors = Tutor.where(lesson_id: session[:lesson_id]).order('difficulty')
     end

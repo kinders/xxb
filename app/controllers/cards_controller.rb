@@ -11,6 +11,7 @@ class CardsController < ApplicationController
     else
       @cardbox = Cardbox.find(session[:cardbox_id])
       @cards = Card.where(cardbox_id: @cardbox.id).order(:serial)
+      session[:card_id] = nil
     end
   end
 

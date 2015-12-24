@@ -12,7 +12,7 @@ class CadresController < ApplicationController
     else
       @classroom = Classroom.find(session[:classroom_id])
       @cadres = Cadre.where(classroom_id: session[:classroom_id])
-    session[:cadre_id] = nil
+      session[:cadre_id] = nil
     end
   end
 

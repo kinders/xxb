@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  mathjax 'mathjax'
 
   resources :withdraws
 

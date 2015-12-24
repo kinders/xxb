@@ -66,6 +66,6 @@ end
   gem 'ckeditor'
   gem 'tinymce-rails'
   gem 'tinymce-rails-langs'
-
+  gem 'mathjax-rails'
 
 # Use Capistrano for deployment

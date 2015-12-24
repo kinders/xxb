@@ -80,8 +80,9 @@
     <%= f.label "页面", :class => 'control-label' %>
     <div class="controls">
       <%# f.text_area :page, :class => 'form-control', rows: "10", tabindex: 7 %>
-      <%= f.text_area :page, :class => 'tinymce form-control', rows: "10", tabindex: 7   %>
-      <%= tinymce %>
+      <%# f.text_area :page, :class => 'tinymce form-control', rows: "10", tabindex: 7   %>
+      <%# tinymce %>
+      <%= cktext_area :tutor, :page, :rows => 10, tabindex: 7 %>
     </div>
     <%= error_span(@tutor[:page]) %>
   </div>
@@ -90,8 +91,8 @@
     <%= f.label "提示", :class => 'control-label' %>
     <div class="controls">
       <%# f.text_area :proviso, :class => 'form-control', rows: "1", tabindex: 8 %>
-      <%= f.text_area :proviso, :class => 'tinymce form-control', rows: "3", tabindex: 8   %>
-      <%# tinymce %>
+      <%# f.text_area :proviso, :class => 'tinymce form-control', rows: "3", tabindex: 8   %>
+      <%= cktext_area :tutor, :proviso, :rows => 10, tabindex: 8 %>
     </div>
     <%= error_span(@tutor[:proviso]) %>
   </div>
