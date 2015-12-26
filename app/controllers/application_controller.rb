@@ -6,11 +6,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   check_authorization  :unless => :devise_controller?
   rescue_from CanCan::AccessDenied do | exception |
-    begin
-      redirect_to :back, alert: "对不起，您的权限不足"
-    rescue
-      redirect_to root_path, alert: "对不起，您的权限不足"
-    end
+      redirect_to root_path, alert: "对不起，您暂时没有权限！如果需要退回原来的页面，请按浏览器上的回退按钮。"
   end
 
   protected
