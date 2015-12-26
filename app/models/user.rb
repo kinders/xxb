@@ -31,6 +31,8 @@ class User < ActiveRecord::Base
   has_many :receipts
   has_many :cashiers
   has_many :withdraws
+  has_many :quizzes
+  has_many :quiz_items
 
   validates :active_time,  numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 

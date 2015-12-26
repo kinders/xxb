@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  quiz_id: 
+  practice_id: 
+  isright: false
+  deleted_at: 2015-12-26 10:34:24
+
+two:
+  user_id: 
+  quiz_id: 
+  practice_id: 
+  isright: false
+  deleted_at: 2015-12-26 10:34:24

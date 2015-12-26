@@ -7,6 +7,7 @@ class Practice < ActiveRecord::Base
   has_many :justices, dependent: :destroy
   has_many :exercises, dependent: :destroy
   has_many :cards, dependent: :destroy
+  has_many :quiz_items, dependent: :destroy
 
   has_attached_file :picture_q
   validates_attachment_file_name :picture_q, :matches => [/png\Z/, /jpe?g\Z/]

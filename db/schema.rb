@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151216134746) do
+ActiveRecord::Schema.define(version: 20151226023424) do
 
   create_table "badrecords", force: :cascade do |t|
     t.integer  "user_id"
@@ -421,6 +421,37 @@ ActiveRecord::Schema.define(version: 20151216134746) do
   add_index "practices", ["lesson_id"], name: "index_practices_on_lesson_id"
   add_index "practices", ["tutor_id"], name: "index_practices_on_tutor_id"
   add_index "practices", ["user_id"], name: "index_practices_on_user_id"
+
+  create_table "quiz_items", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "quiz_id"
+    t.integer  "practice_id"
+    t.boolean  "isright"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "quiz_items", ["deleted_at"], name: "index_quiz_items_on_deleted_at"
+  add_index "quiz_items", ["practice_id"], name: "index_quiz_items_on_practice_id"
+  add_index "quiz_items", ["quiz_id"], name: "index_quiz_items_on_quiz_id"
+  add_index "quiz_items", ["user_id"], name: "index_quiz_items_on_user_id"
+
+  create_table "quizzes", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "cardbox_id"
+    t.string   "title"
+    t.integer  "number"
+    t.integer  "repetition"
+    t.integer  "duration"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "quizzes", ["cardbox_id"], name: "index_quizzes_on_cardbox_id"
+  add_index "quizzes", ["deleted_at"], name: "index_quizzes_on_deleted_at"
+  add_index "quizzes", ["user_id"], name: "index_quizzes_on_user_id"
 
   create_table "receipts", force: :cascade do |t|
     t.integer  "user_id"

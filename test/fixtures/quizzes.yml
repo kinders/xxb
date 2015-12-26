@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  cardbox_id: 
+  title: MyString
+  number: 1
+  repetition: 1
+  duration: 1
+  deleted_at: 2015-12-26 10:33:18
+
+two:
+  user_id: 
+  cardbox_id: 
+  title: MyString
+  number: 1
+  repetition: 1
+  duration: 1
+  deleted_at: 2015-12-26 10:33:18

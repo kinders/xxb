@@ -20,9 +20,10 @@
 * 为课文内容添加习题
 * 为课文内容添加某种教学方式（有效组织辅导页面）
 * 按教学方式安排辅导页面和习题
-* 依据记忆曲线进行卡片练习和测试
+* 依据记忆曲线进行卡片式练习
+* 对所学卡片进行抽查自测
 * 使用习题进行测试
-* 评价测试结果
+* 评价测试
 
 === 教学管理模块包含如下功能：
 
@@ -51,15 +52,15 @@
 ===  系统要求(System dependencies)：
 
 * Ubuntu 14.04
-* Ruby 2.0.0
+* Ruby 2.2.0
 * Rails 4.2.0
 
 === 安装
 
 * 安装 rvm 。详见 www.rvm.io。一般是两步：
 
-    gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
-    \curl -sSL https://get.rvm.io | bash -s stable
+    $ gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+    $ \curl -sSL https://get.rvm.io | bash -s stable
 
 * 安装 ruby。 在终端输入`$ rvm install 2.2.0`
 * 安装 rails。在终端输入`$ gem install rails --version 4.2.0 --no-ri --no-rdoc`
@@ -83,8 +84,10 @@
 
 ===  配置(Configuration)
 
-* Ckeditor的内核比较陈旧，可以将它替换掉。
-ckeditor的自定义方式见：wwww.ckeditor.com/builder，选择需要的插件即可下载替换。
+==== CKEditor
+
+* Ckeditor的内核比较陈旧，并且没有数学公式的编辑功能，可以将它替换掉。
+ckeditor的自定义方式见：wwww.ckeditor.com/builder，选择需要的插件即可下载替换。编辑数学公式则需要`Mathematical Formulas`插件。
 替换路径为`～/.rvm/gems/ckeditor-x-x-x/vendor/assets/javascripts/`。
 
 * 禁用Ckeditor的图片服务器功能。

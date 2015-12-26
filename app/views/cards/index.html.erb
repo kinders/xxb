@@ -76,7 +76,10 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-        <li><%= link_to "查看今天的成绩", list_right_cards_path, tabindex: 61 %></li>
+        <li><%= link_to "查看今天的练习成绩", list_right_cards_path, tabindex: 61 %></li>
+        <li role="seperator" class="divider"></li>
+        <li><%= link_to "来一次快速测试", new_quiz_path, tabindex: 62 %></li>
+        <li><%= link_to "查看过去快速测试的成绩", quizzes_path, tabindex: 63 %></li>
       </ul>
     </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">

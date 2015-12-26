@@ -18,9 +18,9 @@
   <% end %>
 
   <div class="form-group">
-    <%= f.label :lesson_id, :class => 'control-label col-sm-2' %>
+    <%# f.label :lesson_id, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
-      <%= f.text_field :lesson_id, :class => 'form-control' %>
+      <%= f.hidden_field :lesson_id, :class => 'form-control' %>
     </div>
     <%= error_span(@cardbox[:lesson_id]) %>
   </div>
@@ -53,6 +53,7 @@
 
 <% end %>
 
+<%# 下面是管理员界面%>
 <% else %>
 
 <%= form_for @cardbox, :html => { :class => "form-horizontal cardbox" } do |f| %>

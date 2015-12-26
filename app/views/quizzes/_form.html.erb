@@ -1,0 +1,131 @@
+<% if current_user.has_role? :admin %>
+
+<%= form_for @quiz, html: { class: "form-horizontal quiz" } do |f| %>
+
+    <% if @quiz.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@quiz.errors.count, "error") %> 使得这个 quiz 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @quiz.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :user_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :user_id, class: 'form-control' %>
+    </div>
+    <%= error_span(@quiz[:user_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :cardbox_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :cardbox_id, class: 'form-control' %>
+    </div>
+    <%= error_span(@quiz[:cardbox_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :title, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :title, class: 'form-control' %>
+    </div>
+    <%= error_span(@quiz[:title]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :number, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :number, class: 'form-control' %>
+    </div>
+    <%= error_span(@quiz[:number]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :repetition, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :repetition, class: 'form-control' %>
+    </div>
+    <%= error_span(@quiz[:repetition]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :duration, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :duration, class: 'form-control' %>
+    </div>
+    <%= error_span(@quiz[:duration]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :deleted_at, class: 'form-control' %>
+    </div>
+    <%= error_span(@quiz[:deleted_at]) %>
+  </div>
+
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            quizzes_path, class: 'btn btn-default' %>
+
+<% end %>
+
+<% else %>
+
+<%= form_for @quiz, html: { class: "form-horizontal quiz" } do |f| %>
+
+    <% if @quiz.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@quiz.errors.count, "error") %> 使得这个 quiz 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @quiz.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :title, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :title, class: 'form-control' %>
+    </div>
+    <%= error_span(@quiz[:title]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :number, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.number_field :number, in: 1..Cardbox.find(session[:cardbox_id]).cards.count, class: 'form-control' %>
+    </div>
+    <%= error_span(@quiz[:number]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :repetition, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.number_field :repetition, in: 1..10, class: 'form-control' %>
+    </div>
+    <%= error_span(@quiz[:repetition]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :duration, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.number_field :duration, in: 1..(Cardbox.find(session[:cardbox_id]).cards.count * 60), class: 'form-control' %>
+    </div>
+    <%= error_span(@quiz[:duration]) %>
+  </div>
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            quizzes_path, class: 'btn btn-default' %>
+
+<% end %>
+
+<% end %>

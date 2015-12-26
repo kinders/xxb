@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
 
+  resources :quiz_items do
+    get  "right"
+    get  "wrong"
+  end
+
+  resources :quizzes
+
   mathjax 'mathjax'
 
   resources :withdraws
