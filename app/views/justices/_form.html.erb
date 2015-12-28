@@ -107,7 +107,7 @@
   <div class="control-group">
     <%= f.label "学友得分", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :score, :class => 'form-control' %>
+      <%= f.number_field :score, in: 0..@evaluation.practice_score, :class => 'form-control' %>
     </div>
     <%= error_span(@justice[:score]) %>
   </div>

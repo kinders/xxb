@@ -27,6 +27,7 @@
   <h3>答卷列表</h3>
 </div>
 <h4>未评答卷</h4>
+<% if @unjustified_evaluations.any? %>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -49,6 +50,10 @@
     <% end %>
   </tbody>
 </table>
+<% else %>
+  <div class="well">暂时没有未评价的测试</div>
+<% end %>
+
 <% if @evaluations.any? %>
 <hr>
 <h4>他人已评答卷</h4>
