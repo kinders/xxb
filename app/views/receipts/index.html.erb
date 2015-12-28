@@ -54,6 +54,7 @@
       <th><%= model_class.human_attribute_name(:user_id) %></th>
       <th><%= model_class.human_attribute_name(:cashier) %></th>
       <th><%= model_class.human_attribute_name(:money) %></th>
+      <th><%= model_class.human_attribute_name(:price) %></th>
       <th><%= model_class.human_attribute_name(:balance) %></th>
       <th><%= model_class.human_attribute_name(:time_length) %></th>
       <th><%= model_class.human_attribute_name(:created_at) %></th>
@@ -66,6 +67,7 @@
         <td><%= receipt.user.name%></td>
         <td><%= link_to receipt.cashier.to_s + "_" + User.find(receipt.cashier).name, person_receipts_path(user_id: receipt.cashier) %></td>
         <td><%= receipt.money %>元</td>
+        <td><%= receipt.price %>秒</td>
         <td><%= receipt.balance %>元</td>
         <td><%= receipt.time_length / 60 %>分钟</td>
         <td><%= receipt.created_at %></td>

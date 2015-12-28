@@ -33,6 +33,7 @@ class User < ActiveRecord::Base
   has_many :withdraws
   has_many :quizzes
   has_many :quiz_items
+  has_many :fees
 
   validates :active_time,  numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 

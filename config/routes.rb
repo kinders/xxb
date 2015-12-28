@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :fees
+
   resources :quiz_items do
     get  "right"
     get  "wrong"

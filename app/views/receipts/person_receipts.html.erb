@@ -32,6 +32,7 @@
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:user_id) %></th>
       <th><%= model_class.human_attribute_name(:money) %></th>
+      <th><%= model_class.human_attribute_name(:price) %></th>
       <th><%= model_class.human_attribute_name(:time_length) %></th>
       <th><%= model_class.human_attribute_name(:active_time_before_charge) %></th>
       <th><%= model_class.human_attribute_name(:active_time_after_charge) %></th>
@@ -44,6 +45,7 @@
         <td><%= index + 1 %></td>
         <td><%= receipt.user.name %></td>
         <td><%= receipt.money %>元</td>
+        <td><%= receipt.price %>秒</td>
         <td><%= receipt.time_length / 60 %>分钟</td>
         <td><%= (receipt.active_time_before_charge / 86400).to_i %>天<%= (receipt.active_time_before_charge % 86400) / 3600 %>小时<%= (receipt.active_time_before_charge % 3600) / 60 %>分钟</td>
         <td><%= (receipt.active_time_after_charge / 86400).to_i %>天<%= (receipt.active_time_after_charge % 86400) / 3600 %>小时<%= (receipt.active_time_after_charge % 3600) / 60 %>分钟</td>

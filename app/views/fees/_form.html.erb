@@ -1,0 +1,45 @@
+<%= form_for @fee, html: { class: "form-horizontal fee" } do |f| %>
+
+    <% if @fee.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@fee.errors.count, "error") %> 使得这个 fee 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @fee.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :name, class: 'form-control' %>
+    </div>
+    <%= error_span(@fee[:name]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :price, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :price, class: 'form-control' %>
+    </div>
+    <%= error_span(@fee[:price]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :serial, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :serial, class: 'form-control' %>
+    </div>
+    <%= error_span(@fee[:serial]) %>
+  </div>
+
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            fees_path, class: 'btn btn-default' %>
+
+<% end %>

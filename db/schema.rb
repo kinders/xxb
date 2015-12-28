@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151226023424) do
+ActiveRecord::Schema.define(version: 20151228014001) do
 
   create_table "badrecords", force: :cascade do |t|
     t.integer  "user_id"
@@ -243,6 +243,20 @@ ActiveRecord::Schema.define(version: 20151226023424) do
   add_index "exercises", ["tutor_id"], name: "index_exercises_on_tutor_id"
   add_index "exercises", ["user_id"], name: "index_exercises_on_user_id"
 
+  create_table "fees", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.integer  "price"
+    t.integer  "serial"
+    t.datetime "end_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "fees", ["deleted_at"], name: "index_fees_on_deleted_at"
+  add_index "fees", ["user_id"], name: "index_fees_on_user_id"
+
   create_table "histories", force: :cascade do |t|
     t.integer  "user_id",    null: false
     t.string   "modelname",  null: false
@@ -464,6 +478,7 @@ ActiveRecord::Schema.define(version: 20151226023424) do
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
     t.integer  "balance"
+    t.integer  "price"
   end
 
   add_index "receipts", ["deleted_at"], name: "index_receipts_on_deleted_at"

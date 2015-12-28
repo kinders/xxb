@@ -46,7 +46,7 @@ class ReceiptsController < ApplicationController
     @receipt = Receipt.new(receipt_params)
     @user = User.find(@receipt.cashier)
     @receipt.active_time_before_charge = @user.active_time
-    @receipt.time_length = @receipt.money * 900  # 一小时4元。一元900秒（15分钟）
+    @receipt.time_length = @receipt.money * @receipt.price
     @receipt.active_time_after_charge = @receipt.active_time_before_charge + @receipt.time_length
     @receipt.user_id = current_user.id
     @receipt.balance = last_receipt_balance + @receipt.money
@@ -76,7 +76,7 @@ class ReceiptsController < ApplicationController
       end
     end
 =end
-      redirect_to receipts_path, notice: "您不能更改收款记录。"
+      redirect_to receipts_path, notice: "您不能更改收款记录。如果收款记录有误，请通过新增收款记录来更改。收款金额可以为复数哦，当然也会扣减用户相应的时间。"
   end
 
   # DELETE /receipts/1
@@ -113,7 +113,7 @@ class ReceiptsController < ApplicationController
 
   def off_onboard
     @onboard = Onboard.find(params[:onboard_id])
-    @onboard.update(expire_at: Time.now)
+    @onboard.update(expire_at: Time.now, end_at: Time.now)
     redirect_to :back, notice: "用户 #{@onboard.user.name} 的会话（#{@onboard.id}）已经结束！"
   end
 
@@ -125,7 +125,7 @@ class ReceiptsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def receipt_params
-      params.require(:receipt).permit(:user_id, :active_time_before_charge, :money, :time_length, :active_time_after_charge, :cashier, :deleted_at)
+      params.require(:receipt).permit(:user_id, :active_time_before_charge, :money, :time_length, :active_time_after_charge, :cashier, :deleted_at, :price)
     end
 
   # 只有收款员才能进行master的相关操作

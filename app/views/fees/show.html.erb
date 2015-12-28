@@ -1,26 +1,26 @@
-<%- model_class = Receipt -%>
+<%- model_class = Fee -%>
 
 <div class="container col-xs-12 col-sm-10 col-md-8 affix">
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
     <!-- 管理功能 -->
     <div class="btn-group" role="group" arial-label="manage">
-      <% if current_user.id == @receipt.user_id  %>
+      <% if current_user.id == @fee.user_id  %>
         <%= link_to t('.new', default:  t("helpers.links.new")), 
-          new_receipt_path,
+          new_fee_path,
           class:  'btn btn-default', 
           tabindex: 21, 
           "data-toggle": "tooltip", 
           "data-placement": "bottom", 
           title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
         <%= link_to t('.edit', default: t("helpers.links.edit")), 
-          edit_receipt_path(@receipt),
+          edit_fee_path(@fee),
           class: 'btn btn-default', 
           tabindex: 22, 
           "data-toggle": "tooltip", 
           "data-placement": "bottom", 
           title: t('.edit', default: [:"helpers.titles.edit"], model: model_class.model_name.human.titleize) %>
         <%= link_to t('.destroy', default: t("helpers.links.destroy")),
-          receipt_path(@receipt),
+          fee_path(@fee),
           method: 'delete',
           data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
           class: 'btn btn-default', 
@@ -30,7 +30,7 @@
           title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
       <% end %>
       <%= link_to t('.back', default: t("helpers.links.back")),
-        receipts_path,
+        fees_path,
         class: 'btn btn-default', 
         tabindex: 24, 
         "data-toggle": "tooltip", 
@@ -50,22 +50,22 @@
     </div>
     <!-- 导航按钮 -->
     <div class="btn-group" role="btn-group" arial-label="navigation">
-      <% if @previous_receipt %>
+      <% if @previous_fee %>
         <%= link_to t('.previous', default: t("helpers.links.previous")), 
-          receipt_path(@previous_receipt), 
+          fee_path(@previous_fee), 
           class: 'btn btn-default', 
           tabindex: 61, 
           "data-toggle": "tooltip", "data-placement": "bottom", 
-          title: t('.previous', default: t("helpers.titles.previous"), model: t("activerecord.models.receipt")) %>
+          title: t('.previous', default: t("helpers.titles.previous"), model: t("activerecord.models.fee")) %>
       <% end %>
-      <% if @next_receipt %>
+      <% if @next_fee %>
         <%= link_to t('.next', default: t("helpers.links.next")), 
-          receipt_path(@next_receipt), 
+          fee_path(@next_fee), 
           class: 'btn btn-default', 
           tabindex: 62, 
           "data-toggle": "tooltip", 
           "data-placement": "bottom", 
-          title: t('.next', default: t("helpers.titles.next"), model: t("activerecord.models.receipt")) %>
+          title: t('.next', default: t("helpers.titles.next"), model: t("activerecord.models.fee")) %>
       <% end %>
       <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
         :back, 
@@ -84,19 +84,15 @@
 
 <dl class="dl-horizontal">
   <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
-  <dd><%= @receipt.user_id %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:active_time_before_charge) %>:</strong></dt>
-  <dd><%= @receipt.active_time_before_charge %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:money) %>:</strong></dt>
-  <dd><%= @receipt.money %></dd>
+  <dd><%= @fee.user_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+  <dd><%= @fee.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:price) %>:</strong></dt>
-  <dd><%= @receipt.price %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:time_length) %>:</strong></dt>
-  <dd><%= @receipt.time_length %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:active_time_after_charge) %>:</strong></dt>
-  <dd><%= @receipt.active_time_after_charge %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:cashier) %>:</strong></dt>
-  <dd><%= @receipt.cashier %></dd>
+  <dd><%= @fee.price %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:serial) %>:</strong></dt>
+  <dd><%= @fee.serial %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:end_at) %>:</strong></dt>
+  <dd><%= @fee.end_at %></dd>
   <dt><strong><%= model_class.human_attribute_name(:deleted_at) %>:</strong></dt>
-  <dd><%= @receipt.deleted_at %></dd>
+  <dd><%= @fee.deleted_at %></dd>
 </dl>

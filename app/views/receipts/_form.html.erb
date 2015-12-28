@@ -29,6 +29,13 @@
     </div>
     <%= error_span(@receipt[:money]) %>
   </div>
+  <div class="form-group">
+    <%= f.label :price, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.select :price, Fee.all.collect{|fee| [fee.id.to_s + " " + fee.name + "  一元" + fee.price.to_s + "秒", fee.price]}, { prompt: "请选择一个价格标准"}, {class: 'form-control'} %>
+    </div>
+    <%= error_span(@receipt[:price]) %>
+  </div>
 
   <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
   <%= link_to t('.cancel', default: t("helpers.links.cancel")),
