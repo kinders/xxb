@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
 
+  resources :paperitems
+
+  resources :papertests
+
+  resources :papers
+  get 'paper_overview', to: "papers#overview"
+
   resources :fees
 
   resources :quiz_items do
@@ -124,6 +131,7 @@ Rails.application.routes.draw do
   resources :practices do
     get 'delete_picture_q'
     get 'delete_picture_a'
+    get 'add_to_paper'
   end
   post '/practices/create_practices_in_batch', to: 'practices#create_practices_in_batch'
 

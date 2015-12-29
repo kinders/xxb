@@ -6,6 +6,7 @@ class EvaluationsController < ApplicationController
   # GET /evaluations
   # GET /evaluations.json
   def index
+    session[:evaluation_id] = nil
     if current_user.has_role? :admin
       @evaluations = Evaluation.all
     else
@@ -29,19 +30,7 @@ class EvaluationsController < ApplicationController
     else   # 普通用户
       @lesson = Lesson.find(session[:lesson_id]) if session[:lesson_id]
       @tutor = Tutor.find(session[:tutor_id]) if session[:tutor_id]
-      if params[:practice_id] ## 如果指定了哪道习题
-        @practice = Practice.find(params[:practice_id])
-        session[:practice_id] = @practice.id
-        @evaluation = Evaluation.new { |e|
-          e.title = @practice.title
-          e.material = @practice.material
-          e.question = @practice.question
-          e.practice_score = @practice.score
-        }
-        if Evaluation.find_by(practice_id: @practice.id, user_id: current_user.id)
-          flash[:notice] = "旧题重做"
-        end
-      elsif session[:redo_practice]      ## 如果没有指定练习，但存在重做标记（这是由edit方法自动重定向过来的）。
+      if session[:redo_practice]      ## 如果没有指定练习，但存在重做标记（这是由edit方法自动重定向过来的）。
         @practice = Practice.find(session[:practice_id])
         session[:practice_id] = @practice.id
         @evaluation = Evaluation.new { |e|
@@ -51,7 +40,35 @@ class EvaluationsController < ApplicationController
           e.practice_score = @practice.score
         }
         session[:redo_practice] = nil
-        flash[:notice] = "旧题重做"
+        flash[:notice] = "旧题新做"
+      elsif session[:papertest_id] ## 如果是考试环境
+        @papertest = Papertest.find(session[:papertest_id])
+        if Time.now < @papertest.end_at
+          @practice = Practice.find(params[:practice_id])
+          session[:practice_id] = @practice.id
+          @evaluation = Evaluation.new { |e|
+            e.title = @practice.title
+            e.material = @practice.material
+            e.question = @practice.question
+            e.practice_score = params[:practice_score]
+          }
+        else
+          session[:papertest_id] = nil
+          redirect_to paper_url(@papertest.paper_id), notice: "考试已结束！"
+          return
+        end
+      elsif params[:practice_id] ## 如果指定了哪道习题
+        @practice = Practice.find(params[:practice_id])
+        session[:practice_id] = @practice.id
+        @evaluation = Evaluation.new { |e|
+          e.title = @practice.title
+          e.material = @practice.material
+          e.question = @practice.question
+          e.practice_score = @practice.score
+        }
+        if Evaluation.find_by(practice_id: @practice.id, user_id: current_user.id)
+          flash[:notice] = "旧题新做"
+        end
       else ## 正常情况下
         ### 随机取出未完全答对的练习题
         @use_practices = []
@@ -88,9 +105,9 @@ class EvaluationsController < ApplicationController
 
   # GET /evaluations/1/edit
   def edit
-    unless current_user.has_role? :admin
+    if current_user.has_role? :admin
+    else
       @practice = Practice.find(@evaluation.practice_id)
-      # 如果答卷还没有评分，允许重做。
       # 如果已经评分，则新建评估
       @justice = Justice.find_by(evaluation: @evaluation.id)
       if @justice
@@ -100,6 +117,16 @@ class EvaluationsController < ApplicationController
         respond_to do |format|
           format.html { redirect_to new_evaluation_path, notice: '重新做题' }
 	      end
+      end
+      # 如果答卷还没有评分，允许重做。
+      # 如果在测试环境中，则检查是否超时
+      if session[:papertest_id]
+        @papertest = Papertest.find(session[:papertest_id])
+        if Time.now > @papertest.end_at
+          session[:papertest_id] = nil
+          redirect_to paper_url(@papertest.paper_id), notice: "考试已结束！"
+          return
+        end
       end
     end
   end
@@ -119,11 +146,22 @@ class EvaluationsController < ApplicationController
       @evaluation.material = @practice.material
       @evaluation.question = @practice.question
       @evaluation.answer = @practice.answer
-      @evaluation.practice_score = @practice.score
+      @evaluation.practice_score ||= @practice.score
+      if session[:papertest_id]
+        @papertest = Papertest.find(session[:papertest_id])
+        if Time.now < @papertest.end_at
+          @evaluation.end_at = @papertest.end_at
+          @evaluation.papertest_id = @papertest.id
+        else
+          session[:papertest_id] = nil
+          redirect_to paper_url(@papertest.paper_id), notice: "考试已结束！"
+          return
+        end
+      end
     end
     respond_to do |format|
       if @evaluation.save
-        if @practice.answer == @evaluation.your_answer   # 如果答对了
+        if @practice.answer.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") == @evaluation.your_answer.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")   # 如果答对了
           @justice = Justice.create!(
             user_id: 1,
             evaluation_user_id: @evaluation.user_id,
@@ -197,6 +235,6 @@ class EvaluationsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def evaluation_params
-      params.require(:evaluation).permit(:user_id, :lesson_id, :practice_id, :title, :material, :question, :answer, :your_answer, :score, :practice_score, :picture_ya)
+      params.require(:evaluation).permit(:user_id, :lesson_id, :practice_id, :title, :material, :question, :answer, :your_answer, :score, :practice_score, :picture_ya, :end_at, :papertest)
     end
 end

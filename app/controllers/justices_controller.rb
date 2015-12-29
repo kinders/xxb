@@ -67,21 +67,33 @@ class JusticesController < ApplicationController
   # POST /justices.json
   def create
     @justice = Justice.new(justice_params)
-    unless current_user.has_role? :admin
+    if current_user.has_role? :admin
+      respond_to do |format|
+        if @justice.save
+          format.html { redirect_to @justice, notice: '评分成功' }
+          format.json { render :show, status: :created, location: @justice }
+        else
+          format.html { render :new }
+          format.json { render json: @justice.errors, status: :unprocessable_entity }
+        end
+      end
+    else
       @justice.user_id = current_user.id
       @evaluation = Evaluation.find(session[:evaluation_id])
       @justice.evaluation_id = @evaluation.id
       @justice.evaluation_user_id = @evaluation.user_id
       @justice.practice_id = @evaluation.practice_id
       @justice.p_score = @evaluation.practice_score
-    end
-    respond_to do |format|
-      if @justice.save
-        format.html { redirect_to @justice, notice: '评分成功' }
-        format.json { render :show, status: :created, location: @justice }
-      else
-        format.html { render :new }
-        format.json { render json: @justice.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if @justice.save
+	        evaluation_score = Justice.where(evaluation_id: @evaluation.id).average(:score)
+          @evaluation.update(score: evaluation_score)
+          format.html { redirect_to @justice, notice: '评分成功' }
+          format.json { render :show, status: :created, location: @justice }
+        else
+          format.html { render :new }
+          format.json { render json: @justice.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -91,6 +103,8 @@ class JusticesController < ApplicationController
   def update
     respond_to do |format|
       if @justice.update(justice_params)
+	      evaluation_score = Justice.where(evaluation_id: @justice.evaluation_id).average(:score)
+        @justice.evaluation.update(score: evaluation_score)
         format.html { redirect_to @justice, notice: '评分已经更新' }
         format.json { render :show, status: :ok, location: @justice }
       else

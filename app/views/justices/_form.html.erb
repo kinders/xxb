@@ -67,18 +67,18 @@
     <% end %>
     <% if  @evaluation.material %>
       <p><strong>材料：</strong></p>
-      <div class="well"><%= sanitize(@evaluation.material) %></div>
+      <div class="well"><%= sanitize(@evaluation.material.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></div>
     <% end %>
     <p><strong>问题：</strong></p>
-    <div class="well well-sm"><%= sanitize(@evaluation.question) %></div>
+    <div class="well well-sm"><%= sanitize(@evaluation.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></div>
     <div class="row">
       <div class="col-sm-6">
         <p><strong>学友回答：</strong></p>
-        <div class="well"><%= @evaluation.your_answer %></div>
+        <div class="well"><%= @evaluation.your_answer.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %></div>
       </div>
       <div class="col-sm-6">
         <p><strong>参考答案：</strong></p>
-        <div class="well"><%= @evaluation.answer %></div>
+        <div class="well"><%= @evaluation.answer.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %></div>
       </div>
     </div>
     <p><strong>题目总分：</strong><%=  @evaluation.practice_score %></p> 

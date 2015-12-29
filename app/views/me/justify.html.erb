@@ -43,8 +43,8 @@
       <tr>
         <td><%= evaluation.id %></td>
         <td><%= evaluation.title %></td>
-        <td><%= evaluation.question %></td>
-        <td><%= evaluation.your_answer %></td>
+        <td><%= evaluation.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %></td>
+        <td><%= evaluation.your_answer.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %></td>
         <td><%= link_to "评", new_justice_path(evaluation_id: evaluation.id), class: "btn btn-xs btn-default", "data-toggle": "tooltip", "data-placement": "bottom", title: "我来评卷" %></td>
       </tr>
     <% end %>
@@ -70,8 +70,8 @@
     <% @evaluations.each do |evaluation| %>
       <tr>
         <td><%= evaluation.title %></td>
-        <td><%= evaluation.question %></td>
-        <td><%= evaluation.your_answer %></td>
+        <td><%= evaluation.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %></td>
+        <td><%= evaluation.your_answer.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %></td>
         <td><%= link_to "评", new_justice_path(evaluation_id: evaluation.id), class: "btn btn-xs btn-default", "data-toggle": "tooltip", "data-placement": "bottom", title: "接着评卷" %></td>
       </tr>
     <% end %>

@@ -1,0 +1,2 @@
+module PaperitemsHelper
+end

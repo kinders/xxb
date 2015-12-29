@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  paper_id: 
+  practice_id: 
+  score: 9.99
+  deleted_at: 2015-12-28 15:34:10
+
+two:
+  user_id: 
+  paper_id: 
+  practice_id: 
+  score: 9.99
+  deleted_at: 2015-12-28 15:34:10

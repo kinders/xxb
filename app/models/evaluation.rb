@@ -2,6 +2,7 @@ class Evaluation < ActiveRecord::Base
   resourcify
   belongs_to :user
   belongs_to :practice
+  belongs_to :papertest
   has_many :justices, dependent: :destroy
 
   has_attached_file :picture_ya

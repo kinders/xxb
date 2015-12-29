@@ -28,6 +28,11 @@
         <li>
           <%= link_to "管理卡片盒", cardboxes_url %>
         </li>
+        <% if session[:paper_id] %>
+          <li>
+            <%= link_to "将本题添加到试卷中", practice_add_to_paper_url(@practice.id) %>
+          </li>
+        <% end %>
       </ul>
     </div>
     <!-- 导航按钮 -->

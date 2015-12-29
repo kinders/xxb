@@ -9,8 +9,8 @@ class Ability
       if user.has_role? :admin
         can :manage, :all
       else
-        can :manage, [Lesson, Tutor, Practice, Textbook, Catalog, Teaching, Plan, Evaluation, Justice, Classroom, Member, Discussion, Complaint, Homework, Observation, Teacher, Subject, Exercise, Cadre, Badrecord, Cardbox, Card, Master, Sectionalization, Team, Player, Classgroupscore, Classpersonscore, Onboard, Receipt, Cashier, Withdraw, Quiz, QuizItem],  user_id: user.id
-	      can :read, [Lesson, Tutor, Practice, Textbook, Catalog, Teaching, Plan, Evaluation, Justice, Classroom, Member, Discussion, Complaint, Homework, Observation, Teacher, Subject, Exercise, Cadre, Badrecord, Cardbox, Card, Sectionalization, Team, Player, Classgroupscore, Classpersonscore, Onboard, Receipt, Cashier, Withdraw, Quiz, QuizItem]
+        can :manage, [Lesson, Tutor, Practice, Textbook, Catalog, Teaching, Plan, Evaluation, Justice, Classroom, Member, Discussion, Complaint, Homework, Observation, Teacher, Subject, Exercise, Cadre, Badrecord, Cardbox, Card, Master, Sectionalization, Team, Player, Classgroupscore, Classpersonscore, Onboard, Receipt, Cashier, Withdraw, Quiz, QuizItem, Paper, Paperitem, Papertest],  user_id: user.id
+	      can :read, [Lesson, Tutor, Practice, Textbook, Catalog, Teaching, Plan, Evaluation, Justice, Classroom, Member, Discussion, Complaint, Homework, Observation, Teacher, Subject, Exercise, Cadre, Badrecord, Cardbox, Card, Sectionalization, Team, Player, Classgroupscore, Classpersonscore, Onboard, Receipt, Cashier, Withdraw, Quiz, QuizItem, Paper, Paperitem, Papertest]
       end
     #
     # The first argument to `can` is the action you are giving the user

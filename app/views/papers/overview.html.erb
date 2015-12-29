@@ -1,0 +1,65 @@
+<%- model_class = Paperitem -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), 
+        paper_url(@paper.id), 
+        class: 'btn btn-default', 
+        tabindex: 80,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.paper")) %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%= @paper.id.to_s + "_" + @paper.title %><small> >> </small><%= @papertest.created_at.strftime("%F %T") %>答卷</h3>
+</div>
+
+<% @paperitems.each_with_index do |paperitem, i| %>
+  <div class="paragraph">
+    <% @practice = paperitem.practice %>
+    <p>第 <%= i+1 %> 题，<%= @practice.title %></p>
+    <% if @practice.material %>
+      <p class="text-success">材料：<%= sanitize(@practice.material.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></p>
+    <% end %>
+    <% if  @practice.question %>
+      <p class="text-success">问题：<%= sanitize(@practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></p>
+    <% end %>
+    <% e = Evaluation.find_by(practice_id: paperitem.practice_id, papertest_id: @papertest.id, user_id: current_user.id) %>
+    <% if e %>
+      <p>分值：<%= number_with_precision(e.practice_score, precision: 2) %> 分</p>
+      <p class="text-danger">回答：<%= sanitize(e.your_answer.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></p>
+      <% if e.score %>
+        <p>得分：<%= number_with_precision(e.score, precision: 2) %> 分</p>
+        <p>得分率：<%= number_to_percentage(e.score*100/e.practice_score, precision: 2) %> 分</p>
+      <% else %>
+        <p>还未批改，敬请期待</p>
+      <% end %>
+    <% else %>
+      <p class="text-danger">没有回答</p>
+      <p>得分：<%= number_with_precision(0, precision: 2) %> 分</p>
+    <% end %>
+  </div>
+  <% if e %>
+    <% justices = Justice.where(evaluation_id: e.id) %>
+    <% if justices.any? %>
+      <div class="well">
+        <p>大家的批改:</p>
+        <% justices.each_with_index do |justice, index| %>
+          <p><strong><%= justice.user.name %></strong>：<%= number_with_precision(justice.score, precision: 2) %>，评语：<%= justice.remark %></p>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+  <hr>
+<% end %>

@@ -58,21 +58,25 @@
                 <ul class="dropdown-menu">
                   <li><%= link_to "图书馆", textbooks_path %></li>
                   <% @textbook = Textbook.find(session[:textbook_id]) %>
-                  <li><%= link_to @textbook.title, textbook_path(@textbook) %></li>
+                  <li><%= link_to "课本：" + @textbook.title, textbook_path(@textbook) %></li>
                   <% if session[:lesson_id] %>
                     <% @lesson = Lesson.find(session[:lesson_id]) %>
-                    <li><%= link_to @lesson.title, lesson_path(@lesson) %></li>
+                    <li><%= link_to "课程：" + @lesson.title, lesson_path(@lesson) %></li>
                     <% if session[:tutor_id] %>
                       <% @tutor = Tutor.find(session[:tutor_id]) %>
-                      <li><%= link_to @tutor.title, tutor_path(@tutor) %></li>
+                      <li><%= link_to "辅导：" + @tutor.title, tutor_path(@tutor) %></li>
                     <% end %>
                   <% end %>
                   <% if session[:cardbox_id] %>
                     <% @cardbox = Cardbox.find(session[:cardbox_id]) %>
-                    <li><%= link_to @cardbox.name, cardbox_path(@cardbox) %></li>
+                    <li><%= link_to "卡片盒：" + @cardbox.name, cardbox_path(@cardbox) %></li>
                   <% end %>
                 </ul>
               </li>
+            <% end %>
+            <% if session[:paper_id] %>
+              <% @paper = Paper.find(session[:paper_id]) %>
+              <li><%= link_to @paper.title, paper_path(@paper) %></li>
             <% end %>
           </ul>
         <ul class="nav navbar-nav navbar-right">

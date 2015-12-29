@@ -1,4 +1,6 @@
-<%= form_for @evaluation, :html => { :class => "form-horizontal evaluation" } do |f| %>
+<% if current_user.has_role? :admin %>
+
+  <%= form_for @evaluation, :html => { :class => "form-horizontal evaluation" } do |f| %>
 
     <% if @evaluation.errors.any? %>
     <div id="error_expl" class="panel panel-danger">
@@ -15,7 +17,6 @@
     </div>
   <% end %>
 
-  <% if current_user.has_role? :admin %>
 
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>
@@ -86,16 +87,36 @@
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
             evaluations_path, :class => 'btn btn-default' %>
 
-  <% else %>
+  <% end %>
+
+<% else %>
+
+  <%= form_for @evaluation, :html => { :class => "form-horizontal evaluation" } do |f| %>
+
+    <% if @evaluation.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@evaluation.errors.count, "error") %> 让本次评估无法完成：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @evaluation.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+    <% end %>
+
 
     <p><strong>标题：</strong><%= @evaluation.title || @practice.title %></p>
     <p><strong>分值：</strong><%= @evaluation.practice_score || @practice.score %></p> 
     <% unless @evaluation.material.blank? || @practice.material.blank? %>
     <p><strong>材料：</strong></p>
-      <div class="well well-sm"><%= @evaluation.material || @practice.material %></div>
+      <div class="well well-sm"><%=sanitize( @evaluation.material || @practice.material )%></div>
     <% end %>
     <p><strong>问题：</strong></p>
-    <div class="well well-sm"><%= @evaluation.question || @practice.question %></div>
+    <div class="well well-sm"><%=sanitize( @evaluation.question || @practice.question )%></div>
     <% if @practice.picture_q_file_name %>
       <p><br></p>
       <%= image_tag @practice.picture_q, class: "img-responsive center-block" %>
@@ -111,35 +132,43 @@
   </div>
 
   <%# if @practice.picture_a_file_name %>
-  <div class="control-group">
+  <%#<div class="control-group">%>
     <%# f.label "图片式回答", :class => 'control-label' %>
-    <div class="controls">
+    <%#<div class="controls">%>
       <%# f.file_field :picture_ya, :class => 'form-control' %>
-    </div>
+    <%#</div>%>
     <%# error_span(@evaluation[:picture_ya]) %>
-  </div>
+  <%#</div>%>
   <%# end %>
 
-  <p></p>
+  <%#<p></p>%>
 
-<div class="row">
-  <% if @evaluation.picture_ya_file_name %>
-  <div class="col-sm-6 col-md-6">
-    <div class="thumbnail">
-      <%= image_tag @evaluation.picture_ya.url, size: "300x300" %>
-      <div class="caption">
-	      <p>
-          <%= link_to "删除图片", evaluation_delete_picture_ya_path(@evaluation), class: "btn btn-default" %>
-	      </p>
-      </div>
-    </div>
-  </div>
-  <% end %>
-</div>
+<%#<div class="row">%>
+  <%# if @evaluation.picture_ya_file_name %>
+  <%#<div class="col-sm-6 col-md-6">%>
+    <%#<div class="thumbnail">%>
+      <%# image_tag @evaluation.picture_ya.url, size: "300x300" %>
+      <%#<div class="caption">%>
+				<%#<p>%>
+          <%# link_to "删除图片", evaluation_delete_picture_ya_path(@evaluation), class: "btn btn-default" %>
+				<%#</p>%>
+      <%#</div>%>
+    <%#</div>%>
+  <%#</div>%>
+  <%# end %>
+
+  <%#<div class="control-group">%>
+    <%# f.label :practice_score, :class => 'control-label' %>
+    <%#<div class="controls">%>
+      <%= f.hidden_field :practice_score, :class => 'form-control', rows: '2' %>
+    <%#</div>%>
+    <%# error_span(@evaluation[:practice_score]) %>
+  <%#</div>%>
 
   <hr>
 
   <%= f.submit "提交答案", :class => 'btn btn-primary' %>
 
-  <% end %> 
+  <% end %>
+
 <% end %>

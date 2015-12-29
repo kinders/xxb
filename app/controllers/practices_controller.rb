@@ -158,6 +158,22 @@ class PracticesController < ApplicationController
     end
   end
 
+  def add_to_paper
+    @practice = Practice.find(params[:practice_id])
+    if Paperitem.find_by(paper_id: session[:paper_id], practice_id: @practice.id)
+      redirect_to :back, notice: "您之前已经将这道题添加到试卷中。"
+      return
+    else
+      @paperitem = Paperitem.create{ |pi|
+        pi.user_id = current_user.id
+        pi.paper_id = session[:paper_id]
+        pi.practice_id = @practice.id
+        pi.score = @practice.score
+      }
+      redirect_to :back, notice: "成功将这道题添加到试卷中！"
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_practice

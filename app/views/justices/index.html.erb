@@ -82,8 +82,8 @@
     <% @justices.each do |justice| %>
       <tr>
         <td><%= justice.evaluation.title %></td>
-        <td><%= link_to justice.evaluation.question, justice_path(justice) %></td>
-        <td><%= justice.evaluation.your_answer %></td>
+        <td><%= link_to justice.evaluation.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, ""), justice_path(justice) %></td>
+        <td><%= justice.evaluation.your_answer.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %></td>
         <td><%= justice.score %></td>
         <td><%= justice.remark %></td>
         <td>

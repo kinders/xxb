@@ -75,7 +75,11 @@ class MeController < ApplicationController
           end
 	      end
       else
-        @unjustified_evaluations << evaluation
+        if evaluation.end_at == nil
+          @unjustified_evaluations << evaluation
+        elsif evaluation.end_at < Time.now
+          @unjustified_evaluations << evaluation
+        end
       end
     }
   end

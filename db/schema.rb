@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151228014001) do
+ActiveRecord::Schema.define(version: 20151228104352) do
 
   create_table "badrecords", force: :cascade do |t|
     t.integer  "user_id"
@@ -221,10 +221,13 @@ ActiveRecord::Schema.define(version: 20151228014001) do
     t.datetime "deleted_at"
     t.integer  "lesson_id"
     t.text     "material"
+    t.datetime "end_at"
+    t.integer  "papertest_id"
   end
 
   add_index "evaluations", ["deleted_at"], name: "index_evaluations_on_deleted_at"
   add_index "evaluations", ["lesson_id"], name: "index_evaluations_on_lesson_id"
+  add_index "evaluations", ["papertest_id"], name: "index_evaluations_on_papertest_id"
   add_index "evaluations", ["practice_id"], name: "index_evaluations_on_practice_id"
   add_index "evaluations", ["user_id"], name: "index_evaluations_on_user_id"
 
@@ -373,6 +376,47 @@ ActiveRecord::Schema.define(version: 20151228014001) do
 
   add_index "onboards", ["deleted_at"], name: "index_onboards_on_deleted_at"
   add_index "onboards", ["user_id"], name: "index_onboards_on_user_id"
+
+  create_table "paperitems", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "paper_id"
+    t.integer  "practice_id"
+    t.decimal  "score"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.decimal  "serial"
+  end
+
+  add_index "paperitems", ["deleted_at"], name: "index_paperitems_on_deleted_at"
+  add_index "paperitems", ["paper_id"], name: "index_paperitems_on_paper_id"
+  add_index "paperitems", ["practice_id"], name: "index_paperitems_on_practice_id"
+  add_index "paperitems", ["user_id"], name: "index_paperitems_on_user_id"
+
+  create_table "papers", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "title"
+    t.integer  "duration"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "papers", ["deleted_at"], name: "index_papers_on_deleted_at"
+  add_index "papers", ["user_id"], name: "index_papers_on_user_id"
+
+  create_table "papertests", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "paper_id"
+    t.datetime "end_at"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "papertests", ["deleted_at"], name: "index_papertests_on_deleted_at"
+  add_index "papertests", ["paper_id"], name: "index_papertests_on_paper_id"
+  add_index "papertests", ["user_id"], name: "index_papertests_on_user_id"
 
   create_table "plans", force: :cascade do |t|
     t.decimal  "serial"

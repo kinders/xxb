@@ -34,6 +34,9 @@ class User < ActiveRecord::Base
   has_many :quizzes
   has_many :quiz_items
   has_many :fees
+  has_many :papers
+  has_many :paperitems
+  has_many :papertests
 
   validates :active_time,  numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 
