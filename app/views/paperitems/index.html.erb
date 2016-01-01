@@ -90,7 +90,7 @@
     </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <%= link_to t('.up', :default => t("helpers.links.up")), 
-        papers_url, 
+        paper_url(@paper.id), 
         class: 'btn btn-default', 
         tabindex: 80,
         "data-toggle": "tooltip", 
@@ -155,7 +155,7 @@
         <% if session[:papertest_id] %>
           <td><%= paperitem.practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %></td>
         <% else %>
-          <td><%= link_to paperitem.practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, ""), practice_url(paperitem.practice_id) %></td>
+          <td><%= link_to paperitem.practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, ""), paperitem_url(paperitem) %></td>
         <% end %>
         <% if session[:papertest_id] %>
           <% e = Evaluation.find_by(papertest_id: session[:papertest_id], practice_id: paperitem.practice_id, user_id: current_user.id) %>

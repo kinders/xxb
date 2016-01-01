@@ -16,6 +16,17 @@ class JusticesController < ApplicationController
   # GET /justices/1
   # GET /justices/1.json
   def show
+    if current_user.has_role? :admin
+    else
+      if session[:papertest_id]
+        redirect_to papertest_url(session[:papertest_id])
+        return
+      elsif session[:paperitem_id]
+        redirect_to paperitem_url(session[:paperitem_id])
+        return
+      else
+      end
+    end
   end
 
   # GET /justices/new
@@ -70,7 +81,7 @@ class JusticesController < ApplicationController
     if current_user.has_role? :admin
       respond_to do |format|
         if @justice.save
-          format.html { redirect_to @justice, notice: '评分成功' }
+          format.html { redirect_to :back, notice: '评分成功' }
           format.json { render :show, status: :created, location: @justice }
         else
           format.html { render :new }

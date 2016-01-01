@@ -5,7 +5,6 @@ Rails.application.routes.draw do
   resources :papertests
 
   resources :papers
-  get 'paper_overview', to: "papers#overview"
 
   resources :fees
 

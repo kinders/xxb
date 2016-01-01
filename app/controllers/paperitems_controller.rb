@@ -12,15 +12,22 @@ class PaperitemsController < ApplicationController
     else
       @paper = Paper.find(session[:paper_id])
       @paperitems = Paperitem.where(paper_id: @paper.id)
-      if session[:papertest_id] == nil && current_user.id != @paper.user_id
-        @papertest = Papertest.create{|pt|
-          pt.user_id = current_user.id
-          pt.paper_id = @paper.id
-          pt.end_at = Time.now + @paper.duration * 60
-        }
-        session[:papertest_id] = @papertest.id
+      ## 如果已经有了测验会话，则继续测验
+      if session[:papertest_id]
+      @papertest = Papertest.find(session[:papertest_id])
+      ## 如果没有测验会话
       else
-        @papertest = Papertest.find(session[:papertest_id]) if session[:papertest_id]
+        ### 并且不是出卷人，则新建测验会话开始测验。
+        if @paper.user_id != current_user.id
+          unless Master.find(current_user.id)
+            @papertest = Papertest.create{|pt|
+              pt.user_id = current_user.id
+              pt.paper_id = @paper.id
+              pt.end_at = Time.now + @paper.duration * 60
+            }
+            session[:papertest_id] = @papertest.id
+          end
+        end
       end
     end
   end
@@ -31,7 +38,9 @@ class PaperitemsController < ApplicationController
     if current_user.has_role? :admin
     else
       session[:paperitem_id] = @paperitem.id
-      redirect_to paperitems_url
+      @paper = @paperitem.paper
+      @papertest_ids = @paper.papertests.map{|p|p.id}
+      @evaluations = Evaluation.where(practice_id: @paperitem.practice_id, papertest: @papertest_ids).order(id: :desc)
     end
   end
 

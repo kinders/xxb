@@ -1,3 +1,5 @@
+<% if current_user.has_role? :admin %>
+
 <%- model_class = Paperitem -%>
 
 <div class="container col-xs-12 col-sm-10 col-md-8 affix">
@@ -94,3 +96,135 @@
   <dt><strong><%= model_class.human_attribute_name(:deleted_at) %>:</strong></dt>
   <dd><%= @paperitem.deleted_at %></dd>
 </dl>
+
+<% else %>
+
+<%- model_class = Paperitem -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 管理功能 -->
+    <div class="btn-group" role="group" arial-label="manage">
+      <% if current_user.id == @paperitem.user_id  %>
+        <%= link_to t('.new', default:  t("helpers.links.new")), 
+          new_paperitem_path,
+          class:  'btn btn-default', 
+          tabindex: 21, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
+        <%= link_to t('.edit', default: t("helpers.links.edit")), 
+          edit_paperitem_path(@paperitem),
+          class: 'btn btn-default', 
+          tabindex: 22, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.edit', default: [:"helpers.titles.edit"], model: model_class.model_name.human.titleize) %>
+        <%= link_to t('.destroy', default: t("helpers.links.destroy")),
+          paperitem_path(@paperitem),
+          method: 'delete',
+          data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
+          class: 'btn btn-default', 
+          tabindex: 23, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
+      <% end %>
+      <%= link_to t('.back', default: t("helpers.links.back")),
+        paperitems_path,
+        class: 'btn btn-default', 
+        tabindex: 24, 
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.back', default: [:"helpers.titles.back"], model: model_class.model_name.human.titleize)  %>
+    </div>
+   <!-- 附加功能 -->
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+        </li>
+        <li role="separator" class="divider"></li>
+      </ul>
+    </div>
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if @previous_paperitem %>
+        <%= link_to t('.previous', default: t("helpers.links.previous")), 
+          paperitem_path(@previous_paperitem), 
+          class: 'btn btn-default', 
+          tabindex: 61, 
+          "data-toggle": "tooltip", "data-placement": "bottom", 
+          title: t('.previous', default: t("helpers.titles.previous"), model: t("activerecord.models.paperitem")) %>
+      <% end %>
+      <% if @next_paperitem %>
+        <%= link_to t('.next', default: t("helpers.links.next")), 
+          paperitem_path(@next_paperitem), 
+          class: 'btn btn-default', 
+          tabindex: 62, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.next', default: t("helpers.titles.next"), model: t("activerecord.models.paperitem")) %>
+      <% end %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81, 
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<% @practice = @paperitem.practice %>
+
+<div class="page-header">
+  <p class="pull-right">分值：<%= number_with_precision(@paperitem.score, precision: 2) %> 分</p>
+  <h3><%= @paper.title %> >> <%= @paperitem.serial %>  <%= @practice.title %></h3>
+</div>
+
+<div class="well paragraph">
+  <% if @practice.material %>
+    <span>材料：</span>
+    <p class="text-success"><%= sanitize(@practice.material.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></p>
+  <% end %>
+  <% if  @practice.question %>
+    <span>问题：</span>
+    <p class="text-success"><%= sanitize(@practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></p>
+  <% end %>
+</div>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>标识号</th>
+      <th>答题用户</th>
+      <th>答题时间</th>
+      <th>得分</th>
+      <th>得分率</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @evaluations.each do |evaluation| %>
+      <tr>
+        <td><%= evaluation.id %></td>
+        <td><%= link_to evaluation.user.name, evaluation_path(evaluation) %></td>
+        <td><%= evaluation.created_at.strftime("%F %T") %></td>
+        <% if evaluation.score %>
+          <td><%= number_with_precision(evaluation.score, precision: 2) %></td>
+          <td><%= number_to_percentage(evaluation.score*100/evaluation.practice_score, precision: 2) %></td>
+        <% elsif evaluation.user_id != current_user.id %>
+          <td><%= link_to "我来批改", new_justice_url(evaluation_id: evaluation.id)%></td>
+          <td><td>
+        <% else %>
+          <td>还请等待</td>
+          <td></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>

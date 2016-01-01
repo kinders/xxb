@@ -1,3 +1,5 @@
+<% if current_user.has_role? :admin %>
+
 <%- model_class = Papertest -%>
 
 <div class="container col-xs-12 col-sm-10 col-md-8 affix">
@@ -92,3 +94,135 @@
   <dt><strong><%= model_class.human_attribute_name(:deleted_at) %>:</strong></dt>
   <dd><%= @papertest.deleted_at %></dd>
 </dl>
+
+<% else %>
+
+<%- model_class = Papertest -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 管理功能 -->
+    <div class="btn-group" role="group" arial-label="manage">
+      <% if current_user.id == @papertest.user_id  %>
+        <%= link_to t('.new', default:  t("helpers.links.new")), 
+          new_papertest_path,
+          class:  'btn btn-default', 
+          tabindex: 21, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
+        <%= link_to t('.edit', default: t("helpers.links.edit")), 
+          edit_papertest_path(@papertest),
+          class: 'btn btn-default', 
+          tabindex: 22, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.edit', default: [:"helpers.titles.edit"], model: model_class.model_name.human.titleize) %>
+        <%= link_to t('.destroy', default: t("helpers.links.destroy")),
+          papertest_path(@papertest),
+          method: 'delete',
+          data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
+          class: 'btn btn-default', 
+          tabindex: 23, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
+      <% end %>
+      <%= link_to t('.back', default: t("helpers.links.back")),
+        papertests_path,
+        class: 'btn btn-default', 
+        tabindex: 24, 
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.back', default: [:"helpers.titles.back"], model: model_class.model_name.human.titleize)  %>
+    </div>
+   <!-- 附加功能 -->
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+        </li>
+        <li role="separator" class="divider"></li>
+      </ul>
+    </div>
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if @previous_papertest %>
+        <%= link_to t('.previous', default: t("helpers.links.previous")), 
+          papertest_path(@previous_papertest), 
+          class: 'btn btn-default', 
+          tabindex: 61, 
+          "data-toggle": "tooltip", "data-placement": "bottom", 
+          title: t('.previous', default: t("helpers.titles.previous"), model: t("activerecord.models.papertest")) %>
+      <% end %>
+      <% if @next_papertest %>
+        <%= link_to t('.next', default: t("helpers.links.next")), 
+          papertest_path(@next_papertest), 
+          class: 'btn btn-default', 
+          tabindex: 62, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.next', default: t("helpers.titles.next"), model: t("activerecord.models.papertest")) %>
+      <% end %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81, 
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%= @paper.id.to_s + "_" + @paper.title %><small> >> </small><%= @papertest.user.name %> >> <%= @papertest.created_at.strftime("%F %T") %>答卷</h3>
+</div>
+
+<% @paperitems.each_with_index do |paperitem, i| %>
+  <% @practice = paperitem.practice %>
+  <h4>第 <%= i+1 %> 题，<%= @practice.title %></h4>
+  <div class="well paragraph">
+    <% if @practice.material %>
+      <p class="text-success">材料：<%= sanitize(@practice.material.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></p>
+    <% end %>
+    <% if  @practice.question %>
+      <p class="text-success">问题：<%= sanitize(@practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></p>
+    <% end %>
+    <% e = Evaluation.find_by(practice_id: paperitem.practice_id, papertest_id: @papertest.id, user_id: @papertest.user_id) %>
+    <% if e %>
+      <p>分值：<%= number_with_precision(e.practice_score, precision: 2) %> 分</p>
+      <p class="text-danger">回答：<%= sanitize(e.your_answer.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></p>
+  </div>
+  <div class="paragraph">
+      <% if e.score %>
+        <p>得分：<%= number_with_precision(e.score, precision: 2) %> 分
+      得分率：<%= number_to_percentage(e.score*100/e.practice_score, precision: 2) %></p>
+      <% elsif @papertest.user_id != current_user.id %>
+        <%= link_to "我来评卷", new_justice_url(evaluation_id: e.id), class: 'btn btn-primary' %>
+      <% else %>
+        <p>还未批改，敬请期待</p>
+      <% end %>
+    <% else %>
+      <p class="text-danger">没有回答</p>
+      <p>得分：<%= number_with_precision(0, precision: 2) %> 分</p>
+    <% end %>
+  </div>
+  <% if e %>
+    <% justices = Justice.where(evaluation_id: e.id) %>
+    <% if justices.any? %>
+      <div class="well">
+        <p>大家的批改:</p>
+        <% justices.each_with_index do |justice, index| %>
+          <p><strong><%= justice.user.name %></strong>：<%= number_with_precision(justice.score, precision: 2) %>
+         <%=  ("，评语：" + justice.remark ) unless justice.remark.blank? %></p>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+  <hr>
+<% end %>
+
+<% end %>

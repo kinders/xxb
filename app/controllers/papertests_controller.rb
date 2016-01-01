@@ -6,17 +6,29 @@ class PapertestsController < ApplicationController
   # GET /papertests
   # GET /papertests.json
   def index
-    @papertests = Papertest.all
+    if current_user.has_role? :admin
+      @papertests = Papertest.all
+    else
+      @paper = Paper.find(session[:paper_id])
+      @papertests = Papertest.where(paper_id: @paper.id).order(id: :desc)
+    end
   end
 
   # GET /papertests/1
   # GET /papertests/1.json
   def show
+    session[:papertest_id] = @papertest.id
+    @paper = @papertest.paper
+    @paperitems = @paper.paperitems
   end
 
   # GET /papertests/new
   def new
-    @papertest = Papertest.new
+    if current_user.has_role? :admin
+      @papertest = Papertest.new
+    else
+      redirect_to papertests_url
+    end
   end
 
   # GET /papertests/1/edit

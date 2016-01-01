@@ -218,7 +218,9 @@
   </div>
 </div>
 <% if current_user.id == @paper.user_id %>
-<%= link_to "编辑试卷", paperitems_url, class: 'btn btn-success' %>
+<%= link_to "编辑/查看试卷", paperitems_url, class: 'btn btn-success' %>
+<% elsif Master.find(current_user.id) %>
+<%= link_to "查看试卷", paperitems_url, class: 'btn btn-success' %>
 <% else %>
 <%= link_to "开始测试", paperitems_url, class: 'btn btn-success' %>
 <% end %>
@@ -250,7 +252,7 @@
         <% else %>
           <td>试卷还没改好</td>
         <% end %>
-          <td><%= link_to "查看答卷情况", paper_overview_url(papertest_id: papertest.id), class: "btn btn-xs btn-default" %></td>
+          <td><%= link_to "查看答卷情况", papertest_url(papertest.id), class: "btn btn-xs btn-default" %></td>
       </tr>
     <% end %>
   </tbody>

@@ -65,7 +65,7 @@
       <%= image_tag @evaluation.practice.picture_q, class: "img-responsive center-block" %>
       <p><br></p>
     <% end %>
-    <% if  @evaluation.material %>
+    <% unless  @evaluation.material.blank? %>
       <p><strong>材料：</strong></p>
       <div class="well"><%= sanitize(@evaluation.material.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></div>
     <% end %>

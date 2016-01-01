@@ -81,6 +81,8 @@
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <% if session[:papertest_id] %>
         <%= link_to t('.up', :default => t("helpers.links.up")), paperitems_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.paperitem")) %>
+      <% elsif session[:paperitem_id] %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), paperitem_path(session[:paperitem_id]), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.paperitem")) %>
       <% else %>
         <%= link_to t('.up', :default => t("helpers.links.up")), practices_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.practice")) %>
       <% end %>
