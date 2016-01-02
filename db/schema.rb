@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151228104352) do
+ActiveRecord::Schema.define(version: 20160101142527) do
 
   create_table "badrecords", force: :cascade do |t|
     t.integer  "user_id"
@@ -230,6 +230,21 @@ ActiveRecord::Schema.define(version: 20151228104352) do
   add_index "evaluations", ["papertest_id"], name: "index_evaluations_on_papertest_id"
   add_index "evaluations", ["practice_id"], name: "index_evaluations_on_practice_id"
   add_index "evaluations", ["user_id"], name: "index_evaluations_on_user_id"
+
+  create_table "examrooms", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "classroom_id"
+    t.integer  "paper_id"
+    t.datetime "deleted_at"
+    t.boolean  "isactive"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "examrooms", ["classroom_id"], name: "index_examrooms_on_classroom_id"
+  add_index "examrooms", ["deleted_at"], name: "index_examrooms_on_deleted_at"
+  add_index "examrooms", ["paper_id"], name: "index_examrooms_on_paper_id"
+  add_index "examrooms", ["user_id"], name: "index_examrooms_on_user_id"
 
   create_table "exercises", force: :cascade do |t|
     t.integer  "user_id"

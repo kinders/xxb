@@ -171,6 +171,7 @@ class EvaluationsController < ApplicationController
 	          p_score: @evaluation.practice_score,
             remark: "完全正确！",
           )
+          @evaluation.update(score: @evaluation.practice_score)
         end
         format.html { redirect_to @evaluation, notice: '答案提交成功' }
         format.json { render :show, status: :created, location: @evaluation }
@@ -197,6 +198,7 @@ class EvaluationsController < ApplicationController
 	          p_score: @evaluation.practice_score,
             remark: "完全正确！",
           )
+          @evaluation.update(score: @evaluation.practice_score)
         end
         format.html { redirect_to @evaluation, notice: "答案更新成功" }
         format.json { render :show, status: :ok, location: @evaluation }

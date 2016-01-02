@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :examrooms
+
   resources :paperitems
 
   resources :papertests

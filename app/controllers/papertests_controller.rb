@@ -10,7 +10,11 @@ class PapertestsController < ApplicationController
       @papertests = Papertest.all
     else
       @paper = Paper.find(session[:paper_id])
-      @papertests = Papertest.where(paper_id: @paper.id).order(id: :desc)
+      if params[:user_id]
+        @papertests = Papertest.where(paper_id: @paper.id, user_id: params[:user_id]).order(id: :desc)
+      else
+        @papertests = Papertest.where(paper_id: @paper.id).order(id: :desc)
+      end
     end
   end
 

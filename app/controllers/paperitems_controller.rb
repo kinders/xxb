@@ -19,7 +19,7 @@ class PaperitemsController < ApplicationController
       else
         ### 并且不是出卷人，则新建测验会话开始测验。
         if @paper.user_id != current_user.id
-          unless Master.find(current_user.id)
+          unless Master.find_by(id: current_user.id)
             @papertest = Papertest.create{|pt|
               pt.user_id = current_user.id
               pt.paper_id = @paper.id

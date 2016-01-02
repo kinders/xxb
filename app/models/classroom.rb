@@ -5,6 +5,7 @@ class Classroom < ActiveRecord::Base
   has_many :cadres, dependent: :destroy
   has_many :badrecords, dependent: :destroy
   has_many :sectionalizations, dependent: :destroy
+  has_many :examrooms, dependent: :destroy
   resourcify
   acts_as_paranoid
   validates :name, presence: true

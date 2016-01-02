@@ -13,6 +13,7 @@ zh-CN:
       complaint: "建议"
       discussion: "课堂"
       evaluation: "评估"
+      examroom: "考场"
       exercise: "练习"
       fee: "收费标准"
       homework: "作业"
@@ -163,6 +164,15 @@ zh-CN:
         deleted_at: "删除时间"
         created_at: "创建时间"
         updated_at: "更新时间"
+      examroom:
+        id: "标识号"
+        user_id: "创建者"
+        classroom_id: "班级"
+        paper_id: "试卷"
+        isactive: "状态"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
+        updated_at: "更新时间"
       exercise:
         id: "标识号"
         user_id: "创建者"
@@ -248,7 +258,7 @@ zh-CN:
         duration: "测试时长"
         end_at: "失效时间"
         deleted_at: "删除时间"
-        created_at: "创建时间"
+        created_at: "出卷时间"
         updated_at: "更新时间"
       paperitem:
         id: "标识号"
