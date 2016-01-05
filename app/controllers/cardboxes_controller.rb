@@ -132,12 +132,43 @@ class CardboxesController < ApplicationController
         c.cardbox_id = @my_cardbox.id
         c.practice_id = card.practice_id
         c.sequence = card.sequence
-        c.serial = c.sequence.to_f + c.sequence.to_f / 10000
+        c.serial = c.sequence.to_f + c.sequence.to_f / 100000
         c.nexttime = Time.now
       }
     }
     flash[:notice] = "我的《#{@my_cardbox.name}》卡片盒已经准备就绪"
     redirect_to @my_cardbox
+  end
+
+  def append_to_cardbox
+    begin
+      @cardbox = Cardbox.find(params[:dest_id])
+      params[:cardbox_id].each do |cardbox_id|
+        Cardbox.find(cardbox_id).cards.each do | card |
+          new_card = Card.create { |n_card|
+          n_card.user_id = current_user.id
+          n_card.practice_id = card.practice_id
+          n_card.cardbox_id = @cardbox.id
+          if @cardbox.cards.first
+            n_card.sequence = @cardbox.cards.order(:sequence).last.sequence + 1
+          else
+            n_card.sequence = 1
+          end
+          n_card.serial = n_card.sequence.to_f + n_card.sequence.to_f / 100000
+          n_card.nexttime = Time.now
+          }
+        end
+      end
+      respond_to do |format|
+        format.html { redirect_to cardbox_path(params[:dest_id]), notice: '成功将卡片盒中的习题追加到卡片盒中。' }
+        format.json { render :show, status: :created, location: @card }
+      end
+    rescue 
+      respond_to do |format|
+        format.html { redirect_to :back, notice: '添加失败，请到卡片盒中检查哪些习题没有添加。' }
+        format.json { render json: @card.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   private
@@ -148,6 +179,6 @@ class CardboxesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def cardbox_params
-      params.require(:cardbox).permit(:user_id, :name, :deleted_at, :share, :lesson_id)
+      params.require(:cardbox).permit( :dest_id, {id: []}, :user_id, :name, :deleted_at, :share, :lesson_id)
     end
 end

@@ -2,5 +2,5 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
  $(document).on "ready", ->
-   $("input#checkbox_select_all").click ->
+   $("input#checkbox_select_all_practices").click ->
      $("input[name='practice_id[]']").click()

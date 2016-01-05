@@ -53,7 +53,7 @@ class CardsController < ApplicationController
       else
         @card.sequence = 1
       end
-      @card.serial = @card.sequence.to_f + @card.sequence.to_f / 10000
+      @card.serial = @card.sequence.to_f + @card.sequence.to_f / 100000
       @card.nexttime = Time.now
       respond_to do |format|
         if @card.save
@@ -184,7 +184,7 @@ class CardsController < ApplicationController
         else
           card.sequence = 1
         end
-        card.serial = card.sequence.to_f + card.sequence.to_f / 10000
+        card.serial = card.sequence.to_f + card.sequence.to_f / 100000
         card.nexttime = Time.now
         card.save
       end
@@ -197,6 +197,32 @@ class CardsController < ApplicationController
         format.html { redirect_to :back, notice: '卡片添加失败，请到卡片盒中检查哪些习题没有添加。' }
         format.json { render json: @card.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def multiple_operate
+    if params[:commit] == "删除"
+      Card.where(id: params[:card_id]).destroy_all
+      redirect_to :back, notice: "删除所选的多个卡片。"
+    elsif params[:commit] == "追加"
+      @cardbox = Cardbox.find(params[:card_id])
+      Card.where(id: params[:card_id]).each do | card |
+        new_card = Card.create { |n_card|
+        n_card.user_id = current_user.id
+        n_card.practice_id = card.practice_id
+        n_card.cardbox_id = @cardbox.id
+        if @cardbox.cards.first
+          n_card.sequence = @cardbox.cards.order(:sequence).last.sequence + 1
+        else
+          n_card.sequence = 1
+        end
+        n_card.serial = n_card.sequence.to_f + n_card.sequence.to_f / 100000
+        n_card.nexttime = Time.now
+        }
+      end
+      redirect_to :back, notice: "已经将卡片添加到该卡片盒中。"
+    else
+      redirect_to :back, notice: "操作失败。"
     end
   end
 
@@ -236,7 +262,7 @@ class CardsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def card_params
-      params.require(:card).permit(:user_id, :practice_id, {practice_id: []}, :cardbox_id, :sequence, :serial, :degree, :nexttime, :foul, :count, :deleted_at)
+      params.require(:card).permit({id: []}, :user_id, :practice_id, {practice_id: []}, :cardbox_id, :sequence, :serial, :degree, :nexttime, :foul, :count, :deleted_at)
       # user_id      用户
       # practice_id  练习题
       # cardbox_id   卡片盒

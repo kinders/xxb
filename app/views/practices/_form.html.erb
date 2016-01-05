@@ -175,47 +175,47 @@
   </div>
 
 
-  <div class="control-group">
+  <%#<div class="control-group">%>
     <%# f.label "答案图片", :class => 'control-label' %>
-    <div class="controls">
+    <%#<div class="controls">%>
       <%# f.file_field :picture_a, :class => 'form-control' %>
-    </div>
+    <%#</div>%>
     <%# error_span(@practice[:picture_a]) %>
-  </div>
+  <%#</div>%>
 
-  <p></p>
+  <%#<p></p>%>
 
-<div class="row">
+<%#<div class="row">%>
   <%# if @practice.picture_q_file_name %>
-  <div class="col-sm-6 col-md-6">
-    <div class="thumbnail">
+  <%#<div class="col-sm-6 col-md-6">%>
+    <%#<div class="thumbnail">%>
       <%# image_tag @practice.picture_q.url, size: "300x300" %>
-      <div class="caption">
-	<p>
+      <%#<div class="caption">%>
+	<%#<p>%>
           <%# link_to "删除问题图片", practice_delete_picture_q_path(@practice), class: "btn btn-default" %>
-	</p>
-      </div>
-    </div>
-  </div>
+	<%#</p>%>
+      <%#</div>%>
+    <%#</div>%>
+  <%#</div>%>
   <%# end %>
   <%# if @practice.picture_a_file_name %>
-  <div class="col-sm-6 col-md-6">
-    <div class="thumbnail">
+  <%#<div class="col-sm-6 col-md-6">%>
+    <%#<div class="thumbnail">%>
       <%# image_tag @practice.picture_a.url, size: "300x300" %>
-      <div class="caption">
-	<p>
+      <%#<div class="caption">%>
+	<%#<p>%>
           <%# link_to "删除答案图片", practice_delete_picture_a_path(@practice), class: "btn btn-default" %>
-	</p>
-      </div>
-    </div>
-  </div>
+	<%#</p>%>
+      <%#</div>%>
+    <%#</div>%>
+  <%#</div>%>
   <%# end %>
-</div>
+<%#</div>%>
 
   <hr>
-  <%= f.submit "保存这个练习", :class => 'btn btn-primary' %>
+  <%= f.submit "保存这个练习", :class => 'btn btn-primary', tabindex: 20 %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            practices_path, :class => 'btn btn-default' %>
+            practices_path, :class => 'btn btn-default', tabindex: 21 %>
 
  <% end %>
 <% end %>

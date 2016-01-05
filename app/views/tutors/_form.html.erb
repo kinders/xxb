@@ -23,49 +23,49 @@
     <%= error_span(@tutor[:title]) %>
   </div>
 
-<div class="row">
-  <% if @tutor.picture1_file_name %>
-  <div class="col-sm-6 col-md-6">
-    <div class="thumbnail">
-      <%= image_tag @tutor.picture1.url, size: "300x300", tabindex: 2 %>
-      <div class="caption">
-	<p>
-          <%= link_to "删除图片一", tutor_delete_picture1_path(@tutor), class: "btn btn-default" %>
-	</p>
-      </div>
-    </div>
-  </div>
-  <% end %>
-  <% if @tutor.picture2_file_name %>
-  <div class="col-sm-6 col-md-6">
-    <div class="thumbnail">
-      <%= image_tag @tutor.picture2.url, size: "300x300", tabindex: 3 %>
-      <div class="caption">
-	<p>
-          <%= link_to "删除图片二", tutor_delete_picture2_path(@tutor), class: "btn btn-default" %>
-	</p>
-      </div>
-    </div>
-  </div>
-  <% end %>
-</div>
+<%#<div class="row">%>
+  <%# if @tutor.picture1_file_name %>
+  <%#<div class="col-sm-6 col-md-6">%>
+    <%#<div class="thumbnail">%>
+      <%#= image_tag @tutor.picture1.url, size: "300x300", tabindex: 2 %>
+      <%#<div class="caption">%>
+	<%#<p>%>
+          <%# link_to "删除图片一", tutor_delete_picture1_path(@tutor), class: "btn btn-default" %>
+	<%#</p>%>
+      <%#</div>%>
+    <%#</div>%>
+  <%#</div>%>
+  <%# end %>
+  <%# if @tutor.picture2_file_name %>
+  <%#<div class="col-sm-6 col-md-6">%>
+    <%#<div class="thumbnail">%>
+      <%# image_tag @tutor.picture2.url, size: "300x300", tabindex: 3 %>
+      <%#<div class="caption">%>
+	<%#<p>%>
+          <%# link_to "删除图片二", tutor_delete_picture2_path(@tutor), class: "btn btn-default" %>
+	<%#</p>%>
+      <%#</div>%>
+    <%#</div>%>
+  <%#</div>%>
+  <%# end %>
+<%#</div>%>
 
-  <div class="control-group">
-    <%= f.label "图片一", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.file_field :picture1, :class => 'form-control', tabindex: 4 %>
-    </div>
-    <%= error_span(@tutor[:picture1]) %>
-  </div>
+  <%#<div class="control-group">%>
+    <%# f.label "图片一", :class => 'control-label' %>
+    <%#<div class="controls">%>
+      <%# f.file_field :picture1, :class => 'form-control', tabindex: 4 %>
+    <%#</div>%>
+    <%# error_span(@tutor[:picture1]) %>
+  <%#</div>%>
 
 
-  <div class="control-group">
-    <%= f.label "图片二", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.file_field :picture2, :class => 'form-control', tabindex: 5 %>
-    </div>
-    <%= error_span(@tutor[:picture2]) %>
-  </div>
+  <%#<div class="control-group">%>
+    <%# f.label "图片二", :class => 'control-label' %>
+    <%#<div class="controls">%>
+      <%# f.file_field :picture2, :class => 'form-control', tabindex: 5 %>
+    <%#</div>%>
+    <%# error_span(@tutor[:picture2]) %>
+  <%#</div>%>
 
 
   <div class="control-group">

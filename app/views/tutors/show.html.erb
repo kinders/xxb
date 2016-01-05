@@ -189,7 +189,7 @@
       <tr>
         <td><%= exercise.serial %></td>
         <td><%= exercise.practice.title %></td>
-        <td><%= exercise.practice.question %></td>
+        <td><%= exercise.practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %></td>
         <td><%= link_to "做题", new_evaluation_path(practice_id: exercise.practice_id), class: 'btn btn-xs btn-default' %></td>
       </tr>
     <% end %>

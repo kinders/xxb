@@ -7,9 +7,9 @@ class PracticesController < ApplicationController
   # GET /practices
   # GET /practices.json
   def index
-    if current_user.has_role? :admin
+    if current_user.has_role? :admin 
       @practices = Practice.all
-    else
+    elsif session[:lesson_id]
       @lesson = Lesson.find(session[:lesson_id])
       if session[:tutor_id]
         @tutor = Tutor.find(session[:tutor_id])
@@ -17,7 +17,8 @@ class PracticesController < ApplicationController
       else
         @practices = Practice.where(lesson_id: @lesson.id)
       end
-
+    else
+      redirect_to :back, notice: "需要指定课文。"
     end
   end
 
@@ -65,7 +66,7 @@ class PracticesController < ApplicationController
     unless current_user.has_role? :admin
     @practice.user_id = current_user.id
     @practice.lesson_id = session[:lesson_id]
-    @practice.score = (@practice.answer.to_s.length.to_f / 10).ceil
+    @practice.score = (@practice.answer.to_s.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length.to_f / 10).ceil
     end
     respond_to do |format|
       if @practice.save
@@ -82,7 +83,7 @@ class PracticesController < ApplicationController
   # PATCH/PUT /practices/1.json
   def update
     unless current_user.has_role? :admin
-    @practice.score = (@practice.answer.to_s.length.to_f / 10).ceil
+    @practice.score = (@practice.answer.to_s.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length.to_f / 10).ceil
     end
     respond_to do |format|
       if @practice.update(practice_params)

@@ -96,9 +96,12 @@
     “<%= @cardbox.name %>”里的<%=t '.title', :default => model_class.model_name.human.titleize %>
   </h3>
 </div>
+
+<%= form_tag "/cards/multiple_operate", class: 'form-inline' do %>
 <table class="table table-striped">
   <thead>
     <tr>
+      <th><input type="checkbox" id="checkbox_select_all_cards" /></th>
       <th><%= model_class.human_attribute_name(:serial) %></th>
       <th><%= model_class.human_attribute_name(:practice_id) %></th>
       <th><%= model_class.human_attribute_name(:degree) %></th>
@@ -111,8 +114,9 @@
   <tbody>
     <% @cards.each do |card| %>
       <tr>
+        <td><%= check_box_tag "card_id[]", card.id %></td>
         <td><%= card.serial.round(5) %></td>
-        <td><%=link_to card.practice.question, card_path(card)%></td>
+        <td><%=link_to card.practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, ""), card_path(card)%></td>
         <td><%= card.degree %></td>
         <td><%= card.nexttime.strftime("%F %R") %></td>
         <td><%= card.foul %></td>
@@ -130,6 +134,19 @@
     <% end %>
   </tbody>
 </table>
+<%= submit_tag "删除", class: 'btn btn-danger', operation: 'multiple_delete' %>
+<button class="btn btn-default" type="button" data-toggle="collapse" data-target="#collapseAppendToCardbox" aria-expanded="false" aria-controls="collapseAppendToCardbox">
+  将所选卡片盒附加到下面这个卡片盒中
+</button>
+<div class="collapse" id="collapseAppendToCardbox">
+  <div class="well">
+    <div class="control-group">
+      <%= select_tag :cardbox_id, options_for_select(Cardbox.where(user_id: current_user.id).collect{ |cardbox| [cardbox.id.to_s + " - " + cardbox.name, cardbox.id]}), {prompt: "请选择一个卡片盒", class: 'form-control col-md-4'} %>
+    </div>
+    <%= submit_tag "追加", :class => 'btn btn-primary', operation: 'append_to_cardbox' %>
+  </div>
+</div>
+<% end %>
 
 
 <% end %>

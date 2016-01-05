@@ -83,7 +83,7 @@ class TutorsController < ApplicationController
     @tutor = Tutor.new(tutor_params)
     @tutor.user_id = current_user.id
     @tutor.lesson_id = session[:lesson_id]
-    @tutor.page_length = @tutor.page.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
+    @tutor.page_length = @tutor.page.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length + @tutor.proviso.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
 
     respond_to do |format|
       if @tutor.save
@@ -101,7 +101,8 @@ class TutorsController < ApplicationController
   def update
     respond_to do |format|
       if @tutor.update(tutor_params)
-        @tutor.page_length = @tutor.page.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
+        @tutor.page_length = @tutor.page.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length + @tutor.proviso.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
+        @tutor.save
         format.html { redirect_to @tutor, notice: "Tutor“#{@tutor.title}”已经更新成功" }
         format.json { render :show, status: :ok, location: @tutor }
       else

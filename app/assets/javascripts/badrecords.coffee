@@ -2,5 +2,5 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
  $(document).on "ready", ->
-   $("input#checkbox_select_all").click ->
+   $("input#checkbox_select_all_badrecords").click ->
      $("input[name='badrecord[troublemaker][]']").click()

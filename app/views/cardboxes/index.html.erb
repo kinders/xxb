@@ -89,9 +89,13 @@
     <h3>我的<%=t '.title', :default => model_class.model_name.human.titleize %></h3>
   <% end %>
 </div>
+
+
+<%= form_tag "/cardboxes/append_to_cardbox", class: 'form-inline' do %>
 <table class="table table-striped">
   <thead>
     <tr>
+      <th><input type="checkbox" id="checkbox_select_all_cardboxes" /></th>
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:user_id) %></th>
       <th><%= model_class.human_attribute_name(:name) %></th>
@@ -108,6 +112,7 @@
     <% total_degree = 0 %>
     <% @cardboxes.each do |cardbox| %>
       <tr>
+        <td><%= check_box_tag "cardbox_id[]", cardbox.id %></td>
         <td><%= cardbox.id %></td>
         <td><%= cardbox.user.name %></td>
         <td><%= link_to cardbox.name, cardbox_path(cardbox) %></td>
@@ -117,7 +122,11 @@
         <% cardbox_degree = cardbox.cards.sum(:degree) %>
         <% total_degree += cardbox_degree %>
         <td><%= cardbox_degree  %></td>
+        <% if cardbox.cards.any? %>
         <td><%= (cardbox.cards.average(:degree)*10).round(2) %> %</td>
+        <% else %>
+        <td>0.0 %</td>
+        <% end %>
         <td>
           <% if cardbox.share %>
           共享
@@ -140,5 +149,21 @@
     <% end %>
   </tbody>
 </table>
-<h4>我的总分：<%= total_degree %></h4>
+
+<h4 class="pull-right">我的总分：<%= total_degree %></h4>
+
+<button class="btn btn-default" type="button" data-toggle="collapse" data-target="#collapseAppendToCardbox" aria-expanded="false" aria-controls="collapseAppendToCardbox">
+  将所选卡片盒附加到下面这个卡片盒中
+</button>
+<div class="collapse" id="collapseAppendToCardbox">
+  <div class="well">
+    <div class="control-group">
+      <%= select_tag :dest_id, options_for_select(Cardbox.where(user_id: current_user.id).collect{ |cardbox| [cardbox.id.to_s + " - " + cardbox.name, cardbox.id]}), {prompt: "请选择一个卡片盒", class: 'form-control col-md-4'} %>
+    </div>
+    <%= submit_tag "提交", :class => 'btn btn-primary' %>
+  </div>
+</div>
+<% end %>
+
+
 <% end %>

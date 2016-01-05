@@ -55,12 +55,14 @@ Rails.application.routes.draw do
     get 'pass_card'
   end
   post '/cards/add_to_cardbox', to: 'cards#add_to_cardbox'
+  post '/cards/multiple_operate', to: 'cards#multiple_operate'
   get '/list_right_cards', to: 'cards#list_right_cards'
 
   resources :cardboxes do
     get 'turn_cards'
     post 'copy_cardbox_for_me'
   end
+  post '/cardboxes/append_to_cardbox', to: 'cardboxes#append_to_cardbox'
   get '/share_cardboxes', to: 'cardboxes#share_cardboxes'
 
   get 'download_csv', to: "badrecords#download_csv"
