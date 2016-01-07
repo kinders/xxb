@@ -174,7 +174,7 @@ class ExercisesController < ApplicationController
           }
         }
         respond_to do |format|
-          format.html { redirect_to :back, notice: '习题已经被成功添加到卡片盒中。' }
+          format.html { redirect_to :back, notice: "习题已经被成功添加到卡片盒“#{@cardbox.name}”中。" }
           format.json { render json: @card.errors, status: :unprocessable_entity }
         end
       else

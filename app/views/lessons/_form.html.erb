@@ -40,13 +40,13 @@
   <% end %>
 </div>
 
-  <div class="control-group">
-    <%= f.label "图片", :class => 'control-label' %>
-    <div class="controls">
-      <%= f.file_field :picture, :class => 'form-control', tabindex: 13 %>
-    </div>
-    <%= error_span(@lesson[:picture]) %>
-  </div>
+  <%#<div class="control-group">%>
+    <%# f.label "图片", :class => 'control-label' %>
+    <%#<div class="controls">%>
+      <%# f.file_field :picture, :class => 'form-control', tabindex: 13 %>
+    <%#</div>%>
+    <%# error_span(@lesson[:picture]) %>
+  <%#</div>%>
 
   <div class="control-group">
     <%= f.label "内容", :class => 'control-label' %>
@@ -54,7 +54,7 @@
       <%# f.text_area :content, :class => 'form-control', rows: "30", tabindex: 14 %>
       <%# f.text_area :content, :class => 'tinymce form-control', rows: "30", tabindex: 14   %>
       <%# tinymce %>
-      <%= cktext_area :lesson, :content, :rows => 10, tabindex: 14 %>
+      <%= f.cktext_area :content, :rows => 10, tabindex: 14 %>
 
     </div>
     <%= error_span(@lesson[:content]) %>
