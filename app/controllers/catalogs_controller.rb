@@ -73,6 +73,32 @@ class CatalogsController < ApplicationController
     end
   end
 
+  def quick_append
+    if session[:textbook_id] && session[:lesson_id]
+      @textbook = Textbook.find(session[:textbook_id])
+      @lesson = Lesson.find(session[:lesson_id])
+      if @textbook.user_id == current_user.id
+        if @textbook.catalogs.any?
+          catalog_serial = @textbook.catalogs.order(:serial).last.serial.to_i
+        else
+          catalog_serial = 0
+        end
+        @catalog = Catalog.create{|c|
+          c.serial = catalog_serial + 1
+          c.user_id = current_user.id
+          c.textbook_id = @textbook.id
+          c.lesson_id = @lesson.id
+        }
+        redirect_to :back, notice: "已经将这篇课文添加为《#{@textbook.title}》第 #{@catalog.serial} 课。"
+      else
+        redirect_to :back, notice: "您不能将这篇课文添加到《#{@textbook.title}》中。"
+      end
+    else
+      redirect_to :back, notice: "操作失败，您未指定课本或课文。"
+    end
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_catalog

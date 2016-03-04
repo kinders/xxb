@@ -181,7 +181,9 @@
 </div>
 
 <div class="page-header">
-  <h3>正在测试中，加油！</h3>
+  <h3>正在测试中，加油！
+  <span class="badge" id="timer">0</span>
+  </h3>
 </div>
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -222,6 +224,13 @@
     </div>
   </div>
 </div>
-
+<script>
+  var myVar=setInterval(function(){myTimer()},1000);
+  var t=0
+  function myTimer() {
+    document.getElementById("timer").innerHTML=t;
+    t = t + 1
+  }
+</script>
 
 <% end %>

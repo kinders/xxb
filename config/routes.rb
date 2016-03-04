@@ -57,6 +57,7 @@ Rails.application.routes.draw do
   post '/cards/add_to_cardbox', to: 'cards#add_to_cardbox'
   post '/cards/multiple_operate', to: 'cards#multiple_operate'
   get '/list_right_cards', to: 'cards#list_right_cards'
+  post '/search_right_cards', to: 'cards#search_right_cards'
 
   resources :cardboxes do
     get 'turn_cards'
@@ -71,6 +72,7 @@ Rails.application.routes.draw do
     get 'finish_badrecord'
     get 'restore_badrecord'
   end
+  post '/badrecords/finish_badrecords_in_batch', to: 'badrecords#finish_badrecords_in_batch'
 
   resources :cadres
 
@@ -128,6 +130,7 @@ Rails.application.routes.draw do
   resources :catalogs do
     get :autocomplete_lesson_title, on: :collection
   end
+  get '/catalogs_quick_append', to: 'catalogs#quick_append'
 
   resources :textbooks
 

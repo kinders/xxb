@@ -135,7 +135,7 @@
   </tbody>
 </table>
 <% if @cardbox.user_id == current_user.id %>
-  <%= submit_tag "删除", class: 'btn btn-danger', operation: 'multiple_delete' %>
+  <%= submit_tag "删除所选", class: 'btn btn-default', operation: 'multiple_delete' %>
 <% end %>
 <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#collapseAppendToCardbox" aria-expanded="false" aria-controls="collapseAppendToCardbox">
   将所选卡片盒附加到下面这个卡片盒中

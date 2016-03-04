@@ -147,13 +147,13 @@ class PracticesController < ApplicationController
         end
       end
       respond_to do |format|
-        format.html { redirect_to practices_url, notice: '成功导入数据！' }
+        format.html { redirect_to :back, notice: '成功导入练习！' }
         format.json { head :no_content }
       end
     rescue 
       File.delete(path)
       respond_to do |format|
-        format.html { redirect_to practices_url, notice: '导入数据失败，请修改CSV文件后重新尝试！' }
+        format.html { redirect_to :back, notice: '导入练习失败，请修改CSV文件后重新尝试！' }
         format.json { head :no_content }
       end
     end

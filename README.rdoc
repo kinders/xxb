@@ -87,6 +87,10 @@
 
 ===  配置(Configuration)
 
+==== Bootstrap-rails
+这个软件包逐个导入js文件，将会拖慢网页的加载时间。
+可以将gem包里的bootstrap.js文件替换为官网下载的压缩过的bootstrap.min.js（当然，这个文件需要命名为bootsrap.js。
+
 ==== CKEditor
 
 * 更换内核

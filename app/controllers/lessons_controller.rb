@@ -19,6 +19,8 @@ class LessonsController < ApplicationController
       h.modelname = "lesson"
       h.entryid = @lesson.id
     }
+    @textbook = Textbook.find_by(id: session[:textbook_id])
+    @catalog = Catalog.find_by(textbook_id: @textbook.id, lesson_id: @lesson.id)
     session[:lesson_id] = @lesson.id
     session[:tutor_id] = nil
     session[:teaching_id] = nil

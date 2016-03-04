@@ -209,10 +209,12 @@
 <% end %>
 
 <% if @my_badrecords.any? %>
+<%= form_tag "/badrecords/finish_badrecords_in_batch", class: 'form-inline' do %>
 <table class="table table-striped">
   <caption class="text-center">我的不良记录（共<%=@my_badrecords.count %>条）</caption>
   <thead>
     <tr>
+      <th><input type="checkbox" id="checkbox_select_all_badrecords" /></th>
       <th><%= Badrecord.human_attribute_name(:id) %></th>
       <th><%= Badrecord.human_attribute_name(:troubletime) %></th>
       <th><%= Badrecord.human_attribute_name(:subject_id) %></th>
@@ -223,6 +225,7 @@
   <tbody>
     <% @my_badrecords.each do |badrecord| %>
       <tr>
+        <td><%= check_box_tag "badrecord_id[]", badrecord.id %></td>
         <td><%= link_to badrecord.id, badrecord_path(badrecord) %></td>
         <td><%= badrecord.troubletime.strftime("%F") %></td>
         <td><%= badrecord.subject.name %></td>
@@ -249,6 +252,8 @@
     <% end %>
   </tbody>
 </table>
+<%= submit_tag "抹去所选不良记录", :class => 'btn btn-primary pull-right' %>
+<% end %>
 <% else %>
   <div class="well">暂时没有不良记录……</div>
 <% end %>

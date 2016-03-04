@@ -57,13 +57,13 @@
 
 <dl class="dl-horizontal">
   <dt>序号</dt>
-  <dd><%= @catalog.serial %></dd>
+  <dd><%= @catalog.serial.round(3) %></dd>
   <dt>创建者</dt>
   <dd><%= @catalog.user.name %></dd>
   <dt>课本</dt>
   <dd><%= @catalog.textbook.title %></dd>
   <dt><strong><%= model_class.human_attribute_name(:lesson_id) %>:</strong></dt>
-  <dd><%= @catalog.lesson.title %></dd>
+  <dd><%= link_to @catalog.lesson.title, lesson_url(@catalog.lesson) %></dd>
 </dl>
 
 <% end %>

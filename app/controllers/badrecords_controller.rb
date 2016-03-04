@@ -78,8 +78,13 @@ class BadrecordsController < ApplicationController
     @classroom = Classroom.find(session[:classroom_id])  if session[:classroom_id]
     respond_to do |format|
       if @badrecord.update(badrecord_params)
-        format.html { redirect_to badrecords_url, notice: 'Badrecord was successfully updated.' }
-        format.json { render :show, status: :ok, location: @badrecord }
+        if session[:member_id]
+          format.html { redirect_to member_url(session[:member_id]), notice: 'Badrecord was successfully updated.' }
+          format.json { render :show, status: :ok, location: @badrecord }
+        else
+          format.html { redirect_to badrecords_url, notice: 'Badrecord was successfully updated.' }
+          format.json { render :show, status: :ok, location: @badrecord }
+        end
       else
         format.html { render :edit }
         format.json { render json: @badrecord.errors, status: :unprocessable_entity }
@@ -100,11 +105,19 @@ class BadrecordsController < ApplicationController
   # GET /badrecords/1/finish_badrecord
   def finish_badrecord
     @badrecord = Badrecord.find(params[:badrecord_id])
-    @badrecord.finish_man = current_user.id
-    @badrecord.finish_time = Time.now
-    @badrecord.update(finish: true)
+    @badrecord.update(finish_man: current_user.id, finish_time: Time.now, finish: true)
     respond_to do |format|
-      format.html { redirect_to :back, notice: '成功抹平一条不良记录。' }
+      format.html { redirect_to :back, notice: "成功抹平一条不良记录（#{@badrecord.id}）。" }
+      format.json { head :no_content }
+    end
+  end
+
+  # POST /badrecords/finish_badrecords_in_batch
+  def finish_badrecords_in_batch
+    @badrecords = Badrecord.where(id: params[:badrecord_id])
+    @badrecords.update_all(finish_man: current_user.id, finish_time: Time.now, finish: true)
+    respond_to do |format|
+      format.html { redirect_to :back, notice: "成功抹平以下不良记录：#{@badrecords.map{|badrecord| badrecord.id }}。"} 
       format.json { head :no_content }
     end
   end
@@ -137,6 +150,6 @@ class BadrecordsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def badrecord_params
-      params.require(:badrecord).permit(:user_id, {troublemaker: []}, :classroom_id, :troubletime, :subject_id, :description, :finish, :finish_man, :finish_time, :deleted_at)
+      params.require(:badrecord).permit(:user_id, {troublemaker: []}, {id: []}, :classroom_id, :troubletime, :subject_id, :description, :finish, :finish_man, :finish_time, :deleted_at)
     end
 end

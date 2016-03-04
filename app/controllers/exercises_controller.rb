@@ -159,6 +159,7 @@ class ExercisesController < ApplicationController
           c.user_id = current_user.id
           c.name = @tutor.title + Time.now.strftime("%F %T")
           c.lesson_id = @tutor.lesson_id
+          c.share = true if Master.find_by(id: current_user.id)
         }
         @tutor.exercises.each_with_index {|e, i|
           Card.create {|card|

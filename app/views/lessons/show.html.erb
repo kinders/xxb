@@ -68,6 +68,19 @@
         <li>
           <%= link_to "快速生成简易教案", lesson_easy_teaching_path(@lesson) %>
         </li>
+        <% if current_user.id == @lesson.user_id %>
+        <li role="separator" class="divider"></li>
+        <% catalog_id = Catalog.find_by(textbook_id: @textbook.id, lesson_id: @lesson.id) %>
+        <% if catalog_id %>
+        <li>
+        <%= link_to "修改在课本《#{@textbook.title}》中的目录位置", edit_catalog_url(catalog_id)  %>
+        </li>
+        <% else %>
+        <li>
+        <%= link_to "附加到课本《#{@textbook.title}》中", catalogs_quick_append_path  %>
+        </li>
+        <% end %>
+        <% end %>
       </ul>
     </div>
     <% else %>
@@ -96,7 +109,7 @@
 
 
 <div class="page-header">
-  <h1><%= @lesson.title %></h1>
+  <h1><%= number_with_precision(@catalog.serial, precision: 2) if @catalog %> <%= @lesson.title %></h1>
   <p class="text-right">字数：<%= @lesson.content_length %></p>
 </div>
 <% if @lesson.picture_file_name %>

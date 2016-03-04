@@ -34,9 +34,11 @@
           </div>
         <% end %>
       <% end %>
-      <label>全选/不选</label>
+    <div class="col-sm-12">
       <input type="checkbox" id="checkbox_select_all_badrecords" />
-      <label>（提示：全选操作无效时可刷新页面）</label>
+      <label>全选/不选</label>
+      <label>（提示：全选操作无效时可刷新页面再点击）</label>
+    </div>
     </div>
     <%= error_span(@badrecord[:troublemaker]) %>
   </div>

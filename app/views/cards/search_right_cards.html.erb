@@ -22,7 +22,7 @@
 
 <div class="page-header">
   <h3>
-    今天答对的卡片：<strong><%= @right_today_cards.count %>张</strong>！
+    <%= User.find(@the_who).name %>在<%= @the_day.begin.strftime("%F") %>答对的卡片：<strong><%= @right_today_cards.count %>张</strong>！
   </h3>
 </div>
 <% if @right_today_cards.any? %>
@@ -48,14 +48,4 @@
     <% end %>
   </tbody>
 </table>
-<% end %>
-
-<% if Master.find_by(id: current_user.id) %>
-<%= form_tag "/search_right_cards" do %>
-    <%= label_tag "用户" %>
-    <%= select_tag :user_id, options_for_select(User.all.map{|u|[u.id.to_s + " "+ u.name, u.id]})  %>
-    <%= label_tag "日期" %>
-      <%= select_date %>
-  <%= submit_tag "搜索", :class => 'btn btn-default' %>
-<% end %>
 <% end %>

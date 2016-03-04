@@ -89,7 +89,7 @@ class QuizItemsController < ApplicationController
   def right
     @quiz_item = QuizItem.find(params[:quiz_item_id])
     if Time.now > @quiz_item.quiz.created_at + @quiz_item.quiz.duration
-      redirect_to :back, notice: "测试时间已过，您不能更改测试记录。"
+      redirect_to quiz_items_url, notice: "测试时间已过，您不能更改测试记录。"
     else
       @quiz_item.update(isright: true)
       @next_quiz_item = QuizItem.where(quiz_id: @quiz_item.quiz_id, isright: nil).sample
@@ -104,7 +104,7 @@ class QuizItemsController < ApplicationController
   def wrong
     @quiz_item = QuizItem.find(params[:quiz_item_id])
     if Time.now > @quiz_item.quiz.created_at + @quiz_item.quiz.duration
-      redirect_to :back, notice: "测试时间已过，您不能更改测试记录。"
+      redirect_to quiz_items_url, notice: "测试时间已过，您不能更改测试记录。"
     else
       @quiz_item.update(isright: false)
       @next_quiz_item = QuizItem.where(quiz_id: @quiz_item.quiz_id, isright: nil).sample

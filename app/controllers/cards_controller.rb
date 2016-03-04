@@ -168,6 +168,14 @@ class CardsController < ApplicationController
     @right_today_cards = Card.where(id: right_today_history)
   end
 
+  # post /cards/search_right_cards
+  def search_right_cards
+    @the_who = params[:user_id]
+    @the_day = Time.new(params[:date][:year], params[:date][:month], params[:date][:day], 0, 0, 0).all_day
+    right_today_history = History.where(user_id: @the_who, modelname: "card", created_at: @the_day).collect{|h|h.entryid}.uniq
+    @right_today_cards = Card.where(id: right_today_history)
+  end
+
 
   # 在习题 的 index 界面中，将所有习题添加到卡片盒中。
   def add_to_cardbox
@@ -201,7 +209,7 @@ class CardsController < ApplicationController
   end
 
   def multiple_operate
-    if params[:commit] == "删除"
+    if params[:commit] == "删除所选"
       Card.where(id: params[:card_id]).destroy_all
       redirect_to :back, notice: "删除所选的多个卡片。"
     elsif params[:commit] == "追加"

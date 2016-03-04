@@ -117,7 +117,7 @@
         <td><%= cardbox.user.name %></td>
         <td><%= link_to cardbox.name, cardbox_path(cardbox) %></td>
         <% unless @lesson %>
-        <td><%= cardbox.lesson.title if cardbox.lesson_id %></td>
+          <td><%= number_with_precision(Catalog.find_by(textbook_id: session[:textbook_id], lesson_id: cardbox.lesson.id).serial, precision: 2) if  session[:textbook_id] %> <%= cardbox.lesson.title if cardbox.lesson_id %></td>
         <% end %>
         <% cardbox_degree = cardbox.cards.sum(:degree) %>
         <% total_degree += cardbox_degree %>

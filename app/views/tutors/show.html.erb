@@ -64,15 +64,23 @@
           <li role="separator" class="divider"></li>
           <% end %>
           <li>
-          <%= link_to "随机练习", new_evaluation_path %>
+          <% if @tutor.exercises.any? %>
+            <%= link_to "随机练习", new_evaluation_path %>
+          <% end %>
           </li>
           <% unless session[:discussion_id] %>
           <% if current_user.id == @tutor.user_id  %>
           <li>
             <%= link_to "为辅导添加习题", new_many_exercises_path, tabindex: 62 %>
+          </li>
+          <li>
             <%= link_to "管理辅导的习题", exercises_path, tabindex: 63 %>
           </li>
           <% end %>
+          <% end %>
+          <% if @tutor.exercises.any? %>
+            <li role="separator" class="divider"></li>
+            <li><%= link_to "将习题导出到卡片盒", export_exercises_to_cardbox_path %></li>
           <% end %>
       </ul>
     </div>
