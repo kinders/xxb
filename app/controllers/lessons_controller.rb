@@ -19,8 +19,10 @@ class LessonsController < ApplicationController
       h.modelname = "lesson"
       h.entryid = @lesson.id
     }
-    @textbook = Textbook.find_by(id: session[:textbook_id])
-    @catalog = Catalog.find_by(textbook_id: @textbook.id, lesson_id: @lesson.id)
+    if session[:textbook_id]
+      @textbook = Textbook.find_by(id: session[:textbook_id])
+      @catalog = Catalog.find_by(textbook_id: @textbook.id, lesson_id: @lesson.id)
+    end
     session[:lesson_id] = @lesson.id
     session[:tutor_id] = nil
     session[:teaching_id] = nil
@@ -129,6 +131,7 @@ class LessonsController < ApplicationController
     end
   end
 
+  # 快速将所有辅导页面组织成教法。
   def easy_teaching
     @lesson = Lesson.find(params[:lesson_id])
     teaching = Teaching.create { |t|
@@ -145,6 +148,15 @@ class LessonsController < ApplicationController
       }
     }
     redirect_to :back, notice: "#{teaching.title}已经成功创建。"
+  end
+
+  # 搜索所有课程的题目。
+  def search_lesson_title
+    @lessons = Lesson.where("title LIKE ?", "%" + params[:title] +"%" )
+    @search = params[:title]
+    unless @lessons.any?
+      redirect_to :back, notice: "暂时没有找到包含 #{@search} 的课文。"
+    end
   end
 
   private

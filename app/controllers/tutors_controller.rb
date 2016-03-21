@@ -13,6 +13,9 @@ class TutorsController < ApplicationController
       session[:tutor_id] = nil
       @lesson = Lesson.find_by(id: session[:lesson_id])
       @tutors = Tutor.where(lesson_id: session[:lesson_id]).order('difficulty')
+      unless @lesson
+        redirect_to root_path, notice: "无法找到相应的课程。"
+      end
     end
   end
 

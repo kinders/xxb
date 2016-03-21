@@ -149,6 +149,7 @@ Rails.application.routes.draw do
     get 'delete_picture'
     get 'easy_teaching'
   end
+  post '/search_lesson_title', to: 'lessons#search_lesson_title'
 
   devise_for :users, controllers: { sessions: "users/sessions" }
 

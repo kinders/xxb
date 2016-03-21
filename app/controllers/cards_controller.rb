@@ -168,6 +168,7 @@ class CardsController < ApplicationController
     @right_today_cards = Card.where(id: right_today_history)
   end
 
+  # 搜索某一天答对的卡片。
   # post /cards/search_right_cards
   def search_right_cards
     @the_who = params[:user_id]

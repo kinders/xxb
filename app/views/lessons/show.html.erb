@@ -68,7 +68,7 @@
         <li>
           <%= link_to "快速生成简易教案", lesson_easy_teaching_path(@lesson) %>
         </li>
-        <% if current_user.id == @lesson.user_id %>
+        <% if current_user.id == @lesson.user_id && @textbook %>
         <li role="separator" class="divider"></li>
         <% catalog_id = Catalog.find_by(textbook_id: @textbook.id, lesson_id: @lesson.id) %>
         <% if catalog_id %>

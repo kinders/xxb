@@ -82,7 +82,7 @@
         <td><%= link_to User.find(teacher.mentor).name, teacher_path(teacher) %></td>
         <td><%= teacher.created_at.strftime("%F") %></td>
         <td>
-          <% if current_user.id == teacher.user_id %>
+          <% if teacher.user_id == current_user.id %>
             <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_teacher_path(teacher), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
             <%= link_to t('.destroy', :default => t("helpers.links.destroy")),

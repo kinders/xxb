@@ -22,7 +22,7 @@
       <% cadre = Cadre.find(session[:cadre_id]) if session[:cadre_id] %>
       <% if cadre && cadre.team_id %>
         <% all_members = cadre.team.players.collect{|p| p.member} %>
-        <%= f.collection_check_boxes :troublemaker, all_members.any? ? all_members.order(:serial).collect { |m| [m.student, m.serial.to_s + " " + User.find(m.student).name]} : [], :first, :last, class: 'form-control' do |b| %>
+        <%= f.collection_check_boxes :troublemaker, all_members.any? ? all_members.collect { |m| [m.student, m.serial.to_s + " " + User.find(m.student).name]} : [], :first, :last, class: 'form-control' do |b| %>
           <div class="col-sm-3">
             <%= b.label + b.check_box  %>
           </div>
