@@ -3,10 +3,10 @@
 #   csv << [badrecord.id, User.find(badrecord.troublemaker).name, badrecord.troubletime.strftime("%F"), badrecord.subject.name, badrecord.description, badrecord.user.name]
 # end
 
-all_student = []
+# all_student = []
 @class_badrecords.group(:troublemaker).each do |maker|
   csv << [Member.find_by(classroom_id: @classroom.id, student: maker.troublemaker).serial.to_i.to_s + " " + User.find(maker.troublemaker).name]
-  all_student <<  Member.find_by(classroom_id: @classroom.id, student: maker.troublemaker).serial.to_i.to_s + " " + User.find(maker.troublemaker).name
+#   all_student <<  Member.find_by(classroom_id: @classroom.id, student: maker.troublemaker).serial.to_i.to_s + " " + User.find(maker.troublemaker).name
   csv << ["违规时间", "科目", "详细情况", "负责人", "序号", "签字通过"]
   i = 0
   @class_badrecords.where(troublemaker: maker.troublemaker).each do |badrecord|

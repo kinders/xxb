@@ -27,6 +27,19 @@
     <%= @classroom.name %> <small>的</small> 不良记录（共<%= @class_badrecords.count %>条）
   </h3>
 </div>
+<div class="panel panel-default">
+  <% troublemakers_ids = @class_badrecords.map{|m| m.troublemaker }.uniq %>
+  <% troublemakers = troublemakers_ids.map {|m|User.find(m).name} %> 
+  <% goodstudents_ids = @classroom.members.map {|m|m.student} - troublemakers_ids %>
+  <% goodstudents = goodstudents_ids.map {|m|User.find(m).name} %> 
+  <div class="panel-heading">名单总览（共 <%= troublemakers.length %> 人）</div>
+  <div class="panel-body">
+    <%= troublemakers.join(", ") %>
+    <hr>
+    <p>没有不良记录的学生（共<%= goodstudents_ids.length %>人）</p>
+    <%= goodstudents.join(", ") %>
+  </div>
+</div>
 
 <table class="table table-striped">
   <thead>
@@ -59,5 +72,5 @@
 </table>
 <%= link_to "下载csv文件（全班的不良记录）", "/download_csv.csv", class: "btn btn-default pull-right" %>
 <% else %>
-  <div class="well">您还不是班级的老师，无法查看全班的记录</div>
+  <div class="well">暂时没有不良记录。或者您还不是班级的老师，无法查看全班的记录</div>
 <% end %>

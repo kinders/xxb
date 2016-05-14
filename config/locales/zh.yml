@@ -42,6 +42,9 @@ zh-CN:
       tutor: "辅导"
       user: "用户"
       withdraw: "结款"
+      word_parser: "词汇分析"
+      word: "单词"
+      words_report: "用词报告"
     attributes:
       badrecord:
         id: "标识号"
@@ -421,6 +424,27 @@ zh-CN:
         memo: "备注"
         deleted_at: "删除时间"
         created_at: "结款时间"
+        updated_at: "更新时间"
+      word_parser:
+        id: "标识号"
+        word_id: "单词"
+        lesson_id: "课程"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      word:
+        id: "标识号"
+        name: "名称"
+        length: "长度"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      words_report:
+        id: "标识号"
+        lesson_id: "课程"
+        md: "消息摘要"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
         updated_at: "更新时间"
   date:
     abbr_day_names:

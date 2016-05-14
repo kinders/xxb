@@ -67,5 +67,6 @@ end
   gem 'tinymce-rails'
   gem 'tinymce-rails-langs'
   gem 'mathjax-rails'
+  gem 'pg'
 
 # Use Capistrano for deployment

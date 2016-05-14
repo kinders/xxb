@@ -1,0 +1,276 @@
+<%- model_class = WordsReport -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if @previous_words_report %>
+        <%= link_to t('.previous', default: t("helpers.links.previous")), 
+          words_report_path(@previous_words_report), 
+          class: 'btn btn-default', 
+          tabindex: 61, 
+          "data-toggle": "tooltip", "data-placement": "bottom", 
+          title: t('.previous', default: t("helpers.titles.previous"), model: t("activerecord.models.words_report")) %>
+      <% end %>
+      <% if @next_words_report %>
+        <%= link_to t('.next', default: t("helpers.links.next")), 
+          words_report_path(@next_words_report), 
+          class: 'btn btn-default', 
+          tabindex: 62, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.next', default: t("helpers.titles.next"), model: t("activerecord.models.words_report")) %>
+      <% end %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81, 
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%=t '.title', default: model_class.model_name.human.titleize %>：《<%= @words_report.lesson.title %>》</h3>
+</div>
+
+<div>
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li role="presentation" class="active"><a href="#word1" aria-controls="word1" role="tab" data-toggle="tab">按单字</a></li>
+    <li role="presentation"><a href="#word2" aria-controls="word2" role="tab" data-toggle="tab">按双字</a></li>
+    <li role="presentation"><a href="#word3" aria-controls="word3" role="tab" data-toggle="tab">按三字</a></li>
+    <li role="presentation"><a href="#word4" aria-controls="word4" role="tab" data-toggle="tab">按四字</a></li>
+    <li role="presentation"><a href="#word5" aria-controls="word5" role="tab" data-toggle="tab">按五字</a></li>
+    <li role="presentation"><a href="#word6" aria-controls="word6" role="tab" data-toggle="tab">按六字</a></li>
+    <li role="presentation"><a href="#word7" aria-controls="word7" role="tab" data-toggle="tab">按七字</a></li>
+    <li role="presentation"><a href="#word8" aria-controls="word8" role="tab" data-toggle="tab">按八字</a></li>
+    <li role="presentation"><a href="#de1" aria-controls="de1" role="tab" data-toggle="tab">含“的”</a></li>
+    <li role="presentation"><a href="#de2" aria-controls="de2" role="tab" data-toggle="tab">含“地”</a></li>
+    <li role="presentation"><a href="#de3" aria-controls="de3" role="tab" data-toggle="tab">含“得”</a></li>
+    <li role="presentation"><a href="#words" aria-controls="words" role="tab" data-toggle="tab">按词条</a></li>
+    <li role="presentation"><a href="#basic" aria-controls="basic" role="tab" data-toggle="tab">按文序</a></li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="basic">
+      <br>
+      <p>本文共有词条<%= @word_parsers.count %>个：</p>
+      <br>
+      <ul class="list-group">
+        <% @word_parsers.each_with_index do |word_parser, index| %>
+          <li class="list-group-item"><%= index + 1 %> <%= word_parser.word.name %></li>
+        <% end %>
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="words">
+      <br>
+      <p>本文按词条统计合并：</p>
+      <br>
+      <ul class="list-group">
+        <% @word_parsers_in_group.each_with_index do |word_parser, index| %>
+          <li class="list-group-item">
+            <span class="badge"><%= word_parser[1]%></span>
+            <%= index + 1 %> <%= Word.find(word_parser[0]).name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="word1">
+      <br>
+      <p>本文所用单字统计：</p>
+      <br>
+      <ul class="list-group">
+        <% i = 0 %>
+        <% @word_parsers_in_group.each do |word_parser| %>
+          <% word = Word.find(word_parser[0]) %>
+          <% next unless word.length == 1 %>
+          <% i = i + 1 %>
+          <li class="list-group-item">
+            <span class="badge"><%= word_parser[1]%></span>
+            <%= i %> <%= Word.find(word_parser[0]).name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="word2">
+      <br>
+      <p>本文所用双字统计：</p>
+      <br>
+      <ul class="list-group">
+        <% i = 0 %>
+        <% @word_parsers_in_group.each do |word_parser| %>
+          <% word = Word.find(word_parser[0]) %>
+          <% next unless word.length == 2 %>
+          <% i = i + 1 %>
+          <li class="list-group-item">
+            <span class="badge"><%= word_parser[1]%></span>
+            <%= i %> <%= Word.find(word_parser[0]).name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="word3">
+      <br>
+      <p>本文所用三字统计：</p>
+      <br>
+      <ul class="list-group">
+        <% i = 0 %>
+        <% @word_parsers_in_group.each do |word_parser| %>
+          <% word = Word.find(word_parser[0]) %>
+          <% next unless word.length == 3 %>
+          <% i = i + 1 %>
+          <li class="list-group-item">
+            <span class="badge"><%= word_parser[1]%></span>
+            <%= i %> <%= Word.find(word_parser[0]).name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="word4">
+      <br>
+      <p>本文所用四字统计：</p>
+      <br>
+      <ul class="list-group">
+        <% i = 0 %>
+        <% @word_parsers_in_group.each do |word_parser| %>
+          <% word = Word.find(word_parser[0]) %>
+          <% next unless word.length == 4 %>
+          <% i = i + 1 %>
+          <li class="list-group-item">
+            <span class="badge"><%= word_parser[1]%></span>
+            <%= i %> <%= Word.find(word_parser[0]).name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="word5">
+      <br>
+      <p>本文所用五字统计：</p>
+      <br>
+      <ul class="list-group">
+        <% i = 0 %>
+        <% @word_parsers_in_group.each do |word_parser| %>
+          <% word = Word.find(word_parser[0]) %>
+          <% next unless word.length == 5 %>
+          <% i = i + 1 %>
+          <li class="list-group-item">
+            <span class="badge"><%= word_parser[1]%></span>
+            <%= i %> <%= Word.find(word_parser[0]).name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="word6">
+      <br>
+      <p>本文所用六字统计：</p>
+      <br>
+      <ul class="list-group">
+        <% i = 0 %>
+        <% @word_parsers_in_group.each do |word_parser| %>
+          <% word = Word.find(word_parser[0]) %>
+          <% next unless word.length == 6 %>
+          <% i = i + 1 %>
+          <li class="list-group-item">
+            <span class="badge"><%= word_parser[1]%></span>
+            <%= i %> <%= Word.find(word_parser[0]).name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="word7">
+      <br>
+      <p>本文所用七字统计：</p>
+      <br>
+      <ul class="list-group">
+        <% i = 0 %>
+        <% @word_parsers_in_group.each do |word_parser| %>
+          <% word = Word.find(word_parser[0]) %>
+          <% next unless word.length == 7 %>
+          <% i = i + 1 %>
+          <li class="list-group-item">
+            <span class="badge"><%= word_parser[1]%></span>
+            <%= i %> <%= Word.find(word_parser[0]).name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="word8">
+      <br>
+      <p>本文所用八字统计：</p>
+      <br>
+      <ul class="list-group">
+        <% i = 0 %>
+        <% @word_parsers_in_group.each do |word_parser| %>
+          <% word = Word.find(word_parser[0]) %>
+          <% next unless word.length == 8 %>
+          <% i = i + 1 %>
+          <li class="list-group-item">
+            <span class="badge"><%= word_parser[1]%></span>
+            <%= i %> <%= Word.find(word_parser[0]).name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="de1">
+      <br>
+      <p>本文所包含“的”字统计：</p>
+      <br>
+      <ul class="list-group">
+        <% i = 0 %>
+        <% @word_parsers_in_group.each do |word_parser| %>
+          <% word = Word.find(word_parser[0]) %>
+          <% next unless word.name.match('的') %>
+          <% i = i + 1 %>
+          <li class="list-group-item">
+            <span class="badge"><%= word_parser[1]%></span>
+            <%= i %> <%= Word.find(word_parser[0]).name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="de2">
+      <br>
+      <p>本文所包含“地”字统计：</p>
+      <br>
+      <ul class="list-group">
+        <% i = 0 %>
+        <% @word_parsers_in_group.each do |word_parser| %>
+          <% word = Word.find(word_parser[0]) %>
+          <% next unless word.name.match('地') %>
+          <% i = i + 1 %>
+          <li class="list-group-item">
+            <span class="badge"><%= word_parser[1]%></span>
+            <%= i %> <%= Word.find(word_parser[0]).name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+    <div role="tabpanel" class="tab-pane" id="de3">
+      <br>
+      <p>本文所包含“得”字统计：</p>
+      <br>
+      <ul class="list-group">
+        <% i = 0 %>
+        <% @word_parsers_in_group.each do |word_parser| %>
+          <% word = Word.find(word_parser[0]) %>
+          <% next unless word.name.match('得') %>
+          <% i = i + 1 %>
+          <li class="list-group-item">
+            <span class="badge"><%= word_parser[1]%></span>
+            <%= i %> <%= Word.find(word_parser[0]).name %>
+          </li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<hr>
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:md) %>:</strong></dt>
+  <dd><%= @words_report.md %></dd>
+</dl>

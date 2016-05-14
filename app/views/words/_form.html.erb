@@ -1,0 +1,45 @@
+<%= form_for @word, html: { class: "form-horizontal word" } do |f| %>
+
+    <% if @word.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@word.errors.count, "error") %> 使得这个 word 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @word.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :name, class: 'form-control' %>
+    </div>
+    <%= error_span(@word[:name]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :length, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :length, class: 'form-control' %>
+    </div>
+    <%= error_span(@word[:length]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :deleted_at, class: 'form-control' %>
+    </div>
+    <%= error_span(@word[:deleted_at]) %>
+  </div>
+
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            words_path, class: 'btn btn-default' %>
+
+<% end %>

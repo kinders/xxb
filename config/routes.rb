@@ -1,5 +1,11 @@
 Rails.application.routes.draw do
 
+  resources :word_parsers
+
+  resources :words
+
+  resources :words_reports
+
   resources :examrooms
 
   resources :paperitems
@@ -148,6 +154,7 @@ Rails.application.routes.draw do
   resources :lessons do
     get 'delete_picture'
     get 'easy_teaching'
+    get 'words_analysis'
   end
   post '/search_lesson_title', to: 'lessons#search_lesson_title'
 

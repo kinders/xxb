@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160101142527) do
+ActiveRecord::Schema.define(version: 20160511161207) do
 
   create_table "badrecords", force: :cascade do |t|
     t.integer  "user_id"
@@ -698,5 +698,39 @@ ActiveRecord::Schema.define(version: 20160101142527) do
 
   add_index "withdraws", ["deleted_at"], name: "index_withdraws_on_deleted_at"
   add_index "withdraws", ["user_id"], name: "index_withdraws_on_user_id"
+
+  create_table "word_parsers", force: :cascade do |t|
+    t.integer  "word_id"
+    t.integer  "lesson_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "word_parsers", ["deleted_at"], name: "index_word_parsers_on_deleted_at"
+  add_index "word_parsers", ["lesson_id"], name: "index_word_parsers_on_lesson_id"
+  add_index "word_parsers", ["word_id"], name: "index_word_parsers_on_word_id"
+
+  create_table "words", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "length"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "words", ["deleted_at"], name: "index_words_on_deleted_at"
+  add_index "words", ["name"], name: "index_words_on_name"
+
+  create_table "words_reports", force: :cascade do |t|
+    t.integer  "lesson_id"
+    t.string   "md"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "words_reports", ["deleted_at"], name: "index_words_reports_on_deleted_at"
+  add_index "words_reports", ["lesson_id"], name: "index_words_reports_on_lesson_id"
 
 end

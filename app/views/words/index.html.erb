@@ -1,0 +1,66 @@
+<%- model_class = Word -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.new', default: t("helpers.links.new")), 
+        new_word_path,
+        class: 'btn btn-default', 
+        tabindex: 21,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%=t '.title', default: model_class.model_name.human.titleize %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:length) %></th>
+      <th><%= model_class.human_attribute_name(:deleted_at) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', default: t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @words.each do |word| %>
+      <tr>
+        <td><%= link_to word.id, word_path(word) %></td>
+        <td><%= word.name %></td>
+        <td><%= word.length %></td>
+        <td><%= word.deleted_at %></td>
+        <td><%= word.created_at.strftime("%F") %></td>
+        <td>
+          <%= link_to t('.edit', default: t("helpers.links.edit")),
+            edit_word_path(word), class: 'btn btn-default btn-xs',
+            "data-toggle": "tooltip", 
+            "data-placement": "bottom", 
+            title: t('.edit', default: [:"helpers.titles.edit"], model: model_class.model_name.human.titleize) %>
+          <%= link_to t('.destroy', default: t("helpers.links.destroy")),
+            word_path(word),
+            method: :delete,
+            data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
+            class: 'btn btn-xs btn-default', 
+            "data-toggle": "tooltip", 
+            "data-placement": "bottom", 
+            title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

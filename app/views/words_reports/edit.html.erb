@@ -1,0 +1,29 @@
+<%- model_class = WordsReport -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.back', default: t("helpers.links.back")), 
+        words_reports_path, 
+        class: 'btn btn-default', 
+        tabindex: 24,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.back', default: [:"helpers.titles.back"], model: model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%=t '.title', default: [:'helpers.titles.edit', 'Edit %{model}'], model: model_class.model_name.human.titleize %></h3>
+</div>
+<%= render partial: 'form' %>

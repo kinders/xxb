@@ -14,14 +14,13 @@ class LessonsController < ApplicationController
   # GET /lessons/1.json
   def show
     # 记录足迹
-    history = History.create { |h| 
-      h.user_id = current_user.id
-      h.modelname = "lesson"
-      h.entryid = @lesson.id
-    }
+    history = History.create(user_id: current_user.id, modelname: "lesson", entryid: @lesson.id)
     if session[:textbook_id]
       @textbook = Textbook.find_by(id: session[:textbook_id])
       @catalog = Catalog.find_by(textbook_id: @textbook.id, lesson_id: @lesson.id)
+    else
+      @catalogs = Catalog.where(lesson_id: @lesson.id)
+      @textbooks = Textbook.where(id: @catalogs.map{|c| c.textbook_id})
     end
     session[:lesson_id] = @lesson.id
     session[:tutor_id] = nil
@@ -157,6 +156,102 @@ class LessonsController < ApplicationController
     unless @lessons.any?
       redirect_to :back, notice: "暂时没有找到包含 #{@search} 的课文。"
     end
+  end
+
+  # 分析课文正文
+  # GET /lessons/1/words_analysis
+  def words_analysis
+    require 'digest/md5'
+    @lesson = Lesson.find(session[:lesson_id])
+    if @lesson.content == ""
+        redirect_to :back, notice: "该课程内容为空，无需分析"
+        return
+    end
+    new_md = Digest::MD5.hexdigest("@lesson.content")
+
+    # 检查是否存在分析报告，若有则分析文本是否改动
+    @words_report = WordsReport.find_by(lesson_id: @lesson.id)
+    if @words_report
+      if new_md == @words_report.md
+        redirect_to words_report_path(@words_report)
+        return
+      else
+        @lesson.word_parsers.destroy_all
+        @words_report.destroy
+        @words_report = WordsReport.create(lesson_id: @lesson.id, md: new_md)
+      end
+    else
+      @words_report = WordsReport.create(lesson_id: @lesson.id, md: new_md)
+    end
+
+    # 获取并精简文本
+    content = @lesson.content
+    content.gsub!(/<(\w|\/)+[^>]*>/, "") # 除去html标签
+    content.gsub!(/\r|\n|\f/, "") # 除去换行符
+
+    # 将括号里的语句提出来，单独作为一句附在内容之后。
+    # 当然如果是括号里还有括号这种写法，下面的分析会出错。可是谁让那个人乱写呢？
+    i = 1
+    while  match_data = /[(（\[【].+?[)）\]】]/.match(content)
+      content.sub!(/[(（\[【].+?[)）\]】]/, "") # 删除第一个括号里的内容。
+      another_sentence = match_data.to_s.gsub(/[()（）【】\[\]]/, "") # 清除括号
+      content << another_sentence + "。" # 添加到原有内容之后
+      i = i + 1
+    end
+    # p content
+    
+    # 将内容分割为句子，逐句分析
+    sentences = content.split(/[，。？！……——：]|([,.?!:] )/)
+    sentences.each do |sentence|
+      ## 将句子中的引号去除
+      sentence.gsub!(/['"“”]/, "")
+      ## 将句子中的非中文字符用空格隔开
+      next if sentence =~ /[,.?!:] /
+      chinese_pattern = /[\u4e00-\u9fa5]/
+      none_chinese_part = sentence.split(chinese_pattern).delete_if{|x| x == ""}
+      none_chinese_part.each do |p|
+        sentence.gsub!(/#{p}/, " "+p+" ").squeeze(" ")
+      end
+      ## 将句子分隔为词语
+      words = sentence.split(/\s+/).delete_if {|w| w == ""}
+      real_words = []
+      words.each do |word|   # 逐个词语分析
+        unless chinese_pattern.match(word)
+          real_words << word
+        else
+          letters = word.chars
+          real_words << letters
+        end
+      end
+      real_words.flatten!
+      ## 正式对句子中的单词进行解析。
+      a_size = real_words.size
+      a_size.times do |i|
+        a_size.times do |j|
+          words_with_blank =  real_words[i, j+1].join(" ")
+          words_with_blank.gsub!(/(?<=[\u4e00-\u9fa5]) (?=[\u4e00-\u9fa5])/, "") #去除中文中间多余的空格
+          # p words_with_blank
+          ### 至此完成拆分成最小单位
+          ### 下面计算单位的长度，有中文则按字计算，非中文按空格计算
+          if words_with_blank =~ /[\u4e00-\u9fa5]/
+            words_length = words_with_blank.size
+          else
+            words_length = words_with_blank.split(" ").size
+          end
+          #### 查找单词，找不到时创建word记录
+          word = Word.find_by(name: words_with_blank)
+          if word
+            @word = word
+          else
+            @word = Word.create(name: words_with_blank, length: words_length)
+          end
+          #### 登记本个用词分析
+          word_parser = WordParser.create(lesson_id: @lesson.id, word_id: @word.id)
+        end
+        a_size = a_size - 1
+      end
+    end
+    redirect_to words_report_url(@words_report), notice: "完成词语分析。"
   end
 
   private
