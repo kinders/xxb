@@ -83,7 +83,13 @@
         <% end %>
         <li role="separator" class="divider"></li>
         <li>
-        <%= link_to "查看用词分析（可能需要几十分钟）", lesson_words_analysis_path(@lesson.id) %>
+        <% unless @lesson.content == "" %>
+          <% if @words_report %>
+            <%= link_to "查看已有的用词报告", words_report_path(@words_report) %>
+          <% end %>
+          <% need_time = (@lesson.content_length/100)+1 %>
+          <%= link_to "进行用词分析（可能需要#{need_time}分钟）", lesson_words_analysis_path(@lesson.id), :data => { :confirm => "耗时#{need_time}分钟！您确定要进行分析吗？"} %>
+        <% end %>
         </li>
       </ul>
     </div>

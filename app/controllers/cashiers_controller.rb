@@ -78,7 +78,7 @@ class CashiersController < ApplicationController
 
   # 只有管理员才能进行master的相关操作
     def is_admin
-      unless current_user.id == 1
+      unless current_user.has_role? :admin
         redirect_to :back, notice: "您没有权限。"
       end
     end

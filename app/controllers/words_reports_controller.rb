@@ -12,8 +12,13 @@ class WordsReportsController < ApplicationController
   # GET /words_reports/1
   # GET /words_reports/1.json
   def show
-    @word_parsers = WordParser.where(lesson_id: @words_report.lesson_id)
-    @word_parsers_in_group = @word_parsers.group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+    session[:words_report_id] = @words_report.id
+    # begin_time = Time.now
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+    # @word_parsers_in_group = WordParser.includes(:word).where(lesson_id: @words_report.lesson_id).where("words.length": 1).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+    # @word_parsers_in_group = WordParser.includes(:words).where("words.length": 1)
+    # end_time = Time.now
+    # flash[:notice] = "查询耗时#{end_time - begin_time}秒" 
   end
 
   # GET /words_reports/new
@@ -64,6 +69,73 @@ class WordsReportsController < ApplicationController
       # format.json { head :no_content }
     # end
   # end
+
+  # GET /words_reports/1/show_word2
+  def show_word2
+    @words_report = WordsReport.find(session[:words_report_id])
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+  end
+
+  # GET /words_reports/1/show_word3
+  def show_word3
+    @words_report = WordsReport.find(session[:words_report_id])
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+  end
+
+  # GET /words_reports/1/show_word4
+  def show_word4
+    @words_report = WordsReport.find(session[:words_report_id])
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+  end
+
+  # GET /words_reports/1/show_word5
+  def show_word5
+    @words_report = WordsReport.find(session[:words_report_id])
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+  end
+
+  # GET /words_reports/1/show_word6
+  def show_word6
+    @words_report = WordsReport.find(session[:words_report_id])
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+  end
+
+  # GET /words_reports/1/show_word7
+  def show_word7
+    @words_report = WordsReport.find(session[:words_report_id])
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+  end
+
+  # GET /words_reports/1/show_de1
+  def show_de1
+    @words_report = WordsReport.find(session[:words_report_id])
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+  end
+
+  # GET /words_reports/1/show_de2
+  def show_de2
+    @words_report = WordsReport.find(session[:words_report_id])
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+  end
+
+  # GET /words_reports/1/show_de3
+  def show_de3
+    @words_report = WordsReport.find(session[:words_report_id])
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+  end
+
+  # GET /words_reports/1/show_all_words
+  def show_all_words
+    @words_report = WordsReport.find(session[:words_report_id])
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id)
+  end
+
+  # GET /words_reports/1/show_basic
+  def show_basic
+    @words_report = WordsReport.find(session[:words_report_id])
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

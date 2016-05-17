@@ -19,7 +19,6 @@
       <th><%= model_class.human_attribute_name(:reset_password_token) %></th>
       <th><%= model_class.human_attribute_name(:reset_password_sent_at) %></th>
       <th><%= model_class.human_attribute_name(:remember_created_at) %></th>
-      <th><%= model_class.human_attribute_name(:encrypted_password) %></th>
     </tr>
   </thead>
   <tbody>
@@ -61,7 +60,6 @@
         <td><%= user.reset_password_token %></td>
         <td><%= user.reset_password_sent_at %></td>
         <td><%= user.remember_created_at %></td>
-        <td><%= user.encrypted_password %></td>
       </tr>
     <% end %>
   </tbody>

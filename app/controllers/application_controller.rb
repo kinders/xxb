@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_user_active_time
-    if current_user && current_user.id != 1  # 系统管理员无需检查
+    if current_user && !(current_user.has_role? :admin)  # 系统管理员无需检查
       last_onboard = current_user.onboards.last
       # 不能通过检查的第一种情况：用户第一次登录,没有上线时间
       if last_onboard == nil  && current_user.active_time == 0

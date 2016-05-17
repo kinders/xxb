@@ -25,6 +25,7 @@ class LessonsController < ApplicationController
     session[:lesson_id] = @lesson.id
     session[:tutor_id] = nil
     session[:teaching_id] = nil
+    @words_report = WordsReport.find_by(lesson_id: @lesson.id)
     # 标准教学计划
     if session[:discussion_id]
       @discussion = Discussion.find(session[:discussion_id])
@@ -151,9 +152,18 @@ class LessonsController < ApplicationController
 
   # 搜索所有课程的题目。
   def search_lesson_title
-    @lessons = Lesson.where("title LIKE ?", "%" + params[:title] +"%" )
+    require 'digest/md5'
     @search = params[:title]
-    unless @lessons.any?
+    @lessons = Lesson.where("title LIKE ?", "%" + params[:title] +"%" )
+    @sentences = []
+    search_md = Digest::MD5.hexdigest(@search).bytes.map{|b|b=b-38}.join
+    word = Word.find_by(md1: search_md[0..7], md2: search_md[8..15], md3: search_md[16..23], md4: search_md[24..31], md5: search_md[32..39], md6: search_md[40..47], md7: search_md[48..55], md8: search_md[56..63])
+    if word
+    word.word_parsers.select(:sentence_id).uniq.each{ |w|
+      @sentences << Sentence.find(w.sentence_id)
+    }
+    elsif @lessons.any?
+    else
       redirect_to :back, notice: "暂时没有找到包含 #{@search} 的课文。"
     end
   end
@@ -162,21 +172,27 @@ class LessonsController < ApplicationController
   # GET /lessons/1/words_analysis
   def words_analysis
     require 'digest/md5'
+    # 检查是否空白内容
     @lesson = Lesson.find(session[:lesson_id])
     if @lesson.content == ""
         redirect_to :back, notice: "该课程内容为空，无需分析"
         return
     end
-    new_md = Digest::MD5.hexdigest("@lesson.content")
+    content = @lesson.title + "。"+ @lesson.content
+    # 获取并精简文本
+    content.gsub!(/<(\w|\/)+[^>]*>/, "") # 除去html标签
+    content.gsub!(/\r|\n|\f/, "") # 除去换行符
+    new_md = Digest::MD5.hexdigest(content)
 
     # 检查是否存在分析报告，若有则分析文本是否改动
     @words_report = WordsReport.find_by(lesson_id: @lesson.id)
     if @words_report
       if new_md == @words_report.md
-        redirect_to words_report_path(@words_report)
+        redirect_to words_report_url(@words_report), notice: "别惊讶，这篇课文已经分析过了。"
         return
       else
         @lesson.word_parsers.destroy_all
+        @lesson.sentences.destroy_all
         @words_report.destroy
         @words_report = WordsReport.create(lesson_id: @lesson.id, md: new_md)
       end
@@ -184,10 +200,7 @@ class LessonsController < ApplicationController
       @words_report = WordsReport.create(lesson_id: @lesson.id, md: new_md)
     end
 
-    # 获取并精简文本
-    content = @lesson.content
-    content.gsub!(/<(\w|\/)+[^>]*>/, "") # 除去html标签
-    content.gsub!(/\r|\n|\f/, "") # 除去换行符
+    @begin_at = Time.now
 
     # 将括号里的语句提出来，单独作为一句附在内容之后。
     # 当然如果是括号里还有括号这种写法，下面的分析会出错。可是谁让那个人乱写呢？
@@ -201,12 +214,14 @@ class LessonsController < ApplicationController
     # p content
     
     # 将内容分割为句子，逐句分析
-    sentences = content.split(/[，。？！……——：]|([,.?!:] )/)
+    sentences = content.split(/[，；。？！……——：]|([,;.?!:] )/)
     sentences.each do |sentence|
+      word_parser = []
       ## 将句子中的引号去除
       sentence.gsub!(/['"“”]/, "")
-      ## 将句子中的非中文字符用空格隔开
       next if sentence =~ /[,.?!:] /
+      @sentence = Sentence.create(lesson_id: @lesson.id, name: sentence)
+      ## 将句子中的非中文字符用空格隔开
       chinese_pattern = /[\u4e00-\u9fa5]/
       none_chinese_part = sentence.split(chinese_pattern).delete_if{|x| x == ""}
       none_chinese_part.each do |p|
@@ -232,6 +247,9 @@ class LessonsController < ApplicationController
           words_with_blank.gsub!(/(?<=[\u4e00-\u9fa5]) (?=[\u4e00-\u9fa5])/, "") #去除中文中间多余的空格
           # p words_with_blank
           ### 至此完成拆分成最小单位
+          ### 计算字符串的md值作为索引
+          words_with_blank_id = Digest::MD5.hexdigest(words_with_blank).bytes.map{|b|b=b-38}.join
+          
           ### 下面计算单位的长度，有中文则按字计算，非中文按空格计算
           if words_with_blank =~ /[\u4e00-\u9fa5]/
             words_length = words_with_blank.size
@@ -239,19 +257,25 @@ class LessonsController < ApplicationController
             words_length = words_with_blank.split(" ").size
           end
           #### 查找单词，找不到时创建word记录
-          word = Word.find_by(name: words_with_blank)
+          # word = Word.find_by(name: words_with_blank)
+          word = Word.find_by(md1: words_with_blank_id[0..7], md2: words_with_blank_id[8..15], md3: words_with_blank_id[16..23], md4: words_with_blank_id[24..31], md5: words_with_blank_id[32..39], md6: words_with_blank_id[40..47], md7: words_with_blank_id[48..55], md8: words_with_blank_id[56..63])
           if word
             @word = word
           else
-            @word = Word.create(name: words_with_blank, length: words_length)
+            # @word = Word.create(name: words_with_blank, length: words_length)
+            @word = Word.create(name: words_with_blank, length: words_length, md1: words_with_blank_id[0..7], md2: words_with_blank_id[8..15], md3: words_with_blank_id[16..23], md4: words_with_blank_id[24..31], md5: words_with_blank_id[32..39], md6: words_with_blank_id[40..47], md7: words_with_blank_id[48..55], md8: words_with_blank_id[56..63])
           end
           #### 登记本个用词分析
-          word_parser = WordParser.create(lesson_id: @lesson.id, word_id: @word.id)
+          # word_parser = WordParser.create(lesson_id: @lesson.id, sentence_id: @sentence.id, word_id: @word.id)
+          word_parser << {lesson_id: @lesson.id, sentence_id: @sentence.id, word_id: @word.id}
         end
         a_size = a_size - 1
       end
+      WordParser.create(word_parser)
     end
-    redirect_to words_report_url(@words_report), notice: "完成词语分析。"
+    @end_at = Time.now
+    @duaration = @end_at - @begin_at
+    redirect_to words_report_url(@words_report), notice: "让您久等了。本次分析开始于#{@begin_at}，结束于#{@end_at}。用时#{@duaration.to_i/60}分#{@duaration.to_i.modulo(60)}秒。"
   end
 
   private

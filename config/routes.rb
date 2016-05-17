@@ -1,10 +1,26 @@
 Rails.application.routes.draw do
 
+  resources :sentences
+
   resources :word_parsers
 
-  resources :words
+  resources :words do
+    get "change_meanful"
+  end
 
-  resources :words_reports
+  resources :words_reports do
+    get 'show_word2'
+    get 'show_word3'
+    get 'show_word4'
+    get 'show_word5'
+    get 'show_word6'
+    get 'show_word7'
+    get 'show_de1'
+    get 'show_de2'
+    get 'show_de3'
+    get 'show_basic'
+    get 'show_all_words'
+  end
 
   resources :examrooms
 

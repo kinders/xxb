@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160511161207) do
+ActiveRecord::Schema.define(version: 20160515192946) do
 
   create_table "badrecords", force: :cascade do |t|
     t.integer  "user_id"
@@ -567,6 +567,17 @@ ActiveRecord::Schema.define(version: 20160511161207) do
   add_index "sectionalizations", ["deleted_at"], name: "index_sectionalizations_on_deleted_at"
   add_index "sectionalizations", ["user_id"], name: "index_sectionalizations_on_user_id"
 
+  create_table "sentences", force: :cascade do |t|
+    t.integer  "lesson_id"
+    t.string   "name"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "sentences", ["deleted_at"], name: "index_sentences_on_deleted_at"
+  add_index "sentences", ["lesson_id"], name: "index_sentences_on_lesson_id"
+
   create_table "subjects", force: :cascade do |t|
     t.string   "name"
     t.datetime "deleted_at"
@@ -703,12 +714,14 @@ ActiveRecord::Schema.define(version: 20160511161207) do
     t.integer  "word_id"
     t.integer  "lesson_id"
     t.datetime "deleted_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "sentence_id"
   end
 
   add_index "word_parsers", ["deleted_at"], name: "index_word_parsers_on_deleted_at"
   add_index "word_parsers", ["lesson_id"], name: "index_word_parsers_on_lesson_id"
+  add_index "word_parsers", ["sentence_id"], name: "index_word_parsers_on_sentence_id"
   add_index "word_parsers", ["word_id"], name: "index_word_parsers_on_word_id"
 
   create_table "words", force: :cascade do |t|
@@ -717,10 +730,26 @@ ActiveRecord::Schema.define(version: 20160511161207) do
     t.datetime "deleted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer  "md1"
+    t.integer  "md2"
+    t.integer  "md3"
+    t.integer  "md4"
+    t.boolean  "is_meanful"
+    t.integer  "md5"
+    t.integer  "md6"
+    t.integer  "md7"
+    t.integer  "md8"
   end
 
   add_index "words", ["deleted_at"], name: "index_words_on_deleted_at"
-  add_index "words", ["name"], name: "index_words_on_name"
+  add_index "words", ["md1"], name: "index_words_on_md1"
+  add_index "words", ["md2"], name: "index_words_on_md2"
+  add_index "words", ["md3"], name: "index_words_on_md3"
+  add_index "words", ["md4"], name: "index_words_on_md4"
+  add_index "words", ["md5"], name: "index_words_on_md5"
+  add_index "words", ["md6"], name: "index_words_on_md6"
+  add_index "words", ["md7"], name: "index_words_on_md7"
+  add_index "words", ["md8"], name: "index_words_on_md8"
 
   create_table "words_reports", force: :cascade do |t|
     t.integer  "lesson_id"

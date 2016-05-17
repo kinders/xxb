@@ -11,8 +11,8 @@ class WordsController < ApplicationController
 
   # GET /words/1
   # GET /words/1.json
-  # def show
-  # end
+  def show
+  end
 
   # GET /words/new
   # def new
@@ -63,6 +63,19 @@ class WordsController < ApplicationController
     # end
   # end
 
+  # GET /words/1/change_meanful
+  def change_meanful
+    @word = Word.find(params[:word_id])
+    if @word.is_meanful
+      @word.update(is_meanful: nil)
+      status = "无意义词汇"
+    else
+      @word.update(is_meanful: true)
+      status = "有意义词汇"
+    end
+    redirect_to :back, notice: "“#{@word.name}”已经被标记为#{status}。"
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_word
@@ -71,6 +84,6 @@ class WordsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def word_params
-      params.require(:word).permit(:name, :length, :deleted_at)
+      params.require(:word).permit(:name, :length, :deleted_at, :is_meanful)
     end
 end

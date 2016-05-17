@@ -141,7 +141,25 @@ Select All
 
 ===  初始化数据库 (Database initialization)
 
-* 暂无。
+==== 设置管理员
+
+将第一个用户自动设置为管理员的做法司空常见，但这种做法显然不够严谨。
+基于系统安全，开发人员抛弃了这种做法。
+当然这么做需要付出点代价：
+
+- 首先进入本应用的目录，在终端（Terminal）里打开rails后台：`$ rails console`
+- 在后台输入：
+
+    user = User.find(who_id)  # who_id 就是拥有管理员权限的那个人的用户id。
+    user.add_role :admin
+
+于是后台会弹出类似如下的提示，就表明添加管理员权限成功了：
+
+    (0.0ms)  begin transaction
+    SQL (0.2ms)  INSERT INTO "users_roles" ("user_id", "role_id") VALUES (?, ?)  [["user_id", 2], ["role_id", 1]]
+     (130.3ms)  commit transaction
+
+- 关闭后台：`exit`，关闭终端，就可以了。
 
 ===  代码测试 (How to run the test suite)
 

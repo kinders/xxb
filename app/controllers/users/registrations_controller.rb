@@ -1,7 +1,7 @@
 class Users::RegistrationsController < Devise::RegistrationsController
   skip_before_action :check_user_active_time
-# before_filter :configure_sign_up_params, only: [:create]
-# before_filter :configure_account_update_params, only: [:update]
+  # before_filter :configure_sign_up_params, only: [:create]
+  # before_filter :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
   # def new
@@ -10,7 +10,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   # def create
-  #   super
+    # super
   # end
 
   # GET /resource/edit
@@ -41,7 +41,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # You can put the params you want to permit in the empty array.
   # def configure_sign_up_params
-  #   devise_parameter_sanitizer.for(:sign_up) << :attribute
+   #  devise_parameter_sanitizer.for(:sign_up) << :attribute
   # end
 
   # You can put the params you want to permit in the empty array.

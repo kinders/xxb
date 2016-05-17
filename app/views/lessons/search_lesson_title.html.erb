@@ -8,8 +8,9 @@
   </div>
 </div>
 
+<% if @lessons.any? %>
 <div class="page-header">
-  <h3>查看所有包含 <%= @search %> 的课程</h3>
+  <h3><small>包含</small> <%= @search %> <small>的课程：</small></h3>
 </div>
 <table class="table table-striped">
   <thead>
@@ -39,5 +40,30 @@
     <% end %>
   </tbody>
 </table>
+<% end %>
 <hr>
+
+<% if @sentences.any? %>
+<div class="page-header">
+  <h3><small>包含</small> <%= @search %> <small>的语句：</small></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th>句子</th>
+      <th>出处</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sentences.each_with_index do |sentence, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= sentence.name %></td>
+        <td><%= link_to sentence.lesson.title, lesson_path(sentence.lesson) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
 

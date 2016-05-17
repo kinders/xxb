@@ -67,7 +67,11 @@ class UsersController < ApplicationController
 
   def set_vip_user
     @user = User.find(params[:user_id])
-    last_receipt_balance = Receipt.last.balance || 0
+    if Receipt.last
+      last_receipt_balance = Receipt.last.balance
+    else
+      last_receipt_balance = 0
+    end
     @receipt = Receipt.new{ |r|
       r.user_id = 1
       r.active_time_before_charge = @user.active_time
