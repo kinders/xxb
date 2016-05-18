@@ -21,6 +21,8 @@ Rails.application.routes.draw do
     get 'show_basic'
     get 'show_all_words'
   end
+  get 'compare_with_another', to: "words_reports#compare_with_another"
+  post 'compare_report', to: "words_reports#compare_report"
 
   resources :examrooms
 

@@ -1,0 +1,71 @@
+<%- model_class = WordsReport -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), words_report_url(@words_report.id), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.words_report")) %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81, 
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3>课文比较</h3>
+</div>
+
+<!-- 比较概述 -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">比较概述</h3>
+  </div>
+  <div class="panel-body">
+    <p>《<%= @lesson.title %>》相同部分占全文比例：<%= number_to_percentage(@same_in_lesson_1, precision: 2) %></p>
+    <p>《<%= @lesson_2.title %>》相同部分占全文比例：<%= number_to_percentage(@same_in_lesson_2, precision: 2) %></p>
+  </div>
+</div>
+<!-- 相同部分 -->
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">相同部分（<%= @same_words.size %>个）</h3>
+  </div>
+  <div class="panel-body">
+    <% @same_words.each_with_index do |word, index| %>
+      (<%= index + 1 %>)<%= Word.find(word).name %>,  
+    <% end %>
+  </div>
+</div>
+
+<!-- 不同部分 -->
+<div class="row">
+  <div calss="col-xs-6 col-sm-6 col-md-6">
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">《<%= @lesson.title %>》独有部分（<%= @diff_words_from_lesson1.size %>个）：</h3>
+  </div>
+  <div class="panel-body">
+    <% @diff_words_from_lesson1.each_with_index do |word, index| %>
+      (<%= index + 1 %>)<%= Word.find(word).name %>,  
+    <% end %>
+  </div>
+</div>
+  </div>
+  <div calss="col-xs-6 col-sm-6 col-md-6">
+<div class="panel panel-default">
+  <div class="panel-heading">
+    <h3 class="panel-title">《<%= @lesson_2.title %>》独有部分（<%= @diff_words_from_lesson2.size %>个）：</h3>
+  </div>
+  <div class="panel-body">
+    <% @diff_words_from_lesson2.each_with_index do |word, index| %>
+      (<%= index + 1 %>)<%= Word.find(word).name %>,  
+    <% end %>
+  </div>
+</div>
+  </div>
+</div>

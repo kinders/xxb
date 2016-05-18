@@ -136,6 +136,31 @@ class WordsReportsController < ApplicationController
     @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
   end
 
+  # GET /words_reports/compare_with_another
+  def compare_with_another
+    # @words_report = WordsReport.find(session[:words_report_id])
+    # @lesson = Lesson.find(@words_report.lesson_id)
+    @lesson = Lesson.find(session[:lesson_id])
+  end
+
+  # GET /words_reports/compare_report
+  def compare_report
+    @words_report = WordsReport.find(session[:words_report_id])
+    @lesson = Lesson.find(session[:lesson_id])
+    @lesson_2 = Lesson.find(params[:lesson_id])
+    unless WordsReport.find_by(lesson_id: params[:lesson_id])
+      redirect_to :back, notice: "还未对《#{@lesson_2.title}》进行分析，暂时无法比较。"
+      return
+    end
+    words_from_lesson_1 = WordParser.where(lesson_id: @lesson.id).map{|word_parser|word_parser.word_id}
+    words_from_lesson_2 = WordParser.where(lesson_id: @lesson_2.id).map{|word_parser|word_parser.word_id}
+    @same_words = words_from_lesson_1 & words_from_lesson_2
+    @diff_words_from_lesson1 =  words_from_lesson_1 - words_from_lesson_2
+    @diff_words_from_lesson2 =  words_from_lesson_2 - words_from_lesson_1
+    @same_in_lesson_1 = @same_words.size.to_f * 100  / (@diff_words_from_lesson1.size + @same_words.size)
+    @same_in_lesson_2 = @same_words.size.to_f * 100  / (@diff_words_from_lesson2.size + @same_words.size)
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

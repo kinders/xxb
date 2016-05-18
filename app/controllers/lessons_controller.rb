@@ -278,6 +278,7 @@ class LessonsController < ApplicationController
     redirect_to words_report_url(@words_report), notice: "让您久等了。本次分析开始于#{@begin_at}，结束于#{@end_at}。用时#{@duaration.to_i/60}分#{@duaration.to_i.modulo(60)}秒。"
   end
 
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_lesson

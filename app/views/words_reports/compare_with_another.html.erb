@@ -1,0 +1,24 @@
+<%- model_class = WordsReport -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3>与《<%= @lesson.title %>》比较：</h3>
+</div>
+
+<%= form_tag "/compare_report" %>
+  <div class="control-group">
+    <%= label_tag "请先选择一篇课文：" %>
+    <div class="controls">
+      <%= select_tag :lesson_id, options_from_collection_for_select(Lesson.all, "id", "title"), class: "form-control" %>
+    </div>
+  </div>
+  <br>
+  <%= submit_tag "比较", class: "btn btn-primary" %>
+
