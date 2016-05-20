@@ -172,6 +172,7 @@ class LessonsController < ApplicationController
   # GET /lessons/1/words_analysis
   def words_analysis
     require 'digest/md5'
+    begin
     # 检查是否空白内容
     @lesson = Lesson.find(session[:lesson_id])
     if @lesson.content == ""
@@ -276,6 +277,12 @@ class LessonsController < ApplicationController
     @end_at = Time.now
     @duaration = @end_at - @begin_at
     redirect_to words_report_url(@words_report), notice: "让您久等了。本次分析开始于#{@begin_at}，结束于#{@end_at}。用时#{@duaration.to_i/60}分#{@duaration.to_i.modulo(60)}秒。"
+    rescue
+      respond_to do |format|
+        format.html { redirect_to :back, notice: "对课文解析出错。建议您将情况通过“建议”向管理员反映。"}
+        format.json { head :no_content }
+      end
+    end
   end
 
 

@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   resources :sentences
 
   resources :word_parsers
+  get '/choose_dictionary', to: 'words#choose_dictionary'
+  post '/load_dictionary', to: 'words#load_dictionary'
 
   resources :words do
     get "change_meanful"
