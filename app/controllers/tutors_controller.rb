@@ -3,6 +3,7 @@ class TutorsController < ApplicationController
   load_and_authorize_resource
   before_action :set_tutor, only: [:show, :edit, :update, :destroy]
   before_action :be_a_master, except: [:index, :show]
+  autocomplete :lesson, :title, full: true, :display_value => :funky_method, extra_data: [:id]
 
   # GET /tutors
   # GET /tutors.json
@@ -144,6 +145,28 @@ class TutorsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  # GET /tutors/new_link_to_lesson
+  def new_link_to_lesson
+    @lesson = Lesson.find_by(id: session[:lesson_id])
+  end
+
+  # POST /tutors/create_link_to_lesson
+  def create_link_to_lesson
+    @lesson = Lesson.find_by(id: session[:lesson_id])
+    unless @lesson
+      redirect_to 'root_path', notice: "未指定课程，无法创建辅导。"
+      return
+    end
+    @target = Lesson.find_by(id: params[:lesson_id])
+    @tutor = Tutor.create(title: @target.title, lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
+    respond_to do |format|
+      format.html { redirect_to @tutor, notice: "辅导《#{@tutor.title}》已经成功生成。" }
+      format.json { head :no_content }
+    end
+
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

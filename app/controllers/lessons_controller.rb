@@ -285,6 +285,19 @@ class LessonsController < ApplicationController
     end
   end
 
+  # Get /lessons/1/as_tutor_link
+  def as_tutor_link
+    @origin_lesson = Lesson.find_by(id: session[:lesson_id])
+    unless @origin_lesson
+      redirect_to :back, notice: "无法确定辅导关联的课文。"
+      return
+    end
+    @lesson = Lesson.find_by(id: params[:lesson_id])
+    unless @lesson
+      redirect_to :back, notice: "无法找到辅导关联的课文。"
+      return
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

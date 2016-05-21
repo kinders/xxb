@@ -6,6 +6,14 @@
     <div class="btn-group" role="btn-group" arial-label="manage">
       <%= link_to t('.new', :default => t("helpers.links.new")), new_tutor_url, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
     </div>
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" tabindex="61", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><%= link_to "创建链接到其他课文的辅导", tutor_new_link_to_lesson_path %></li>
+      </ul>
+    </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <%= link_to t('.up', :default => t("helpers.links.up")), lesson_url(@lesson), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.lesson")) %>
       <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>

@@ -168,13 +168,18 @@ Rails.application.routes.draw do
   post '/practices/create_practices_in_batch', to: 'practices#create_practices_in_batch'
 
   resources :tutors do
+    get :autocomplete_lesson_title, on: :collection
     get 'delete_picture1'
     get 'delete_picture2'
   end
+  get '/tutor/new_link_to_lesson', to: 'tutors#new_link_to_lesson'
+  post '/tutor/create_link_to_lesson', to: 'tutors#create_link_to_lesson'
+
   resources :lessons do
     get 'delete_picture'
     get 'easy_teaching'
     get 'words_analysis'
+    get 'as_tutor_link'
   end
   post '/search_lesson_title', to: 'lessons#search_lesson_title'
 

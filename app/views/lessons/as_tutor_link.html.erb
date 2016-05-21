@@ -1,0 +1,23 @@
+<%- model_class = Lesson -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 导航按钮 -->
+    <div class="btn-group pull-right" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), lesson_path(session[:lesson_id]), class: 'btn btn-default', tabindex: 83, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.lesson")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+
+<div class="page-header">
+  <h1><%= number_with_precision(@catalog.serial, precision: 2) if @catalog %> <%= @lesson.title %></h1>
+  <p class="text-right">字数：<%= @lesson.content_length %></p>
+</div>
+<% if @lesson.picture_file_name %>
+  <%= image_tag @lesson.picture.url, class: "img-responsive center-block"  %>
+  <hr>
+<% end %>
+<div class="lesson_paragraph"><%= sanitize(@lesson.content) %></div>
+

@@ -16,7 +16,11 @@
 !/log/.keep
 /tmp
 
+# 忽略数据库配置文件，因为它包含了密码
+/config/database.yml
+
 # 一些资料
 /public/system
+/public/data_import
 xxb.ods
-rvmrc
+/rvmrc
