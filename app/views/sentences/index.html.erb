@@ -90,19 +90,11 @@
 
 <p>其他可用的分析：</p>
 <div class="btn-group" role="group">
-  <%= link_to "单字", words_report_path(@lesson.words_report), class: 'btn btn-default' %>
-  <%= link_to "双字", words_report_show_word2_path(@lesson.words_report), class: 'btn btn-default' %>
-  <%= link_to "三字", words_report_show_word3_path(@lesson.words_report), class: 'btn btn-default' %>
-  <%= link_to "四字", words_report_show_word4_path(@lesson.words_report), class: 'btn btn-default' %>
-  <%= link_to "五字", words_report_show_word5_path(@lesson.words_report), class: 'btn btn-default' %>
-  <%= link_to "六字", words_report_show_word6_path(@lesson.words_report), class: 'btn btn-default' %>
-  <%= link_to "七字", words_report_show_word7_path(@lesson.words_report), class: 'btn btn-default' %>
+  <%= link_to "全部", words_report_path(@lesson.words_report), class: 'btn btn-default' %>
   <%= link_to "的字", words_report_show_de1_path(@lesson.words_report), class: 'btn btn-default' %>
   <%= link_to "地字", words_report_show_de2_path(@lesson.words_report), class: 'btn btn-default' %>
   <%= link_to "得字", words_report_show_de3_path(@lesson.words_report), class: 'btn btn-default' %>
-  <%= link_to "全部", words_report_show_all_words_path(@lesson.words_report), class: 'btn btn-default' %>
   <%= link_to "基本", words_report_show_basic_path(@lesson.words_report), class: 'btn btn-default' %>
-  <%= link_to "句子", sentences_path, class: 'btn btn-default' %>
 </div>
 
 <hr>
@@ -122,5 +114,6 @@
     <% end %>
   </tbody>
 </table>
+<%= paginate @sentences %>
 
 <% end %>

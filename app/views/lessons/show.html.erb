@@ -83,6 +83,10 @@
         <% end %>
         <li role="separator" class="divider"></li>
         <li>
+        <%= link_to "转为另一课程的辅导", lesson_as_tutor_url  %>
+        </li>
+        <li role="separator" class="divider"></li>
+        <li>
         <% unless @lesson.content == "" %>
           <% if @words_report %>
             <%= link_to "查看已有的用词报告", words_report_path(@words_report) %>

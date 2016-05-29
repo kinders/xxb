@@ -3,6 +3,7 @@ class LessonsController < ApplicationController
   load_and_authorize_resource
   before_action :set_lesson, only: [:show, :edit, :update, :destroy]
   before_action :be_a_master, except: [:index, :show]
+  autocomplete :lesson, :title, full: true, :display_value => :funky_method, extra_data: [:id]
 
   # GET /lessons
   # GET /lessons.json
@@ -278,6 +279,9 @@ class LessonsController < ApplicationController
     @duaration = @end_at - @begin_at
     redirect_to words_report_url(@words_report), notice: "让您久等了。本次分析开始于#{@begin_at}，结束于#{@end_at}。用时#{@duaration.to_i/60}分#{@duaration.to_i.modulo(60)}秒。"
     rescue
+      @lesson.word_parsers.destroy_all
+      @lesson.sentences.destroy_all
+      @words_report.destroy
       respond_to do |format|
         format.html { redirect_to :back, notice: "对课文解析出错。建议您将情况通过“建议”向管理员反映。"}
         format.json { head :no_content }
@@ -296,6 +300,32 @@ class LessonsController < ApplicationController
     unless @lesson
       redirect_to :back, notice: "无法找到辅导关联的课文。"
       return
+    end
+  end
+
+  # GET /lesson/as_tutor
+  def as_tutor
+    @lesson = Lesson.find(session[:lesson_id])
+  end
+
+  # POST /lesson/to_tutor
+  def to_tutor
+    @lesson = Lesson.find_by(id: session[:lesson_id])
+    unless @lesson
+      redirect_to 'root_path', notice: "未指定课程，无法创建辅导。"
+      return
+    end
+    @target = Lesson.find_by(id: params[:lesson_id])
+    if @lesson.id == @target.id
+      redirect_to :back, notice: "请重新指定一片课文。"
+      return
+    end
+    @tutor = Tutor.create(title: @lesson.title, lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
+    @another_tutor = Tutor.create(title: @target.title, lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
+    session[:lesson_id] = @target.id
+    respond_to do |format|
+      format.html { redirect_to @tutor, notice: "辅导《#{@tutor.title}》已经成功生成。" }
+      format.json { head :no_content }
     end
   end
 

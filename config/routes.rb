@@ -11,17 +11,11 @@ Rails.application.routes.draw do
   end
 
   resources :words_reports do
-    get 'show_word2'
-    get 'show_word3'
-    get 'show_word4'
-    get 'show_word5'
-    get 'show_word6'
-    get 'show_word7'
+    get 'show_word_n'
     get 'show_de1'
     get 'show_de2'
     get 'show_de3'
     get 'show_basic'
-    get 'show_all_words'
   end
   get 'compare_with_another', to: "words_reports#compare_with_another"
   post 'compare_report', to: "words_reports#compare_report"
@@ -176,12 +170,15 @@ Rails.application.routes.draw do
   post '/tutor/create_link_to_lesson', to: 'tutors#create_link_to_lesson'
 
   resources :lessons do
+    get :autocomplete_lesson_title, on: :collection
     get 'delete_picture'
     get 'easy_teaching'
     get 'words_analysis'
     get 'as_tutor_link'
   end
   post '/search_lesson_title', to: 'lessons#search_lesson_title'
+  get '/lesson/as_tutor', to: 'lessons#as_tutor'
+  post '/lesson/to_tutor', to: 'lessons#to_tutor'
 
   devise_for :users, controllers: { sessions: "users/sessions" }
 

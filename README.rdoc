@@ -95,19 +95,20 @@
 
 * 更换内核
 Ckeditor的内核比较陈旧，并且没有数学公式的编辑功能，可以将它替换掉。
-ckeditor的自定义方式见：wwww.ckeditor.com/builder，选择需要的插件即可下载替换。编辑数学公式则需要`Mathematical Formulas`插件。
-替换路径为`～/.rvm/gems/ckeditor-x-x-x/vendor/assets/javascripts/`。
+ckeditor的自定义方式见：`wwww.ckeditor.com/builder`，选择需要的插件即可下载替换。编辑数学公式则需要`Mathematical Formulas`插件。
+替换路径为`～/.rvm/gems/ruby/gems/ckeditor-x-x-x/vendor/assets/javascripts/`。
 
 * 推荐安装插件有：
-Color Button
-Enhanced Image
-Find / Replace
-Font Size and Family
-Image Rotate
-Justify
-Mathematical Formulas
-Print
-Select All
+
+- Color Button
+- Enhanced Image
+- Find / Replace
+- Font Size and Family
+- Image Rotate
+- Justify
+- Mathematical Formulas
+- Print
+- Select All
 
 * 配置ckeditor
 具体位置是：~/.rvm/gems/ruby/gems/ckeditor/app/assets/javascripts/ckeditor/config.js
@@ -116,7 +117,8 @@ Select All
 
 第二，工具栏：
   用下面这一段更换gem包中原有的代码，不要依赖app里的config.js，那会导致图片上传功能消失的bug。
-  config.toolbar = [
+
+    config.toolbar = [
     { name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: ['Undo', 'Redo', '-', 'SelectAll', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord' ] },
     { name: 'editing', groups: [ 'find', 'selection', 'spellchecker' ], items: [ 'Find', 'Replace', '-', 'Scayt' ] },
     // { name: 'forms', items: [ 'Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField' ] },
@@ -134,6 +136,16 @@ Select All
 * 禁用Ckeditor的图片服务器功能。
 在`～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/plugins/`路径下有`image/dialogs/image.js`、`link/dialogs/link.js`和`flash/dialogs/flash.js`三个文件，
 将三个文件里面`browseserver`和`filebrowsers`的`style`改为`display: none;`
+
+
+* 删除sample文件。
+如果没有删除sample文件，部署时预编译assets就会出错。
+需要删除的文件夹：
+
+- `～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/samples/`
+- `～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/skins/xxx/sample/`
+- `～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/skins/xxx/scss/`
+- `～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/skins/xxx/.temp/`
 
 ===  创建数据库(Database creation)
 

@@ -13,12 +13,11 @@ class WordsReportsController < ApplicationController
   # GET /words_reports/1.json
   def show
     session[:words_report_id] = @words_report.id
-    # begin_time = Time.now
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
-    # @word_parsers_in_group = WordParser.includes(:word).where(lesson_id: @words_report.lesson_id).where("words.length": 1).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
-    # @word_parsers_in_group = WordParser.includes(:words).where("words.length": 1)
-    # end_time = Time.now
-    # flash[:notice] = "查询耗时#{end_time - begin_time}秒" 
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).page(params[:page]).per(10)
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
+    @longest = Word.where(id: all_words).maximum("length")
+    # word_parsers_in_group = WordParser.includes("word").where(lesson_id: @words_report.lesson_id, words: {length: 1}).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+    # @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
   end
 
   # GET /words_reports/new
@@ -70,70 +69,50 @@ class WordsReportsController < ApplicationController
     # end
   # end
 
-  # GET /words_reports/1/show_word2
-  def show_word2
+  # GET /words_reports/1/show_word_n
+  def show_word_n
     @words_report = WordsReport.find(session[:words_report_id])
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
-  end
-
-  # GET /words_reports/1/show_word3
-  def show_word3
-    @words_report = WordsReport.find(session[:words_report_id])
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
-  end
-
-  # GET /words_reports/1/show_word4
-  def show_word4
-    @words_report = WordsReport.find(session[:words_report_id])
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
-  end
-
-  # GET /words_reports/1/show_word5
-  def show_word5
-    @words_report = WordsReport.find(session[:words_report_id])
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
-  end
-
-  # GET /words_reports/1/show_word6
-  def show_word6
-    @words_report = WordsReport.find(session[:words_report_id])
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
-  end
-
-  # GET /words_reports/1/show_word7
-  def show_word7
-    @words_report = WordsReport.find(session[:words_report_id])
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
+    @longest = Word.where(id: all_words).maximum("length")
+    @num = params[:num] || 1
+    word_parsers_in_group = WordParser.includes("word").where(lesson_id: @words_report.lesson_id, words: {length: @num}).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
   end
 
   # GET /words_reports/1/show_de1
   def show_de1
     @words_report = WordsReport.find(session[:words_report_id])
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
+    @longest = Word.where(id: all_words).maximum("length")
+    # @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count
+    # word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).pluck("word_id")
   end
 
   # GET /words_reports/1/show_de2
   def show_de2
     @words_report = WordsReport.find(session[:words_report_id])
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
+    @longest = Word.where(id: all_words).maximum("length")
     @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
   end
 
   # GET /words_reports/1/show_de3
   def show_de3
     @words_report = WordsReport.find(session[:words_report_id])
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
+    @longest = Word.where(id: all_words).maximum("length")
     @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
-  end
-
-  # GET /words_reports/1/show_all_words
-  def show_all_words
-    @words_report = WordsReport.find(session[:words_report_id])
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id)
   end
 
   # GET /words_reports/1/show_basic
   def show_basic
     @words_report = WordsReport.find(session[:words_report_id])
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
+    @longest = Word.where(id: all_words).maximum("length")
+    word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
+    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
+
   end
 
   # GET /words_reports/compare_with_another

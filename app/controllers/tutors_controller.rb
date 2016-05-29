@@ -160,6 +160,7 @@ class TutorsController < ApplicationController
     end
     @target = Lesson.find_by(id: params[:lesson_id])
     @tutor = Tutor.create(title: @target.title, lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
+    @another_tutor = Tutor.create(title: @lesson.title, lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
     respond_to do |format|
       format.html { redirect_to @tutor, notice: "辅导《#{@tutor.title}》已经成功生成。" }
       format.json { head :no_content }
