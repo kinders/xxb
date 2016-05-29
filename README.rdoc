@@ -16,6 +16,7 @@
 
 * 创建教科书
 * 为教科书添加课文
+* 对课文进行字词分析
 * 为课文内容添加辅导页面
 * 为课文内容添加习题
 * 为课文内容添加某种教学方式（有效组织辅导页面）
@@ -70,20 +71,6 @@
 * 安装 git。在终端输入`sudo apt-get install git`
 * 获取“学学半”代码。在终端输入`$ git clone www.github.com/kinders/xxb.git`
 * 配置“学学半”。进入学学半的目录中，在终端输入`$ bundle install`
-* 安装passenger。在终端输入`$ gem install passenger`
-* 安装nginx。在终端输入`$ passenger install nginx-module`，安装位置选择`/opt/nginx`
-* 配置nginx。修改`/opt/nginx/conf/nginx.conf`文件
-
-    server {  
-            listen       80;  
-            server_name  localhost;  
-            root /xx/xx/rails_app/public;  
-            passenger_enabled on;  
-            rails_env production;  
-    }  
-
-* 启动“学学半”。在终端输入`$ sudo /opt/nginx/sbin/nginx`
-* 关闭“学学半”。在终端输入`$ sudo /opt/nginx/sbin/nginx -s quit`
 
 ===  配置(Configuration)
 
@@ -95,20 +82,20 @@
 
 * 更换内核
 Ckeditor的内核比较陈旧，并且没有数学公式的编辑功能，可以将它替换掉。
-ckeditor的自定义方式见：`wwww.ckeditor.com/builder`，选择需要的插件即可下载替换。编辑数学公式则需要`Mathematical Formulas`插件。
+ckeditor的自定义方式见：<www.ckeditor.com/builder>，选择需要的插件即可下载替换。编辑数学公式则需要`Mathematical Formulas`插件。
 替换路径为`～/.rvm/gems/ruby/gems/ckeditor-x-x-x/vendor/assets/javascripts/`。
 
 * 推荐安装插件有：
 
-- Color Button
-- Enhanced Image
-- Find / Replace
-- Font Size and Family
-- Image Rotate
-- Justify
-- Mathematical Formulas
-- Print
-- Select All
+    - Color Button
+    - Enhanced Image
+    - Find / Replace
+    - Font Size and Family
+    - Image Rotate
+    - Justify
+    - Mathematical Formulas
+    - Print
+    - Select All
 
 * 配置ckeditor
 具体位置是：~/.rvm/gems/ruby/gems/ckeditor/app/assets/javascripts/ckeditor/config.js
@@ -116,7 +103,7 @@ ckeditor的自定义方式见：`wwww.ckeditor.com/builder`，选择需要的插
   config.mathJaxLib = '/mathjax/MathJax.js?config=TeX-AMS_HTML';
 
 第二，工具栏：
-  用下面这一段更换gem包中原有的代码，不要依赖app里的config.js，那会导致图片上传功能消失的bug。
+用下面这一段更换gem包中原有的代码，不要依赖app里的config.js，那会导致图片上传功能消失的bug。
 
     config.toolbar = [
     { name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: ['Undo', 'Redo', '-', 'SelectAll', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord' ] },
@@ -142,16 +129,47 @@ ckeditor的自定义方式见：`wwww.ckeditor.com/builder`，选择需要的插
 如果没有删除sample文件，部署时预编译assets就会出错。
 需要删除的文件夹：
 
-- `～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/samples/`
-- `～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/skins/xxx/sample/`
-- `～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/skins/xxx/scss/`
-- `～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/skins/xxx/.temp/`
+    - `～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/samples/`
+    - `～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/skins/xxx/sample/`
+    - `～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/skins/xxx/scss/`
+    - `～/.rvm/gems/ruby/gems/ckeditor/vendor/assets/javascripts/ckeditor/skins/xxx/.temp/`
 
 ===  创建数据库(Database creation)
 
-* 参见xxb.ods。
+* 创建`config/database.yml`文件，内容如下： 
+
+    default: &default
+      adapter: sqlite3
+      pool: 5
+      timeout: 5000
+    development:
+      <<: *default
+      database: db/development.sqlite3
+    test:
+      <<: *default
+      database: db/test.sqlite3
+    production:
+      <<: *default
+      database: db/production.sqlite3
+
+* 创建`config/secrets.yml`文件，生成密钥。
+
+    development:
+      secret_key_base: <128位的乱序英文和数字字符>
+    test:
+      secret_key_base: <128位的乱序英文和数字字符>
+    production:
+      secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
+
+* 创建`config/initializers/secret_token.rb`文件，生成密钥。
+
+    Depot::Application.config.secret_key_base = '<128位的乱序英文和数字字符>'
+
+- 该数据库一些字段信息参见xxb.ods。
 
 ===  初始化数据库 (Database initialization)
+
+生成数据库：`$ rake db:setup`
 
 ==== 设置管理员
 
@@ -183,10 +201,26 @@ ckeditor的自定义方式见：`wwww.ckeditor.com/builder`，选择需要的插
 * 部署在云端时，应该启用Mailer，并补充代码
 
 ===  部署(Deployment instructions)
+推荐使用Passenger和Nginx
 
-* 推荐使用Passenger和Nginx，详见上面“安装”部分。
+* 安装postgresql数据库，创建项目使用的数据库，修改文件`config/database.yml`，初始化生产数据库。
+* 安装passenger。在终端输入`$ gem install passenger`
+* 安装nginx。在终端输入`$ passenger install nginx-module`，安装位置选择`/opt/nginx`
+* 配置nginx。修改`/opt/nginx/conf/nginx.conf`文件
 
-==  版权
+    server {  
+            listen       80;  
+            server_name  localhost;  
+            root /xx/xx/rails_app/public;  
+            passenger_enabled on;  
+            rails_env production;  
+    }  
+
+* 预编译assets。在终端输入`$ RAILS_ENV=production rake assets:precompile`
+* 启动“学学半”。在终端输入`$ sudo /opt/nginx/sbin/nginx`
+* 关闭“学学半”。在终端输入`$ sudo /opt/nginx/sbin/nginx -s quit`
+
+==  版权（COPYRIGHT）
 
 * 许可证：GPLv3。
 * 这是一个自由软件，您可自由复制、自由使用、自由修改，乃至发布为新的自由软件。

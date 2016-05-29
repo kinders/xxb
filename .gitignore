@@ -19,9 +19,9 @@
 # 忽略数据库配置文件，包含了数据库密码
 /config/database.yml
 /config/secrets.yml
+/config/initializers/secret_token.rb
 
 # 一些资料
 /public/system
 /public/data_import
-xxb.ods
 /rvmrc
