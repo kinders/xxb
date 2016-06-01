@@ -23,6 +23,13 @@
     <%= error_span(@lesson[:title]) %>
   </div>
 
+  <div class="control-group">
+    <%= f.label :time, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :time, :class => 'form-control', tabindex: 11 %>
+    </div>
+    <%= error_span(@lesson[:time]) %>
+  </div>
   <p></p>
 
 <div class="row">

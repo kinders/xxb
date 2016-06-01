@@ -109,14 +109,13 @@
     <% end %>
 
 
-    <p><strong>标题：</strong><%= @evaluation.title || @practice.title %></p>
-    <p><strong>分值：</strong><%= @evaluation.practice_score || @practice.score %></p> 
+    <p><strong>标题：</strong><%= @evaluation.title || @practice.title %>（<strong>分值：</strong><%= @evaluation.practice_score || @practice.score %>）</p> 
+    <p><strong>问题：</strong></p>
+    <div class="well well-sm"><%=sanitize( @evaluation.question || @practice.question )%></div>
     <% unless @evaluation.material.blank? || @practice.material.blank? %>
     <p><strong>材料：</strong></p>
       <div class="well well-sm"><%=sanitize( @evaluation.material || @practice.material )%></div>
     <% end %>
-    <p><strong>问题：</strong></p>
-    <div class="well well-sm"><%=sanitize( @evaluation.question || @practice.question )%></div>
     <% if @practice.picture_q_file_name %>
       <p><br></p>
       <%= image_tag @practice.picture_q, class: "img-responsive center-block" %>

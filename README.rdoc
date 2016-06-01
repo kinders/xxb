@@ -82,7 +82,7 @@
 
 * 更换内核
 Ckeditor的内核比较陈旧，并且没有数学公式的编辑功能，可以将它替换掉。
-ckeditor的自定义方式见： www.ckeditor.com/builder，选择需要的插件即可下载替换。编辑数学公式则需要`Mathematical Formulas`插件。
+ckeditor的自定义方式见： www.ckeditor.com/builder ，选择需要的插件即可下载替换。编辑数学公式则需要`Mathematical Formulas`插件。
 替换路径为`～/.rvm/gems/ruby/gems/ckeditor-x-x-x/vendor/assets/javascripts/`。
 
 * 推荐安装插件有：

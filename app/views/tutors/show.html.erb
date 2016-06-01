@@ -74,7 +74,10 @@
             <%= link_to "为辅导添加习题", new_many_exercises_path, tabindex: 62 %>
           </li>
           <li>
-            <%= link_to "管理辅导的习题", exercises_path, tabindex: 63 %>
+            <%= link_to "将本辅导转为习题", tutor_to_practice_path, tabindex: 63 %>
+          </li>
+          <li>
+            <%= link_to "管理辅导的习题", exercises_path, tabindex: 64 %>
           </li>
           <% end %>
           <% end %>

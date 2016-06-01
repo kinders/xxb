@@ -329,6 +329,15 @@ class LessonsController < ApplicationController
     end
   end
 
+  # GET /choose_a_textbook
+  def choose_a_textbook
+    session[:textbook_id] = params[:textbook_id]
+    respond_to do |format|
+      format.html { redirect_to :back, notice: "成功选择课本。" }
+      format.json { head :no_content }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_lesson
@@ -337,7 +346,7 @@ class LessonsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def lesson_params
-      params.require(:lesson).permit(:title, :content, :user_id, :picture)
+      params.require(:lesson).permit(:title, :content, :user_id, :picture, :time)
     end
 
     def be_a_master

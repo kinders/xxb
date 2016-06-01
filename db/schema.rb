@@ -11,7 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160515192946) do
+ActiveRecord::Schema.define(version: 20160531220215) do
+
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
   create_table "badrecords", force: :cascade do |t|
     t.integer  "user_id"
@@ -28,10 +31,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "finish_time"
   end
 
-  add_index "badrecords", ["classroom_id"], name: "index_badrecords_on_classroom_id"
-  add_index "badrecords", ["deleted_at"], name: "index_badrecords_on_deleted_at"
-  add_index "badrecords", ["subject_id"], name: "index_badrecords_on_subject_id"
-  add_index "badrecords", ["user_id"], name: "index_badrecords_on_user_id"
+  add_index "badrecords", ["classroom_id"], name: "index_badrecords_on_classroom_id", using: :btree
+  add_index "badrecords", ["deleted_at"], name: "index_badrecords_on_deleted_at", using: :btree
+  add_index "badrecords", ["subject_id"], name: "index_badrecords_on_subject_id", using: :btree
+  add_index "badrecords", ["user_id"], name: "index_badrecords_on_user_id", using: :btree
 
   create_table "cadres", force: :cascade do |t|
     t.integer  "user_id"
@@ -44,10 +47,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.integer  "team_id"
   end
 
-  add_index "cadres", ["classroom_id"], name: "index_cadres_on_classroom_id"
-  add_index "cadres", ["member_id"], name: "index_cadres_on_member_id"
-  add_index "cadres", ["team_id"], name: "index_cadres_on_team_id"
-  add_index "cadres", ["user_id"], name: "index_cadres_on_user_id"
+  add_index "cadres", ["classroom_id"], name: "index_cadres_on_classroom_id", using: :btree
+  add_index "cadres", ["member_id"], name: "index_cadres_on_member_id", using: :btree
+  add_index "cadres", ["team_id"], name: "index_cadres_on_team_id", using: :btree
+  add_index "cadres", ["user_id"], name: "index_cadres_on_user_id", using: :btree
 
   create_table "cardboxes", force: :cascade do |t|
     t.integer  "user_id"
@@ -59,9 +62,9 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.integer  "lesson_id"
   end
 
-  add_index "cardboxes", ["deleted_at"], name: "index_cardboxes_on_deleted_at"
-  add_index "cardboxes", ["lesson_id"], name: "index_cardboxes_on_lesson_id"
-  add_index "cardboxes", ["user_id"], name: "index_cardboxes_on_user_id"
+  add_index "cardboxes", ["deleted_at"], name: "index_cardboxes_on_deleted_at", using: :btree
+  add_index "cardboxes", ["lesson_id"], name: "index_cardboxes_on_lesson_id", using: :btree
+  add_index "cardboxes", ["user_id"], name: "index_cardboxes_on_user_id", using: :btree
 
   create_table "cards", force: :cascade do |t|
     t.integer  "user_id"
@@ -78,10 +81,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.integer  "sequence"
   end
 
-  add_index "cards", ["cardbox_id"], name: "index_cards_on_cardbox_id"
-  add_index "cards", ["deleted_at"], name: "index_cards_on_deleted_at"
-  add_index "cards", ["practice_id"], name: "index_cards_on_practice_id"
-  add_index "cards", ["user_id"], name: "index_cards_on_user_id"
+  add_index "cards", ["cardbox_id"], name: "index_cards_on_cardbox_id", using: :btree
+  add_index "cards", ["deleted_at"], name: "index_cards_on_deleted_at", using: :btree
+  add_index "cards", ["practice_id"], name: "index_cards_on_practice_id", using: :btree
+  add_index "cards", ["user_id"], name: "index_cards_on_user_id", using: :btree
 
   create_table "cashiers", force: :cascade do |t|
     t.integer  "user_id"
@@ -90,8 +93,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "cashiers", ["deleted_at"], name: "index_cashiers_on_deleted_at"
-  add_index "cashiers", ["user_id"], name: "index_cashiers_on_user_id"
+  add_index "cashiers", ["deleted_at"], name: "index_cashiers_on_deleted_at", using: :btree
+  add_index "cashiers", ["user_id"], name: "index_cashiers_on_user_id", using: :btree
 
   create_table "catalogs", force: :cascade do |t|
     t.decimal  "serial"
@@ -103,10 +106,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "deleted_at"
   end
 
-  add_index "catalogs", ["deleted_at"], name: "index_catalogs_on_deleted_at"
-  add_index "catalogs", ["lesson_id"], name: "index_catalogs_on_lesson_id"
-  add_index "catalogs", ["textbook_id"], name: "index_catalogs_on_textbook_id"
-  add_index "catalogs", ["user_id"], name: "index_catalogs_on_user_id"
+  add_index "catalogs", ["deleted_at"], name: "index_catalogs_on_deleted_at", using: :btree
+  add_index "catalogs", ["lesson_id"], name: "index_catalogs_on_lesson_id", using: :btree
+  add_index "catalogs", ["textbook_id"], name: "index_catalogs_on_textbook_id", using: :btree
+  add_index "catalogs", ["user_id"], name: "index_catalogs_on_user_id", using: :btree
 
   create_table "ckeditor_assets", force: :cascade do |t|
     t.string   "data_file_name",               null: false
@@ -121,8 +124,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at",                   null: false
   end
 
-  add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable"
-  add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type"
+  add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
+  add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type", using: :btree
 
   create_table "classgroupscores", force: :cascade do |t|
     t.integer  "user_id"
@@ -135,9 +138,9 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "classgroupscores", ["deleted_at"], name: "index_classgroupscores_on_deleted_at"
-  add_index "classgroupscores", ["team_id"], name: "index_classgroupscores_on_team_id"
-  add_index "classgroupscores", ["user_id"], name: "index_classgroupscores_on_user_id"
+  add_index "classgroupscores", ["deleted_at"], name: "index_classgroupscores_on_deleted_at", using: :btree
+  add_index "classgroupscores", ["team_id"], name: "index_classgroupscores_on_team_id", using: :btree
+  add_index "classgroupscores", ["user_id"], name: "index_classgroupscores_on_user_id", using: :btree
 
   create_table "classpersonscores", force: :cascade do |t|
     t.integer  "user_id"
@@ -149,10 +152,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at",         null: false
   end
 
-  add_index "classpersonscores", ["classgroupscore_id"], name: "index_classpersonscores_on_classgroupscore_id"
-  add_index "classpersonscores", ["deleted_at"], name: "index_classpersonscores_on_deleted_at"
-  add_index "classpersonscores", ["member_id"], name: "index_classpersonscores_on_member_id"
-  add_index "classpersonscores", ["user_id"], name: "index_classpersonscores_on_user_id"
+  add_index "classpersonscores", ["classgroupscore_id"], name: "index_classpersonscores_on_classgroupscore_id", using: :btree
+  add_index "classpersonscores", ["deleted_at"], name: "index_classpersonscores_on_deleted_at", using: :btree
+  add_index "classpersonscores", ["member_id"], name: "index_classpersonscores_on_member_id", using: :btree
+  add_index "classpersonscores", ["user_id"], name: "index_classpersonscores_on_user_id", using: :btree
 
   create_table "classrooms", force: :cascade do |t|
     t.string   "name"
@@ -163,8 +166,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "deleted_at"
   end
 
-  add_index "classrooms", ["deleted_at"], name: "index_classrooms_on_deleted_at"
-  add_index "classrooms", ["user_id"], name: "index_classrooms_on_user_id"
+  add_index "classrooms", ["deleted_at"], name: "index_classrooms_on_deleted_at", using: :btree
+  add_index "classrooms", ["user_id"], name: "index_classrooms_on_user_id", using: :btree
 
   create_table "complaints", force: :cascade do |t|
     t.integer  "user_id"
@@ -179,8 +182,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "picture_updated_at"
   end
 
-  add_index "complaints", ["deleted_at"], name: "index_complaints_on_deleted_at"
-  add_index "complaints", ["user_id"], name: "index_complaints_on_user_id"
+  add_index "complaints", ["deleted_at"], name: "index_complaints_on_deleted_at", using: :btree
+  add_index "complaints", ["user_id"], name: "index_complaints_on_user_id", using: :btree
 
   create_table "discussions", force: :cascade do |t|
     t.integer  "user_id"
@@ -196,12 +199,12 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.boolean  "is_ready",     default: false
   end
 
-  add_index "discussions", ["classroom_id"], name: "index_discussions_on_classroom_id"
-  add_index "discussions", ["deleted_at"], name: "index_discussions_on_deleted_at"
-  add_index "discussions", ["lesson_id"], name: "index_discussions_on_lesson_id"
-  add_index "discussions", ["teaching_id"], name: "index_discussions_on_teaching_id"
-  add_index "discussions", ["textbook_id"], name: "index_discussions_on_textbook_id"
-  add_index "discussions", ["user_id"], name: "index_discussions_on_user_id"
+  add_index "discussions", ["classroom_id"], name: "index_discussions_on_classroom_id", using: :btree
+  add_index "discussions", ["deleted_at"], name: "index_discussions_on_deleted_at", using: :btree
+  add_index "discussions", ["lesson_id"], name: "index_discussions_on_lesson_id", using: :btree
+  add_index "discussions", ["teaching_id"], name: "index_discussions_on_teaching_id", using: :btree
+  add_index "discussions", ["textbook_id"], name: "index_discussions_on_textbook_id", using: :btree
+  add_index "discussions", ["user_id"], name: "index_discussions_on_user_id", using: :btree
 
   create_table "evaluations", force: :cascade do |t|
     t.integer  "user_id"
@@ -225,11 +228,11 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.integer  "papertest_id"
   end
 
-  add_index "evaluations", ["deleted_at"], name: "index_evaluations_on_deleted_at"
-  add_index "evaluations", ["lesson_id"], name: "index_evaluations_on_lesson_id"
-  add_index "evaluations", ["papertest_id"], name: "index_evaluations_on_papertest_id"
-  add_index "evaluations", ["practice_id"], name: "index_evaluations_on_practice_id"
-  add_index "evaluations", ["user_id"], name: "index_evaluations_on_user_id"
+  add_index "evaluations", ["deleted_at"], name: "index_evaluations_on_deleted_at", using: :btree
+  add_index "evaluations", ["lesson_id"], name: "index_evaluations_on_lesson_id", using: :btree
+  add_index "evaluations", ["papertest_id"], name: "index_evaluations_on_papertest_id", using: :btree
+  add_index "evaluations", ["practice_id"], name: "index_evaluations_on_practice_id", using: :btree
+  add_index "evaluations", ["user_id"], name: "index_evaluations_on_user_id", using: :btree
 
   create_table "examrooms", force: :cascade do |t|
     t.integer  "user_id"
@@ -241,10 +244,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at",   null: false
   end
 
-  add_index "examrooms", ["classroom_id"], name: "index_examrooms_on_classroom_id"
-  add_index "examrooms", ["deleted_at"], name: "index_examrooms_on_deleted_at"
-  add_index "examrooms", ["paper_id"], name: "index_examrooms_on_paper_id"
-  add_index "examrooms", ["user_id"], name: "index_examrooms_on_user_id"
+  add_index "examrooms", ["classroom_id"], name: "index_examrooms_on_classroom_id", using: :btree
+  add_index "examrooms", ["deleted_at"], name: "index_examrooms_on_deleted_at", using: :btree
+  add_index "examrooms", ["paper_id"], name: "index_examrooms_on_paper_id", using: :btree
+  add_index "examrooms", ["user_id"], name: "index_examrooms_on_user_id", using: :btree
 
   create_table "exercises", force: :cascade do |t|
     t.integer  "user_id"
@@ -256,10 +259,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "deleted_at"
   end
 
-  add_index "exercises", ["deleted_at"], name: "index_exercises_on_deleted_at"
-  add_index "exercises", ["practice_id"], name: "index_exercises_on_practice_id"
-  add_index "exercises", ["tutor_id"], name: "index_exercises_on_tutor_id"
-  add_index "exercises", ["user_id"], name: "index_exercises_on_user_id"
+  add_index "exercises", ["deleted_at"], name: "index_exercises_on_deleted_at", using: :btree
+  add_index "exercises", ["practice_id"], name: "index_exercises_on_practice_id", using: :btree
+  add_index "exercises", ["tutor_id"], name: "index_exercises_on_tutor_id", using: :btree
+  add_index "exercises", ["user_id"], name: "index_exercises_on_user_id", using: :btree
 
   create_table "fees", force: :cascade do |t|
     t.integer  "user_id"
@@ -272,8 +275,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "fees", ["deleted_at"], name: "index_fees_on_deleted_at"
-  add_index "fees", ["user_id"], name: "index_fees_on_user_id"
+  add_index "fees", ["deleted_at"], name: "index_fees_on_deleted_at", using: :btree
+  add_index "fees", ["user_id"], name: "index_fees_on_user_id", using: :btree
 
   create_table "histories", force: :cascade do |t|
     t.integer  "user_id",    null: false
@@ -283,7 +286,7 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "histories", ["user_id"], name: "index_histories_on_user_id"
+  add_index "histories", ["user_id"], name: "index_histories_on_user_id", using: :btree
 
   create_table "homeworks", force: :cascade do |t|
     t.integer  "user_id"
@@ -297,10 +300,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.integer  "subject_id"
   end
 
-  add_index "homeworks", ["classroom_id"], name: "index_homeworks_on_classroom_id"
-  add_index "homeworks", ["deleted_at"], name: "index_homeworks_on_deleted_at"
-  add_index "homeworks", ["subject_id"], name: "index_homeworks_on_subject_id"
-  add_index "homeworks", ["user_id"], name: "index_homeworks_on_user_id"
+  add_index "homeworks", ["classroom_id"], name: "index_homeworks_on_classroom_id", using: :btree
+  add_index "homeworks", ["deleted_at"], name: "index_homeworks_on_deleted_at", using: :btree
+  add_index "homeworks", ["subject_id"], name: "index_homeworks_on_subject_id", using: :btree
+  add_index "homeworks", ["user_id"], name: "index_homeworks_on_user_id", using: :btree
 
   create_table "justices", force: :cascade do |t|
     t.decimal  "score",                             null: false
@@ -316,10 +319,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.decimal  "p_score"
   end
 
-  add_index "justices", ["deleted_at"], name: "index_justices_on_deleted_at"
-  add_index "justices", ["evaluation_id"], name: "index_justices_on_evaluation_id"
-  add_index "justices", ["practice_id"], name: "index_justices_on_practice_id"
-  add_index "justices", ["user_id"], name: "index_justices_on_user_id"
+  add_index "justices", ["deleted_at"], name: "index_justices_on_deleted_at", using: :btree
+  add_index "justices", ["evaluation_id"], name: "index_justices_on_evaluation_id", using: :btree
+  add_index "justices", ["practice_id"], name: "index_justices_on_practice_id", using: :btree
+  add_index "justices", ["user_id"], name: "index_justices_on_user_id", using: :btree
 
   create_table "lessons", force: :cascade do |t|
     t.string   "title"
@@ -333,10 +336,11 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "picture_updated_at"
     t.datetime "deleted_at"
     t.integer  "content_length",       default: 0
+    t.integer  "time"
   end
 
-  add_index "lessons", ["deleted_at"], name: "index_lessons_on_deleted_at"
-  add_index "lessons", ["user_id"], name: "index_lessons_on_user_id"
+  add_index "lessons", ["deleted_at"], name: "index_lessons_on_deleted_at", using: :btree
+  add_index "lessons", ["user_id"], name: "index_lessons_on_user_id", using: :btree
 
   create_table "masters", force: :cascade do |t|
     t.integer  "user_id"
@@ -345,8 +349,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "masters", ["deleted_at"], name: "index_masters_on_deleted_at"
-  add_index "masters", ["user_id"], name: "index_masters_on_user_id"
+  add_index "masters", ["deleted_at"], name: "index_masters_on_deleted_at", using: :btree
+  add_index "masters", ["user_id"], name: "index_masters_on_user_id", using: :btree
 
   create_table "members", force: :cascade do |t|
     t.decimal  "serial"
@@ -358,9 +362,9 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.integer  "student"
   end
 
-  add_index "members", ["classroom_id"], name: "index_members_on_classroom_id"
-  add_index "members", ["deleted_at"], name: "index_members_on_deleted_at"
-  add_index "members", ["user_id"], name: "index_members_on_user_id"
+  add_index "members", ["classroom_id"], name: "index_members_on_classroom_id", using: :btree
+  add_index "members", ["deleted_at"], name: "index_members_on_deleted_at", using: :btree
+  add_index "members", ["user_id"], name: "index_members_on_user_id", using: :btree
 
   create_table "observations", force: :cascade do |t|
     t.integer  "user_id"
@@ -373,9 +377,9 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at",  null: false
   end
 
-  add_index "observations", ["deleted_at"], name: "index_observations_on_deleted_at"
-  add_index "observations", ["homework_id"], name: "index_observations_on_homework_id"
-  add_index "observations", ["user_id"], name: "index_observations_on_user_id"
+  add_index "observations", ["deleted_at"], name: "index_observations_on_deleted_at", using: :btree
+  add_index "observations", ["homework_id"], name: "index_observations_on_homework_id", using: :btree
+  add_index "observations", ["user_id"], name: "index_observations_on_user_id", using: :btree
 
   create_table "onboards", force: :cascade do |t|
     t.integer  "user_id"
@@ -389,8 +393,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at",      null: false
   end
 
-  add_index "onboards", ["deleted_at"], name: "index_onboards_on_deleted_at"
-  add_index "onboards", ["user_id"], name: "index_onboards_on_user_id"
+  add_index "onboards", ["deleted_at"], name: "index_onboards_on_deleted_at", using: :btree
+  add_index "onboards", ["user_id"], name: "index_onboards_on_user_id", using: :btree
 
   create_table "paperitems", force: :cascade do |t|
     t.integer  "user_id"
@@ -403,10 +407,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.decimal  "serial"
   end
 
-  add_index "paperitems", ["deleted_at"], name: "index_paperitems_on_deleted_at"
-  add_index "paperitems", ["paper_id"], name: "index_paperitems_on_paper_id"
-  add_index "paperitems", ["practice_id"], name: "index_paperitems_on_practice_id"
-  add_index "paperitems", ["user_id"], name: "index_paperitems_on_user_id"
+  add_index "paperitems", ["deleted_at"], name: "index_paperitems_on_deleted_at", using: :btree
+  add_index "paperitems", ["paper_id"], name: "index_paperitems_on_paper_id", using: :btree
+  add_index "paperitems", ["practice_id"], name: "index_paperitems_on_practice_id", using: :btree
+  add_index "paperitems", ["user_id"], name: "index_paperitems_on_user_id", using: :btree
 
   create_table "papers", force: :cascade do |t|
     t.integer  "user_id"
@@ -417,8 +421,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "papers", ["deleted_at"], name: "index_papers_on_deleted_at"
-  add_index "papers", ["user_id"], name: "index_papers_on_user_id"
+  add_index "papers", ["deleted_at"], name: "index_papers_on_deleted_at", using: :btree
+  add_index "papers", ["user_id"], name: "index_papers_on_user_id", using: :btree
 
   create_table "papertests", force: :cascade do |t|
     t.integer  "user_id"
@@ -429,9 +433,9 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "papertests", ["deleted_at"], name: "index_papertests_on_deleted_at"
-  add_index "papertests", ["paper_id"], name: "index_papertests_on_paper_id"
-  add_index "papertests", ["user_id"], name: "index_papertests_on_user_id"
+  add_index "papertests", ["deleted_at"], name: "index_papertests_on_deleted_at", using: :btree
+  add_index "papertests", ["paper_id"], name: "index_papertests_on_paper_id", using: :btree
+  add_index "papertests", ["user_id"], name: "index_papertests_on_user_id", using: :btree
 
   create_table "plans", force: :cascade do |t|
     t.decimal  "serial"
@@ -443,10 +447,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "deleted_at"
   end
 
-  add_index "plans", ["deleted_at"], name: "index_plans_on_deleted_at"
-  add_index "plans", ["teaching_id"], name: "index_plans_on_teaching_id"
-  add_index "plans", ["tutor_id"], name: "index_plans_on_tutor_id"
-  add_index "plans", ["user_id"], name: "index_plans_on_user_id"
+  add_index "plans", ["deleted_at"], name: "index_plans_on_deleted_at", using: :btree
+  add_index "plans", ["teaching_id"], name: "index_plans_on_teaching_id", using: :btree
+  add_index "plans", ["tutor_id"], name: "index_plans_on_tutor_id", using: :btree
+  add_index "plans", ["user_id"], name: "index_plans_on_user_id", using: :btree
 
   create_table "players", force: :cascade do |t|
     t.integer  "user_id"
@@ -457,10 +461,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "players", ["deleted_at"], name: "index_players_on_deleted_at"
-  add_index "players", ["member_id"], name: "index_players_on_member_id"
-  add_index "players", ["team_id"], name: "index_players_on_team_id"
-  add_index "players", ["user_id"], name: "index_players_on_user_id"
+  add_index "players", ["deleted_at"], name: "index_players_on_deleted_at", using: :btree
+  add_index "players", ["member_id"], name: "index_players_on_member_id", using: :btree
+  add_index "players", ["team_id"], name: "index_players_on_team_id", using: :btree
+  add_index "players", ["user_id"], name: "index_players_on_user_id", using: :btree
 
   create_table "practices", force: :cascade do |t|
     t.string   "title"
@@ -490,10 +494,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.decimal  "difficulty",             default: 0.0
   end
 
-  add_index "practices", ["deleted_at"], name: "index_practices_on_deleted_at"
-  add_index "practices", ["lesson_id"], name: "index_practices_on_lesson_id"
-  add_index "practices", ["tutor_id"], name: "index_practices_on_tutor_id"
-  add_index "practices", ["user_id"], name: "index_practices_on_user_id"
+  add_index "practices", ["deleted_at"], name: "index_practices_on_deleted_at", using: :btree
+  add_index "practices", ["lesson_id"], name: "index_practices_on_lesson_id", using: :btree
+  add_index "practices", ["tutor_id"], name: "index_practices_on_tutor_id", using: :btree
+  add_index "practices", ["user_id"], name: "index_practices_on_user_id", using: :btree
 
   create_table "quiz_items", force: :cascade do |t|
     t.integer  "user_id"
@@ -505,10 +509,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at",  null: false
   end
 
-  add_index "quiz_items", ["deleted_at"], name: "index_quiz_items_on_deleted_at"
-  add_index "quiz_items", ["practice_id"], name: "index_quiz_items_on_practice_id"
-  add_index "quiz_items", ["quiz_id"], name: "index_quiz_items_on_quiz_id"
-  add_index "quiz_items", ["user_id"], name: "index_quiz_items_on_user_id"
+  add_index "quiz_items", ["deleted_at"], name: "index_quiz_items_on_deleted_at", using: :btree
+  add_index "quiz_items", ["practice_id"], name: "index_quiz_items_on_practice_id", using: :btree
+  add_index "quiz_items", ["quiz_id"], name: "index_quiz_items_on_quiz_id", using: :btree
+  add_index "quiz_items", ["user_id"], name: "index_quiz_items_on_user_id", using: :btree
 
   create_table "quizzes", force: :cascade do |t|
     t.integer  "user_id"
@@ -522,9 +526,9 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "quizzes", ["cardbox_id"], name: "index_quizzes_on_cardbox_id"
-  add_index "quizzes", ["deleted_at"], name: "index_quizzes_on_deleted_at"
-  add_index "quizzes", ["user_id"], name: "index_quizzes_on_user_id"
+  add_index "quizzes", ["cardbox_id"], name: "index_quizzes_on_cardbox_id", using: :btree
+  add_index "quizzes", ["deleted_at"], name: "index_quizzes_on_deleted_at", using: :btree
+  add_index "quizzes", ["user_id"], name: "index_quizzes_on_user_id", using: :btree
 
   create_table "receipts", force: :cascade do |t|
     t.integer  "user_id"
@@ -540,8 +544,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.integer  "price"
   end
 
-  add_index "receipts", ["deleted_at"], name: "index_receipts_on_deleted_at"
-  add_index "receipts", ["user_id"], name: "index_receipts_on_user_id"
+  add_index "receipts", ["deleted_at"], name: "index_receipts_on_deleted_at", using: :btree
+  add_index "receipts", ["user_id"], name: "index_receipts_on_user_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
@@ -551,8 +555,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at"
   end
 
-  add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id"
-  add_index "roles", ["name"], name: "index_roles_on_name"
+  add_index "roles", ["name", "resource_type", "resource_id"], name: "index_roles_on_name_and_resource_type_and_resource_id", using: :btree
+  add_index "roles", ["name"], name: "index_roles_on_name", using: :btree
 
   create_table "sectionalizations", force: :cascade do |t|
     t.integer  "user_id"
@@ -563,9 +567,9 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at",   null: false
   end
 
-  add_index "sectionalizations", ["classroom_id"], name: "index_sectionalizations_on_classroom_id"
-  add_index "sectionalizations", ["deleted_at"], name: "index_sectionalizations_on_deleted_at"
-  add_index "sectionalizations", ["user_id"], name: "index_sectionalizations_on_user_id"
+  add_index "sectionalizations", ["classroom_id"], name: "index_sectionalizations_on_classroom_id", using: :btree
+  add_index "sectionalizations", ["deleted_at"], name: "index_sectionalizations_on_deleted_at", using: :btree
+  add_index "sectionalizations", ["user_id"], name: "index_sectionalizations_on_user_id", using: :btree
 
   create_table "sentences", force: :cascade do |t|
     t.integer  "lesson_id"
@@ -575,8 +579,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "sentences", ["deleted_at"], name: "index_sentences_on_deleted_at"
-  add_index "sentences", ["lesson_id"], name: "index_sentences_on_lesson_id"
+  add_index "sentences", ["deleted_at"], name: "index_sentences_on_deleted_at", using: :btree
+  add_index "sentences", ["lesson_id"], name: "index_sentences_on_lesson_id", using: :btree
 
   create_table "subjects", force: :cascade do |t|
     t.string   "name"
@@ -586,8 +590,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.integer  "user_id"
   end
 
-  add_index "subjects", ["deleted_at"], name: "index_subjects_on_deleted_at"
-  add_index "subjects", ["user_id"], name: "index_subjects_on_user_id"
+  add_index "subjects", ["deleted_at"], name: "index_subjects_on_deleted_at", using: :btree
+  add_index "subjects", ["user_id"], name: "index_subjects_on_user_id", using: :btree
 
   create_table "teachers", force: :cascade do |t|
     t.integer  "user_id"
@@ -599,10 +603,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.integer  "subject_id"
   end
 
-  add_index "teachers", ["classroom_id"], name: "index_teachers_on_classroom_id"
-  add_index "teachers", ["deleted_at"], name: "index_teachers_on_deleted_at"
-  add_index "teachers", ["subject_id"], name: "index_teachers_on_subject_id"
-  add_index "teachers", ["user_id"], name: "index_teachers_on_user_id"
+  add_index "teachers", ["classroom_id"], name: "index_teachers_on_classroom_id", using: :btree
+  add_index "teachers", ["deleted_at"], name: "index_teachers_on_deleted_at", using: :btree
+  add_index "teachers", ["subject_id"], name: "index_teachers_on_subject_id", using: :btree
+  add_index "teachers", ["user_id"], name: "index_teachers_on_user_id", using: :btree
 
   create_table "teachings", force: :cascade do |t|
     t.integer  "user_id"
@@ -613,9 +617,9 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "deleted_at"
   end
 
-  add_index "teachings", ["deleted_at"], name: "index_teachings_on_deleted_at"
-  add_index "teachings", ["lesson_id"], name: "index_teachings_on_lesson_id"
-  add_index "teachings", ["user_id"], name: "index_teachings_on_user_id"
+  add_index "teachings", ["deleted_at"], name: "index_teachings_on_deleted_at", using: :btree
+  add_index "teachings", ["lesson_id"], name: "index_teachings_on_lesson_id", using: :btree
+  add_index "teachings", ["user_id"], name: "index_teachings_on_user_id", using: :btree
 
   create_table "teams", force: :cascade do |t|
     t.integer  "user_id"
@@ -626,9 +630,9 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at",          null: false
   end
 
-  add_index "teams", ["deleted_at"], name: "index_teams_on_deleted_at"
-  add_index "teams", ["sectionalization_id"], name: "index_teams_on_sectionalization_id"
-  add_index "teams", ["user_id"], name: "index_teams_on_user_id"
+  add_index "teams", ["deleted_at"], name: "index_teams_on_deleted_at", using: :btree
+  add_index "teams", ["sectionalization_id"], name: "index_teams_on_sectionalization_id", using: :btree
+  add_index "teams", ["user_id"], name: "index_teams_on_user_id", using: :btree
 
   create_table "textbooks", force: :cascade do |t|
     t.string   "title"
@@ -640,13 +644,13 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "deleted_at"
   end
 
-  add_index "textbooks", ["deleted_at"], name: "index_textbooks_on_deleted_at"
-  add_index "textbooks", ["user_id"], name: "index_textbooks_on_user_id"
+  add_index "textbooks", ["deleted_at"], name: "index_textbooks_on_deleted_at", using: :btree
+  add_index "textbooks", ["user_id"], name: "index_textbooks_on_user_id", using: :btree
 
   create_table "tutors", force: :cascade do |t|
     t.string   "title",                             null: false
     t.decimal  "difficulty",                        null: false
-    t.text     "page",                              null: false
+    t.text     "page"
     t.integer  "user_id"
     t.datetime "created_at",                        null: false
     t.datetime "updated_at",                        null: false
@@ -664,9 +668,9 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.integer  "page_length",           default: 0
   end
 
-  add_index "tutors", ["deleted_at"], name: "index_tutors_on_deleted_at"
-  add_index "tutors", ["lesson_id"], name: "index_tutors_on_lesson_id"
-  add_index "tutors", ["user_id"], name: "index_tutors_on_user_id"
+  add_index "tutors", ["deleted_at"], name: "index_tutors_on_deleted_at", using: :btree
+  add_index "tutors", ["lesson_id"], name: "index_tutors_on_lesson_id", using: :btree
+  add_index "tutors", ["user_id"], name: "index_tutors_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -686,17 +690,17 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.boolean  "is_vip"
   end
 
-  add_index "users", ["active_time"], name: "index_users_on_active_time"
-  add_index "users", ["email"], name: "index_users_on_email", unique: true
-  add_index "users", ["is_vip"], name: "index_users_on_is_vip"
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  add_index "users", ["active_time"], name: "index_users_on_active_time", using: :btree
+  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
+  add_index "users", ["is_vip"], name: "index_users_on_is_vip", using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
   create_table "users_roles", id: false, force: :cascade do |t|
     t.integer "user_id"
     t.integer "role_id"
   end
 
-  add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id"
+  add_index "users_roles", ["user_id", "role_id"], name: "index_users_roles_on_user_id_and_role_id", using: :btree
 
   create_table "withdraws", force: :cascade do |t|
     t.integer  "user_id"
@@ -707,8 +711,8 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "deleted_at"
   end
 
-  add_index "withdraws", ["deleted_at"], name: "index_withdraws_on_deleted_at"
-  add_index "withdraws", ["user_id"], name: "index_withdraws_on_user_id"
+  add_index "withdraws", ["deleted_at"], name: "index_withdraws_on_deleted_at", using: :btree
+  add_index "withdraws", ["user_id"], name: "index_withdraws_on_user_id", using: :btree
 
   create_table "word_parsers", force: :cascade do |t|
     t.integer  "word_id"
@@ -719,10 +723,10 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.integer  "sentence_id"
   end
 
-  add_index "word_parsers", ["deleted_at"], name: "index_word_parsers_on_deleted_at"
-  add_index "word_parsers", ["lesson_id"], name: "index_word_parsers_on_lesson_id"
-  add_index "word_parsers", ["sentence_id"], name: "index_word_parsers_on_sentence_id"
-  add_index "word_parsers", ["word_id"], name: "index_word_parsers_on_word_id"
+  add_index "word_parsers", ["deleted_at"], name: "index_word_parsers_on_deleted_at", using: :btree
+  add_index "word_parsers", ["lesson_id"], name: "index_word_parsers_on_lesson_id", using: :btree
+  add_index "word_parsers", ["sentence_id"], name: "index_word_parsers_on_sentence_id", using: :btree
+  add_index "word_parsers", ["word_id"], name: "index_word_parsers_on_word_id", using: :btree
 
   create_table "words", force: :cascade do |t|
     t.string   "name"
@@ -741,15 +745,15 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.integer  "md8"
   end
 
-  add_index "words", ["deleted_at"], name: "index_words_on_deleted_at"
-  add_index "words", ["md1"], name: "index_words_on_md1"
-  add_index "words", ["md2"], name: "index_words_on_md2"
-  add_index "words", ["md3"], name: "index_words_on_md3"
-  add_index "words", ["md4"], name: "index_words_on_md4"
-  add_index "words", ["md5"], name: "index_words_on_md5"
-  add_index "words", ["md6"], name: "index_words_on_md6"
-  add_index "words", ["md7"], name: "index_words_on_md7"
-  add_index "words", ["md8"], name: "index_words_on_md8"
+  add_index "words", ["deleted_at"], name: "index_words_on_deleted_at", using: :btree
+  add_index "words", ["md1"], name: "index_words_on_md1", using: :btree
+  add_index "words", ["md2"], name: "index_words_on_md2", using: :btree
+  add_index "words", ["md3"], name: "index_words_on_md3", using: :btree
+  add_index "words", ["md4"], name: "index_words_on_md4", using: :btree
+  add_index "words", ["md5"], name: "index_words_on_md5", using: :btree
+  add_index "words", ["md6"], name: "index_words_on_md6", using: :btree
+  add_index "words", ["md7"], name: "index_words_on_md7", using: :btree
+  add_index "words", ["md8"], name: "index_words_on_md8", using: :btree
 
   create_table "words_reports", force: :cascade do |t|
     t.integer  "lesson_id"
@@ -759,7 +763,7 @@ ActiveRecord::Schema.define(version: 20160515192946) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "words_reports", ["deleted_at"], name: "index_words_reports_on_deleted_at"
-  add_index "words_reports", ["lesson_id"], name: "index_words_reports_on_lesson_id"
+  add_index "words_reports", ["deleted_at"], name: "index_words_reports_on_deleted_at", using: :btree
+  add_index "words_reports", ["lesson_id"], name: "index_words_reports_on_lesson_id", using: :btree
 
 end

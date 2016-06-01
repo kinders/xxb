@@ -168,6 +168,7 @@ Rails.application.routes.draw do
   end
   get '/tutor/new_link_to_lesson', to: 'tutors#new_link_to_lesson'
   post '/tutor/create_link_to_lesson', to: 'tutors#create_link_to_lesson'
+  get '/tutor/to_practice', to: 'tutors#to_practice'
 
   resources :lessons do
     get :autocomplete_lesson_title, on: :collection
@@ -179,6 +180,7 @@ Rails.application.routes.draw do
   post '/search_lesson_title', to: 'lessons#search_lesson_title'
   get '/lesson/as_tutor', to: 'lessons#as_tutor'
   post '/lesson/to_tutor', to: 'lessons#to_tutor'
+  get '/choose_a_textbook', to: 'lessons#choose_a_textbook'
 
   devise_for :users, controllers: { sessions: "users/sessions" }
 

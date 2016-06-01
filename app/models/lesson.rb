@@ -21,6 +21,7 @@ class Lesson < ActiveRecord::Base
   acts_as_paranoid
 
   validates :title, presence: true
+  validates :time, numericality: { only_integer: true }
   # validates :content, presence: true if "picture_file_name.nil"
   
   def funky_method

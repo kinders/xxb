@@ -165,9 +165,38 @@ class TutorsController < ApplicationController
       format.html { redirect_to @tutor, notice: "辅导《#{@tutor.title}》已经成功生成。" }
       format.json { head :no_content }
     end
-
   end
 
+  # GET /tutor/to_practice
+  def to_practice
+    @tutor = Tutor.find(session[:tutor_id])
+    @lesson = Lesson.find(session[:lesson_id])
+    practice = Practice.create { |p|
+      p.user_id = current_user.id
+      p.lesson_id = session[:lesson_id]
+      p.title = "简答题"
+      p.material = @tutor.proviso
+      p.question = @tutor.title
+      p.answer = @tutor.page
+      p.score = (p.answer.to_s.length.to_f / 10).ceil
+    } 
+    last_exercise = Exercise.where(tutor_id: @tutor.id).order(:serial).last
+    if last_exercise
+      last_exercise_serial = last_exercise.serial
+    else
+      last_exercise_serial = 0
+    end
+    Exercise.create { |e| 
+      e.user_id = current_user.id
+      e.tutor_id = @tutor.id
+      e.serial  =  last_exercise_serial + 1 
+      e.practice_id = practice.id
+    }
+    respond_to do |format|
+      format.html { redirect_to @tutor, notice: "已经将辅导《#{@tutor.title}》转为习题。" }
+      format.json { head :no_content }
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
