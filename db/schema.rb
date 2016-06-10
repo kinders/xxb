@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160531220215) do
+ActiveRecord::Schema.define(version: 20160605102147) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -352,6 +352,17 @@ ActiveRecord::Schema.define(version: 20160531220215) do
   add_index "masters", ["deleted_at"], name: "index_masters_on_deleted_at", using: :btree
   add_index "masters", ["user_id"], name: "index_masters_on_user_id", using: :btree
 
+  create_table "meanings", force: :cascade do |t|
+    t.text     "content"
+    t.integer  "word_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "meanings", ["deleted_at"], name: "index_meanings_on_deleted_at", using: :btree
+  add_index "meanings", ["word_id"], name: "index_meanings_on_word_id", using: :btree
+
   create_table "members", force: :cascade do |t|
     t.decimal  "serial"
     t.integer  "user_id"
@@ -436,6 +447,28 @@ ActiveRecord::Schema.define(version: 20160531220215) do
   add_index "papertests", ["deleted_at"], name: "index_papertests_on_deleted_at", using: :btree
   add_index "papertests", ["paper_id"], name: "index_papertests_on_paper_id", using: :btree
   add_index "papertests", ["user_id"], name: "index_papertests_on_user_id", using: :btree
+
+  create_table "phonetic_notations", force: :cascade do |t|
+    t.integer  "phonetic_id"
+    t.integer  "word_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "phonetic_notations", ["deleted_at"], name: "index_phonetic_notations_on_deleted_at", using: :btree
+  add_index "phonetic_notations", ["phonetic_id"], name: "index_phonetic_notations_on_phonetic_id", using: :btree
+  add_index "phonetic_notations", ["word_id"], name: "index_phonetic_notations_on_word_id", using: :btree
+
+  create_table "phonetics", force: :cascade do |t|
+    t.string   "content"
+    t.string   "label"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "phonetics", ["deleted_at"], name: "index_phonetics_on_deleted_at", using: :btree
 
   create_table "plans", force: :cascade do |t|
     t.decimal  "serial"
@@ -766,4 +799,7 @@ ActiveRecord::Schema.define(version: 20160531220215) do
   add_index "words_reports", ["deleted_at"], name: "index_words_reports_on_deleted_at", using: :btree
   add_index "words_reports", ["lesson_id"], name: "index_words_reports_on_lesson_id", using: :btree
 
+  add_foreign_key "meanings", "words"
+  add_foreign_key "phonetic_notations", "phonetics"
+  add_foreign_key "phonetic_notations", "words"
 end

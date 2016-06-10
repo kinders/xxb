@@ -50,7 +50,7 @@
 	        <a class="navbar-brand" href="/">学学半</a>
         </div>
         <div class="navbar-collapse collapse navbar-responsive-collapse">
-          <%= form_tag "/search_lesson_title", class: 'navbar-form navbar-left' do %>
+          <%= form_tag "/search_lesson", class: 'navbar-form navbar-left' do %>
             <div class="form-group">
               <label class="sr-only">search</label>
               <%= search_field_tag :title, "", class: "form-control input-sm", placeholder: "搜索课程" %>

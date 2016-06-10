@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
 
+  resources :meanings
+
+  resources :phonetic_notations
+
+  resources :phonetics
+  post '/phonetic/create_phonetic_for_word', to: 'phonetics#create_phonetic_for_word'
+
   resources :sentences
 
   resources :word_parsers
@@ -8,7 +15,9 @@ Rails.application.routes.draw do
 
   resources :words do
     get "change_meanful"
+    get "load_explain_from_baidu_hanyu"
   end
+
 
   resources :words_reports do
     get 'show_word_n'
@@ -169,6 +178,7 @@ Rails.application.routes.draw do
   get '/tutor/new_link_to_lesson', to: 'tutors#new_link_to_lesson'
   post '/tutor/create_link_to_lesson', to: 'tutors#create_link_to_lesson'
   get '/tutor/to_practice', to: 'tutors#to_practice'
+  get '/tutor/create_pinyin_help_tutor', to: "tutors#create_pinyin_help_tutor"
 
   resources :lessons do
     get :autocomplete_lesson_title, on: :collection
@@ -177,7 +187,6 @@ Rails.application.routes.draw do
     get 'words_analysis'
     get 'as_tutor_link'
   end
-  post '/search_lesson_title', to: 'lessons#search_lesson_title'
   get '/lesson/as_tutor', to: 'lessons#as_tutor'
   post '/lesson/to_tutor', to: 'lessons#to_tutor'
   get '/choose_a_textbook', to: 'lessons#choose_a_textbook'
@@ -193,6 +202,7 @@ Rails.application.routes.draw do
 
   mount Ckeditor::Engine => '/ckeditor'
 
+  post '/search_lesson', to: 'site#search_lesson'
   root 'site#home'
 
 

@@ -198,6 +198,30 @@ class TutorsController < ApplicationController
     end
   end
 
+  # GET /tutor/create_pinyin_help_tutor
+  def create_pinyin_help_tutor
+    @lesson = Lesson.find(session[:lesson_id])
+    content = "<h2>" + @lesson.title + "</h2><hr>" + @lesson.content
+    contents = content.chars
+    contents.map! do |char|
+      word = Word.find_by(name: char.to_s)
+      if word
+        if word.name =~ /[\u4e00-\u9fa5]/
+          pinyins = word.phonetics.map{|p| p.content}.join(" ")
+          char = "<ruby>" + char.to_s + "<rp>【</rp><rt> " + pinyins + " </rt><rp>】</rp></ruby>"
+        else
+        char
+        end
+      else
+        char
+      end
+    end
+    new_content = contents.join
+    @tutor = Tutor.create(title: "注音助读", difficulty: 1, page: new_content, user_id: current_user.id, lesson_id: @lesson.id, page_length: new_content.size)
+    redirect_to @tutor, notice: "已经生成助读辅导，请您对多音字进行选定修改。"
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_tutor

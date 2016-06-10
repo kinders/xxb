@@ -6,67 +6,126 @@ class WordsController < ApplicationController
   # GET /words
   # GET /words.json
   def index
-    if current_user.has_role? :admin 
-      @words = Word.all.page params[:page]
-
-    else
-      redirect_to root_path, notice: "您没有权限查看字典，请进行其他操作。"
-    end
+    # if current_user.has_role? :admin 
+      @words = Word.all.page(params[:page]).per(10)
+    # else
+      # redirect_to root_path, notice: "您没有权限查看字典，请进行其他操作。"
+    # end
   end
 
   # GET /words/1
   # GET /words/1.json
   def show
+    session[:word_id] = @word.id
+    @words_has_word = Word.where(is_meanful: true).where("name LIKE ?", "%" + @word.name + "%" ).order(:length)
+    # 生成上一个和下一个词语
+    all_words_id = Word.all.pluck("id")
+    current_word_id = all_words_id.index(@word.id)
+    if current_word_id == 0
+      @previous_word = nil
+    else
+      @previous_word = all_words_id[current_word_id - 1]
+    end
+    if current_word_id == all_words_id.size
+      @next_word == nil
+    else
+      @next_word = all_words_id[current_word_id + 1]
+    end
   end
 
   # GET /words/new
-  # def new
+  def new
+    redirect_to :back, notice: "您没有权限新建字典，请进行其他操作。"
     # @word = Word.new
-  # end
+  end
 
   # GET /words/1/edit
-  # def edit
-  # end
+  def edit
+    # redirect_to :back, notice: "您没有权限新建字典，请进行其他操作。"
+  end
 
   # POST /words
   # POST /words.json
-  # def create
-    # @word = Word.new(word_params)
+  def create
+    require 'digest/md5'
+    @word = Word.new(word_params)
+    word_md = Digest::MD5.hexdigest(@word.name).bytes.map{|b|b=b-38}.join
 
-    # respond_to do |format|
-      # if @word.save
-        # format.html { redirect_to @word, notice: 'Word was successfully created.' }
-        # format.json { render :show, status: :created, location: @word }
-      # else
-        # format.html { render :new }
-        # format.json { render json: @word.errors, status: :unprocessable_entity }
-      # end
-    # end
-  # end
+    word = Word.find_by(md1: word_md[0..7], md2: word_md[8..15], md3: word_md[16..23], md4: word_md[24..31], md5: word_md[32..39], md6: word_md[40..47], md7: word_md[48..55], md8: word_md[56..63])
+    if word
+      redirect_to :back, notice: "词语已经存在，无需新建。"
+      return
+    else
+      if @word.name =~ /[\u4e00-\u9fa5]/
+        words_length = @word.name.size
+      else
+        words_length = @word.name.split(" ").size
+      end
+      @word.length = words_length
+      @word.is_meanful = true
+      @word.md1 = word_md[0..7]
+      @word.md2 = word_md[8..15]
+      @word.md3 = word_md[16..23]
+      @word.md4 = word_md[24..31]
+      @word.md5 = word_md[32..39]
+      @word.md6 = word_md[40..47]
+      @word.md7 = word_md[48..55]
+      @word.md8 = word_md[56..63]
+  
+      respond_to do |format|
+        if @word.save
+          format.html { redirect_to @word, notice: 'Word was successfully created.' }
+          format.json { render :show, status: :created, location: @word }
+        else
+          format.html { render :new }
+          format.json { render json: @word.errors, status: :unprocessable_entity }
+        end
+      end
+    end
+  end
 
   # PATCH/PUT /words/1
   # PATCH/PUT /words/1.json
-  # def update
-    # respond_to do |format|
-      # if @word.update(word_params)
-        # format.html { redirect_to @word, notice: 'Word was successfully updated.' }
-        # format.json { render :show, status: :ok, location: @word }
-      # else
-        # format.html { render :edit }
-        # format.json { render json: @word.errors, status: :unprocessable_entity }
-      # end
-    # end
-  # end
+  def update
+    require 'digest/md5'
+    respond_to do |format|
+      if @word.update(word_params)
+        word_md = Digest::MD5.hexdigest(@word.name).bytes.map{|b|b=b-38}.join
+        if @word.name =~ /[\u4e00-\u9fa5]/
+          words_length = @word.name.size
+        else
+          words_length = @word.name.split(" ").size
+        end
+        @word.length = words_length
+        @word.is_meanful = true
+        @word.md1 = word_md[0..7]
+        @word.md2 = word_md[8..15]
+        @word.md3 = word_md[16..23]
+        @word.md4 = word_md[24..31]
+        @word.md5 = word_md[32..39]
+        @word.md6 = word_md[40..47]
+        @word.md7 = word_md[48..55]
+        @word.md8 = word_md[56..63]
+        @word.save!
+        format.html { redirect_to @word, notice: 'Word was successfully updated.' }
+        format.json { render :show, status: :ok, location: @word }
+      else
+        format.html { render :edit }
+        format.json { render json: @word.errors, status: :unprocessable_entity }
+      end
+    end
+  end
 
   # DELETE /words/1
   # DELETE /words/1.json
-  # def destroy
+  def destroy
+    redirect_to :back, notice: "您没有权限新建字典，请进行其他操作。"
     # @word.destroy
     # respond_to do |format|
       # format.html { redirect_to words_url, notice: 'Word was successfully destroyed.' }
       # format.json { head :no_content }
     # end
-  # end
+   end
 
   # GET /words/1/change_meanful
   def change_meanful
@@ -125,7 +184,30 @@ class WordsController < ApplicationController
         format.json { head :no_content }
       end
     end
-    
+  end
+
+  # get /words/1/load_explain_from_baidu_hanyu
+  def load_explain_from_baidu_hanyu
+    require 'net/http'
+    @word || @word = Word.find(session[:word_id])
+    path = "/zici/s?wd=" + @word.name
+    response = Net::HTTP.get_response("hanyu.baidu.com", path)
+    if empty = response.body.scan(/id="empty-body"/)
+      redirect_to :back, notice: "百度词典还没有收录这个词语。"
+      return
+    end
+    pinyin = response.body.scan(/<span><b>(.*?)<\/b>/)
+    pinyin.each do |py|
+      the_phonetic = Phonetic.find_by(content: py)
+      unless the_phonetic
+        the_phonetic = Phonetic.create(content: py, label: "")
+      end
+      @word.phonetic_notations.create(phonetic_id: the_phonetic.id)
+    end
+    number = pinyin.size
+    explains = response.body.scan(/<dl>(.*?)<\/dl>/)[0..number-1].join(" ")
+    @word.meanings.create(content: explains)
+    redirect_to :back, notice: "成功从百度汉语网站导入信息。"
   end
 
   private

@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  phonetic_id: 
+  word_id: 
+  deleted_at: 2016-06-05 18:19:11
+
+two:
+  phonetic_id: 
+  word_id: 
+  deleted_at: 2016-06-05 18:19:11

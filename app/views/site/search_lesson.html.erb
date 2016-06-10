@@ -17,7 +17,6 @@
     <tr>
       <th>编号</th>
       <th>课程名称</th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
@@ -25,17 +24,6 @@
       <tr>
         <td><%= lesson.id %></td>
         <td><%= link_to lesson.title, lesson_path(lesson) %></td>
-        <td>
-	  <% if  current_user.id == lesson.user_id %>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_lesson_path(lesson), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      lesson_path(lesson),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-		      :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
-	  <% end %>
-        </td>
       </tr>
     <% end %>
   </tbody>
@@ -67,3 +55,14 @@
 </table>
 <% end %>
 
+<% if @words.any? %>
+<div class="panel panel-default">
+  <div class="panel-heading"><small>包含</small><%= @search %><small>的词汇</small>（共 <%= @words.size %> 个）：</div>
+  <div class="panel-body">
+    <%# @words.join("; ") %>
+    <% @words.each do |w| %>
+      <%= link_to w.name, word_path(w.id) %> 
+    <% end %>
+  </div>
+</div>
+<% end %>

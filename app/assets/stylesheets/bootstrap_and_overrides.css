@@ -17,11 +17,13 @@
   counter-increment: paragraph_counter;
 }
 
-.paragraph > p {
+.paragraph > * {
   text-indent: 2em;
   font-size: 24px;
   line-height: 40px;
 }
+
+rt {font-size: 20px;color: green;}
 
 .paragraph {
   font-size: 24px;

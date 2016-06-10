@@ -132,7 +132,7 @@
           <%= image_tag @tutor.picture2.url, class: "img-responsive center-block"  %>
         <hr>
         <% end %>
-        <div class="paragraph"> <%= sanitize(@tutor.page) %> </div>
+        <div class="paragraph"> <%= sanitize(@tutor.page, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp)) %> </div>
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="bg-success center-block">
           <p class="text-center">...</p>
         </a>

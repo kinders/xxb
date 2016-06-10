@@ -1,0 +1,48 @@
+<%= form_for @phonetic_notation, html: { class: "form-horizontal phonetic_notation" } do |f| %>
+
+    <% if @phonetic_notation.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@phonetic_notation.errors.count, "error") %> 使得这个 phonetic_notation 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @phonetic_notation.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :word_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :word_id, class: 'form-control' %>
+    </div>
+    <%= error_span(@phonetic_notation[:word_id]) %>
+  </div>
+  <div class="form-group">
+    <%= f.label :phonetic_id, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%# f.text_field :phonetic_id, class: 'form-control' %>
+      <%= f.select :phonetic_id, Phonetic.all.collect { |p| [ p.content, p.id ] }, {prompt: "请选择一个拼音"},  {class: 'form-control'}  %>
+    </div>
+    <%= error_span(@phonetic_notation[:phonetic_id]) %>
+  </div>
+  <% if current_user && (current_user.has_role? :admin) %>
+  <div class="form-group">
+    <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :deleted_at, class: 'form-control' %>
+    </div>
+    <%= error_span(@phonetic_notation[:deleted_at]) %>
+  </div>
+  <% end %>
+
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            phonetic_notations_path, class: 'btn btn-default' %>
+
+<% end %>

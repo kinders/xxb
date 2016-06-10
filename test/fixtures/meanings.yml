@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  content: MyText
+  word_id: 
+  deleted_at: 2016-06-05 18:21:47
+
+two:
+  content: MyText
+  word_id: 
+  deleted_at: 2016-06-05 18:21:47
