@@ -137,7 +137,7 @@
         <% @textbooks.each do |textbook| %>
           <% textbook_user = User.find(textbook.user_id) %>
           <tr>
-            <td><%= textbook.serial.round(2) %></td>
+            <td><%= textbook.serial.round(3) %></td>
             <td><%= link_to textbook.title, choose_a_textbook_path(textbook_id: textbook.id), class: "btn-link" %></td>
             <td><%= textbook.description %></td>
             <td><%= textbook_user.name %></td>
@@ -149,7 +149,7 @@
 <% end %>
 
 <div class="page-header">
-  <h2><%= number_with_precision(@catalog.serial, precision: 2) if @catalog %> <%= @lesson.title %></h2>
+  <h2><%= number_with_precision(@catalog.serial, precision: 2) if @catalog %> <%= @lesson.title %><small><%= @lesson.author if @lesson.author %></small></h2>
 </div>
   <p class="text-right">时间：<%= @lesson.time || "未知"%>；字数：<%= @lesson.content_length %></p>
 <% if @lesson.picture_file_name %>

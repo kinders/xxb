@@ -227,6 +227,7 @@ zh-CN:
         id: "标识号"
         user_id: "创建者"
         title: "标题"
+        author: "作者"
         time: "创作时间"
         content: "内容"
         content_length: "内容长度"

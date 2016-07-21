@@ -24,6 +24,14 @@
   </div>
 
   <div class="control-group">
+    <%= f.label :author, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :author, :class => 'form-control', tabindex: 11 %>
+    </div>
+    <%= error_span(@lesson[:author]) %>
+  </div>
+
+  <div class="control-group">
     <%= f.label :time, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :time, :class => 'form-control', tabindex: 11 %>

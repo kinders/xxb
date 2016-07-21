@@ -11,6 +11,14 @@
         "data-placement": "bottom", 
         title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
     </div>
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" tabindex="61", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><%= link_to "导入读音", choose_phonetic_notations_path %></li>
+      </ul>
+    </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
         :back, 

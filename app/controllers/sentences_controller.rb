@@ -11,7 +11,7 @@ class SentencesController < ApplicationController
     else
       session[:sentence_id] = nil
       @lesson = Lesson.find_by(id: session[:lesson_id])
-      @sentences = Sentence.where(lesson_id: session[:lesson_id]).page(params[:page]).per(10)
+      @sentences = Sentence.where(lesson_id: session[:lesson_id]).order("id").page(params[:page]).per(10)
       unless @lesson
         redirect_to root_path, notice: "操作出错：无法找到指定的课程。"
       end

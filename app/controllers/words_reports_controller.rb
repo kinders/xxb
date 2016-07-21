@@ -13,9 +13,9 @@ class WordsReportsController < ApplicationController
   # GET /words_reports/1.json
   def show
     session[:words_report_id] = @words_report.id
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).page(params[:page]).per(10)
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).order("id").page(params[:page]).per(10)
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
-    @longest = Word.where(id: all_words).maximum("length")
+    @longest = Word.where(id: all_words).maximum(:length)
     # word_parsers_in_group = WordParser.includes("word").where(lesson_id: @words_report.lesson_id, words: {length: 1}).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
     # @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
   end
@@ -106,6 +106,7 @@ class WordsReportsController < ApplicationController
   end
 
   # GET /words_reports/1/show_basic
+  # 词条统计分析
   def show_basic
     @words_report = WordsReport.find(session[:words_report_id])
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
@@ -140,6 +141,31 @@ class WordsReportsController < ApplicationController
     @same_in_lesson_2 = @same_words.size.to_f * 100  / (@diff_words_from_lesson2.size + @same_words.size)
   end
 
+  def show_unmeanful_words
+    @words_report = WordsReport.find(session[:words_report_id])
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("word_id").uniq
+    word_parsers_in_group = []
+    Word.where(id: all_words, is_meanful: nil).order("length").each do |word|
+      word_count = word.word_parsers.where(lesson_id: @words_report.lesson_id).size
+      word_parsers_in_group << [word.id, word_count]
+    end
+    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
+  end
+
+  def show_meanful_words
+    @words_report = WordsReport.find(session[:words_report_id])
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("word_id").uniq
+    # 下面是将词语按词语的长度进行排列。
+    # @word_parsers_in_group = Word.where(id: all_words, is_meanful: true).order("length").page(params[:page]).per(10)
+    # 下面词语的排序规则是：首先按出现的频率，然后按词语的长度。
+    word_parsers_in_group = []
+    Word.where(id: all_words, is_meanful: true).order("length").each do |word|
+      word_count = word.word_parsers.where(lesson_id: @words_report.lesson_id).size
+      word_parsers_in_group << [word.id, word_count]
+    end
+    word_parsers_in_group.sort! {|a, b| a[1]<=>b[1]}
+    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

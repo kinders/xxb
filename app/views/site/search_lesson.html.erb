@@ -31,6 +31,29 @@
 <% end %>
 <hr>
 
+<% if @lessons_by_author.any? %>
+<div class="page-header">
+  <h3><small>作者是</small> <%= @search %> <small>的课程：</small></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>编号</th>
+      <th>课程名称</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @lessons_by_author.each do |lesson| %>
+      <tr>
+        <td><%= lesson.id %></td>
+        <td><%= link_to lesson.title, lesson_path(lesson) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+<hr>
+
 <% if @sentences.any? %>
 <div class="page-header">
   <h3><small>包含</small> <%= @search %> <small>的语句：</small></h3>

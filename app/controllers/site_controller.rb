@@ -11,6 +11,7 @@ class SiteController < ApplicationController
     words = Word.where("name LIKE ?", "%" + params[:title] +"%" ).where(is_meanful: true)
     @words = words.order("length")
     @lessons = Lesson.where("title LIKE ?", "%" + params[:title] +"%" )
+    @lessons_by_author = Lesson.where("author LIKE ?", "%" + params[:title] +"%" )
     @sentences = []
     search_md = Digest::MD5.hexdigest(@search).bytes.map{|b|b=b-38}.join
     word = Word.find_by(md1: search_md[0..7], md2: search_md[8..15], md3: search_md[16..23], md4: search_md[24..31], md5: search_md[32..39], md6: search_md[40..47], md7: search_md[48..55], md8: search_md[56..63])

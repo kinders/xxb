@@ -24,7 +24,9 @@
     <tr>
       <th>编号</th>
       <th>课程名称</th>
+      <th>作者</th>
       <th>创作时间</th>
+      <th>字数/长度</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -33,7 +35,9 @@
       <tr>
         <td><%= lesson.id %></td>
         <td><%= link_to lesson.title, lesson_path(lesson) %></td>
+        <td><%= lesson.author %></td>
         <td><%= lesson.time %></td>
+        <td><%= lesson.content_length %></td>
         <td>
 	  <% if  current_user.id == lesson.user_id %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),

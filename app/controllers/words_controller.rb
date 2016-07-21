@@ -189,23 +189,29 @@ class WordsController < ApplicationController
   # get /words/1/load_explain_from_baidu_hanyu
   def load_explain_from_baidu_hanyu
     require 'net/http'
+    require 'nokogiri'
+
     @word || @word = Word.find(session[:word_id])
+
     path = "/zici/s?wd=" + @word.name
     response = Net::HTTP.get_response("hanyu.baidu.com", path)
-    if empty = response.body.scan(/id="empty-body"/)
+    if response.body =~ /id="empty-tip"/
       redirect_to :back, notice: "百度词典还没有收录这个词语。"
       return
     end
-    pinyin = response.body.scan(/<span><b>(.*?)<\/b>/)
-    pinyin.each do |py|
-      the_phonetic = Phonetic.find_by(content: py)
-      unless the_phonetic
-        the_phonetic = Phonetic.create(content: py, label: "")
-      end
-      @word.phonetic_notations.create(phonetic_id: the_phonetic.id)
-    end
-    number = pinyin.size
-    explains = response.body.scan(/<dl>(.*?)<\/dl>/)[0..number-1].join(" ")
+
+    a_pattern = Regexp.union(/<a[^>]*>/, /<\/a>/)
+    b_pattern = /<b[^>]*>/
+    h_pattern = Regexp.union(/<h[^>]*>/, /<\/h[^>]*>/)
+
+    explains = ""
+    doc = Nokogiri::HTML(response.body)
+
+    explains <<  doc.css("div#pinyin").inner_html.gsub(a_pattern, "").gsub(b_pattern, "<b>").gsub(h_pattern, "")
+    title = doc.css("b.title","b.active")[0].inner_html.gsub(a_pattern, "").gsub(b_pattern, "<b>")
+    explains << "<hr><b>" + title + "</b>"
+    explains << doc.css("div.en-content","div.tab-content", "div#baike-wrapper")[0].inner_html.gsub(a_pattern, " ").gsub(b_pattern, "<b>").gsub(h_pattern, "") + "<hr>"
+    explains <<  doc.css("div#baike-wrapper").inner_html.gsub(a_pattern, " ").gsub(b_pattern, "<b>").gsub(h_pattern, "").gsub("查看百科", "")
     @word.meanings.create(content: explains)
     redirect_to :back, notice: "成功从百度汉语网站导入信息。"
   end

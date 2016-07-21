@@ -3,6 +3,7 @@ class Lesson < ActiveRecord::Base
   belongs_to :user
   has_one :words_report, dependent: :destroy
   has_many :catalogs, dependent: :destroy
+  has_many :textbook, through: :catalogs
   has_many :teachings, dependent: :destroy
   has_many :tutors, dependent: :destroy
   has_many :practices, dependent: :destroy

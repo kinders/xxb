@@ -16,7 +16,7 @@
   <div class="control-group">
     <%= label_tag "请先选择一篇课文：" %>
     <div class="controls">
-      <%= select_tag :lesson_id, options_from_collection_for_select(Lesson.all, "id", "title"), class: "form-control" %>
+      <%= select_tag :lesson_id, options_for_select(Lesson.all.order(:id).map{|lesson| lesson.id.to_s + lesson.title }), class: "form-control" %>
     </div>
   </div>
   <br>

@@ -20,6 +20,21 @@ class CatalogsController < ApplicationController
   # GET /catalogs/1
   # GET /catalogs/1.json
   def show
+    if session[:textbook_id]
+      @textbook = Textbook.find(session[:textbook_id])
+      catalogs = @textbook.catalogs.order(:serial).pluck(:id)
+      current_catalog_index = catalogs.index(@catalog.id)
+      if current_catalog_index == 0
+        @previous_catalog = nil
+      else
+        @previous_catalog = catalogs[current_catalog_index - 1]
+      end
+      if current_catalog_index == catalogs.size - 1
+        @next_catalog = nil
+      else
+        @next_catalog = catalogs[current_catalog_index + 1]
+      end
+    end
   end
 
   # GET /catalogs/new

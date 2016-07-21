@@ -65,6 +65,41 @@ class PhoneticNotationsController < ApplicationController
     end
   end
 
+
+  # GET /words/choose_phonetic_notations
+  def choose_phonetic_notations
+    # unless current_user.has_role? :admin 
+      # redirect_to root_path, notice: "您没有操作权限，请进行其他操作。"
+    # end
+  end
+
+  # POST /words/load_phonetic_notations
+  def load_phonetic_notations
+    begin
+      name =  Time.now.to_s
+      directory = "public/data_import"
+      path = File.join(directory, name)
+      File.open(path, "wb") { |f| f.write(params[:csv_file].read) }
+      data = SmarterCSV.process(path) do |allline|
+        allline.each do |one_line|
+          word = Word.find_by(name: one_line[:word])
+          phonetic = Phonetic.find_or_create_by!(content: one_line[:phonetic], label: "")
+          word.phonetic_notations.create(phonetic_id: phonetic.id)
+        end
+      end
+      respond_to do |format|
+        format.html { redirect_to :back, notice: '成功导入所有读音！' }
+        format.json { head :no_content }
+      end
+    rescue Exception => e 
+      # File.delete(path)
+      respond_to do |format|
+        format.html { redirect_to :back, notice: "导入读音失败，请修改CSV文件后重新尝试！错误提示：#{e}" }
+        format.json { head :no_content }
+      end
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_phonetic_notation

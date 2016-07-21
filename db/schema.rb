@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160605102147) do
+ActiveRecord::Schema.define(version: 20160709031108) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -337,8 +337,10 @@ ActiveRecord::Schema.define(version: 20160605102147) do
     t.datetime "deleted_at"
     t.integer  "content_length",       default: 0
     t.integer  "time"
+    t.string   "author"
   end
 
+  add_index "lessons", ["author"], name: "index_lessons_on_author", using: :btree
   add_index "lessons", ["deleted_at"], name: "index_lessons_on_deleted_at", using: :btree
   add_index "lessons", ["user_id"], name: "index_lessons_on_user_id", using: :btree
 

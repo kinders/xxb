@@ -163,7 +163,7 @@ class LessonsController < ApplicationController
         redirect_to :back, notice: "该课程内容为空，无需分析"
         return
     end
-    content = @lesson.title + "。"+ @lesson.content
+    content = @lesson.title + "。" + @lesson.author + "。"+ @lesson.content
     # 获取并精简文本
     content.gsub!(/<(\w|\/)+[^>]*>/, "") # 除去html标签
     content.gsub!(/\r|\n|\f/, "") # 除去换行符
@@ -303,8 +303,8 @@ class LessonsController < ApplicationController
       redirect_to :back, notice: "请重新指定一片课文。"
       return
     end
-    @tutor = Tutor.create(title: @lesson.title, lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
-    @another_tutor = Tutor.create(title: @target.title, lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
+    @tutor = Tutor.create(title: @lesson.title + @lesson.author, lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
+    @another_tutor = Tutor.create(title: @target.title + @target.author, lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
     session[:lesson_id] = @target.id
     respond_to do |format|
       format.html { redirect_to @tutor, notice: "辅导《#{@tutor.title}》已经成功生成。" }
@@ -329,7 +329,7 @@ class LessonsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def lesson_params
-      params.require(:lesson).permit(:title, :content, :user_id, :picture, :time)
+      params.require(:lesson).permit(:title, :content, :user_id, :picture, :time, :author)
     end
 
     def be_a_master

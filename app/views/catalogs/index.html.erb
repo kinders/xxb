@@ -29,20 +29,32 @@
 <div class="page-header">
   <h3>《<%= @textbook.title %>》目录</h3>
 </div>
+<div class="well">
+  <p><strong>描述</strong>: <%= @textbook.description %></p>
+  <p><strong>字数</strong>: <%= @textbook.lessons.sum("content_length").to_s(:human) %></p>
+</div>
 <table class="table table-striped">
   <thead>
     <tr>
       <th>序号</th>
       <th>课文标题</th>
+      <th>作者</th>
+      <th>字数</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% @catalogs.each do |catalog| %>
     <% catalog_lesson = Lesson.find(catalog.lesson_id) %>
+      <% if catalog.lesson.content_length == 0 %>
+      <tr class="info">
+      <% else %>
       <tr>
-        <td><%= catalog.serial.round(2) %></td>
+      <% end %>
+        <td><%= catalog.serial.round(3) %></td>
         <td><%= link_to catalog_lesson.title, lesson_path(catalog_lesson), class: "btn-link" %></td>
+        <td><%= catalog_lesson.author %></td>
+        <td><%= catalog_lesson.content_length %></td>
         <td>
 	  <%# link_to "学习", lesson_path(catalog_lesson), class: "btn btn-xs btn-success" %>
 	  <% if current_user.id == catalog.user_id %>

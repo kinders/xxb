@@ -34,47 +34,33 @@
 </div>
 
 <div class="page-header">
-  <h3><%=t '.title', default: model_class.model_name.human.titleize %>：《<%= @words_report.lesson.title %>》“的”字分析</h3>
+  <h3><%=t '.title', default: model_class.model_name.human.titleize %>：《<%= @words_report.lesson.title %>》全部有意义的词条</h3>
 </div>
 
+  <!-- Tab panes -->
+<ul class="list-group">
+  <% i = 0 %>
+  <% @word_parsers_in_group.each do |word_and_count| %>
+      <% i = i + 1 %>
+      <% word = Word.find(word_and_count[0]) %>
+      <li class="list-group-item">
+        <span class="badge"><%= word_and_count[1]%></span>
+        <span class="badge"><%= link_to "标记为无意义词汇", word_change_meanful_path(word) %></span>
+        <%= i %>. <%= word.name %>
+    </li>
+  <% end %>
+</ul>
+<%= paginate @word_parsers_in_group %>
+
+<hr>
 <p>其他可用的分析：</p>
 <div class="btn-group" role="group">
   <%= link_to "全部", words_report_path(@words_report), class: 'btn btn-default' %>
-  <% 1.upto(@longest) do |t| %>
-    <%= link_to "#{t}字", words_report_show_word_n_path(num: t), class: 'btn btn-default' %>
-  <% end %>
+  <%= link_to "的字", words_report_show_de1_path(@words_report), class: 'btn btn-default' %>
   <%= link_to "地字", words_report_show_de2_path(@words_report), class: 'btn btn-default' %>
   <%= link_to "得字", words_report_show_de3_path(@words_report), class: 'btn btn-default' %>
   <%= link_to "基本", words_report_show_basic_path(@words_report), class: 'btn btn-default' %>
+  <%= link_to "无意义", words_report_show_unmeanful_words_path(@words_report), class: 'btn btn-default' %>
   <%= link_to "句子", sentences_path, class: 'btn btn-default' %>
+  <%= link_to "比较", compare_with_another_path, class: 'btn btn-default' %>
 </div>
-<hr>
-<br>
-<ul class="list-group">
-  <% i = 0 %>
-  <% @word_parsers_in_group.each do |word_parser| %>
-    <% word = Word.find(word_parser[0]) %>
-    <% next unless (word.name =~ /.的./ && word.is_meanful == true )%>
-    <% i = i + 1 %>
-      <li class="list-group-item list-group-item-success">
-        <span class="badge"><%= word_parser[1]%></span>
-        <span class="badge"><%= link_to "标记为无意义词汇", word_change_meanful_path(word) %></span>
-      <%= i %> <%= Word.find(word_parser[0]).name %>
-    </li>
-  <% end %>
-</ul>
-<hr>
-<ul class="list-group">
-  <% i = 0 %>
-  <% @word_parsers_in_group.each do |word_parser| %>
-    <% word = Word.find(word_parser[0]) %>
-    <% next unless word.name =~ /.的./ %>
-    <% next if word.is_meanful == true  %>
-    <% i = i + 1 %>
-      <li class="list-group-item">
-        <span class="badge"><%= word_parser[1]%></span>
-        <span class="badge"><%= link_to "标记为有意义词汇", word_change_meanful_path(word) %></span>
-        <%= i %> <%= Word.find(word_parser[0]).name %>
-    </li>
-  <% end %>
-</ul>

@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   resources :meanings
 
   resources :phonetic_notations
+  get '/choose_phonetic_notations', to: 'phonetic_notations#choose_phonetic_notations'
+  post '/load_phonetic_notations', to: 'phonetic_notations#load_phonetic_notations'
 
   resources :phonetics
   post '/phonetic/create_phonetic_for_word', to: 'phonetics#create_phonetic_for_word'
@@ -25,6 +27,8 @@ Rails.application.routes.draw do
     get 'show_de2'
     get 'show_de3'
     get 'show_basic'
+    get 'show_unmeanful_words'
+    get 'show_meanful_words'
   end
   get 'compare_with_another', to: "words_reports#compare_with_another"
   post 'compare_report', to: "words_reports#compare_report"
