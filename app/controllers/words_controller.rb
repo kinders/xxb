@@ -18,6 +18,7 @@ class WordsController < ApplicationController
   def show
     session[:word_id] = @word.id
     @words_has_word = Word.where(is_meanful: true).where("name LIKE ?", "%" + @word.name + "%" ).order(:length)
+    @lessons_has_word = WordParser.where(word_id: @word.id).pluck(:lesson_id).uniq
     # 生成上一个和下一个词语
     all_words_id = Word.all.pluck("id")
     current_word_id = all_words_id.index(@word.id)

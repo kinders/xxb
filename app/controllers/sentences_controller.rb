@@ -22,6 +22,25 @@ class SentencesController < ApplicationController
   # GET /sentences/1
   # GET /sentences/1.json
   def show
+    @word_parsers = @sentence.word_parsers.order(:id)
+    # 生成上一个和下一个词语
+    if session[:lesson_id]
+      @lesson = Lesson.find(session[:lesson_id])
+      all_sentences_id = Sentence.where(lesson_id: @lesson.id).pluck("id").sort
+    else
+      all_sentences_id = Sentence.all.pluck("id").sort
+    end
+    current_sentence_id = all_sentences_id.index(@sentence.id)
+    if current_sentence_id == 0
+      @previous_sentence = nil
+    else
+      @previous_sentence = all_sentences_id[current_sentence_id - 1]
+    end
+    if current_sentence_id == all_sentences_id.size
+      @next_sentence == nil
+    else
+      @next_sentence = all_sentences_id[current_sentence_id + 1]
+    end
   end
 
   # GET /sentences/new

@@ -1,0 +1,181 @@
+<%- model_class = Pace -%>
+
+<% if current_user.has_role? :admin %>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.new', default: t("helpers.links.new")), 
+        new_pace_path,
+        class: 'btn btn-default', 
+        tabindex: 21,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%=t '.title', default: model_class.model_name.human.titleize %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:id) %></th>
+      <th><%= model_class.human_attribute_name(:user_id) %></th>
+      <th><%= model_class.human_attribute_name(:roadmap_id) %></th>
+      <th><%= model_class.human_attribute_name(:lesson_id) %></th>
+      <th><%= model_class.human_attribute_name(:serial) %></th>
+      <th><%= model_class.human_attribute_name(:deleted_at) %></th>
+      <th><%= model_class.human_attribute_name(:created_at) %></th>
+      <th><%=t '.actions', default: t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @paces.each do |pace| %>
+      <tr>
+        <td><%= link_to pace.id, pace_path(pace) %></td>
+        <td><%= pace.user_id %></td>
+        <td><%= pace.roadmap_id %></td>
+        <td><%= pace.lesson_id %></td>
+        <td><%= pace.serial %></td>
+        <td><%= pace.deleted_at %></td>
+        <td><%= pace.created_at.strftime("%F") %></td>
+        <td>
+          <%= link_to t('.edit', default: t("helpers.links.edit")),
+            edit_pace_path(pace), class: 'btn btn-default btn-xs',
+            "data-toggle": "tooltip", 
+            "data-placement": "bottom", 
+            title: t('.edit', default: [:"helpers.titles.edit"], model: model_class.model_name.human.titleize) %>
+          <%= link_to t('.destroy', default: t("helpers.links.destroy")),
+            pace_path(pace),
+            method: :delete,
+            data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
+            class: 'btn btn-xs btn-default', 
+            "data-toggle": "tooltip", 
+            "data-placement": "bottom", 
+            title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% else %>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.new', default: t("helpers.links.new")), 
+        new_pace_path,
+        class: 'btn btn-default', 
+        tabindex: 21,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" tabindex="61", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <%= link_to "批量导入课程", "#choose_a_textbook", data: {toggle: "modal"}  %>
+        </li>
+        <li>
+          <%= link_to "查看字表", roadmap_single_words_path(@roadmap) %>
+        </li>
+        <li>
+          <%= link_to "查看词表", roadmap_meanful_words_path(@roadmap) %>
+        </li>
+      </ul>
+    </div>
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), roadmaps_url, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.roadmap")) %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3>“<%= @roadmap.name %>”的<%=t '.title', default: model_class.model_name.human.titleize %></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:serial) %></th>
+      <th><%= model_class.human_attribute_name(:lesson_id) %></th>
+      <th><%= Lesson.human_attribute_name(:content_length) %></th>
+      <th>是否分析</th>
+      <th><%=t '.actions', default: t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @paces.each do |pace| %>
+      <tr>
+        <td><%= pace.serial %></td>
+        <td><%= pace.lesson.title %></td>
+        <td><%= pace.lesson.content_length %></td>
+        <% if pace.lesson.words_report %>
+          <td><%= link_to "查看报告", words_report_url(pace.lesson_id) %></td>
+        <% else %>
+          <td>暂无报告，<%= link_to "马上分析", new_words_report_url(pace.lesson_id) %></td>
+        <% end %>
+        <td>
+          <%= link_to t('.edit', default: t("helpers.links.edit")),
+            edit_pace_path(pace), class: 'btn btn-default btn-xs',
+            "data-toggle": "tooltip", 
+            "data-placement": "bottom", 
+            title: t('.edit', default: [:"helpers.titles.edit"], model: model_class.model_name.human.titleize) %>
+          <%= link_to t('.destroy', default: t("helpers.links.destroy")),
+            pace_path(pace),
+            method: :delete,
+            data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
+            class: 'btn btn-xs btn-default', 
+            "data-toggle": "tooltip", 
+            "data-placement": "bottom", 
+            title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<!-- Modal 选择一本教科书来导入课程 -->
+<div class="modal fade" id="choose_a_textbook" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">请选择一本教科书：</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_tag "/paces/choose_a_textbook", class: 'form-inline' do %>
+          <div class="control-group">
+            <%= select_tag :textbook_id, options_for_select(Textbook.all.order(:serial).collect{ |textbook| [textbook.serial.to_s + " - " + textbook.title, textbook.id]}), {prompt: "请选择一本教科书", class: 'form-control col-md-4'} %>
+          </div>
+          <%= submit_tag "提交", :class => 'btn btn-primary' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal 小组评价结束-->
+
+<% end %>

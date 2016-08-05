@@ -10,6 +10,7 @@ class Lesson < ActiveRecord::Base
   has_many :cardboxes, dependent: :destroy
   has_many :word_parsers, dependent: :destroy
   has_many :sentences, dependent: :destroy
+  has_many :paces, dependent: :destroy
 
   def self.titles
     all.collect{|lesson| [lesson.title, lesson.id]}

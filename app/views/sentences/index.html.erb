@@ -109,7 +109,7 @@
     <% @sentences.each_with_index do |sentence, index| %>
       <tr>
         <td><%= index + 1 %></td>
-        <td><%= sentence.name %></td>
+        <td><%= link_to sentence.name, sentence_path(sentence) %></td>
       </tr>
     <% end %>
   </tbody>

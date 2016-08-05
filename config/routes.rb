@@ -1,5 +1,18 @@
 Rails.application.routes.draw do
 
+  resources :paces do
+    get :autocomplete_lesson_title, on: :collection
+  end
+  post '/paces/choose_a_textbook', to: 'paces#choose_a_textbook'
+  post '/paces/load_from_textbook', to: 'paces#load_from_textbook'
+
+  resources :roadmaps do
+    get 'single_words'
+    get 'single_words_in_freq'
+    get 'meanful_words'
+    get 'meanful_words_in_freq'
+  end
+
   resources :meanings
 
   resources :phonetic_notations
@@ -165,7 +178,12 @@ Rails.application.routes.draw do
   end
   get '/catalogs_quick_append', to: 'catalogs#quick_append'
 
-  resources :textbooks
+  resources :textbooks do
+    get 'single_words'
+    get 'single_words_in_freq'
+    get 'meanful_words'
+    get 'meanful_words_in_freq'
+  end
 
   resources :practices do
     get 'delete_picture_q'

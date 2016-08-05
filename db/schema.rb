@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160709031108) do
+ActiveRecord::Schema.define(version: 20160728023015) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -409,6 +409,21 @@ ActiveRecord::Schema.define(version: 20160709031108) do
   add_index "onboards", ["deleted_at"], name: "index_onboards_on_deleted_at", using: :btree
   add_index "onboards", ["user_id"], name: "index_onboards_on_user_id", using: :btree
 
+  create_table "paces", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "roadmap_id"
+    t.integer  "lesson_id"
+    t.decimal  "serial"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "paces", ["deleted_at"], name: "index_paces_on_deleted_at", using: :btree
+  add_index "paces", ["lesson_id"], name: "index_paces_on_lesson_id", using: :btree
+  add_index "paces", ["roadmap_id"], name: "index_paces_on_roadmap_id", using: :btree
+  add_index "paces", ["user_id"], name: "index_paces_on_user_id", using: :btree
+
   create_table "paperitems", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "paper_id"
@@ -581,6 +596,18 @@ ActiveRecord::Schema.define(version: 20160709031108) do
 
   add_index "receipts", ["deleted_at"], name: "index_receipts_on_deleted_at", using: :btree
   add_index "receipts", ["user_id"], name: "index_receipts_on_user_id", using: :btree
+
+  create_table "roadmaps", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "user_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "roadmaps", ["deleted_at"], name: "index_roadmaps_on_deleted_at", using: :btree
+  add_index "roadmaps", ["user_id"], name: "index_roadmaps_on_user_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
     t.string   "name"
@@ -802,6 +829,10 @@ ActiveRecord::Schema.define(version: 20160709031108) do
   add_index "words_reports", ["lesson_id"], name: "index_words_reports_on_lesson_id", using: :btree
 
   add_foreign_key "meanings", "words"
+  add_foreign_key "paces", "lessons"
+  add_foreign_key "paces", "roadmaps"
+  add_foreign_key "paces", "users"
   add_foreign_key "phonetic_notations", "phonetics"
   add_foreign_key "phonetic_notations", "words"
+  add_foreign_key "roadmaps", "users"
 end

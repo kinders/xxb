@@ -265,5 +265,19 @@
     </div>
   </div>
 </div>
+<div class="panel panel-default">
+  <div class="panel-heading">
+    包含<strong><%= @word.name %></strong>的课文（共<%= @lessons_has_word.size %>个）
+  </div>
+  <div class="panel-body">
+    <div class="row">
+      <% @lessons_has_word.each do |lesson_id| %>
+        <% lesson = Lesson.find(lesson_id) %>
+      <div class="col-xs-12 col-sm-6 col-md-3">
+        <%= link_to lesson.title, lesson_path(lesson) %>
+      </div>
+      <% end %>
+    </div>
+  </div>
 
 <% end %>

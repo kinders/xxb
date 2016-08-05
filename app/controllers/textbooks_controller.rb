@@ -82,6 +82,45 @@ class TextbooksController < ApplicationController
     end
   end
 
+  # 一本书的用字报告。
+  ## 包含两个部分：按字排序，按频排序。
+  ### 按字排序
+  def single_words
+    @textbook = Textbook.find(session[:textbook_id])
+    lesson_ids = @textbook.lessons.pluck(:id)
+    all_words = WordParser.where(lesson_id: lesson_ids).pluck("word_id").uniq
+    @word_parsers_in_group = Word.where(id: all_words, length: 1).page(params[:page]).per(100)
+  end
+  ### 按字频率排序
+  def single_words_in_freq
+    @textbook = Textbook.find(session[:textbook_id])
+    lesson_ids = @textbook.lessons.pluck(:id)
+    all_words = WordParser.includes(:word).where(lesson_id: lesson_ids, words: {length: 1}).pluck("word_id")
+    word_parsers_in_group = all_words.group_by {|word| [word, all_words.count(word)]}.keys.sort {|a, b| a[1]<=>b[1]}
+
+    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
+  end
+
+  # 一本书的用词报告。
+  ## 包含两个部分：按字排序，按频排序。
+  ### 按字排序
+  def meanful_words
+    @textbook = Textbook.find(session[:textbook_id])
+    lesson_ids = @textbook.lessons.pluck(:id)
+    all_words = WordParser.where(lesson_id: lesson_ids).pluck("word_id").uniq
+    @word_parsers_in_group = Word.where(id: all_words, length: [2..100], is_meanful: true).order(:name).page(params[:page]).per(100)
+  end
+  ### 按频排序
+  def meanful_words_in_freq
+    @textbook = Textbook.find(session[:textbook_id])
+    lesson_ids = @textbook.lessons.pluck(:id)
+    all_words = WordParser.includes(:word).where(lesson_id: lesson_ids, words: {length: 2..100, is_meanful: true}).pluck("word_id")
+    word_parsers_in_group = all_words.group_by {|word| [word, all_words.count(word)]}.keys.sort {|a, b| a[1]<=>b[1]}
+
+    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_textbook

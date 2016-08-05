@@ -1,25 +1,26 @@
-<%- model_class = Sentence -%>
+<%- model_class = Roadmap -%>
 
 <div class="container col-xs-12 col-sm-10 col-md-8 affix">
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
     <!-- 管理功能 -->
     <div class="btn-group" role="group" arial-label="manage">
+      <% if current_user.id == @roadmap.user_id  %>
         <%= link_to t('.new', default:  t("helpers.links.new")), 
-          new_sentence_path,
+          new_roadmap_path,
           class:  'btn btn-default', 
           tabindex: 21, 
           "data-toggle": "tooltip", 
           "data-placement": "bottom", 
           title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
         <%= link_to t('.edit', default: t("helpers.links.edit")), 
-          edit_sentence_path(@sentence),
+          edit_roadmap_path(@roadmap),
           class: 'btn btn-default', 
           tabindex: 22, 
           "data-toggle": "tooltip", 
           "data-placement": "bottom", 
           title: t('.edit', default: [:"helpers.titles.edit"], model: model_class.model_name.human.titleize) %>
         <%= link_to t('.destroy', default: t("helpers.links.destroy")),
-          sentence_path(@sentence),
+          roadmap_path(@roadmap),
           method: 'delete',
           data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
           class: 'btn btn-default', 
@@ -27,8 +28,9 @@
           "data-toggle": "tooltip", 
           "data-placement": "bottom", 
           title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
+      <% end %>
       <%= link_to t('.back', default: t("helpers.links.back")),
-        sentences_path,
+        roadmaps_path,
         class: 'btn btn-default', 
         tabindex: 24, 
         "data-toggle": "tooltip", 
@@ -48,22 +50,22 @@
     </div>
     <!-- 导航按钮 -->
     <div class="btn-group" role="btn-group" arial-label="navigation">
-      <% if @previous_sentence %>
+      <% if @previous_roadmap %>
         <%= link_to t('.previous', default: t("helpers.links.previous")), 
-          sentence_path(@previous_sentence), 
+          roadmap_path(@previous_roadmap), 
           class: 'btn btn-default', 
           tabindex: 61, 
           "data-toggle": "tooltip", "data-placement": "bottom", 
-          title: t('.previous', default: t("helpers.titles.previous"), model: t("activerecord.models.sentence")) %>
+          title: t('.previous', default: t("helpers.titles.previous"), model: t("activerecord.models.roadmap")) %>
       <% end %>
-      <% if @next_sentence %>
+      <% if @next_roadmap %>
         <%= link_to t('.next', default: t("helpers.links.next")), 
-          sentence_path(@next_sentence), 
+          roadmap_path(@next_roadmap), 
           class: 'btn btn-default', 
           tabindex: 62, 
           "data-toggle": "tooltip", 
           "data-placement": "bottom", 
-          title: t('.next', default: t("helpers.titles.next"), model: t("activerecord.models.sentence")) %>
+          title: t('.next', default: t("helpers.titles.next"), model: t("activerecord.models.roadmap")) %>
       <% end %>
       <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
         :back, 
@@ -77,24 +79,16 @@
 </div>
 
 <div class="page-header">
-  <h3><%=t '.title', default: model_class.model_name.human.titleize %>：<%= @sentence.name %></h3>
+  <h3><%=t '.title', default: model_class.model_name.human.titleize %></h3>
 </div>
-<p>选自课文：《<%= @sentence.lesson.title %>》<small><%= @sentence.lesson.author %> <%= @sentence.lesson.time %></small></p>
-<hr>
-<div class="row">
-  <% @word_parsers.each_with_index do |word_parser, index| %>
-    <% if word_parser.word.length == 1 %>
-      </div>
-      <div class="row">
-    <% end %>
-    <% if word_parser.word.is_meanful %>
-      <div class="col-md-3 col-sm-4 col-xs-6 bg-info">
-        <%= index + 1 %>)<%= link_to word_parser.word.name, word_url(word_parser.word_id) %><small>_<%= link_to "标记为无意义词汇", word_change_meanful_path(word_parser.word) %>_</small>
-      </div>
-    <% else %>
-      <div class="col-md-3 col-sm-4 col-xs-6">
-        <%= index + 1 %>)<%= link_to word_parser.word.name, word_url(word_parser.word_id) %><small>_<%= link_to "标记为有意义词汇", word_change_meanful_path(word_parser.word) %>_</small>
-      </div>
-    <% end %>
-  <% end %>
-</div>
+
+<dl class="dl-horizontal">
+  <dt><strong><%= model_class.human_attribute_name(:name) %>:</strong></dt>
+  <dd><%= @roadmap.name %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:description) %>:</strong></dt>
+  <dd><%= @roadmap.description %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:user_id) %>:</strong></dt>
+  <dd><%= @roadmap.user_id %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:deleted_at) %>:</strong></dt>
+  <dd><%= @roadmap.deleted_at %></dd>
+</dl>

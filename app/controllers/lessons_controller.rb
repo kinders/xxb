@@ -163,7 +163,7 @@ class LessonsController < ApplicationController
         redirect_to :back, notice: "该课程内容为空，无需分析"
         return
     end
-    content = @lesson.title + "。" + @lesson.author + "。"+ @lesson.content
+    content = @lesson.title + "。" + (@lesson.author || "") + "。"+ (@lesson.content || "")
     # 获取并精简文本
     content.gsub!(/<(\w|\/)+[^>]*>/, "") # 除去html标签
     content.gsub!(/\r|\n|\f/, "") # 除去换行符
@@ -204,6 +204,8 @@ class LessonsController < ApplicationController
       word_parser = []
       ## 将句子中的引号去除
       sentence.gsub!(/['"“”]/, "")
+      sentence.gsub!(/&rdquo;/, "")
+      sentence.gsub!(/&ldquo;/, "")
       next if sentence =~ /[,.?!:] /
       @sentence = Sentence.create(lesson_id: @lesson.id, name: sentence)
       ## 将句子中的非中文字符用空格隔开

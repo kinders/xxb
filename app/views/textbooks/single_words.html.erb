@@ -1,0 +1,65 @@
+<%- model_class = Textbook -%>
+
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if @previous_textbook %>
+        <%= link_to t('.previous', default: t("helpers.links.previous")), 
+          textbook_path(@previous_textbook), 
+          class: 'btn btn-default', 
+          tabindex: 61, 
+          "data-toggle": "tooltip", "data-placement": "bottom", 
+          title: t('.previous', default: t("helpers.titles.previous"), model: t("activerecord.models.textbook")) %>
+      <% end %>
+      <% if @next_textbook %>
+        <%= link_to t('.next', default: t("helpers.links.next")), 
+          textbook_path(@next_textbook), 
+          class: 'btn btn-default', 
+          tabindex: 62, 
+          "data-toggle": "tooltip", 
+          "data-placement": "bottom", 
+          title: t('.next', default: t("helpers.titles.next"), model: t("activerecord.models.textbook")) %>
+      <% end %>
+      <%= link_to t('.up', :default => t("helpers.links.up")), textbook_url(@textbook), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.textbook")) %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81, 
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3><%=t '.title', default: model_class.model_name.human.titleize %>：《<%= @textbook.title %>》字表</h3>
+</div>
+
+  <!-- Tab panes -->
+<div class="row">
+<%#<ul class="list-group">%>
+  <% i = 0 %>
+  <%# @word_parsers_in_group.each do |word_and_count| %>
+  <% @word_parsers_in_group.each do |word| %>
+      <% i = i + 1 %>
+      <%# word = Word.find(word_and_count[0]) %>
+      <%#<li class="list-group-item">%>
+        <%#<span class="badge">[> word_and_count[1]<]</span>%>
+        <div class="col-md-2 col-sm-3 col-xs-4">
+        <%= i %>. <%= word.name %>
+      </div>
+    <%#</li>%>
+  <% end %>
+  <%#</ul>%>
+</div>
+<%= paginate @word_parsers_in_group %>
+
+<hr>
+<p>其他可用的分析：</p>
+<div class="btn-group" role="group">
+  <%= link_to "查看字频", textbook_single_words_in_freq_path(@textbook), class: 'btn btn-default' %>
+  <%= link_to "查看词表", textbook_meanful_words_path(@textbook), class: 'btn btn-default' %>
+  <%= link_to "查看词频", textbook_meanful_words_in_freq_path(@textbook), class: 'btn btn-default' %>
+</div>
