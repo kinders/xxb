@@ -12,6 +12,8 @@ Rails.application.routes.draw do
     get 'meanful_words'
     get 'meanful_words_in_freq'
   end
+  post '/roadmaps/choose_begin_and_end', to: 'roadmaps#choose_begin_and_end'
+  post '/roadmaps/compare_with_roadmap', to: 'roadmaps#compare_with_roadmap'
 
   resources :meanings
 

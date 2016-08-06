@@ -132,8 +132,8 @@ class WordsReportsController < ApplicationController
       redirect_to :back, notice: "还未对《#{@lesson_2.title}》进行分析，暂时无法比较。"
       return
     end
-    words_from_lesson_1 = WordParser.where(lesson_id: @lesson.id).map{|word_parser|word_parser.word_id}
-    words_from_lesson_2 = WordParser.where(lesson_id: @lesson_2.id).map{|word_parser|word_parser.word_id}
+    words_from_lesson_1 = WordParser.includes(:word).where(lesson_id: @lesson.id, words: {is_meanful: true}).map{|word_parser|word_parser.word_id}
+    words_from_lesson_2 = WordParser.includes(:word).where(lesson_id: @lesson_2.id, words: {is_meanful: true}).map{|word_parser|word_parser.word_id}
     @same_words = words_from_lesson_1 & words_from_lesson_2
     @diff_words_from_lesson1 =  words_from_lesson_1 - words_from_lesson_2
     @diff_words_from_lesson2 =  words_from_lesson_2 - words_from_lesson_1

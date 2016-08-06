@@ -113,6 +113,33 @@ class RoadmapsController < ApplicationController
     @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
   end
 
+  def choose_begin_and_end
+    unless session[:lesson_id]
+      redirect_to :back, notice: "请先指定一个课程"
+      return
+    end
+    @lesson = Lesson.find(session[:lesson_id])
+    unless WordsReport.find_by(lesson_id: session[:lesson_id])
+      redirect_to lesson_url(@lesson), notice: "还未对《#{@lesson.title}》进行分析，暂时无法比较。"
+      return
+    end
+    @roadmap = Roadmap.find(params[:roadmap_id])
+    session[:roadmap_id] = params[:roadmap_id]
+  end
+
+  def compare_with_roadmap
+    @roadmap = Roadmap.find(session[:roadmap_id])
+    @pace_begin = Pace.find(params[:pace_begin_id])
+    @pace_end = Pace.find(params[:pace_end_id])
+    roadmap_lessons_id = Pace.where(roadmap_id: @roadmap.id, serial: params[:pace_begin_id]..params[:pace_end_id]).pluck(:lesson_id)
+    @lesson = Lesson.find(session[:lesson_id])
+    words_from_lesson_1 = WordParser.includes(:word).where(lesson_id: @lesson.id, words: {is_meanful: true}).map{|word_parser|word_parser.word_id}.uniq
+    words_from_lesson_2 = WordParser.includes(:word).where(lesson_id: roadmap_lessons_id, words: {is_meanful: true}).map{|word_parser|word_parser.word_id}.uniq
+    @same_words = (words_from_lesson_1 & words_from_lesson_2).sort
+    @diff_words_from_lesson1 =  (words_from_lesson_1 - words_from_lesson_2).sort
+    @same_in_lesson_1 = @same_words.size.to_f * 100  / words_from_lesson_1.size
+    @same_in_lesson_2 = @same_words.size.to_f * 100  / words_from_lesson_2.size
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
