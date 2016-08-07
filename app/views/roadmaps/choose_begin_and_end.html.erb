@@ -29,14 +29,20 @@
   <div class="form-group">
     <%= label_tag "标准起点", nil, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
-      <%= select_tag :pace_begin_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}), {prompt: "请选择一个比较起点", class: 'form-control'} %>
+      <%= select_tag :pace_begin_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}, "1.0"), {prompt: "请选择一个比较起点", class: 'form-control'} %>
     </div>
   </div>
 
   <div class="form-group">
     <%= label_tag "标准终点", nil, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
-      <%= select_tag :pace_end_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}), {prompt: "请选择一个比较终点", class: 'form-control'} %>
+      <% lesson_pace = Pace.find_by(roadmap_id: @roadmap.id, lesson_id: @lesson.id) %>
+      <% if lesson_pace %>
+        <% selected_end_pace = lesson_pace.serial - 1 %>
+      <% else %>
+        <% selected_end_pace = @roadmap.paces.last.serial %>
+      <% end %>
+      <%= select_tag :pace_end_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}, selected_end_pace.to_s), {prompt: "请选择一个比较终点", class: 'form-control'} %>
     </div>
   </div>
 

@@ -1,7 +1,6 @@
 class Lesson < ActiveRecord::Base
   resourcify
   belongs_to :user
-  has_one :words_report, dependent: :destroy
   has_many :catalogs, dependent: :destroy
   has_many :textbook, through: :catalogs
   has_many :teachings, dependent: :destroy
@@ -9,6 +8,7 @@ class Lesson < ActiveRecord::Base
   has_many :practices, dependent: :destroy
   has_many :cardboxes, dependent: :destroy
   has_many :word_parsers, dependent: :destroy
+  has_one :words_report, dependent: :destroy
   has_many :sentences, dependent: :destroy
   has_many :paces, dependent: :destroy
 

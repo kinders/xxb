@@ -50,8 +50,10 @@
         <h3 class="panel-title">《<%= @lesson.title %>》独有部分（<%= @diff_words_from_lesson1.size %>个）：</h3>
       </div>
       <div class="panel-body">
+      <%= form_tag '/word/new_words_as_tutor' %>
         <% @diff_words_from_lesson1.each_with_index do |word, index| %>
-          (<%= index + 1 %>)<%= Word.find(word).name %>,  
+          <%= check_box_tag "word_id[]", word, true %>(<%= index + 1 %>)<%= link_to Word.find(word).name, word_url(word), target: "_blank" %>  
         <% end %>
       </div>
+      <%= submit_tag "将勾选的生词转移到辅导页面", class: "btn btn-primary btn-sm" %>
     </div>

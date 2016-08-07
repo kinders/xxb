@@ -155,6 +155,15 @@ class LessonsController < ApplicationController
   # 分析课文正文
   # GET /lessons/1/words_analysis
   def words_analysis
+# =begin
+    if params[:lesson_id]
+      AnalyzeLessonJob.perform_later params[:lesson_id]
+      redirect_to :back, notice: "已经将分析任务提交给后台，分析需要较长时间，请耐心等候。"
+    else
+      redirect_to :back, notice: "没有找到所要分析的课程"
+    end
+# =end
+=begin
     require 'digest/md5'
     begin
     # 检查是否空白内容
@@ -272,6 +281,7 @@ class LessonsController < ApplicationController
         format.json { head :no_content }
       end
     end
+=end
   end
 
   # Get /lessons/1/as_tutor_link

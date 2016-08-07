@@ -95,10 +95,6 @@
           <%= link_to "进行用词分析（可能需要#{need_time}分钟）", lesson_words_analysis_path(@lesson.id), :data => { :confirm => "耗时#{need_time}分钟！您确定要进行分析吗？"} %>
         <% end %>
         </li>
-        <li role="separator" class="divider"></li>
-        <li>
-          <%= link_to "标准比对", "#compare_with_standard", data: {toggle: "modal"}  %>
-        </li>
       </ul>
     </div>
     <% else %>
@@ -161,29 +157,6 @@
   <hr>
 <% end %>
 <div class="lesson_paragraph"><%= sanitize(@lesson.content) %></div>
-
-
-
-<!-- Modal 选择一个标准进行比较 -->
-<div class="modal fade" id="compare_with_standard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalTitle">请选择一个标准：</h4>
-      </div>
-      <div class="modal-body">
-        <%= form_tag "/roadmaps/choose_begin_and_end", class: 'form-inline' do %>
-          <div class="control-group">
-            <%= select_tag :roadmap_id, options_for_select(Roadmap.where(user_id: current_user.id).order(:id).collect{ |roadmap| [roadmap.id.to_s + " - " + roadmap.name, roadmap.id]}), {prompt: "请选择一个标准，才能进行比较", class: 'form-control col-md-4'} %>
-          </div>
-          <%= submit_tag "提交", :class => 'btn btn-primary' %>
-        <% end %>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Modal 选择一个标准进行比较 -->
 
 <% else %>
 

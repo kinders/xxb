@@ -217,6 +217,23 @@ class WordsController < ApplicationController
     redirect_to :back, notice: "成功从百度汉语网站导入信息。"
   end
 
+  def new_words_as_tutor
+    unless session[:lesson_id]
+      redirect_to textbooks_url, notice: "没有找到相应的课文。"
+      return
+    end
+    @lesson = Lesson.find(session[:lesson_id])
+    @words = Word.where(id: params[:word_id])
+    new_content = ""
+    @words.each_with_index do |word, index|
+      new_content << "<p>" + (index + 1).to_s + ". <strong> " + word.name + " </strong>" +  word.phonetics.map{|p|p.content}.to_s.delete("\"") + "<a target=\"_blank\" href=\"/words/" + word.id.to_s + "\" class=\"btn btn-link btn-xs\">查看详细解释</a>"
+    end
+    @tutor = Tutor.create(title: "词汇表", difficulty: 10, page: new_content, user_id: current_user.id, lesson_id: @lesson.id, page_length: new_content.size)
+    redirect_to tutor_path(@tutor), notice: "成功生成辅导。"
+  end
+
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_word
@@ -225,6 +242,6 @@ class WordsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def word_params
-      params.require(:word).permit(:name, :length, :deleted_at, :is_meanful)
+      params.require(:word).permit( {id: []},:name, :length, :deleted_at, :is_meanful)
     end
 end

@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     get "change_meanful"
     get "load_explain_from_baidu_hanyu"
   end
+  post '/word/new_words_as_tutor', to: 'words#new_words_as_tutor'
 
 
   resources :words_reports do

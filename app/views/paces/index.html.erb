@@ -133,9 +133,9 @@
         <td><%= pace.lesson.title %></td>
         <td><%= pace.lesson.content_length %></td>
         <% if pace.lesson.words_report %>
-          <td><%= link_to "查看报告", words_report_url(pace.lesson_id) %></td>
+          <td><%= link_to "查看报告", words_report_url(pace.lesson.words_report) %></td>
         <% else %>
-          <td>暂无报告，<%= link_to "马上分析", new_words_report_url(pace.lesson_id) %></td>
+          <td>暂无报告，<%= link_to "马上分析", lesson_words_analysis_url(pace.lesson_id) %></td>
         <% end %>
         <td>
           <%= link_to t('.edit', default: t("helpers.links.edit")),

@@ -43,8 +43,8 @@ group :development, :test do
   gem 'spring'
 end
 
-  gem "twitter-bootstrap-rails"
-  gem "devise"
+  gem "twitter-bootstrap-rails", '3.2.0'
+  gem "devise", '~> 3.4.1'
   gem "cancancan"
   gem "rolify"
   gem 'rails-i18n', '~> 4.0.0'
@@ -63,10 +63,11 @@ end
   gem 'paranoia', "~> 2.0"
   gem 'smarter_csv'
   gem 'csv_builder'
-  gem 'ckeditor'
+  gem 'ckeditor', '4.1.5'
   gem 'tinymce-rails'
   gem 'tinymce-rails-langs'
   gem 'mathjax-rails'
   gem 'pg'
+  gem 'sidekiq'
 
 # Use Capistrano for deployment

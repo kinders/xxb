@@ -221,7 +221,6 @@ class TutorsController < ApplicationController
     redirect_to @tutor, notice: "已经生成助读辅导，请您对多音字进行选定修改。"
   end
 
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_tutor

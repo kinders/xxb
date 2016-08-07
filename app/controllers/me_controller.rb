@@ -39,6 +39,8 @@ class MeController < ApplicationController
     @ever_tutors.uniq!
     ## 最近玩过的卡片盒
     @my_cardboxes = Cardbox.where(user_id: current_user.id).last(10)
+    ## 最近使用过的文路
+    @my_roadmaps = Roadmap.where(user_id: current_user.id).last(10)
   end
 
   # 我的付款记录

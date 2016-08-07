@@ -2,6 +2,17 @@
 
 <div class="container col-xs-12 col-sm-10 col-md-8 affix">
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+   <!-- 附加功能 -->
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" tabindex="61", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <%= link_to "标准比对", "#compare_with_standard", data: {toggle: "modal"}  %>
+        </li>
+      </ul>
+    </div>
     <!-- 导航按钮 -->
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <% if @previous_words_report %>
@@ -73,3 +84,25 @@
   <%= link_to "句子", sentences_path, class: 'btn btn-default' %>
   <%= link_to "比较", compare_with_another_path, class: 'btn btn-default' %>
 </div>
+
+
+<!-- Modal 选择一个标准进行比较 -->
+<div class="modal fade" id="compare_with_standard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalTitle">请选择一个标准：</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_tag "/roadmaps/choose_begin_and_end", class: 'form-inline' do %>
+          <div class="control-group">
+            <%= select_tag :roadmap_id, options_for_select(Roadmap.where(user_id: current_user.id).order(:id).collect{ |roadmap| [roadmap.id.to_s + " - " + roadmap.name, roadmap.id]}), {prompt: "请选择一个标准，再进行比较", class: 'form-control col-md-4'} %>
+          </div>
+          <%= submit_tag "提交", :class => 'btn btn-primary' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal 选择一个标准进行比较 -->

@@ -271,6 +271,37 @@
       </div>
     </div>
   </div>
+  <div class="panel panel-info">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" href="#my_roadmaps" aria-expanded="true" aria-controls="collapseOne">
+          最近用过的文路
+        </a>
+      </h4>
+    </div>
+    <div id="my_roadmaps" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+         <% unless @my_roadmaps.length > 0 %>
+	        暂时还没有哦
+        <% else %>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>文路</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @my_roadmaps.reverse.each do |roadmap| %>
+                <tr>
+                  <td><%= link_to roadmap.name, roadmap_path(roadmap) %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      </div>
+    </div>
+  </div>
 </div>
 
 

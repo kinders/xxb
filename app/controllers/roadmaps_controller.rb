@@ -119,12 +119,11 @@ class RoadmapsController < ApplicationController
       return
     end
     @lesson = Lesson.find(session[:lesson_id])
-    unless WordsReport.find_by(lesson_id: session[:lesson_id])
-      redirect_to lesson_url(@lesson), notice: "还未对《#{@lesson.title}》进行分析，暂时无法比较。"
-      return
-    end
     @roadmap = Roadmap.find(params[:roadmap_id])
     session[:roadmap_id] = params[:roadmap_id]
+    if Pace.find_by(lesson_id: @lesson.id, roadmap_id: @roadmap.id, serial: 1)
+      redirect_to lesson_url(@lesson), notice: "“#{@roadmap.name}”的起点太高，暂时无法比较，请重新选择一个较低的标准。"
+    end
   end
 
   def compare_with_roadmap
