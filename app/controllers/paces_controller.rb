@@ -86,6 +86,7 @@ class PacesController < ApplicationController
     begin
       @roadmap = Roadmap.find(session[:roadmap_id])
       params[:lesson_id].each do |lesson|
+        next if Pace.find_by(lesson_id: lesson, roadmap_id: @roadmap.id)
         Pace.create {|pace|
           pace.user_id = current_user.id
           pace.roadmap_id = @roadmap.id

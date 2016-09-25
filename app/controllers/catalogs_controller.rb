@@ -10,10 +10,12 @@ class CatalogsController < ApplicationController
   def index
     if current_user.has_role? :admin
       @catalogs = Catalog.all
-    else
+    elsif session[:textbook_id]
       textbook_id = session[:textbook_id]
       @textbook = Textbook.find(textbook_id)
-      @catalogs = @textbook.catalogs.order(:serial)
+      @catalogs = @textbook.catalogs.order(:serial).page(params[:page]).per("50")
+    else
+      redirect_to textbooks_path, notice: "请先指定一本书。"
     end
   end
 
@@ -112,7 +114,6 @@ class CatalogsController < ApplicationController
       redirect_to :back, notice: "操作失败，您未指定课本或课文。"
     end
   end
-
 
   private
     # Use callbacks to share common setup or constraints between actions.

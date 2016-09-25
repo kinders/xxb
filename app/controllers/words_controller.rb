@@ -224,10 +224,11 @@ class WordsController < ApplicationController
     end
     @lesson = Lesson.find(session[:lesson_id])
     @words = Word.where(id: params[:word_id])
-    new_content = ""
-    @words.each_with_index do |word, index|
-      new_content << "<p>" + (index + 1).to_s + ". <strong> " + word.name + " </strong>" +  word.phonetics.map{|p|p.content}.to_s.delete("\"") + "<a target=\"_blank\" href=\"/words/" + word.id.to_s + "\" class=\"btn btn-link btn-xs\">查看详细解释</a>"
+    new_content = "<ol>"
+    @words.each do |word|
+      new_content << "<li><strong> " + word.name + " </strong>" +  word.phonetics.map{|p|p.content}.to_s.delete("\"") + "<a target=\"_blank\" href=\"/words/" + word.id.to_s + "\" class=\"btn btn-link btn-xs\">查看详细解释</a></li>"
     end
+    new_content << "</ol>"
     @tutor = Tutor.create(title: "词汇表", difficulty: 10, page: new_content, user_id: current_user.id, lesson_id: @lesson.id, page_length: new_content.size)
     redirect_to tutor_path(@tutor), notice: "成功生成辅导。"
   end

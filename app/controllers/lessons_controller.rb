@@ -87,6 +87,7 @@ class LessonsController < ApplicationController
 
     respond_to do |format|
       if @lesson.save
+        AnalyzeLessonJob.perform_later @lesson.id
         format.html { redirect_to @lesson, notice: "该课程\"#{@lesson.title}\"已经添加。" }
         format.json { render :show, status: :created, location: @lesson }
       else
@@ -103,6 +104,7 @@ class LessonsController < ApplicationController
       if @lesson.update(lesson_params)
         @lesson.content_length = @lesson.content.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
         @lesson.save
+        AnalyzeLessonJob.perform_later @lesson.id
         format.html { redirect_to @lesson, notice: "课程\"#{@lesson.title}\"已经更新完毕。" }
         format.json { render :show, status: :ok, location: @lesson }
       else
@@ -306,17 +308,21 @@ class LessonsController < ApplicationController
   # POST /lesson/to_tutor
   def to_tutor
     @lesson = Lesson.find_by(id: session[:lesson_id])
+    @target = Lesson.find_by(id: params[:lesson_id])
     unless @lesson
       redirect_to 'root_path', notice: "未指定课程，无法创建辅导。"
       return
     end
-    @target = Lesson.find_by(id: params[:lesson_id])
+    unless  @target
+      redirect_to 'root_path', notice: "未指定目标，无法创建辅导。"
+      return
+    end
     if @lesson.id == @target.id
       redirect_to :back, notice: "请重新指定一片课文。"
       return
     end
-    @tutor = Tutor.create(title: @lesson.title + @lesson.author, lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
-    @another_tutor = Tutor.create(title: @target.title + @target.author, lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
+    @tutor = Tutor.create(title: @lesson.title + "（" + @lesson.author + "）", lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
+    Tutor.create(title: @target.title + "（" + @target.author + "）", lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
     session[:lesson_id] = @target.id
     respond_to do |format|
       format.html { redirect_to @tutor, notice: "辅导《#{@tutor.title}》已经成功生成。" }

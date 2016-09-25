@@ -90,13 +90,20 @@
       </button>
       <ul class="dropdown-menu">
         <li>
+          <%= link_to "查看字表", "#choose_for_single_word", data: {toggle: "modal"}  %>
+        </li>
+        <li>
+          <%= link_to "查看词表", "#choose_for_meanful_word", data: {toggle: "modal"}  %>
+        </li>
+        <li>
+          <%= link_to "查看字频表", "#choose_for_single_word_in_freq", data: {toggle: "modal"}  %>
+        </li>
+        <li>
+          <%= link_to "查看词频表", "#choose_for_meanful_word_in_freq", data: {toggle: "modal"}  %>
+        </li>
+        <li role="separator" class="divider"></li>
+        <li>
           <%= link_to "批量导入课程", "#choose_a_textbook", data: {toggle: "modal"}  %>
-        </li>
-        <li>
-          <%= link_to "查看字表", roadmap_single_words_path(@roadmap) %>
-        </li>
-        <li>
-          <%= link_to "查看词表", roadmap_meanful_words_path(@roadmap) %>
         </li>
       </ul>
     </div>
@@ -130,7 +137,7 @@
     <% @paces.each do |pace| %>
       <tr>
         <td><%= pace.serial %></td>
-        <td><%= pace.lesson.title %></td>
+        <td><%= link_to pace.lesson.title, lesson_path(pace.lesson_id) %></td>
         <td><%= pace.lesson.content_length %></td>
         <% if pace.lesson.words_report %>
           <td><%= link_to "查看报告", words_report_url(pace.lesson.words_report) %></td>
@@ -158,12 +165,12 @@
 </table>
 
 <!-- Modal 选择一本教科书来导入课程 -->
-<div class="modal fade" id="choose_a_textbook" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="choose_a_textbook" tabindex="-1" role="dialog" aria-labelledby="firstModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">请选择一本教科书：</h4>
+        <h4 class="modal-title" id="firstModalLabel">请选择一本教科书：</h4>
       </div>
       <div class="modal-body">
         <%= form_tag "/paces/choose_a_textbook", class: 'form-inline' do %>
@@ -177,5 +184,128 @@
   </div>
 </div>
 <!-- Modal 选择一本教科书来导入课程 -->
+
+<!-- Modal 选择起止点来查看字表 -->
+<div class="modal fade" id="choose_for_single_word" tabindex="-2" role="dialog" aria-labelledby="secondModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="secondModalLabel">请选择标准的起始点：</h4>
+      </div>
+      <div class="modal-body">
+
+        <%= form_tag "/roadmaps/#{@roadmap.id}/single_words", class: 'form-horizontal' do %>
+
+          <div class="form-group">
+            <%= label_tag "标准起点", nil, class: 'control-label col-sm-2' %>
+            <div class="controls col-sm-10">
+              <%= select_tag :pace_begin_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}, "1.0"), {prompt: "请选择一个起点", class: 'form-control'} %>
+            </div>
+          </div>
+        
+          <div class="form-group">
+            <%= label_tag "标准终点", nil, class: 'control-label col-sm-2' %>
+            <div class="controls col-sm-10">
+              <%= select_tag :pace_end_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}, @roadmap.paces.last.serial.to_s), {prompt: "请选择一个终点", class: 'form-control'} %>
+            </div>
+          </div>
+          <%= submit_tag "生成字表", :class => 'btn btn-primary col-sm-offset-2' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal 选择起止点来查看字表 -->
+
+<!-- Modal 选择起止点来查看词表 -->
+<div class="modal fade" id="choose_for_meanful_word" tabindex="-3" role="dialog" aria-labelledby="thirdModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="thirdModalLabel">请选择起止点：</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_tag "/roadmaps/#{@roadmap.id}/meanful_words", class: 'form-horizontal' do %>
+          <div class="form-group">
+            <%= label_tag "标准起点", nil, class: 'control-label col-sm-2' %>
+            <div class="controls col-sm-10">
+              <%= select_tag :pace_begin_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}, "1.0"), {prompt: "请选择一个起点", class: 'form-control'} %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= label_tag "标准终点", nil, class: 'control-label col-sm-2' %>
+            <div class="controls col-sm-10">
+              <%= select_tag :pace_end_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}, @roadmap.paces.last.serial.to_s), {prompt: "请选择一个终点", class: 'form-control'} %>
+            </div>
+          </div>
+          <%= submit_tag "生成词表", :class => 'btn btn-primary col-sm-offset-2' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal 选择起止点来查看词表 -->
+
+<!-- Modal 选择起止点来查看字频表 -->
+<div class="modal fade" id="choose_for_single_word_in_freq" tabindex="-3" role="dialog" aria-labelledby="fourModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="fourModalLabel">请选择起止点：</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_tag "/roadmaps/#{@roadmap.id}/single_words_in_freq", class: 'form-horizontal' do %>
+          <div class="form-group">
+            <%= label_tag "标准起点", nil, class: 'control-label col-sm-2' %>
+            <div class="controls col-sm-10">
+              <%= select_tag :pace_begin_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}, "1.0"), {prompt: "请选择一个起点", class: 'form-control'} %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= label_tag "标准终点", nil, class: 'control-label col-sm-2' %>
+            <div class="controls col-sm-10">
+              <%= select_tag :pace_end_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}, @roadmap.paces.last.serial.to_s), {prompt: "请选择一个终点", class: 'form-control'} %>
+            </div>
+          </div>
+          <%= submit_tag "生成字频表", :class => 'btn btn-primary col-sm-offset-2' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal 选择起止点来查看字频表 -->
+
+<!-- Modal 选择起止点来查看词频表 -->
+<div class="modal fade" id="choose_for_meanful_word_in_freq" tabindex="-3" role="dialog" aria-labelledby="fifthModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="fifthModalLabel">请选择起止点：</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_tag "/roadmaps/#{@roadmap.id}/meanful_words_in_freq", class: 'form-horizontal' do %>
+          <div class="form-group">
+            <%= label_tag "标准起点", nil, class: 'control-label col-sm-2' %>
+            <div class="controls col-sm-10">
+              <%= select_tag :pace_begin_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}, "1.0"), {prompt: "请选择一个起点", class: 'form-control'} %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= label_tag "标准终点", nil, class: 'control-label col-sm-2' %>
+            <div class="controls col-sm-10">
+              <%= select_tag :pace_end_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}, @roadmap.paces.last.serial.to_s), {prompt: "请选择一个终点", class: 'form-control'} %>
+            </div>
+          </div>
+          <%= submit_tag "生成词频表", :class => 'btn btn-primary col-sm-offset-2' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal 选择起止点来查看词频表 -->
 
 <% end %>

@@ -21,6 +21,9 @@
         <li>
           <%= link_to "查看词表", textbook_meanful_words_path(@textbook) %>
         </li>
+        <li>
+          <%= link_to "对本书的课程进行用词分析", textbook_words_analysis_path(@textbook) %>
+        </li>
       </ul>
     </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
@@ -77,6 +80,7 @@
     <% end %>
   </tbody>
 </table>
+<%= paginate @catalogs %>
 
 <% if current_user.has_role? :admin %>
 <table class="table table-striped">

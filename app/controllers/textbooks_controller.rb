@@ -120,6 +120,19 @@ class TextbooksController < ApplicationController
     @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
   end
 
+  # textbook_words_analysis_path
+  def words_analysis
+    if params[:textbook_id]
+      @textbook = Textbook.find(params[:textbook_id])
+      @textbook.lessons.each do |lesson|
+        AnalyzeLessonJob.perform_later lesson.id
+      end
+      redirect_to :back, notice: "已经将分析任务提交给后台，分析需要较长时间，请耐心等候。"
+    else
+      redirect_to :back, notice: "没有找到所要分析的课本"
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

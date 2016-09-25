@@ -26,7 +26,8 @@
   <div class="control-group">
     <%= f.label "辅导", :class => 'control-label' %>
     <div class="controls">
-      <%= f.select :tutor_id, Tutor.where(lesson_id: session[:lesson_id]).order("difficulty").collect{|tutor| [tutor.title[0,20] + "； 作者：" + tutor.user_id.to_s + "； 页面：" + tutor.page[0,30], tutor.id]}, { prompt: "请选择一个辅导"}, {class: "form-control" } %>
+      <%= f.select :tutor_id, Tutor.where(lesson_id: session[:lesson_id]).order("difficulty").collect{|tutor| [tutor.title[0,20] + "； 作者：" + tutor.user_id.to_s , tutor.id]}, { prompt: "请选择一个辅导"}, {class: "form-control" } %>
+      <%# f.select :tutor_id, Tutor.where(lesson_id: session[:lesson_id]).order("difficulty").collect{|tutor| [tutor.title[0,20] + "； 作者：" + tutor.user_id.to_s + "； 页面：" + tutor.page[0,30], tutor.id]}, { prompt: "请选择一个辅导"}, {class: "form-control" } %>
     </div>
     <%= error_span(@plan[:tutor_id]) %>
   </div>

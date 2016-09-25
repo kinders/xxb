@@ -7,10 +7,10 @@ Rails.application.routes.draw do
   post '/paces/load_from_textbook', to: 'paces#load_from_textbook'
 
   resources :roadmaps do
-    get 'single_words'
-    get 'single_words_in_freq'
-    get 'meanful_words'
-    get 'meanful_words_in_freq'
+    post 'single_words'
+    post 'single_words_in_freq'
+    post 'meanful_words'
+    post 'meanful_words_in_freq'
   end
   post '/roadmaps/choose_begin_and_end', to: 'roadmaps#choose_begin_and_end'
   post '/roadmaps/compare_with_roadmap', to: 'roadmaps#compare_with_roadmap'
@@ -186,6 +186,7 @@ Rails.application.routes.draw do
     get 'single_words_in_freq'
     get 'meanful_words'
     get 'meanful_words_in_freq'
+    get 'words_analysis'
   end
 
   resources :practices do

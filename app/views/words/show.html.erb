@@ -172,7 +172,11 @@
 </div>
 
 <div class="page-header">
-  <h3><small><%=t '.title', default: model_class.model_name.human.titleize %>：</small><%= @word.name %></h3>
+  <h3>
+    <small><%=t '.title', default: model_class.model_name.human.titleize %>：</small>
+    <%= @word.name %>
+    <a href="http://www.image.baidu.com/search/index?tn=baiduimage&word=<%= @word.name %>" class="btn btn-link btn-xs" target="_blank">查看百度图片</a>
+  </h3>
 </div>
 
 <div class="panel panel-default">

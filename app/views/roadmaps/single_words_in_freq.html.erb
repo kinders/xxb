@@ -53,12 +53,4 @@
   <% end %>
   <%#</ul>%>
 </div>
-<%= paginate @word_parsers_in_group %>
-
-<hr>
-<p>其他可用的分析：</p>
-<div class="btn-group" role="group">
-  <%= link_to "查看字表", roadmap_single_words_path(@roadmap), class: 'btn btn-default' %>
-  <%= link_to "查看词表", roadmap_meanful_words_path(@roadmap), class: 'btn btn-default' %>
-  <%= link_to "查看词频", roadmap_meanful_words_in_freq_path(@roadmap), class: 'btn btn-default' %>
-</div>
+<%# paginate @word_parsers_in_group %>

@@ -80,18 +80,22 @@ class RoadmapsController < ApplicationController
   ### 按字排序
   def single_words
     @roadmap = Roadmap.find(session[:roadmap_id])
-    lesson_ids = @roadmap.lessons.pluck(:id)
+    # lesson_ids = @roadmap.lessons.pluck(:id)
+    lesson_ids = Pace.where(roadmap: @roadmap.id, serial: params[:pace_begin_id]..params[:pace_end_id]).pluck(:lesson_id)
     all_words = WordParser.where(lesson_id: lesson_ids).pluck("word_id").uniq
-    @word_parsers_in_group = Word.where(id: all_words, length: 1).page(params[:page]).per(100)
+    @word_parsers_in_group = Word.where(id: all_words, length: 1)#page(params[:page]).per(100)
+    # @word_parsers_in_group = Word.where(id: all_words, length: 1).page(params[:page]).per(100)
   end
   ### 按字频率排序
   def single_words_in_freq
     @roadmap = Roadmap.find(session[:roadmap_id])
-    lesson_ids = @roadmap.lessons.pluck(:id)
+    # lesson_ids = @roadmap.lessons.pluck(:id)
+    lesson_ids = Pace.where(roadmap: @roadmap.id, serial: params[:pace_begin_id]..params[:pace_end_id]).pluck(:lesson_id)
     all_words = WordParser.includes(:word).where(lesson_id: lesson_ids, words: {length: 1}).pluck("word_id")
-    word_parsers_in_group = all_words.group_by {|word| [word, all_words.count(word)]}.keys.sort {|a, b| a[1]<=>b[1]}
+    @word_parsers_in_group = all_words.group_by {|word| [word, all_words.count(word)]}.keys.sort {|a, b| a[1]<=>b[1]}
+    # word_parsers_in_group = all_words.group_by {|word| [word, all_words.count(word)]}.keys.sort {|a, b| a[1]<=>b[1]}
 
-    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
+    # @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
   end
 
   # 文路的用词报告。
@@ -99,18 +103,22 @@ class RoadmapsController < ApplicationController
   ### 按字排序
   def meanful_words
     @roadmap = Roadmap.find(session[:roadmap_id])
-    lesson_ids = @roadmap.lessons.pluck(:id)
+    lesson_ids = Pace.where(roadmap: @roadmap.id, serial: params[:pace_begin_id]..params[:pace_end_id]).pluck(:lesson_id)
+    # lesson_ids = @roadmap.lessons.pluck(:id)
     all_words = WordParser.where(lesson_id: lesson_ids).pluck("word_id").uniq
-    @word_parsers_in_group = Word.where(id: all_words, length: [2..100], is_meanful: true).order(:name).page(params[:page]).per(100)
+    @word_parsers_in_group = Word.where(id: all_words, length: [2..100], is_meanful: true).order(:name)
+    # @word_parsers_in_group = Word.where(id: all_words, length: [2..100], is_meanful: true).order(:name).page(params[:page]).per(100)
   end
   ### 按频排序
   def meanful_words_in_freq
     @roadmap = Roadmap.find(session[:roadmap_id])
-    lesson_ids = @roadmap.lessons.pluck(:id)
+    # lesson_ids = @roadmap.lessons.pluck(:id)
+    lesson_ids = Pace.where(roadmap: @roadmap.id, serial: params[:pace_begin_id]..params[:pace_end_id]).pluck(:lesson_id)
     all_words = WordParser.includes(:word).where(lesson_id: lesson_ids, words: {length: 2..100, is_meanful: true}).pluck("word_id")
-    word_parsers_in_group = all_words.group_by {|word| [word, all_words.count(word)]}.keys.sort {|a, b| a[1]<=>b[1]}
+    @word_parsers_in_group = all_words.group_by {|word| [word, all_words.count(word)]}.keys.sort {|a, b| a[1]<=>b[1]}
+    # word_parsers_in_group = all_words.group_by {|word| [word, all_words.count(word)]}.keys.sort {|a, b| a[1]<=>b[1]}
 
-    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
+    # @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
   end
 
   def choose_begin_and_end
@@ -138,6 +146,30 @@ class RoadmapsController < ApplicationController
     @diff_words_from_lesson1 =  (words_from_lesson_1 - words_from_lesson_2).sort
     @same_in_lesson_1 = @same_words.size.to_f * 100  / words_from_lesson_1.size
     @same_in_lesson_2 = @same_words.size.to_f * 100  / words_from_lesson_2.size
+  end
+
+  def word_first_appear
+    @roadmap = Roadmap.find(session[:roadmap_id])
+    @pace_begin = Pace.find(params[:pace_begin_id])
+    @pace_end = Pace.find(params[:pace_end_id])
+    @result = []
+    word_id_list = []
+    @roadmap.paces.where(serial: @pace_begin..@pace_end).each do |pace|
+      word_id_origin << pace.lesson.word_parsers.map {|word_parser| word_parser.word_id}.uniq # 生成word的id列表
+      word_id_origin.each do |word_id_o|
+        if @pace_end.include?(word_id_o)
+          @pace_end << word_id_o
+          @result << [word_id_o, pace]
+        else
+          next
+        end
+      end
+      # 将生成元素[word_id, pace.serial]组成的结果数组
+      #  将每个word_id和word_id_list相比，如果在里面则跳过，如果没有则加入word_id_list和结果数组
+    end 
+    # lesson_ids = Pace.where(roadmap: @roadmap.id, serial: params[:pace_begin_id]..params[:pace_end_id]).pluck(:lesson_id)
+    # all_words = WordParser.includes(:word).where(lesson_id: lesson_ids, words: {length: 2..100, is_meanful: true}).pluck("word_id")
+    # @word_parsers_in_group = all_words.group_by {|word| [word, all_words.count(word)]}.keys.sort {|a, b| a[1]<=>b[1]}
   end
 
   private

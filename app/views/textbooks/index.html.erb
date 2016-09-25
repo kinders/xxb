@@ -25,7 +25,14 @@
     <div class="col-xs-6 col-sm-4 col-md-2">
       <div class="jumbotron" style="background-color: #f7eed6; padding: 20px;">
         <p style="font-size: 10px; line-height: 14px;"><%= textbook.serial.round(2) %></p>
-        <p style="font-size: 16px; line-height: 32px;"><%= link_to textbook.title, textbook_path(textbook), class: "btn-link" %></p>
+        <p style="font-size: 16px; line-height: 32px;">
+          <%# link_to textbook.title, textbook_path(textbook), class: "btn-link" %>
+          <% unless textbook.description.blank? %>
+            <%= link_to textbook.title, textbook_path(textbook), class: "btn-link", "data-toggle": "tooltip", "data-placement": "bottom", "title": textbook.description %>
+          <% else %>
+            <%= link_to textbook.title, textbook_path(textbook), class: "btn-link" %>
+          <% end %>
+        </p>
 	      <% if current_user.id == textbook.user_id  %>
         <p style="font-size: 12px; line-height: 18px;">
 
