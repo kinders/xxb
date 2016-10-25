@@ -14,6 +14,8 @@ Rails.application.routes.draw do
   end
   post '/roadmaps/choose_begin_and_end', to: 'roadmaps#choose_begin_and_end'
   post '/roadmaps/compare_with_roadmap', to: 'roadmaps#compare_with_roadmap'
+  get '/create_roadmap_for_textbook', to: 'roadmaps#create_roadmap_for_textbook'
+  get '/update_roadmap_for_textbook', to: 'roadmaps#update_roadmap_for_textbook'
 
   resources :meanings
 
@@ -33,6 +35,7 @@ Rails.application.routes.draw do
   resources :words do
     get "change_meanful"
     get "load_explain_from_baidu_hanyu"
+    get "load_explain_from_baidu_dict"
   end
   post '/word/new_words_as_tutor', to: 'words#new_words_as_tutor'
 
@@ -200,6 +203,7 @@ Rails.application.routes.draw do
     get :autocomplete_lesson_title, on: :collection
     get 'delete_picture1'
     get 'delete_picture2'
+    get 'show_with_lesson'
   end
   get '/tutor/new_link_to_lesson', to: 'tutors#new_link_to_lesson'
   post '/tutor/create_link_to_lesson', to: 'tutors#create_link_to_lesson'

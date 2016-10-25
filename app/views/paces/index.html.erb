@@ -102,13 +102,33 @@
           <%= link_to "查看词频表", "#choose_for_meanful_word_in_freq", data: {toggle: "modal"}  %>
         </li>
         <li role="separator" class="divider"></li>
-        <li>
-          <%= link_to "批量导入课程", "#choose_a_textbook", data: {toggle: "modal"}  %>
-        </li>
+        <% if session[:textbook_id] && @roadmap.textbook_id == session[:textbook_id] %>
+          <li>
+            <%= link_to '更新本书文路', update_roadmap_for_textbook_path %>
+          </li>
+          <li>
+            <%= link_to "对本书的课程进行用词分析", textbook_words_analysis_path(@roadmap.textbook_id) %>
+          </li>
+          <li role="separator" class="divider"></li>
+          <li>
+            <%= link_to "查看全书字表", textbook_single_words_path(@roadmap.textbook_id) %>
+          </li>
+          <li>
+            <%= link_to "查看全书词表", textbook_meanful_words_path(@roadmap.textbook_id) %>
+          </li>
+        <% else %>
+          <li>
+            <%= link_to "批量导入课程", "#choose_a_textbook", data: {toggle: "modal"}  %>
+          </li>
+        <% end %>
       </ul>
     </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
-      <%= link_to t('.up', :default => t("helpers.links.up")), roadmaps_url, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.roadmap")) %>
+      <% if session[:textbook_id] && @roadmap.textbook_id == session[:textbook_id] %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), textbook_url(session[:textbook_id]), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.textbook")) %>
+      <% else %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), roadmaps_url, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.roadmap")) %>
+      <% end %>
       <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
         :back, 
         class: 'btn btn-default', 
@@ -194,7 +214,7 @@
         <h4 class="modal-title" id="secondModalLabel">请选择标准的起始点：</h4>
       </div>
       <div class="modal-body">
-
+        <% if @roadmap.paces.any? %>
         <%= form_tag "/roadmaps/#{@roadmap.id}/single_words", class: 'form-horizontal' do %>
 
           <div class="form-group">
@@ -212,6 +232,7 @@
           </div>
           <%= submit_tag "生成字表", :class => 'btn btn-primary col-sm-offset-2' %>
         <% end %>
+        <% end %>
       </div>
     </div>
   </div>
@@ -227,6 +248,7 @@
         <h4 class="modal-title" id="thirdModalLabel">请选择起止点：</h4>
       </div>
       <div class="modal-body">
+        <% if @roadmap.paces.any? %>
         <%= form_tag "/roadmaps/#{@roadmap.id}/meanful_words", class: 'form-horizontal' do %>
           <div class="form-group">
             <%= label_tag "标准起点", nil, class: 'control-label col-sm-2' %>
@@ -241,6 +263,7 @@
             </div>
           </div>
           <%= submit_tag "生成词表", :class => 'btn btn-primary col-sm-offset-2' %>
+        <% end %>
         <% end %>
       </div>
     </div>
@@ -257,6 +280,7 @@
         <h4 class="modal-title" id="fourModalLabel">请选择起止点：</h4>
       </div>
       <div class="modal-body">
+        <% if @roadmap.paces.any? %>
         <%= form_tag "/roadmaps/#{@roadmap.id}/single_words_in_freq", class: 'form-horizontal' do %>
           <div class="form-group">
             <%= label_tag "标准起点", nil, class: 'control-label col-sm-2' %>
@@ -271,6 +295,7 @@
             </div>
           </div>
           <%= submit_tag "生成字频表", :class => 'btn btn-primary col-sm-offset-2' %>
+        <% end %>
         <% end %>
       </div>
     </div>
@@ -287,6 +312,7 @@
         <h4 class="modal-title" id="fifthModalLabel">请选择起止点：</h4>
       </div>
       <div class="modal-body">
+        <% if @roadmap.paces.any? %>
         <%= form_tag "/roadmaps/#{@roadmap.id}/meanful_words_in_freq", class: 'form-horizontal' do %>
           <div class="form-group">
             <%= label_tag "标准起点", nil, class: 'control-label col-sm-2' %>
@@ -301,6 +327,7 @@
             </div>
           </div>
           <%= submit_tag "生成词频表", :class => 'btn btn-primary col-sm-offset-2' %>
+        <% end %>
         <% end %>
       </div>
     </div>

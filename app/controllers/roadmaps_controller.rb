@@ -136,8 +136,8 @@ class RoadmapsController < ApplicationController
 
   def compare_with_roadmap
     @roadmap = Roadmap.find(session[:roadmap_id])
-    @pace_begin = Pace.find(params[:pace_begin_id])
-    @pace_end = Pace.find(params[:pace_end_id])
+    @pace_begin = Pace.find_by(roadmap_id: @roadmap.id, serial: params[:pace_begin_id])
+    @pace_end = Pace.find_by(roadmap_id: @roadmap.id, serial: params[:pace_end_id])
     roadmap_lessons_id = Pace.where(roadmap_id: @roadmap.id, serial: params[:pace_begin_id]..params[:pace_end_id]).pluck(:lesson_id)
     @lesson = Lesson.find(session[:lesson_id])
     words_from_lesson_1 = WordParser.includes(:word).where(lesson_id: @lesson.id, words: {is_meanful: true}).map{|word_parser|word_parser.word_id}.uniq
@@ -172,6 +172,57 @@ class RoadmapsController < ApplicationController
     # @word_parsers_in_group = all_words.group_by {|word| [word, all_words.count(word)]}.keys.sort {|a, b| a[1]<=>b[1]}
   end
 
+  # 直接为课本生成文路
+  def create_roadmap_for_textbook
+    unless session[:textbook_id]
+      redirect_to :back, notice: "无法找到对应的课文"
+      return
+    else
+      @textbook = Textbook.find(session[:textbook_id])
+      @roadmap = Roadmap.create(name: @textbook.title, description: @textbook.description, user_id: @textbook.user_id, textbook_id: @textbook.id)
+      @textbook.catalogs.order(:serial).map{|c|c.lesson_id}.each do |lesson|
+        Pace.create {|pace|
+          pace.user_id = @roadmap.user_id
+          pace.roadmap_id = @roadmap.id
+          pace.lesson_id = lesson
+          if @roadmap.paces.any?
+            pace.serial = @roadmap.paces.order(:serial).last.serial + 1
+          else
+            pace.serial = 1
+          end
+        }
+      end
+      respond_to do |format|
+        format.html { redirect_to roadmap_path(@roadmap), notice: '成功生成文路。' }
+      end
+    end
+  end
+
+  # 更新课本的文路
+  def update_roadmap_for_textbook
+    @roadmap = Roadmap.find(session[:roadmap_id])
+    paces_lesson_ids = @roadmap.paces.map{|p| p.lesson_id}
+    lesson_ids = @roadmap.textbook.catalogs.order(:serial).map{|c|c.lesson_id}
+    void_lesson_ids = paces_lesson_ids - lesson_ids
+    lesson_ids.each_with_index do |lesson, index|
+      old_pace = Pace.find_by(roadmap_id: @roadmap.id, lesson_id: lesson)
+      if old_pace 
+        if old_pace.serial == (index + 1)
+          next
+        else
+          old_pace.update(serial: (index + 1)) 
+        end
+      else
+        Pace.create(user_id: @roadmap.user_id, roadmap_id: @roadmap.id, lesson_id: lesson, serial: (index + 1))
+      end
+    end 
+    Pace.where(roadmap_id: @roadmap, lesson_id: void_lesson_ids).destroy_all
+    respond_to do |format|
+      format.html { redirect_to roadmap_path(@roadmap), notice: '文路完成更新。' }
+    end
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_roadmap
@@ -180,6 +231,6 @@ class RoadmapsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def roadmap_params
-      params.require(:roadmap).permit(:name, :description, :user_id, :deleted_at)
+      params.require(:roadmap).permit(:name, :description, :user_id, :deleted_at, :textbook_id)
     end
 end

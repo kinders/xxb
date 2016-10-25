@@ -16,14 +16,16 @@ class LessonsController < ApplicationController
   def show
     # 记录足迹
     history = History.create(user_id: current_user.id, modelname: "lesson", entryid: @lesson.id)
+    @catalogs = Catalog.where(lesson_id: @lesson.id)
+    if @catalogs.any?
+      @textbooks = Textbook.where(id: @catalogs.map{|c| c.textbook_id}.uniq)
+    end
     if session[:textbook_id]
       @textbook = Textbook.find_by(id: session[:textbook_id])
       @catalog = Catalog.find_by(textbook_id: @textbook.id, lesson_id: @lesson.id)
-    else
-      @catalogs = Catalog.where(lesson_id: @lesson.id)
-      @textbooks = Textbook.where(id: @catalogs.map{|c| c.textbook_id})
     end
     session[:lesson_id] = @lesson.id
+    session[:sentence_id] = nil
     session[:tutor_id] = nil
     session[:teaching_id] = nil
     @words_report = WordsReport.find_by(lesson_id: @lesson.id)

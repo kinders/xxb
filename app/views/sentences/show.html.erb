@@ -65,6 +65,9 @@
           "data-placement": "bottom", 
           title: t('.next', default: t("helpers.titles.next"), model: t("activerecord.models.sentence")) %>
       <% end %>
+      <% if @lesson %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), lesson_url(@lesson), class: 'btn btn-default', tabindex: 82, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.lesson")) %>
+      <% end %>
       <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
         :back, 
         class: 'btn btn-default', 

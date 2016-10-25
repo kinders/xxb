@@ -6,11 +6,6 @@ class Word < ActiveRecord::Base
   acts_as_paranoid
   validates :name, :length,  presence: true
 
-  def who
-    @word = self
-    puts @word.name
-  end
-
   # 这个方法专门为了获取单个汉字的注音和词义
   def load_explain_from_baidu_hanyu
     require 'net/http'
@@ -62,5 +57,54 @@ class Word < ActiveRecord::Base
     end
   end
 
+  # 这个方法可以从百度词典里面获取英语单词的发音和含义
+  def load_explain_from_baidu_dict
+    require 'net/http'
+    require 'nokogiri'
+
+    @word = self
+
+    path = "/s?wd=" + @word.name
+    response = Net::HTTP.get_response("dict.baidu.com", path)
+    if response.body =~ /id="empty-tip"/
+      return
+    end
+
+    doc = Nokogiri::HTML(response.body)
+
+    odd = []
+    even = []
+    doc.css("div#pinyin").inner_html.scan(/\[[^]]*\]/).each_with_index do |item, index|
+      if (index & 1) == 0
+        odd << item.gsub(/["\[\]]/, "")
+      else
+        even << item.gsub(/["\[\]]/, "")
+      end
+    end
+    pinyin = even.zip(odd)
+    pinyin.each do |py|
+      @word.phonetics.create(content: py[0], label: py[1])
+    end
+
+    a_pattern = Regexp.union(/<a[^>]*>/, /<\/a>/)
+    b_pattern = /<b[^>]*>/
+    h_pattern = Regexp.union(/<h[^>]*>/, /<\/h[^>]*>/)
+    explains = ""
+    explains << doc.css("div.en-content","div.tab-content", "div#baike-wrapper")[0].inner_html.gsub(a_pattern, " ").gsub(b_pattern, "<b>").gsub(h_pattern, "") + "<hr>"
+    @word.meanings.create(content: explains)
+
+    if @word.name =~ /[A-Z]/
+      little_word = @word.name.downcase
+      path = "/s?wd=" + little_word
+      response = Net::HTTP.get_response("dict.baidu.com", path)
+      doc = Nokogiri::HTML(response.body)
+      explains = "<div><strong>小写：#{little_word}<strong></div>"
+      explains << "<div><strong>音标</strong>"
+      explains << doc.css("div#pinyin").inner_html.scan(/\[[^]]*\]/).to_s.gsub(/"/, "")
+      explains << "</div>"
+      explains << doc.css("div.en-content","div.tab-content", "div#baike-wrapper")[0].inner_html.gsub(a_pattern, " ").gsub(b_pattern, "<b>").gsub(h_pattern, "") + "<hr>"
+      @word.meanings.create(content: explains)
+    end
+  end
 
 end

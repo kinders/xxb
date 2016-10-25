@@ -41,7 +41,7 @@
     <% @words_reports.each do |words_report| %>
       <tr>
         <td><%= link_to words_report.id, words_report_path(words_report) %></td>
-        <td><%= words_report.lesson_id %></td>
+        <td><%= link_to words_report.lesson.title, lesson_path(words_report.lesson_id) %></td>
         <td><%= words_report.md %></td>
         <td><%= words_report.deleted_at %></td>
         <td><%= words_report.created_at.strftime("%F") %></td>
@@ -64,3 +64,4 @@
     <% end %>
   </tbody>
 </table>
+<%= paginate @words_reports %>

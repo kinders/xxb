@@ -42,6 +42,10 @@
         <li>
           <%= link_to "添加辅导", new_tutor_url %>
         </li>
+        <% if @lesson.sentences.any? %>
+          <li role="separator" class="divider"></li>
+          <li><%= link_to "逐句模式", sentences_url %></li>
+        <% end %>
         <li role="separator" class="divider"></li>
         <% unless @lesson.practices.empty? %>
         <li>
@@ -108,8 +112,10 @@
 </div>
 
 <% if @textbooks && @textbooks.any? %>
+<% @textbooks.to_a.delete(@textbook) %>
+<% if @textbooks && @textbooks.any? %>
 <div class="panel panel-success">
-  <div class="panel-heading">包含了本篇课文的课本有：</div>
+  <div class="panel-heading">包含了本篇课文的课本还有：</div>
     <table class="table table-striped">
       <thead>
         <tr>
@@ -133,6 +139,7 @@
     </table>
   </div>
 <% end %>
+<% end %>
 
 <div class="page-header">
   <h2><%= number_with_precision(@catalog.serial, precision: 2) if @catalog %> <%= @lesson.title %>  <small><%= @lesson.author if @lesson.author %></small></h2>
@@ -142,7 +149,7 @@
   <%= image_tag @lesson.picture.url, class: "img-responsive center-block"  %>
   <hr>
 <% end %>
-<div class="lesson_paragraph"><%= sanitize(@lesson.content) %></div>
+<div class="lesson_paragraph"><%= sanitize(@lesson.content, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %></div>
 
 <% else %>
 

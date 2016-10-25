@@ -14,7 +14,7 @@ class CardboxesController < ApplicationController
       @cardboxes = Cardbox.where(user_id: current_user.id, lesson_id: @lesson.id) 
     elsif session[:textbook_id]
       @textbook = Textbook.find(session[:textbook_id])
-      @cardboxes = Cardbox.where(user_id: current_user.id, lesson_id: @textbook.catalogs.map{|c|c.lesson.id}) 
+      @cardboxes = Cardbox.where(user_id: current_user.id, lesson_id: @textbook.catalogs.map{|c|c.lesson.id}).order(:lesson_id) 
     else
       @cardboxes = Cardbox.where(user_id: current_user.id)
     end

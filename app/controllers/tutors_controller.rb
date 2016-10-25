@@ -221,6 +221,17 @@ class TutorsController < ApplicationController
     redirect_to @tutor, notice: "已经生成助读辅导，请您对多音字进行选定修改。"
   end
 
+  # get /tutor/1/show_with_lesson
+  def show_with_lesson
+    if session[:tutor_id]
+      @tutor = Tutor.find(session[:tutor_id])
+      @lesson = @tutor.lesson
+      @exercises = Exercise.where(tutor_id: @tutor.id).order(:serial)
+    else
+      redirect_to :back, notice: "未指定辅导。"
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_tutor

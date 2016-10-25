@@ -23,7 +23,8 @@ class SentencesController < ApplicationController
   # GET /sentences/1.json
   def show
     @word_parsers = @sentence.word_parsers.order(:id)
-    # 生成上一个和下一个词语
+    session[:sentence_id] = @sentence.id
+    # 生成上一个和下一个句子
     if session[:lesson_id]
       @lesson = Lesson.find(session[:lesson_id])
       all_sentences_id = Sentence.where(lesson_id: @lesson.id).pluck("id").sort

@@ -57,12 +57,16 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
-          <% if session[:teaching_id] %>
+          <li>
+          <%= link_to "原文对照", tutor_show_with_lesson_path(@tutor), tabindex: 61 %>
+          </li>
+          <li role="separator" class="divider"></li>
+        <% if session[:teaching_id] %>
           <li>
           <%= link_to "查看辅导的安排", plans_path, tabindex: 61 %>
           </li>
           <li role="separator" class="divider"></li>
-          <% end %>
+        <% end %>
           <li>
           <% if @tutor.exercises.any? %>
             <%= link_to "随机练习", new_evaluation_path %>

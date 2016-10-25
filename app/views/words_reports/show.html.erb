@@ -58,11 +58,11 @@
     <% if word.is_meanful %>
       <li class="list-group-item list-group-item-success">
         <span class="badge"><%= link_to "标记为无意义词汇", word_change_meanful_path(word) %></span>
-      <%= word.name %>
+      <%= link_to word.name, word_path(word.id) %>
     <% else %>
       <li class="list-group-item">
         <span class="badge"><%= link_to "标记为有意义词汇", word_change_meanful_path(word) %></span>
-        <%= word.name %>
+        <%= link_to word.name, word_path(word.id) %>
     <% end %>
     </li>
   <% end %>
@@ -72,8 +72,10 @@
 <hr>
 <p>其他可用的分析：</p>
 <div class="btn-group" role="group">
+  <% if @longest %>
   <% 1.upto(@longest) do |t| %>
     <%= link_to "#{t}字", words_report_show_word_n_path(words_report_id: @words_report.id, num: t), class: 'btn btn-default' %>
+  <% end %>
   <% end %>
   <%= link_to "的字", words_report_show_de1_path(@words_report), class: 'btn btn-default' %>
   <%= link_to "地字", words_report_show_de2_path(@words_report), class: 'btn btn-default' %>
@@ -96,8 +98,10 @@
       </div>
       <div class="modal-body">
         <%= form_tag "/roadmaps/choose_begin_and_end", class: 'form-inline' do %>
+            <%= label_tag "请选择一个标准，再进行比较", nil, class: 'control-label' %>
           <div class="control-group">
-            <%= select_tag :roadmap_id, options_for_select(Roadmap.where(user_id: current_user.id).order(:id).collect{ |roadmap| [roadmap.id.to_s + " - " + roadmap.name, roadmap.id]}), {prompt: "请选择一个标准，再进行比较", class: 'form-control col-md-4'} %>
+            <% current_textbook_roadmap = Textbook.find(session[:textbook_id]).roadmap %>
+            <%= select_tag :roadmap_id, options_for_select(Roadmap.where(user_id: current_user.id).order(:id).collect{ |roadmap| [roadmap.id.to_s + " - " + roadmap.name, roadmap.id]}, current_textbook_roadmap.id), {prompt: "请选择一个标准，再进行比较", class: 'form-control col-md-4'} %>
           </div>
           <%= submit_tag "提交", :class => 'btn btn-primary' %>
         <% end %>

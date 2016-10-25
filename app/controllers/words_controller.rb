@@ -20,7 +20,7 @@ class WordsController < ApplicationController
     @words_has_word = Word.where(is_meanful: true).where("name LIKE ?", "%" + @word.name + "%" ).order(:length)
     @lessons_has_word = WordParser.where(word_id: @word.id).pluck(:lesson_id).uniq
     # 生成上一个和下一个词语
-    all_words_id = Word.all.pluck("id")
+    all_words_id = Word.where(id: (@word.id - 50)..(@word.id + 50)).pluck("id")
     current_word_id = all_words_id.index(@word.id)
     if current_word_id == 0
       @previous_word = nil
@@ -215,6 +215,13 @@ class WordsController < ApplicationController
     explains <<  doc.css("div#baike-wrapper").inner_html.gsub(a_pattern, " ").gsub(b_pattern, "<b>").gsub(h_pattern, "").gsub("查看百科", "")
     @word.meanings.create(content: explains)
     redirect_to :back, notice: "成功从百度汉语网站导入信息。"
+  end
+
+  # get /words/1/load_explain_from_baidu_dict
+  def load_explain_from_baidu_dict
+    @word || @word = Word.find(session[:word_id])
+    @word.load_explain_from_baidu_dict
+    redirect_to :back, notice: "成功从百度词典网站导入信息。"
   end
 
   def new_words_as_tutor

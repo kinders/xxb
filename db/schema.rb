@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160728023015) do
+ActiveRecord::Schema.define(version: 20161023144629) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -604,9 +604,11 @@ ActiveRecord::Schema.define(version: 20160728023015) do
     t.datetime "deleted_at"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.integer  "textbook_id"
   end
 
   add_index "roadmaps", ["deleted_at"], name: "index_roadmaps_on_deleted_at", using: :btree
+  add_index "roadmaps", ["textbook_id"], name: "index_roadmaps_on_textbook_id", using: :btree
   add_index "roadmaps", ["user_id"], name: "index_roadmaps_on_user_id", using: :btree
 
   create_table "roles", force: :cascade do |t|
@@ -834,5 +836,6 @@ ActiveRecord::Schema.define(version: 20160728023015) do
   add_foreign_key "paces", "users"
   add_foreign_key "phonetic_notations", "phonetics"
   add_foreign_key "phonetic_notations", "words"
+  add_foreign_key "roadmaps", "textbooks"
   add_foreign_key "roadmaps", "users"
 end

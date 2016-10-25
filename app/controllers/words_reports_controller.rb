@@ -5,9 +5,9 @@ class WordsReportsController < ApplicationController
 
   # GET /words_reports
   # GET /words_reports.json
-  # def index
-    # @words_reports = WordsReport.all
-  # end
+  def index
+    @words_reports = WordsReport.all.page(params[:page]).per(100)
+  end
 
   # GET /words_reports/1
   # GET /words_reports/1.json

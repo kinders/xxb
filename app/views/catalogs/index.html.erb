@@ -13,16 +13,15 @@
       </button>
       <ul class="dropdown-menu">
         <li>
+          <% if @textbook.roadmap %>
+            <%= link_to "查看本书的文路", roadmap_path(@textbook.roadmap) %>
+          <% else %>
+            <%= link_to "创建本书的文路", create_roadmap_for_textbook_path %>
+          <% end %>
+        </li>
+        <li role="separator" class="divider"></li>
+        <li>
           <%= link_to "查看本书的卡片盒", cardboxes_path %>
-        </li>
-        <li>
-          <%= link_to "查看字表", textbook_single_words_path(@textbook) %>
-        </li>
-        <li>
-          <%= link_to "查看词表", textbook_meanful_words_path(@textbook) %>
-        </li>
-        <li>
-          <%= link_to "对本书的课程进行用词分析", textbook_words_analysis_path(@textbook) %>
         </li>
       </ul>
     </div>

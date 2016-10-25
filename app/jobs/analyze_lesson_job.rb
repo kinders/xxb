@@ -11,8 +11,9 @@ class AnalyzeLessonJob < ActiveJob::Base
     end
     content = @lesson.title + "。" + (@lesson.author || "") + "。"+ (@lesson.content || "")
     # 获取并精简文本
+    content.gsub!(/(<\/p>)|(<\/div>)/, ".") # 补充句号到段落结尾，防止取出标签之后因为末尾没有标点而和第二行合并
     content.gsub!(/<(\w|\/)+[^>]*>/, "") # 除去html标签
-    content.gsub!(/\r|\n|\f/, "") # 除去换行符
+    content.gsub!(/\r|\n|\f/, ".") # 除去换行符，也是防止因为末尾没有标点而和第二行合并
     new_md = Digest::MD5.hexdigest(content)
 
     # 检查是否存在分析报告，若有则分析文本是否改动
@@ -41,15 +42,41 @@ class AnalyzeLessonJob < ActiveJob::Base
     end
     # p content
     
+    # 处理ckeditor的html转义
+    content.gsub!(/(&#39;)/, "'") # 转为原型：单引号
+    content.gsub!(/(&ldquo;)/, "“") # 转为原型：“
+    content.gsub!(/(&rdquo;)/, "”") # 转为原型：”
+    content.gsub!(/(&nbsp;)/, " ") # 转为原型：空格
+    content.gsub!(/(&lt;)/, "<") # 转为原型：小于号
+    content.gsub!(/(&gt;)/, ">") # 转为原型：大于号
+    content.gsub!(/(&aacute;)/, "á") # 转为原型：
+    content.gsub!(/(&oacute;)/, "ó") # 转为原型：
+    content.gsub!(/(&eacute;)/, "é") # 转为原型：
+    content.gsub!(/(&iacute;)/, "í") # 转为原型：
+    content.gsub!(/(&uacute;)/, "ú") # 转为原型：
+    content.gsub!(/(&agrave;)/, "à") # 转为原型：
+    content.gsub!(/(&ograve;)/, "ò") # 转为原型：
+    content.gsub!(/(&egrave;)/, "è") # 转为原型：
+    content.gsub!(/(&igrave;)/, "ì") # 转为原型：
+    content.gsub!(/(&ugrave;)/, "ù") # 转为原型：
+    content.gsub!(/(&uuml;)/, "ü") # 转为原型：
+    content.gsub!(/(&aelig;)/, "æ") # 转为原型：
+    content.gsub!(/(&theta;)/, "θ") # 转为原型：
+    content.gsub!(/(&eth;)/, "ð") # 转为原型：
+
+
+
+
+
     # 将内容分割为句子，逐句分析
-    sentences = content.split(/[，；。？！……——：]|([,;.?!:] )/)
+    sentences = content.split(/[，；。？！……——：,;.?!:]/)
+    # sentences = content.split(/[，；。？！……——：]|([,;.?!:] )/)
     sentences.each do |sentence|
       word_parser = []
       ## 将句子中的引号去除
       sentence.gsub!(/['"“”]/, "")
-      sentence.gsub!(/&rdquo;/, "")
-      sentence.gsub!(/&ldquo;/, "")
-      next if sentence =~ /[,.?!:] /
+      next if sentence =~ /[,.?!:]/
+      # next if sentence =~ /[,.?!:] /
       @sentence = Sentence.create(lesson_id: @lesson.id, name: sentence)
       ## 将句子中的非中文字符用空格隔开
       chinese_pattern = /[\u4e00-\u9fa5]/
@@ -91,6 +118,10 @@ class AnalyzeLessonJob < ActiveJob::Base
           word = Word.find_by(md1: words_with_blank_id[0..7], md2: words_with_blank_id[8..15], md3: words_with_blank_id[16..23], md4: words_with_blank_id[24..31], md5: words_with_blank_id[32..39], md6: words_with_blank_id[40..47], md7: words_with_blank_id[48..55], md8: words_with_blank_id[56..63])
           if word
             @word = word
+          elsif words_length == 1
+            # @word = Word.create(name: words_with_blank, length: words_length)
+            @word = Word.create(name: words_with_blank, length: words_length, md1: words_with_blank_id[0..7], md2: words_with_blank_id[8..15], md3: words_with_blank_id[16..23], md4: words_with_blank_id[24..31], md5: words_with_blank_id[32..39], md6: words_with_blank_id[40..47], md7: words_with_blank_id[48..55], md8: words_with_blank_id[56..63], is_meanful: true)
+            GetWordExplainJob.perform_later @word.id
           else
             # @word = Word.create(name: words_with_blank, length: words_length)
             @word = Word.create(name: words_with_blank, length: words_length, md1: words_with_blank_id[0..7], md2: words_with_blank_id[8..15], md3: words_with_blank_id[16..23], md4: words_with_blank_id[24..31], md5: words_with_blank_id[32..39], md6: words_with_blank_id[40..47], md7: words_with_blank_id[48..55], md8: words_with_blank_id[56..63])

@@ -1,0 +1,89 @@
+<%- model_class = Tutor -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', tabindex: 83, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h2>
+        <%= @tutor.title %>
+        <% if @exercises.any? %>
+          <button class="btn btn-xs btn-default" type="button" data-toggle="collapse" data-target="#exercisezone" aria-expanded="false" aria-controls="exercise zone">
+            查看/隐藏 习题
+          </button>
+        <% end %>
+      </h2>
+      <div class="text-right"><%= @tutor.page_length %></div>
+      <% if @tutor.proviso && !@tutor.proviso.empty?%>
+        <div class="well well-sm paragraph"> <%= sanitize(@tutor.proviso, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %> </div>
+      <% end %>
+      <% unless @tutor.page.blank? %>
+      <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="bg-success center-block">
+        <p class="text-center">...</p>
+      </a>
+      <% end %>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+        <% if @tutor.picture1_file_name %>
+          <%= image_tag @tutor.picture1.url, class: "img-responsive center-block"  %>
+        <hr>
+        <% end %>
+        <% if @tutor.picture2_file_name %>
+          <%= image_tag @tutor.picture2.url, class: "img-responsive center-block"  %>
+        <hr>
+        <% end %>
+        <div class="paragraph"> <%= sanitize(@tutor.page, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u), attributes: %w(href class style)) %> </div>
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="bg-success center-block">
+          <p class="text-center">...</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="col-md-5">
+  <div class="panel panel-default">
+<div class="panel-heading">
+  <h2><%= number_with_precision(@catalog.serial, precision: 2) if @catalog %> <%= @lesson.title %>  <small><%= @lesson.author if @lesson.author %></small></h2>
+  <p class="text-right">时间：<%= @lesson.time || "未知"%>；字数：<%= @lesson.content_length %></p>
+</div>
+<div class="lesson_paragraph"><%= sanitize(@lesson.content) %></div>
+</div>
+</div>
+</div>
+
+<!-- 下面是配套练习的内容 -->
+<% if @exercises.any? %>
+<div class="collapse" id="exercisezone">
+<table class="table">
+  <thead>
+    <th>序号</th>
+    <th>标题</th>
+    <th>问题</th>
+    <th>可执行的操作</th>
+    </thead>
+  <tbody>
+    <% @exercises.each do |exercise| %>
+      <tr>
+        <td><%= exercise.serial %></td>
+        <td><%= exercise.practice.title %></td>
+        <td><%= exercise.practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %></td>
+        <td><%= link_to "做题", new_evaluation_path(practice_id: exercise.practice_id), class: 'btn btn-xs btn-default' %></td>
+      </tr>
+    <% end %>
+  </tbody> 
+</table>
+</div>
+<% end %>
+
+

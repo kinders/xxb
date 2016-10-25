@@ -100,7 +100,6 @@ class PacesController < ApplicationController
       end
       respond_to do |format|
         format.html { redirect_to paces_path, notice: '成功将课程追加到文路中。' }
-        format.json { render :show, status: :created, location: @card }
       end
     rescue
       respond_to do |format|
@@ -109,7 +108,6 @@ class PacesController < ApplicationController
       end
     end
   end
-
 
   private
     # Use callbacks to share common setup or constraints between actions.
