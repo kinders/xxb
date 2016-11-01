@@ -226,10 +226,11 @@
 </div>
 <script>
   var myVar=setInterval(function(){myTimer()},1000);
-  var t=0
+  var start = new Date();
   function myTimer() {
+    var now = new Date();
+    t = Math.round((now - start)/1000)
     document.getElementById("timer").innerHTML=t;
-    t = t + 1
   }
 </script>
 

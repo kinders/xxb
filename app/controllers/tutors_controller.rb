@@ -13,9 +13,9 @@ class TutorsController < ApplicationController
     else
       session[:tutor_id] = nil
       @lesson = Lesson.find_by(id: session[:lesson_id])
-      @tutors = Tutor.where(lesson_id: session[:lesson_id]).order('difficulty')
+      @tutors = Tutor.where(lesson_id: session[:lesson_id]).order(:difficulty, :created_at)
       unless @lesson
-        redirect_to root_path, notice: "无法找到相应的课程。"
+        redirect_to :back, notice: "无法找到相应的课程。"
       end
     end
   end
@@ -74,16 +74,28 @@ class TutorsController < ApplicationController
 
   # GET /tutors/new
   def new
+    unless session[:lesson_id]
+      redirect_to :back, notice: "无法找到相应的课程。"
+      return
+    end
     @tutor = Tutor.new
   end
 
   # GET /tutors/1/edit
   def edit
+    unless session[:lesson_id]
+      redirect_to :back, notice: "无法找到相应的课程。"
+      return
+    end
   end
 
   # POST /tutors
   # POST /tutors.json
   def create
+    unless session[:lesson_id]
+      redirect_to :back, notice: "无法找到相应的课程。"
+      return
+    end
     @tutor = Tutor.new(tutor_params)
     @tutor.user_id = current_user.id
     @tutor.lesson_id = session[:lesson_id]
@@ -103,6 +115,10 @@ class TutorsController < ApplicationController
   # PATCH/PUT /tutors/1
   # PATCH/PUT /tutors/1.json
   def update
+    unless session[:lesson_id]
+      redirect_to :back, notice: "无法找到相应的课程。"
+      return
+    end
     respond_to do |format|
       if @tutor.update(tutor_params)
         @tutor.page_length = @tutor.page.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length + @tutor.proviso.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
@@ -148,6 +164,10 @@ class TutorsController < ApplicationController
 
   # GET /tutors/new_link_to_lesson
   def new_link_to_lesson
+    unless session[:lesson_id]
+      redirect_to :back, notice: "无法找到相应的课程。"
+      return
+    end
     @lesson = Lesson.find_by(id: session[:lesson_id])
   end
 
@@ -159,8 +179,8 @@ class TutorsController < ApplicationController
       return
     end
     @target = Lesson.find_by(id: params[:lesson_id])
-    @tutor = Tutor.create(title: @target.title, lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
-    @another_tutor = Tutor.create(title: @lesson.title, lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: 4)
+    @tutor = Tutor.create(title: @target.title, lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: @target.content_length)
+    @another_tutor = Tutor.create(title: @lesson.title, lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: @lesson.content_length)
     respond_to do |format|
       format.html { redirect_to @tutor, notice: "辅导《#{@tutor.title}》已经成功生成。" }
       format.json { head :no_content }
@@ -169,6 +189,10 @@ class TutorsController < ApplicationController
 
   # GET /tutor/to_practice
   def to_practice
+    unless session[:lesson_id]
+      redirect_to :back, notice: "无法找到相应的课程。"
+      return
+    end
     @tutor = Tutor.find(session[:tutor_id])
     @lesson = Lesson.find(session[:lesson_id])
     practice = Practice.create { |p|
@@ -200,6 +224,10 @@ class TutorsController < ApplicationController
 
   # GET /tutor/create_pinyin_help_tutor
   def create_pinyin_help_tutor
+    unless session[:lesson_id]
+      redirect_to :back, notice: "无法找到相应的课程。"
+      return
+    end
     @lesson = Lesson.find(session[:lesson_id])
     content = "<h2>" + @lesson.title + "</h2><hr>" + @lesson.content
     contents = content.chars
@@ -223,6 +251,10 @@ class TutorsController < ApplicationController
 
   # get /tutor/1/show_with_lesson
   def show_with_lesson
+    unless session[:lesson_id]
+      redirect_to :back, notice: "无法找到相应的课程。"
+      return
+    end
     if session[:tutor_id]
       @tutor = Tutor.find(session[:tutor_id])
       @lesson = @tutor.lesson

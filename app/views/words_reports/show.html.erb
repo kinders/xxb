@@ -101,7 +101,8 @@
             <%= label_tag "请选择一个标准，再进行比较", nil, class: 'control-label' %>
           <div class="control-group">
             <% current_textbook_roadmap = Textbook.find(session[:textbook_id]).roadmap %>
-            <%= select_tag :roadmap_id, options_for_select(Roadmap.where(user_id: current_user.id).order(:id).collect{ |roadmap| [roadmap.id.to_s + " - " + roadmap.name, roadmap.id]}, current_textbook_roadmap.id), {prompt: "请选择一个标准，再进行比较", class: 'form-control col-md-4'} %>
+            <% current_textbook_roadmap_id = current_textbook_roadmap.id if current_textbook_roadmap %>
+            <%= select_tag :roadmap_id, options_for_select(Roadmap.where(user_id: current_user.id).order(:id).collect{ |roadmap| [roadmap.id.to_s + " - " + roadmap.name, roadmap.id]}, (current_textbook_roadmap_id || nil)), {prompt: "请选择一个标准，再进行比较", class: 'form-control col-md-4'} %>
           </div>
           <%= submit_tag "提交", :class => 'btn btn-primary' %>
         <% end %>
