@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
 
+  get 'agreements/like'
+  get 'agreements/dislike'
+
+  resources :comments
+
   resources :paces do
     get :autocomplete_lesson_title, on: :collection
   end

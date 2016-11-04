@@ -14,6 +14,7 @@ class AnalyzeLessonJob < ActiveJob::Base
     content.gsub!(/(<\/p>)|(<\/div>)/, ".") # 补充句号到段落结尾，防止取出标签之后因为末尾没有标点而和第二行合并
     content.gsub!(/<(\w|\/)+[^>]*>/, "") # 除去html标签
     content.gsub!(/\r|\n|\f/, ".") # 除去换行符，也是防止因为末尾没有标点而和第二行合并
+    content.sub!(/[()（）\[\]【】]/, "，") # 将括号替换为逗号。
     new_md = Digest::MD5.hexdigest(content)
 
     # 检查是否存在分析报告，若有则分析文本是否改动
@@ -31,6 +32,7 @@ class AnalyzeLessonJob < ActiveJob::Base
       @words_report = WordsReport.create(lesson_id: @lesson.id, md: new_md)
     end
 
+=begin
     # 将括号里的语句提出来，单独作为一句附在内容之后。
     # 当然如果是括号里还有括号这种写法，下面的分析会出错。可是谁让那个人乱写呢？
     i = 1
@@ -41,6 +43,7 @@ class AnalyzeLessonJob < ActiveJob::Base
       i = i + 1
     end
     # p content
+=end
     
     # 处理ckeditor的html转义
     content.gsub!(/(&#39;)/, "'") # 转为原型：单引号

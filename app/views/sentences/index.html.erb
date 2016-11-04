@@ -88,16 +88,6 @@
   <h3>《<%= @lesson.title %>》的<%=t '.title', default: model_class.model_name.human.titleize %></h3>
 </div>
 
-<p>其他可用的分析：</p>
-<div class="btn-group" role="group">
-  <%= link_to "全部", words_report_path(@lesson.words_report), class: 'btn btn-default' %>
-  <%= link_to "的字", words_report_show_de1_path(@lesson.words_report), class: 'btn btn-default' %>
-  <%= link_to "地字", words_report_show_de2_path(@lesson.words_report), class: 'btn btn-default' %>
-  <%= link_to "得字", words_report_show_de3_path(@lesson.words_report), class: 'btn btn-default' %>
-  <%= link_to "基本", words_report_show_basic_path(@lesson.words_report), class: 'btn btn-default' %>
-</div>
-
-<hr>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -115,5 +105,15 @@
   </tbody>
 </table>
 <%= paginate @sentences %>
+
+<hr>
+<p>其他可用的分析：</p>
+<div class="btn-group" role="group">
+  <%= link_to "全部", words_report_path(@lesson.words_report), class: 'btn btn-default' %>
+  <%= link_to "的字", words_report_show_de1_path(@lesson.words_report), class: 'btn btn-default' %>
+  <%= link_to "地字", words_report_show_de2_path(@lesson.words_report), class: 'btn btn-default' %>
+  <%= link_to "得字", words_report_show_de3_path(@lesson.words_report), class: 'btn btn-default' %>
+  <%= link_to "基本", words_report_show_basic_path(@lesson.words_report), class: 'btn btn-default' %>
+</div>
 
 <% end %>

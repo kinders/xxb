@@ -1,16 +1,17 @@
 class Lesson < ActiveRecord::Base
   resourcify
   belongs_to :user
-  has_many :catalogs, dependent: :destroy
-  has_many :textbook, through: :catalogs
-  has_many :teachings, dependent: :destroy
-  has_many :tutors, dependent: :destroy
-  has_many :practices, dependent: :destroy
-  has_many :cardboxes, dependent: :destroy
-  has_many :word_parsers, dependent: :destroy
-  has_one :words_report, dependent: :destroy
-  has_many :sentences, dependent: :destroy
-  has_many :paces, dependent: :destroy
+  has_many :catalogs
+  has_many :textbook
+  has_many :teachings
+  has_many :tutors
+  has_many :practices
+  has_many :cardboxes
+  has_many :word_parsers
+  has_one :words_report
+  has_many :sentences
+  has_many :paces
+  has_many :comments
 
   def self.titles
     all.collect{|lesson| [lesson.title, lesson.id]}

@@ -80,24 +80,102 @@
 </div>
 
 <div class="page-header">
-  <h3><%=t '.title', default: model_class.model_name.human.titleize %>：<%= @sentence.name %></h3>
+<p><small>课文：</small>《<%= link_to @sentence.lesson.title, lesson_url(@sentence.lesson_id) %>》<small>（<%= @sentence.lesson.author || '未知' %> <%= @sentence.lesson.time || '未知' %>）</small></p>
+  <h3><small><%=t '.title', default: model_class.model_name.human.titleize %>：</small><%= @sentence.name %></h3>
 </div>
-<p>选自课文：《<%= @sentence.lesson.title %>》<small><%= @sentence.lesson.author %> <%= @sentence.lesson.time %></small></p>
-<hr>
-<div class="row">
-  <% @word_parsers.each_with_index do |word_parser, index| %>
-    <% if word_parser.word.length == 1 %>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+  <li role="presentation" class="active"><a href="#comments" role="tab" data-toggle="tab">评注</a></li>
+  <li role="presentation"><a href="#single_words" role="tab" data-toggle="tab">字解</a></li>
+  <li role="presentation"><a href="#meanful_words" role="tab" data-toggle="tab">词解</a></li>
+  <li role="presentation"><a href="#words" role="tab" data-toggle="tab">析词</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div role="tabpanel" class="tab-pane" id="words">
+    <div class="row">
+      <% @word_parsers.each_with_index do |word_parser, index| %>
+        <% if word_parser.word.length == 1 %>
+          </div>
+          <div class="row">
+        <% end %>
+        <% if word_parser.word.is_meanful %>
+          <div class="col-md-3 col-sm-4 col-xs-6 bg-info">
+            <%= index + 1 %>)<%= link_to word_parser.word.name, word_url(word_parser.word_id) %><small>_<%= link_to "标记为无意义词汇", word_change_meanful_path(word_parser.word) %>_</small>
+          </div>
+        <% else %>
+          <div class="col-md-3 col-sm-4 col-xs-6">
+            <%= index + 1 %>)<%= link_to word_parser.word.name, word_url(word_parser.word_id) %><small>_<%= link_to "标记为有意义词汇", word_change_meanful_path(word_parser.word) %>_</small>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <div role="tabpanel" class="tab-pane active" id="comments">
+    <br>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <%= render partial: 'comment' %>
       </div>
-      <div class="row">
-    <% end %>
-    <% if word_parser.word.is_meanful %>
-      <div class="col-md-3 col-sm-4 col-xs-6 bg-info">
-        <%= index + 1 %>)<%= link_to word_parser.word.name, word_url(word_parser.word_id) %><small>_<%= link_to "标记为无意义词汇", word_change_meanful_path(word_parser.word) %>_</small>
-      </div>
-    <% else %>
-      <div class="col-md-3 col-sm-4 col-xs-6">
-        <%= index + 1 %>)<%= link_to word_parser.word.name, word_url(word_parser.word_id) %><small>_<%= link_to "标记为有意义词汇", word_change_meanful_path(word_parser.word) %>_</small>
-      </div>
-    <% end %>
-  <% end %>
+    </div>
+    <ul class="list-group">
+      <% @comments = @sentence.comments %>
+      <% @comments.each do |comment| %>
+        <li class="list-group-item">
+          <% if Agreement.find_by(user_id: current_user.id, comment_id: comment) %>
+            <%= link_to "撤回赞成", agreements_dislike_path(comment_id: comment.id), class: "btn btn-xs btn-success text-danger" %>
+          <% else %>
+            <%= link_to "赞成", agreements_like_path(comment_id: comment.id), class: "btn btn-xs btn-success text-danger" %>
+          <% end %>
+          <span class="badge"><%= comment.agreements.count %></span>
+          <%= comment.content %>
+        </li>
+      <% end %>
+    </ul>
+    
+  </div>
+  <div role="tabpanel" class="tab-pane" id="single_words">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>字</th>
+          <th>音</th>
+          <th>义</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @word_parsers.each_with_index do |word_parser, index| %>
+        <% next unless word_parser.word.length == 1 %>
+        <tr>
+          <td><%= word_parser.word.name %></td>
+          <td><%= word_parser.word.phonetics.map{|p|p.content}.to_s.gsub(/(^\[")|("\]$)|(\\n)|(\\r)|"/,"") %></td>
+          <td><%= sanitize word_parser.word.meanings.map{|p|p.content}.to_s.gsub(/(^\[")|("\]$)|(\\n)|(\\r)/,"") %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div role="tabpanel" class="tab-pane" id="meanful_words">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>字</th>
+          <th>音</th>
+          <th>义</th>
+        </tr>
+      </thead>
+      <tbody>
+      <% @word_parsers.each_with_index do |word_parser, index| %>
+        <% next if word_parser.word.length == 1 || word_parser.word.is_meanful == nil %>
+        <tr>
+          <td><%= word_parser.word.name %></td>
+          <td><%= word_parser.word.phonetics.map{|p|p.content}.to_s.gsub(/[\[\]"]/,"") %></td>
+          <td><%= sanitize word_parser.word.meanings.map{|p|p.content}.to_s.gsub(/(^\[")|("\]$)|\\n/,"") %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>

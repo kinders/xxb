@@ -15,7 +15,7 @@ class TutorsController < ApplicationController
       @lesson = Lesson.find_by(id: session[:lesson_id])
       @tutors = Tutor.where(lesson_id: session[:lesson_id]).order(:difficulty, :created_at)
       unless @lesson
-        redirect_to :back, notice: "无法找到相应的课程。"
+        redirect_to me_summary_url, notice: "无法找到相应的课程。"
       end
     end
   end
@@ -75,7 +75,7 @@ class TutorsController < ApplicationController
   # GET /tutors/new
   def new
     unless session[:lesson_id]
-      redirect_to :back, notice: "无法找到相应的课程。"
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
       return
     end
     @tutor = Tutor.new
@@ -84,7 +84,7 @@ class TutorsController < ApplicationController
   # GET /tutors/1/edit
   def edit
     unless session[:lesson_id]
-      redirect_to :back, notice: "无法找到相应的课程。"
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
       return
     end
   end
@@ -93,7 +93,7 @@ class TutorsController < ApplicationController
   # POST /tutors.json
   def create
     unless session[:lesson_id]
-      redirect_to :back, notice: "无法找到相应的课程。"
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
       return
     end
     @tutor = Tutor.new(tutor_params)
@@ -116,7 +116,7 @@ class TutorsController < ApplicationController
   # PATCH/PUT /tutors/1.json
   def update
     unless session[:lesson_id]
-      redirect_to :back, notice: "无法找到相应的课程。"
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
       return
     end
     respond_to do |format|
@@ -165,7 +165,7 @@ class TutorsController < ApplicationController
   # GET /tutors/new_link_to_lesson
   def new_link_to_lesson
     unless session[:lesson_id]
-      redirect_to :back, notice: "无法找到相应的课程。"
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
       return
     end
     @lesson = Lesson.find_by(id: session[:lesson_id])
@@ -190,7 +190,7 @@ class TutorsController < ApplicationController
   # GET /tutor/to_practice
   def to_practice
     unless session[:lesson_id]
-      redirect_to :back, notice: "无法找到相应的课程。"
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
       return
     end
     @tutor = Tutor.find(session[:tutor_id])
@@ -225,7 +225,7 @@ class TutorsController < ApplicationController
   # GET /tutor/create_pinyin_help_tutor
   def create_pinyin_help_tutor
     unless session[:lesson_id]
-      redirect_to :back, notice: "无法找到相应的课程。"
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
       return
     end
     @lesson = Lesson.find(session[:lesson_id])
@@ -252,7 +252,7 @@ class TutorsController < ApplicationController
   # get /tutor/1/show_with_lesson
   def show_with_lesson
     unless session[:lesson_id]
-      redirect_to :back, notice: "无法找到相应的课程。"
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
       return
     end
     if session[:tutor_id]
@@ -260,7 +260,7 @@ class TutorsController < ApplicationController
       @lesson = @tutor.lesson
       @exercises = Exercise.where(tutor_id: @tutor.id).order(:serial)
     else
-      redirect_to :back, notice: "未指定辅导。"
+      redirect_to me_summary_url, notice: "未指定辅导。"
     end
   end
 

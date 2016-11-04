@@ -1,6 +1,6 @@
 class SentencesController < ApplicationController
-  skip_before_action :check_user_active_time
-  skip_authorization_check
+  before_action :authenticate_user!
+  load_and_authorize_resource
   before_action :set_sentence, only: [:show, :edit, :update, :destroy]
 
   # GET /sentences

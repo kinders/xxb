@@ -3,6 +3,7 @@ class Word < ActiveRecord::Base
   has_many :phonetic_notations
   has_many :phonetics, through: :phonetic_notations
   has_many :meanings
+  has_many :comments
   acts_as_paranoid
   validates :name, :length,  presence: true
 
@@ -83,7 +84,11 @@ class Word < ActiveRecord::Base
     end
     pinyin = even.zip(odd)
     pinyin.each do |py|
-      @word.phonetics.create(content: py[0], label: py[1])
+      the_phonetic = Phonetic.find_by(content: py[0], label: py[1])
+      unless the_phonetic
+        the_phonetic = Phonetic.create(content: py[0], label: py[1])
+      end
+      @word.phonetic_notations.create(phonetic_id: the_phonetic.id)
     end
 
     a_pattern = Regexp.union(/<a[^>]*>/, /<\/a>/)

@@ -1,0 +1,32 @@
+<% @comment = Comment.new %>
+<%= form_for @comment, html: { class: "form-horizontal comment" } do |f| %>
+
+    <% if @comment.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@comment.errors.count, "error") %> 使得这个 comment 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @comment.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label "发表评论", class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_area :content, class: 'form-control' %>
+    </div>
+    <%= error_span(@comment[:content]) %>
+  </div>
+
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            comments_path, class: 'btn btn-default' %>
+
+<% end %>

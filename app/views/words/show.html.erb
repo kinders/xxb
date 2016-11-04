@@ -289,5 +289,26 @@
       <% end %>
     </div>
   </div>
+</div>
 
+<div class="panel panel-default">
+  <div class="panel-heading">
+    评注
+  </div>
+  <div class="panel-body">
+    <ul class="list-group">
+      <% @comments = @word.comments %>
+      <% @comments.each do |comment| %>
+        <li class="list-group-item">
+          <% if Agreement.find_by(user_id: current_user.id, comment_id: comment) %>
+            <%= link_to "撤回赞成", agreements_dislike_path(comment_id: comment.id), class: "btn btn-xs btn-success text-danger" %>
+          <% else %>
+            <%= link_to "赞成", agreements_like_path(comment_id: comment.id), class: "btn btn-xs btn-success text-danger" %>
+          <% end %>
+          <span class="badge"><%= comment.agreements.count %></span>
+          <%= comment.content %><br>
+          <small>来自课文《<%= comment.lesson.title %>》（<%= comment.lesson.author %>，<%= comment.lesson.time %>）</small>
+        </li>
+      <% end %>
+    </ul>
 <% end %>

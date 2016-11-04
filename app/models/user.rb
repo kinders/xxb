@@ -40,6 +40,8 @@ class User < ActiveRecord::Base
   has_many :examrooms
   has_many :roadmaps
   has_many :paces
+  has_many :comments
+  has_many :agreements
 
   validates :active_time,  numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 

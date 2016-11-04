@@ -26,6 +26,10 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
+        <% if @lesson.sentences.any? %>
+          <li><%= link_to "逐句模式", sentences_url %></li>
+          <li role="separator" class="divider"></li>
+        <% end %>
         <% if @tutor %>
           <li>
             <%= link_to "开始辅导", tutor_path(@tutor) %>
@@ -42,10 +46,6 @@
         <li>
           <%= link_to "添加辅导", new_tutor_url %>
         </li>
-        <% if @lesson.sentences.any? %>
-          <li role="separator" class="divider"></li>
-          <li><%= link_to "逐句模式", sentences_url %></li>
-        <% end %>
         <li role="separator" class="divider"></li>
         <% unless @lesson.practices.empty? %>
         <li>
@@ -110,7 +110,7 @@
     </div>
   </div>
 </div>
-
+<div id="options" class="collapse">
 <% if @textbooks && @textbooks.any? %>
 <% @textbooks.to_a.delete(@textbook) %>
 <% if @textbooks && @textbooks.any? %>
@@ -138,13 +138,21 @@
       </tbody>
     </table>
   </div>
+<% else %>
+  <p class="text-info">没有其他阅读建议了。</p>
 <% end %>
 <% end %>
+</div>
 
 <div class="page-header">
   <h2><%= number_with_precision(@catalog.serial, precision: 2) if @catalog %> <%= @lesson.title %>  <small><%= @lesson.author if @lesson.author %></small></h2>
 </div>
-  <p class="text-right">时间：<%= @lesson.time || "未知"%>；字数：<%= @lesson.content_length %></p>
+<p class="text-right">
+时间：<%= @lesson.time || "未知"%>；字数：<%= @lesson.content_length %>；
+<a  class="btn btn-xs btn-info" data-toggle="collapse" href="#options" aria-expanded="true" aria-controls="options">
+  阅读其他
+</a>
+</p>
 <% if @lesson.picture_file_name %>
   <%= image_tag @lesson.picture.url, class: "img-responsive center-block"  %>
   <hr>
