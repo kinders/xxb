@@ -9,12 +9,17 @@ class AnalyzeLessonJob < ActiveJob::Base
     if @lesson.content == ""
         return "该课程内容为空，无需分析"
     end
-    content = @lesson.title + "。" + (@lesson.author || "") + "。"+ (@lesson.content || "")
+    lesson_title = @lesson.title.gsub(/[《》<>()（）]/, "")
+    if @lesson.author
+    lesson_author = @lesson.author.gsub(/[\[\]《》<>()（）]/, "")
+    else
+    lesson_author = ""
+    end
+    content = lesson_title + "。" + lesson_author + "。"+ @lesson.content
     # 获取并精简文本
     content.gsub!(/(<\/p>)|(<\/div>)/, ".") # 补充句号到段落结尾，防止取出标签之后因为末尾没有标点而和第二行合并
     content.gsub!(/<(\w|\/)+[^>]*>/, "") # 除去html标签
     content.gsub!(/\r|\n|\f/, ".") # 除去换行符，也是防止因为末尾没有标点而和第二行合并
-    content.sub!(/[()（）\[\]【】]/, "，") # 将括号替换为逗号。
     new_md = Digest::MD5.hexdigest(content)
 
     # 检查是否存在分析报告，若有则分析文本是否改动
@@ -32,9 +37,8 @@ class AnalyzeLessonJob < ActiveJob::Base
       @words_report = WordsReport.create(lesson_id: @lesson.id, md: new_md)
     end
 
-=begin
+# =begin
     # 将括号里的语句提出来，单独作为一句附在内容之后。
-    # 当然如果是括号里还有括号这种写法，下面的分析会出错。可是谁让那个人乱写呢？
     i = 1
     while  match_data = /[(（\[【].+?[)）\]】]/.match(content)
       content.sub!(/[(（\[【].+?[)）\]】]/, "") # 删除第一个括号里的内容。
@@ -43,7 +47,7 @@ class AnalyzeLessonJob < ActiveJob::Base
       i = i + 1
     end
     # p content
-=end
+# =end
     
     # 处理ckeditor的html转义
     content.gsub!(/(&#39;)/, "'") # 转为原型：单引号
@@ -67,18 +71,16 @@ class AnalyzeLessonJob < ActiveJob::Base
     content.gsub!(/(&theta;)/, "θ") # 转为原型：
     content.gsub!(/(&eth;)/, "ð") # 转为原型：
 
-
-
-
-
     # 将内容分割为句子，逐句分析
     sentences = content.split(/[，；。？！……——：,;.?!:]/)
     # sentences = content.split(/[，；。？！……——：]|([,;.?!:] )/)
     sentences.each do |sentence|
       word_parser = []
       ## 将句子中的引号去除
-      sentence.gsub!(/['"“”]/, "")
-      next if sentence =~ /[,.?!:]/
+      sentence.gsub!(/(?<=[a-zA-Z])'(?=[a-zA-Z])/, "。") # 将两个单词中间的单引号转义，防止被删除
+      sentence.gsub!(/['"“”‘’]/, "")
+      sentence.gsub!(/。/, "'") # 转为原型：单引号
+      # next if sentence =~ /[,.?!:]/
       # next if sentence =~ /[,.?!:] /
       @sentence = Sentence.create(lesson_id: @lesson.id, name: sentence)
       ## 将句子中的非中文字符用空格隔开

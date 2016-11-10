@@ -214,6 +214,7 @@ Rails.application.routes.draw do
   post '/tutor/create_link_to_lesson', to: 'tutors#create_link_to_lesson'
   get '/tutor/to_practice', to: 'tutors#to_practice'
   get '/tutor/create_pinyin_help_tutor', to: "tutors#create_pinyin_help_tutor"
+  post '/tutor/choose_a_lesson', to: "tutors#choose_a_lesson"
 
   resources :lessons do
     get :autocomplete_lesson_title, on: :collection

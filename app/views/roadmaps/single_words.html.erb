@@ -48,7 +48,7 @@
       <%#<li class="list-group-item">%>
         <%#<span class="badge">[> word_and_count[1]<]</span>%>
         <div class="col-md-2 col-sm-3 col-xs-4">
-        <%= i %>. <%= word.name %>
+        <%= i %>. <%= link_to word.name, word_url(word.id) %>
       </div>
     <%#</li>%>
   <% end %>

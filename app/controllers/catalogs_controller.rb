@@ -13,7 +13,7 @@ class CatalogsController < ApplicationController
     elsif session[:textbook_id]
       textbook_id = session[:textbook_id]
       @textbook = Textbook.find(textbook_id)
-      @catalogs = @textbook.catalogs.order(:serial).page(params[:page]).per("50")
+      @catalogs = @textbook.catalogs.order(:serial).page(params[:page]).per("100")
     else
       redirect_to textbooks_path, notice: "请先指定一本书。"
     end

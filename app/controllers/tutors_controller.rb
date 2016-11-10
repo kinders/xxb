@@ -23,6 +23,10 @@ class TutorsController < ApplicationController
   # GET /tutors/1
   # GET /tutors/1.json
   def show
+    unless session[:lesson_id]
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
+      return
+    end
     history = History.create { |h| 
       h.user_id = current_user.id
       h.modelname = "tutor"
@@ -260,7 +264,23 @@ class TutorsController < ApplicationController
       @lesson = @tutor.lesson
       @exercises = Exercise.where(tutor_id: @tutor.id).order(:serial)
     else
-      redirect_to me_summary_url, notice: "未指定辅导。"
+      redirect_to tutors_url, notice: "未指定辅导。"
+    end
+  end
+
+  # post /tutor/1/choose_a_lesson
+  def choose_a_lesson
+    unless session[:lesson_id]
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
+      return
+    end
+    if session[:tutor_id]
+      @tutor = Tutor.find(session[:tutor_id])
+      @tutor.update(lesson_id: params[:lesson_id])
+      session[:lesson_id] = params[:lesson_id]
+      redirect_to tutor_path(@tutor.id), notice: "已经将辅导更新到课文中。"
+    else
+      redirect_to tutors_url, notice: "未指定辅导。"
     end
   end
 

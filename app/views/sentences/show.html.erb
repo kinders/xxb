@@ -149,8 +149,8 @@
       <% @word_parsers.each_with_index do |word_parser, index| %>
         <% next unless word_parser.word.length == 1 %>
         <tr>
-          <td><%= word_parser.word.name %></td>
-          <td><%= word_parser.word.phonetics.map{|p|p.content}.to_s.gsub(/(^\[")|("\]$)|(\\n)|(\\r)|"/,"") %></td>
+          <td><%= link_to word_parser.word.name, word_url(word_parser.word_id) %></td>
+          <td><%= word_parser.word.phonetics.map{|p|[p.label, p.content]}.to_s.gsub(/[\[\]"]/,"") %></td>
           <td><%= sanitize word_parser.word.meanings.map{|p|p.content}.to_s.gsub(/(^\[")|("\]$)|(\\n)|(\\r)/,"") %></td>
         </tr>
       <% end %>

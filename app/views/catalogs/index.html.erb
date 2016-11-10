@@ -54,7 +54,8 @@
   <tbody>
     <% @catalogs.each do |catalog| %>
     <% catalog_lesson = Lesson.find(catalog.lesson_id) %>
-      <% if catalog.lesson.content_length == 0 %>
+      <%# if catalog.lesson.content_length == 0 %>
+      <% if catalog.serial == catalog.serial.round %>
       <tr class="info">
       <% else %>
       <tr>
