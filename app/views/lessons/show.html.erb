@@ -189,17 +189,16 @@
       </div>
     </div>
   <% end %>
-  <% if false %>
-  <%# if @lesson.author %>
-  <%# 没办法，太耗计算了，暂时关闭，以后再优化；这些推荐应该通过ajax来实现为宜 %>
-  <% lesson_authors = @lesson.author.split(/\s/).map{|word|(word =~ /[\u4e00-\u9fa5]/)? word.chars : word}.flatten.uniq %>
+  <%# if false %>
+  <% if @lesson.author %>
+  <% lesson_authors = @lesson.author.gsub(/[(（\[].+[)）\]]/, "").split(/\s|,|，|、/).flatten.uniq %>
   <% similar_author_lessons_id = [] %>
   <% lesson_authors.each do |author| %>
     <% similar_author_lessons_id << Lesson.where("author LIKE ?", "%" + author +"%" ).pluck(:id) %>
   <% end %>
   <% similar_author_lessons_id.flatten! %>
   <% similar_author_lessons = similar_author_lessons_id.sort_by{|i|similar_author_lessons_id.find_all{|j|j==i}.count}.uniq.reverse %>
-  <% if similar_author_lessons.any? %>
+  <% if similar_author_lessons.size > 1 %>
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="headingOne">
         <h4 class="panel-title">
@@ -290,7 +289,7 @@
 
 <%# 标题部分 %>
 <div class="page-header">
-  <h2><%= number_with_precision(@catalog.serial, precision: 2) if @catalog %> <%= @lesson.title %>  <small><%= @lesson.author if @lesson.author %></small></h2>
+  <h2><%= number_with_precision(@catalog.serial, precision: 3) if @catalog %> <%= @lesson.title %>  <small><%= @lesson.author if @lesson.author %></small></h2>
 </div>
 <p class="text-right">
   时间：<%= @lesson.time || "未知"%>；字数：<%= @lesson.content_length %>；

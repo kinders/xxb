@@ -96,17 +96,19 @@ class CatalogsController < ApplicationController
       @lesson = Lesson.find(session[:lesson_id])
       if @textbook.user_id == current_user.id
         if @textbook.catalogs.any?
-          catalog_serial = @textbook.catalogs.order(:serial).last.serial.to_i
+          last_catalog_serial = @textbook.catalogs.order(:serial).last.serial.to_f
+          last_unit = last_catalog_serial.to_s.partition(".")[2].size
+          catalog_serial = (last_catalog_serial + (1.0/(10**last_unit))).round(last_unit)
         else
-          catalog_serial = 0
+          catalog_serial = 1
         end
         @catalog = Catalog.create{|c|
-          c.serial = catalog_serial + 1
+          c.serial = catalog_serial
           c.user_id = current_user.id
           c.textbook_id = @textbook.id
           c.lesson_id = @lesson.id
         }
-        redirect_to :back, notice: "已经将这篇课文添加为《#{@textbook.title}》第 #{@catalog.serial} 课。"
+        redirect_to :back, notice: "已经将这篇课文添加为《#{@textbook.title}》第 #{@catalog.serial.to_f} 课。"
       else
         redirect_to :back, notice: "您不能将这篇课文添加到《#{@textbook.title}》中。"
       end

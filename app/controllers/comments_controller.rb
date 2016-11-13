@@ -42,11 +42,22 @@ class CommentsController < ApplicationController
   # POST /comments
   # POST /comments.json
   def create
+    unless session[:lesson_id] && session[:sentence_id]
+      redirect_to :back, notice: "无法找到指定课程或者句子"
+      return
+    end
+    @sentence = Sentence.find(session[:sentence_id])
     @comment = Comment.new(comment_params)
     @comment.user_id = current_user.id
     @comment.lesson_id = session[:lesson_id]
-    @comment.sentence_id = session[:sentence_id]
-    @comment.word_id = Word.find_by(name: Sentence.find(session[:sentence_id]).name).id
+    @comment.sentence_id = @sentence.id
+    word = Word.find_by(name: @sentence.name)
+    if word
+      word_id = word.id
+    else
+      word_id = @sentence.words.map{|w|[w.id, w.name]}.each {|w|w[0] if w[1].gsub(' ', '') == @sentence.name.gsub(' ', '') }
+    end
+    @comment.word_id = word_id
 
     respond_to do |format|
       if @comment.save

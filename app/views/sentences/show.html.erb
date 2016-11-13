@@ -121,7 +121,18 @@
       </div>
     </div>
     <ul class="list-group">
-      <% @comments = @sentence.comments %>
+      <% word = Word.find_by(name: @sentence.name) %>
+      <% if word %>
+        <% word_id = word.id %>
+      <% else %>
+        <% word_id = @sentence.words.map{|w|[w.id, w.name]}.each {|w|w[0] if w[1].gsub(' ', '') == @sentence.name.gsub(' ', '') } %>
+      <% end %>
+      <% sentence_word = Word.find_by(id: word_id) %>
+      <% if sentence_word %>
+        <% @comments = sentence_word.comments %>
+      <% else %>
+        <% @comments = @sentence.comments %>
+      <% end %>
       <% @comments.each do |comment| %>
         <li class="list-group-item">
           <% if Agreement.find_by(user_id: current_user.id, comment_id: comment) %>
