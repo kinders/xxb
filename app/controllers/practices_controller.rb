@@ -13,9 +13,9 @@ class PracticesController < ApplicationController
       @lesson = Lesson.find(session[:lesson_id])
       if session[:tutor_id]
         @tutor = Tutor.find(session[:tutor_id])
-        @practices = Practice.where(tutor_id: @tutor.id)
+        @practices = Practice.where(tutor_id: @tutor.id).order(:id)
       else
-        @practices = Practice.where(lesson_id: @lesson.id)
+        @practices = Practice.where(lesson_id: @lesson.id).order(:id)
       end
     else
       redirect_to :back, notice: "需要指定课文。"

@@ -69,7 +69,9 @@
       </ul>
     </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
-      <% if @lesson %>
+      <% if session[:tutor_id] %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), tutor_path(session[:tutor_id]), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', default: t("helpers.titles.up"), :model => t("activerecord.models.tutor")) %>
+      <% elsif @lesson %>
         <%= link_to t('.up', :default => t("helpers.links.up")), lesson_path(@lesson), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', default: t("helpers.titles.up"), :model => t("activerecord.models.lesson")) %>
       <% elsif @textbook %>
         <%= link_to t('.up', :default => t("helpers.links.up")), textbook_path(@textbook), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', default: t("helpers.titles.up"), :model => t("activerecord.models.textbook")) %>

@@ -97,8 +97,13 @@ class CatalogsController < ApplicationController
       if @textbook.user_id == current_user.id
         if @textbook.catalogs.any?
           last_catalog_serial = @textbook.catalogs.order(:serial).last.serial.to_f
-          last_unit = last_catalog_serial.to_s.partition(".")[2].size
-          catalog_serial = (last_catalog_serial + (1.0/(10**last_unit))).round(last_unit)
+          last_part = last_catalog_serial.to_s.partition(".")[2]
+          if last_part == "0"
+            catalog_serial = last_catalog_serial + 1
+          else
+            last_unit = last_part.size
+            catalog_serial = (last_catalog_serial + (1.0/(10**last_unit))).round(last_unit)
+          end
         else
           catalog_serial = 1
         end

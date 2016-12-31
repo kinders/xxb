@@ -14,7 +14,7 @@ class WordsReportsController < ApplicationController
   def show
     session[:words_report_id] = @words_report.id
     @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).order("id").page(params[:page]).per(10)
-    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
     @longest = Word.where(id: all_words).maximum(:length)
     # word_parsers_in_group = WordParser.includes("word").where(lesson_id: @words_report.lesson_id, words: {length: 1}).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
     # @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
@@ -72,8 +72,8 @@ class WordsReportsController < ApplicationController
   # GET /words_reports/1/show_word_n
   def show_word_n
     @words_report = WordsReport.find(session[:words_report_id])
-    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
-    @longest = Word.where(id: all_words).maximum("length")
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
+    @longest = Word.where(id: all_words).maximum(:length) || 1
     @num = params[:num] || 1
     word_parsers_in_group = WordParser.includes("word").where(lesson_id: @words_report.lesson_id, words: {length: @num}).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
     @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
@@ -82,7 +82,7 @@ class WordsReportsController < ApplicationController
   # GET /words_reports/1/show_de1
   def show_de1
     @words_report = WordsReport.find(session[:words_report_id])
-    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
     @longest = Word.where(id: all_words).maximum("length")
     # @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
     @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count
@@ -92,7 +92,7 @@ class WordsReportsController < ApplicationController
   # GET /words_reports/1/show_de2
   def show_de2
     @words_report = WordsReport.find(session[:words_report_id])
-    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
     @longest = Word.where(id: all_words).maximum("length")
     @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
   end
@@ -100,7 +100,7 @@ class WordsReportsController < ApplicationController
   # GET /words_reports/1/show_de3
   def show_de3
     @words_report = WordsReport.find(session[:words_report_id])
-    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
     @longest = Word.where(id: all_words).maximum("length")
     @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
   end
@@ -109,8 +109,8 @@ class WordsReportsController < ApplicationController
   # 词条统计分析
   def show_basic
     @words_report = WordsReport.find(session[:words_report_id])
-    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("id").uniq
-    @longest = Word.where(id: all_words).maximum("length")
+    all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
+    @longest = Word.where(id: all_words).maximum(:length) || 1
     word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
     @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
 

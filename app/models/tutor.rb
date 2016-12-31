@@ -14,6 +14,8 @@ class Tutor < ActiveRecord::Base
   acts_as_paranoid
   validates :title, :difficulty, presence: true
 
+=begin
+  # 从旧的sqlite数据库中快速复制辅导页面。
   def self.copy_from_xxb_from_sqlite(lesson_id, begin_id, end_id = nil)
     require 'pg'
     tutor_begin_id = begin_id
@@ -31,5 +33,5 @@ class Tutor < ActiveRecord::Base
       conn.finish
     end
   end
-
+=end
 end

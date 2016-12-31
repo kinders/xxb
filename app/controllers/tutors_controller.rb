@@ -284,6 +284,57 @@ class TutorsController < ApplicationController
     end
   end
 
+  # post /tutor/1/copy_to_another_lesson
+  def copy_to_another_lesson
+    unless session[:lesson_id]
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
+      return
+    end
+    another_lesson = Lesson.find_by(id: params[:lesson_id])
+    unless another_lesson
+      redirect_to :back, notice: "无法找到指定的课程。"
+      return
+    end
+    if session[:tutor_id]
+      @tutor = Tutor.find(session[:tutor_id])
+      new_tutor = Tutor.create(title: @tutor.title, difficulty: @tutor.difficulty, page: @tutor.page, user_id: current_user.id, lesson_id: params[:lesson_id], proviso: @tutor.proviso, page_length: @tutor.page_length)
+      @tutor.exercises.each do |e|
+        Exercise.create(user_id: current_user.id, tutor_id: new_tutor.id, serial: e.serial, practice_id: e.practice_id)
+      end
+      redirect_to tutor_path(@tutor.id), notice: "已经将辅导更新到课文《#{another_lesson.title}》（#{another_lesson.id}）中。"
+    else
+      redirect_to tutors_url, notice: "未指定辅导。"
+    end
+  end
+
+  # post /tutor/1/append_cardbox_link
+  def append_cardbox_link
+    unless session[:lesson_id]
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
+      return
+    end
+    if session[:tutor_id]
+      @cardbox = Cardbox.find(params[:cardbox_id])
+      @tutor = Tutor.find(session[:tutor_id])
+      new_proviso = @tutor.proviso + "<p class=\"pull-right\" style=\"font-size:10px;\">使用<a href=\"/cardboxes/#{params[:cardbox_id]}\">卡片盒（#{@cardbox.name}）</a></p>"
+      @tutor.update(proviso: new_proviso)
+      redirect_to tutor_path(@tutor.id), notice: "已经将卡片盒添加到辅导页面下方。"
+    else
+      redirect_to tutors_url, notice: "未指定辅导。"
+    end
+  end
+
+  def download_exercises
+    @tutor = Tutor.find(session[:tutor_id])
+    practice_ids = @tutor.exercises.map{|e|e.practice_id}
+    @practices = Practice.where(id: practice_ids)
+    @filename = "辅导“#{@tutor.title}”里的练习题——#{Time.now.to_formatted_s(:number)}.csv"
+    @output_encoding = "UTF-8"
+    respond_to do |format|
+      format.csv # make sure you have action_name.csv.csvbuilder template in place
+    end 
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_tutor

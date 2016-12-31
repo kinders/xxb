@@ -1,0 +1,4 @@
+csv << ["标签", "标题", "材料", "问题", "答案", "分值"]
+@practices.each do |p|
+  csv << [p.labelname, p.title, p.material, p.question, p.answer, p.score]
+end

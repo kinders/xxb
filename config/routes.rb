@@ -115,6 +115,8 @@ Rails.application.routes.draw do
   post '/cards/multiple_operate', to: 'cards#multiple_operate'
   get '/list_right_cards', to: 'cards#list_right_cards'
   post '/search_right_cards', to: 'cards#search_right_cards'
+  get 'card_download_practices', to: "cards#download_practices"
+  get 'card_jquerymobile', to: "cards#jquerymobile"
 
   resources :cardboxes do
     get 'turn_cards'
@@ -215,6 +217,9 @@ Rails.application.routes.draw do
   get '/tutor/to_practice', to: 'tutors#to_practice'
   get '/tutor/create_pinyin_help_tutor', to: "tutors#create_pinyin_help_tutor"
   post '/tutor/choose_a_lesson', to: "tutors#choose_a_lesson"
+  post '/tutor/copy_to_another_lesson', to: "tutors#copy_to_another_lesson"
+  post '/tutor/append_cardbox_link', to: "tutors#append_cardbox_link"
+  get 'tutor_download_exercises', to: "tutors#download_exercises"
 
   resources :lessons do
     get :autocomplete_lesson_title, on: :collection

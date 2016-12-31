@@ -87,7 +87,6 @@
 
 <hr>
   <%= f.submit nil, :class => 'btn btn-primary', tabindex: 51 %>
-  <%= link_to t('.cancel', :default => t("helpers.links.cancel")),
-            lessons_path, :class => 'btn btn-default', tabindex: 52 %>
+  <%= link_to t('.cancel', :default => t("helpers.links.cancel")), :back, :class => 'btn btn-default', tabindex: 52 %>
 
 <% end %>

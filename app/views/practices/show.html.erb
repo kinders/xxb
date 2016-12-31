@@ -59,10 +59,14 @@
   <div class="panel panel-success">
     <div class="panel-heading" role="tab" id="headingOne">
         <span class="pull-right">标签：<%= @practice.labelname || "无" %></span>
-        <p><%= @practice.title %></p>
+        <p class="paragraph"><%= @practice.title %></p>
       <div class="paragraph">
-        <p><%= sanitize(@practice.material) %></p>
-        <p><%= sanitize(@practice.question) %></p>
+        <p>
+        <%= sanitize(@practice.material, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %>
+        </p>
+        <p>
+        <%= sanitize(@practice.question, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %>
+        </p>
         <% if @practice.picture_q_file_name %>
           <%= image_tag @practice.picture_q.url, class: "img-responsive center-block"  %>
         <% end %>

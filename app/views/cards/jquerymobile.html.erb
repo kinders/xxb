@@ -1,0 +1,519 @@
+	<script type="text/javascript">alert("请打开源代码，将第210行起的代码复制到一个独立的html文件中，并分别用\"、<、> 替换全文&quot; &lt; &gt;三个字符")</script>
+<pre>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://cdn.bootcss.com/jquery-mobile/1.4.4/jquery.mobile.min.css">
+
+  <style type="text/css">
+    /* max-width */
+    @media screen and (max-width: 600px) { .par {font-size: 20px; color: green;} .par_ti {font-size: 20px; color: black;}}
+    /* min-width */
+    @media screen and (min-width: 900px) { .par {font-size: 60px; color: green;} .par_ti {font-size: 60px; color: black;}}
+    /* min-width & max-width */
+    @media screen and (min-width: 600px) and (max-width: 900px) { .par {font-size: 40px; color: green;} .par_ti {font-size: 40px; color: black;}}
+  </style>
+  <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+  <script src="http://cdn.bootcss.com/jquery-mobile/1.4.4/jquery.mobile.min.js"></script>
+  <script>
+  var timer; //计时变量。
+  function clear_timer(){ clearTimeout(timer); }; // 翻页时清除计时器
+
+  $(document).ready(function(){
+  // 强制要求输入用户名
+  var myname="";  // 用户名
+  while(myname == ""){
+  myname=prompt("请输入您的名字（2-4个字）：");
+  if(myname === null){myname = "";};
+  var temp_name = myname.replace(/\s/g, "");
+  if(temp_name.length < 2 || temp_name.length > 4){myname = "";};
+  };
+ 
+  // 全局变量
+  var start_time = new Date();  // 使用的开始时间
+  var valid_click = 0;    // 有效点击的次数
+  var neutral_click = 0;    // 中性点击（答案出示太快）的次数
+  var invalid_click = 0;    // 无效点击（没有核对答案）的次数
+  var select_unit = [];
+  var each_maxtime=7000; //每个项目测试的时间；测试时超过该时间，该次测试被判定为不合格。
+  var pass_time=1;  // 如果每个项目得到这个分数，则通过测试。
+  var score=0;      //练习分数。
+  var practice_score = 0; //练习分数，用于测试时存放。
+  var test_score = 0; // 测试分数。
+  var res = "";     // 问题
+  var pre_res = ""; // 上一个问题
+  var answer = "";  // 答案
+  var res_mid_time = 0;  // 答题时间中点；
+  var res_end_time = 0;  // 答题结束时间；
+  // 测试项目：
+<% cardbox = Cardbox.find(session[:cardbox_id]) %>
+<% practice_id = cardbox.cards.map{|c|c.practice_id} %>
+<% practices = Practice.where(id: practice_id) %>
+<% all_practices = practices.map{|p| [ p.question, p.answer ]} %>
+<% all_practices_count = all_practices.count %>
+<% if all_practices_count < 100 %>
+  <% num_per_unit = 10 %>
+<% else %>
+  <% num_per_unit = (all_practices_count.to_f / 10).ceil %>
+<% end %>
+<% units = all_practices.each_slice(num_per_unit).to_a %>
+<% units_count = units.count %>
+<% 1.upto(units_count) do |i| %>
+// 第<%= i %>关
+/// 单元测试和分数变量
+  <%= "var zi_unit_#{i} = #{units[i-1]};" %>
+  <%= "var point_unit_#{i} = {};" %>
+  for(var k=0; k < zi_unit_<%= i %>.length; k++){ 
+    <%= "point_unit_#{i}[zi_unit_#{i}[k][0]]=0;" %>
+    };
+/// 汇总测试和分数变量
+<% if i == 1 %>
+<%= "var zi_unit_#{i}_2 = zi_unit_#{i};" %>
+<% else %>
+<%= "var zi_unit_#{i}_2 = zi_unit_#{i}.concat(zi_unit_#{i-1}_2);" %>
+<% end %>
+  <%= "var point_unit_#{i}_2 = {};" %>
+  for(var k=0; k < zi_unit_<%= i %>_2.length; k++){
+    <%= "point_unit_#{i}_2[zi_unit_#{i}_2[k][0]]=0;"%>
+    };
+/// 测试按钮
+$("#btn_unit_<%= i %>").click(function(){practice(zi_unit_<%= i %>,point_unit_<%= i %>,"par_unit_<%= i %>");});
+$("#btn_unit_<%= i %>_2").click(function(){practice(zi_unit_<%= i %>_2,point_unit_<%= i %>_2,"par_unit_<%= i %>");});
+<% end %>
+
+  // 错题测试
+var zi_fail=[];
+var point_zi_fail = {};
+$("#btn_show_zi_fail").click(function(){lesson(zi_fail, "par_zi_fail");});
+$("#btn_test_zi_fail").click(function(){practice(zi_fail, point_zi_fail, "par_zi_fail");});
+
+  // 展示错题
+  function lesson(chars, level){
+    if (chars.constructor == Array){
+      var new_zi = "<ol><li>" + chars.join("</li><li>") + "</li></ol>";
+    }else{
+      var new_zi = chars;
+    };
+    var par = "#" + level
+    $(answer).hide();
+    $("button.show_answer").hide();
+    if (new_zi == ""){
+      alert("恭喜恭喜！\n没有出错的项目");
+    }else{
+      $(par).html(function(){
+        return new_zi; 
+      });			
+    };
+  }
+
+  // 练习
+  function practice(chars, points, level){
+    var par = "#" + level;
+    answer = "#answer_" + level;
+    // 解除计时
+    clearTimeout(timer);
+    // 如果有元素得分为pass_time变量,则将该元素从chars中删去
+    var i=0;
+    for(i; i<chars.length; i++){
+      if(points[chars[i][0]]>=pass_time){
+        chars.splice(i,1);
+        break;
+      }
+    }
+    // 检查chars是否有元素
+    if (chars.length == 0){
+      alert("恭喜恭喜！大家恭喜！您已经顺利过关啦！\n\n还想再来一次吗？——那就刷新网页吧！\n——不过，右上角的分数会被清零哦！\n\n还是进入下一课吧！");
+      $(par).html(function(){ return ""; });
+      $("button.show_answer").hide();
+      $(answer).hide();
+    }
+    else{
+      //随机选择一个元素进行测试
+      var id = Math.floor(Math.random()*chars.length);
+      res = chars[id][0];
+      ans = chars[id][1];
+      // 如果选择的元素和前一个相同，则废弃该元素重新随机选择
+      if (res == pre_res){
+	      if (chars.length > 1){
+	        var rest_chars = [].concat(chars);
+	        rest_chars.splice(id, 1);
+          var new_id = Math.floor(Math.random()*rest_chars.length);
+          res = rest_chars[new_id][0];
+          ans = rest_chars[new_id][1];
+	      }
+      };
+      ++points[res];
+      ++invalid_click;
+      $(par).html(function(){ return res; });
+      $("button.show_answer").show();
+      $(answer).hide();
+      $(answer).html(function(){ return ans; });
+      pre_res = res;
+      // 设置超时
+      ans = ans.replace(/<[a-z]*>/g,"");
+      ans = ans.replace(/<\/[a-z]*>/g,"");
+      ans = ans.replace(/\r/g,"");
+      ans = ans.replace(/\n/g,"");
+      maxtime = ans.length * each_maxtime;
+      // alert(ans.length.toString() + ans);
+      var res_start_time = new Date();
+      res_mid_time = res_start_time.valueOf() + maxtime / 3;
+      res_end_time = res_start_time.valueOf() + maxtime;
+      timer = setTimeout(function(){
+	      alert("可不要气馁~~\n\n我们再来一次吧！");
+	      --points[res];
+        --score;
+        $(".right-top-count").html(function(){return score});
+          // 将没有通过的字压入zi_fail变量，并初始化该元素的分数。
+	      if (zi_fail.indexOf(chars[id]) == -1){
+	        zi_fail.push(chars[id]);
+	        point_zi_fail[chars[id][0]]=0;
+	      };
+      }, maxtime);   //
+    }
+ }
+ 
+  // 显示答案
+  $("button.show_answer").click(function(){
+      $(answer).show();
+      $("button.show_answer").hide();
+      var now_time = new Date();
+      now_time = now_time.valueOf();
+      if (now_time < res_mid_time){
+        --invalid_click;
+        ++neutral_click;
+      }else{
+        --invalid_click;
+        ++valid_click;
+        ++score;
+        $(".right-top-count").html(function(){return score});
+      };
+  });
+
+  // 设置训练强度
+  $(".settings").click(function(){
+    var prompt_time=prompt("每个项目的测试时间\n单位：秒", "5");
+    if(prompt_time < 1){ prompt_time = 5;};
+    each_maxtime = prompt_time * 1000;
+    pass_time=prompt("每个项目的测试次数", "1");
+    if(pass_time < 1){pass_time = 1};
+  });
+
+//抽查测试
+var zi_part_test = [];
+var point_part_test = {};
+var part_test_times = 0;
+$("#begin_org").click(function(){
+  // 初始化测试
+  select_unit = [].concat($("#select_unit").val());
+  // alert(select_unit);
+  if (select_unit.toString() == "") {alert("请先选择合适的单元。"); return false;} 
+  if (zi_part_test.length == 0){
+    var zi_part_test_step=0;
+    for (var i=0; i < select_unit.length; i++){
+      var single_unit = select_unit[i];
+      var trans_single_unit = eval(single_unit);
+      for (var j=0; j < trans_single_unit.length; j++){
+        zi_part_test[zi_part_test_step]=trans_single_unit[j];
+        zi_part_test_step++;
+      }
+    }
+    // alert(zi_part_test);
+    // 初始化项目次数
+    for(var s=0; s<zi_part_test.length; s++){point_part_test[zi_part_test[s]]=0;};
+    //分数清零。
+    practice_score = score;
+    score = 0; $(".right-top-count").html(function(){return score});
+    alert("测试开始，分数清零");
+  };
+  // 获取试题数目
+  var part_test_entry_num = $("#part_test_entry_num").val();
+  // 开始测试
+  if (part_test_times < part_test_entry_num){
+    practice(zi_part_test,point_part_test,"par_part_test");
+    ++part_test_times;
+  }else{
+    //结束测试
+    $("#par_part_test").html(""); 
+    $("#answer_par_part_test").html(""); 
+    test_score = Math.round(score*(100/part_test_entry_num));
+    var part_test_message = "本次测试" + test_score + "分！"; 
+    alert(part_test_message);
+    clearTimeout(timer);
+    score = practice_score;
+    $(".right-top-count").html(function(){return score});
+    zi_part_test = [];
+    part_test_times = 0;
+    $("#select_unit").val(null);
+  };
+});
+
+// 生成报告
+$(document).on("pageshow","#report",function(){
+  $("#report_start_date").text(start_time.toLocaleDateString());
+  $("#report_start_time").text(start_time.toLocaleTimeString());
+  now_time = new Date();
+  $("#report_end_time").text(now_time.toLocaleTimeString());
+  duration = now_time.valueOf() - start_time.valueOf();
+  d_hour = Math.floor(duration/1000/60/60);
+  d_minute = Math.floor(duration/1000/60%60);
+  d_second = Math.floor(duration/1000%3600);
+  $("#report_time").text(d_hour + "小时" + d_minute + "分钟" + d_second + "秒");
+
+  $("#report_valid_click").text(valid_click + "次");
+  $("#report_neutral_click").text(neutral_click + "次");
+  $("#report_invalid_click").text(invalid_click + "次");
+  $("#report_score").text(score);
+  $("#report_test_score").text(test_score);
+  $("#report_name").text(myname);
+  $("#report_each_maxtime").text(each_maxtime);
+  $("#report_pass_time").text(pass_time);
+  $("#report_select_unit").text(select_unit.length);
+
+});
+
+  });
+  </script>
+</head>
+<body onhashchange="clear_timer()">
+<div data-role="page" id="home">
+  <div data-role="header">
+    <h1><%= cardbox.name %>·首页</h1>
+  </div>
+  <div data-role="content">
+    <div style="text-align: center;">
+      <a href="#part_test" data-role="button" data-transition="pop" style="width: 33%; margin: auto;background-color: rgb(140,191,0);">点击这里，开始练习</a>
+    </div>
+    <div data-role="collapsible" data-collapsed="false">
+      <h4>······使用提示······</h4>
+      <p>使用之前，您需要准备好纸笔。</p>
+      <p>打开软件之后，请输入您的姓名，以便生成报告。</p>
+      <p>使用时，您需要点击按钮，显示问题之后，要先写上问题的序号，再凭借记忆在纸张上写上答案，然后点击“显示答案”按钮进行校对。如果纸张上的答案不正确，您需要对照答案将它改正。然后就可以进入下一题了。</p>
+      <p>达到老师的使用要求之后，请打开“报告”页面，进行截图，然后将您书写答案的纸张进行拍照，将截图和拍照传给老师。</p>
+    </div>
+    <div data-role="collapsible">
+      <h4>······怎么版面乱七八糟的？······</h4>
+      <p>很有可能是浏览器禁用了JavaScript，您需要手动开启JavaScript。</p>
+      <p>也有可能是CDN服务器出错，您可以改动代码或者向作者反映问题。</p>
+    </div>
+    <div data-role="collapsible" >
+      <h4>······已知bug······</h4>
+      <ol>
+        <li>功能改进：如果无需数据持久化，欢迎提出意见！</li>
+      </ol>
+    </div>
+    <div data-role="collapsible">
+      <h4>······许可证······</h4>
+      <p>GPLv3。内容详见<a href="http://www.gnu.org/licenses/gpl-3.0.html">这里</a>。</p>
+    </div>
+    <div data-role="collapsible" style="text-align: center;">
+      <h4>······作者······</h4>
+      <p>我是李启训（keelson@189.cn）<br>一起参加<a href="http://www.gnu.org">自由软件运动</a>吧！</p>
+    </div>
+  </div><!-- content -->
+</div><!-- page -->
+
+<div data-role="page" id="catalog">
+  <div data-role="header">
+    <h1>目录</h1>
+    <div data-role="navbar"> <ul>
+        <li><a href="#home" data-icon="arrow-l">上一页</a></li>
+	      <li><button class="settings" data-icon="gear">设置</button></li>
+        <li><a href="#unit_1" data-icon="arrow-r">下一关</a></li>
+      </ul>
+    </div> <!-- navbar -->
+  </div>
+  <div data-role="content" style="text-align: center;">
+    <h3>请选择适当的单元：</h3>
+    <ul data-role="listview">
+    <% 1.upto(units_count) do |i| %>
+      <li> <a href="#unit_<%= i %>" data-transition="pop">第<%= i %>关</a></li>
+    <% end %>
+      <li> <a href="#part_test" data-transition="pop">抽查测验</a></li>
+      <li> <a href="#report" data-transition="pop">练习报告</a></li>
+    </ul>
+  </div>
+</div>
+
+<% 1.upto(units_count) do |i| %>
+<div data-role="page" id="unit_<%= i %>">
+  <div data-role="header">
+    <a href="#catalog" data-icon="home">目录</a>
+    <h1>第<%= i %>关</h1>
+    <button data-role="button"class="ui-btn-right"><span class="ui-li-count right-top-count" style="position: relative; right: 0em;"></span></button>
+    <div data-role="navbar">
+      <ul>
+        <% if i == 1 %>
+        <li><a href="#catalog" data-icon="arrow-l">上一页</a></li>
+        <% else %>
+        <li><a href="#unit_<%= i - 1 %>" data-icon="arrow-l">上一关</a></li>
+        <% end %>
+        <li><a href="#zi_fail" data-icon="info">错题本</a></li>
+        <li> <a href="#report" data-icon="star">报告</a></li>
+        <% if i == units_count %>
+        <li><a href="#part_test" data-icon="arrow-r">下一关</a></li>
+        <% else %>
+        <li><a href="#unit_<%= i + 1 %>" data-icon="arrow-r">下一关</a></li>
+        <% end %>
+      </ul>
+    </div><!-- navbar -->
+  </div><!-- header -->
+  <div data-role="content">
+    <div class="ui-grid-a">
+      <div class="ui-block-a">
+        <button id="btn_unit_<%= i %>" data-inline="true" style="width: 100%;">本关练习</button>
+      </div>
+      <div class="ui-block-b">
+        <button id="btn_unit_<%= i %>_2" data-inline="true" style="width: 100%;">汇总练习</button>
+      </div>
+    </div><!-- ui-grid-a -->
+    <p id="par_unit_<%= i %>" class="par_ti" style="text-align: center; margin: 0px;"></p>
+    <p id="answer_par_unit_<%= i %>" class="par" style="text-align: center; margin: 0px;"></p>
+    <button class="show_answer" style="display: none;" >查看答案</button>
+  </div><!-- content -->
+</div><!-- page -->
+<% end %>
+
+<div data-role="page" id="zi_fail">
+  <div data-role="header">
+    <a href="#catalog" data-icon="home">目录</a>
+    <h1>出错的字</h1>
+    <button data-role="button"class="ui-btn-right"><span class="ui-li-count right-top-count" style="position: relative; right: 0em;"></span></button>
+    <div data-role="navbar">
+      <ul>
+        <li> <a href="javascript:history.back(-1)" data-icon="back">返回</a></li>
+        <li> <a href="#part_test" data-icon="info">抽查测验</a></li>
+        <li> <a href="#report" data-icon="star">报告</a></li>
+      </ul>
+    </div> <!-- navbar -->
+  </div><!-- header -->
+  <div data-role="content">
+    <div class="ui-grid-a">
+      <div class="ui-block-a">
+        <button id="btn_show_zi_fail" data-inline="true" style="width: 100%;">显示没有通过的字</button>
+      </div>
+      <div class="ui-block-b">
+        <button id="btn_test_zi_fail" data-inline="true" style="width: 100%;">测试没有通过的字</button>
+      </div>
+    </div><!-- ui-grid-a -->
+    <p id="par_zi_fail" class="par_ti" style="font-family: helvetica; text-align: center; margin: 0px;"></p>
+    <p id="answer_par_zi_fail" class="par" style="text-align: center; margin: 0px;"></p>
+    <button class="show_answer" style="display: none;" >查看答案</button>
+  </div><!-- content -->
+</div><!-- page -->
+
+<div data-role="page" id="part_test">
+  <div data-role="header">
+    <h1>抽查测验</h1>
+    <button data-role="button"class="ui-btn-right"><span class="ui-li-count right-top-count" style="position: relative; right: 0em;"></span></button>
+    <div data-role="navbar">
+      <ul>
+        <li> <a href="javascript:history.back(-1)" data-icon="back">返回</a></li>
+        <li><a href="#zi_fail" data-icon="info">错题本</a></li>
+        <li><a href="#report" data-icon="star">报告</a></li>
+        <li><a href="#catalog" data-icon="arrow-r">下一页</a></li>
+      </ul>
+    </div> <!-- navbar -->
+  </div><!-- header -->
+  <div data-role="content">
+    <form method="post" action="#part_test">
+      <div data-role="fieldcontain">
+        <label for="select_unit">选择单元：</label>
+        <select name="select_unit" id="select_unit" multiple="multiple" data-native-menu="false">
+	  <option>单元</option>
+    <% 1.upto(units_count) do |i| %>
+    <option value="zi_unit_<%= i %>" selected>第<%= i %>关</option>
+    <% end %>
+        </select>
+      </div><!-- fieldcontain -->
+      <div data-role="fieldcontain">
+        <label for="part_test_entry_num">测试题数：</label>
+        <input type="range" name="part_test_entry_num" id="part_test_entry_num" value="10" min="10" max="200">
+      </div>
+      <input type="button" data-inline="true" value="开始测试" id="begin_org">
+    </form>
+    <p id="par_part_test" class="par_ti" style="text-align: center; margin: 0px;"></p>
+    <p id="answer_par_part_test" class="par" style="text-align: center; margin: 0px;"></p>
+    <button class="show_answer" style="display: none;" >查看答案</button>
+  </div><!-- content -->
+</div><!-- page -->
+<div data-role="page" id="report">
+  <div data-role="header">
+    <a href="#catalog" data-icon="home">目录</a>
+    <h1>练习报告</h1>
+    <button data-role="button"class="ui-btn-right"><span class="ui-li-count right-top-count" style="position: relative; right: 0em;"></span></button>
+    <div data-role="navbar">
+      <ul>
+        <li> <a href="javascript:history.back(-1)" data-icon="back">返回</a></li>
+	      <li><button class="settings" data-icon="gear">设置</button></li>
+        <li><a href="#zi_fail" data-icon="info">错题本</a></li>
+      </ul>
+    </div> <!-- navbar -->
+  </div><!-- header -->
+  <div data-role="content">
+    <table>
+      <tbody>
+        <tr>
+          <td>任务<td>
+            <td><%= cardbox.name %></td>
+        </tr>
+        <tr>
+          <td>用户名<td>
+          <td id="report_name"></td>
+        </tr>
+        <tr>
+          <td>时长<td>
+          <td id="report_time"></td>
+        </tr>
+        <tr>
+          <td>练习得分<td>
+          <td id="report_score"></td>
+        </tr>
+        <tr>
+          <td>测试得分<td>
+          <td id="report_test_score"></td>
+        </tr>
+        <tr>
+          <td>有效点击<td>
+          <td id="report_valid_click"></td>
+        </tr>
+        <tr>
+          <td>中性点击<td>
+          <td id="report_neutral_click"></td>
+        </tr>
+        <tr>
+          <td>无效点击<td>
+          <td id="report_invalid_click"></td>
+        </tr>
+        <tr>
+          <td>单位时长<td>
+          <td id="report_each_maxtime"></td>
+        </tr>
+        <tr>
+          <td>练习次数<td>
+          <td id="report_pass_time"></td>
+        </tr>
+        <tr>
+          <td>测试范围<td>
+          <td id="report_select_unit"></td>
+        </tr>
+        <tr>
+          <td>练习日期<td>
+          <td id="report_start_date"></td>
+        </tr>        <tr>
+          <td>开始时间<td>
+          <td id="report_start_time"></td>
+        </tr>
+        <tr>
+          <td>报告时间<td>
+          <td id="report_end_time"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div><!-- content -->
+</div><!-- page -->
+</body>
+</html>
+</pre>

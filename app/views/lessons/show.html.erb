@@ -15,13 +15,33 @@
           :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
           :class => 'btn btn-default', tabindex: 53, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
       <% end %>
-      <%= link_to t('.back', :default => t("helpers.links.back")),
+      <%# link_to t('.back', :default => t("helpers.links.back")),
         lessons_path, :class => 'btn btn-default', tabindex: 54, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', :default => [:"helpers.titles.back"], :model => model_class.model_name.human.titleize)  %>
     </div>
     <% end %>
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if @previous_lesson %>
+        <%= link_to t('.previous', :default => t("helpers.links.previous")), lesson_path(@previous_lesson), class: 'btn btn-default', tabindex: 81, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.previous', default: t("helpers.titles.previous"), :model => t("activerecord.models.lesson")) %>
+      <% end %>
+      <% if @next_lesson %>
+        <%= link_to t('.next', :default => t("helpers.links.next")), lesson_path(@next_lesson), class: 'btn btn-default', tabindex: 82, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.next', default: t("helpers.titles.next"), :model => t("activerecord.models.lesson")) %>
+      <% elsif @previous_lesson %>
+        <%= link_to "X", "#", class: 'btn btn-default', tabindex: 82, "data-toggle": "tooltip", "data-placement": "bottom", title: "没有了" %>
+
+      <% else %>
+      <% end %>
+      <% if session[:textbook_id] %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), textbook_path(session[:textbook_id]), class: 'btn btn-default', tabindex: 83, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.textbook")) %>
+      <% end %>
+      <% if @discussion_lesson %>
+        <%= link_to "↓", lesson_path(@discussion_lesson), class: 'btn btn-default', tabindex: 84, "data-toggle": "tooltip", "data-placement": "bottom", title:  "返回正在讨论的课文" %>
+      <% end %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
    <!-- 附加功能 -->
     <% unless session[:discussion_id] %>
-    <div class="btn-group" role="btn-group" arial-label="operation">
+    <div class="btn-group pull-right" role="btn-group" arial-label="operation">
       <button type="button" class="btn btn-default dropdown-toggle" tabindex="61", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="caret"></span>
       </button>
@@ -57,6 +77,11 @@
         <% end %>
         <li>
           <%= link_to "添加习题", new_practice_path %>
+        <% unless @lesson.cardboxes.empty? %>
+          <%= link_to "查看卡片盒", cardboxes_path %>
+        <% else %>
+          <%= link_to "添加卡片盒", new_cardbox_path %>
+        <% end %>
         </li>
         <% if current_user.id == @lesson.user_id && @textbook %>
         <li role="separator" class="divider"></li>
@@ -92,22 +117,6 @@
       <%= link_to "辅导", tutor_path(@tutor), class: 'btn btn-default' %>
       <% end %>
     <% end %>
-    <!-- 导航按钮 -->
-    <div class="btn-group pull-right" role="btn-group" arial-label="navigation">
-      <% if @previous_lesson %>
-        <%= link_to t('.previous', :default => t("helpers.links.previous")), lesson_path(@previous_lesson), class: 'btn btn-default', tabindex: 81, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.previous', default: t("helpers.titles.previous"), :model => t("activerecord.models.lesson")) %>
-      <% end %>
-      <% if @next_lesson %>
-        <%= link_to t('.next', :default => t("helpers.links.next")), lesson_path(@next_lesson), class: 'btn btn-default', tabindex: 82, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.next', default: t("helpers.titles.next"), :model => t("activerecord.models.lesson")) %>
-      <% end %>
-      <% if session[:textbook_id] %>
-        <%= link_to t('.up', :default => t("helpers.links.up")), textbook_path(session[:textbook_id]), class: 'btn btn-default', tabindex: 83, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.textbook")) %>
-      <% end %>
-      <% if @discussion_lesson %>
-        <%= link_to "↓", lesson_path(@discussion_lesson), class: 'btn btn-default', tabindex: 84, "data-toggle": "tooltip", "data-placement": "bottom", title:  "返回正在讨论的课文" %>
-      <% end %>
-      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
-    </div>
   </div>
 </div>
 <%# 下面是阅读提示 %>
@@ -289,7 +298,8 @@
 
 <%# 标题部分 %>
 <div class="page-header">
-  <h2><%= number_with_precision(@catalog.serial, precision: 3) if @catalog %> <%= @lesson.title %>  <small><%= @lesson.author if @lesson.author %></small></h2>
+  <%# number_with_precision(@catalog.serial, precision: 3) %>
+  <h2><%= @catalog.serial.to_f if @catalog %> <%= @lesson.title %>  <small><%= @lesson.author if @lesson.author %></small></h2>
 </div>
 <p class="text-right">
   时间：<%= @lesson.time || "未知"%>；字数：<%= @lesson.content_length %>；

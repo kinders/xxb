@@ -37,17 +37,6 @@
         "data-placement": "bottom", 
         title: t('.back', default: [:"helpers.titles.back"], model: model_class.model_name.human.titleize)  %>
     </div>
-   <!-- 附加功能 -->
-    <div class="btn-group" role="btn-group" arial-label="operation">
-      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li>
-        </li>
-        <li role="separator" class="divider"></li>
-      </ul>
-    </div>
     <!-- 导航按钮 -->
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <%% if @previous_<%= resource_name %> %>
@@ -74,6 +63,17 @@
         "data-toggle": "tooltip", 
         "data-placement": "bottom", 
         title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+   <!-- 附加功能 -->
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+        </li>
+        <li role="separator" class="divider"></li>
+      </ul>
     </div>
   </div>
 </div>

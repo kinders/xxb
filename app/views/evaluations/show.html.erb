@@ -96,8 +96,8 @@
   <p><%= @evaluation.title %></p>
 </div>
 <div class="paragragh">
-  <h2><%= sanitize(@evaluation.material) %></h2>
-  <h2><%= sanitize(@evaluation.question) %></h2>
+  <h2><%= sanitize(@evaluation.material, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %></h2>
+  <h2><%= sanitize(@evaluation.question, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %></h2>
   <% if @evaluation.practice.picture_q_file_name %>
     <p>附带图片</p>
     <%= image_tag @evaluation.practice.picture_q.url, class: "img-responsive center-block"  %>
@@ -106,7 +106,7 @@
 <hr>
 <div><p>回答：</p>
 <div class="paragragh">
-  <h2><%= sanitize(@evaluation.your_answer) %></h2>
+  <h2><%= sanitize(@evaluation.your_answer, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %></h2>
 </div>
   <% if @evaluation.picture_ya_file_name %>
     <p>附带图片</p>

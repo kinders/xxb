@@ -51,6 +51,17 @@
         tutors_path, :class => 'btn btn-default', tabindex: 54, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', :default => [:"helpers.titles.back"], :model => model_class.model_name.human.titleize)  %>
     </div>
   <% end %>
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <% if @previous_tutor %>
+        <%= link_to t('.previous', :default => t("helpers.links.previous")), tutor_path(@previous_tutor), class: 'btn btn-default', tabindex: 80, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.previous', default: t("helpers.titles.previous"), :model => t("activerecord.models.tutor")) %>
+      <% end %>
+      <% if @next_tutor %>
+        <%= link_to t('.next', :default => t("helpers.links.next")), tutor_path(@next_tutor), class: 'btn btn-default', tabindex: 81, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.next', default: t("helpers.titles.next"), :model => t("activerecord.models.tutor")) %>
+      <% end %>
+        <%= link_to t('.up', :default => t("helpers.links.up")), lesson_url(@lesson), class: 'btn btn-default', tabindex: 82, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.lesson")) %>
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', tabindex: 83, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
    <!-- 附加功能 -->
     <div class="btn-group" role="btn-group" arial-label="operation">
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="60" >
@@ -83,28 +94,27 @@
           <li>
             <%= link_to "管理辅导的习题", exercises_path, tabindex: 64 %>
           </li>
+          <li>
+            <%= link_to "下载习题", tutor_download_exercises_path, tabindex: 65 %>
+          </li>
           <li role="separator" class="divider"></li>
           <li>
             <a data-toggle="collapse" href="#options" aria-expanded="true" aria-controls="options" >更改所属课文</a>
+            <a data-toggle="collapse" href="#copy_to_another_lesson" aria-expanded="true" aria-controls="copy_to_another_lesson" >复制给其他课文</a>
           </li>
-          <% end %>
           <% end %>
           <% if @tutor.exercises.any? %>
             <li role="separator" class="divider"></li>
-            <li><%= link_to "将习题导出到卡片盒", export_exercises_to_cardbox_path %></li>
+            <li><%= link_to "查看卡片盒", cardboxes_path %></li>
+            <li><%# link_to "将习题导出到卡片盒", export_exercises_to_cardbox_path %></li>
+          <% end %>
+            <% if session[:textbook_id] %>
+              <li>
+                <a data-toggle="collapse" href="#append_cardbox_link" aria-expanded="true" aria-controls="append_cardbox_link" >附加卡片盒链接</a>
+              </li>
+            <% end %>
           <% end %>
       </ul>
-    </div>
-    <!-- 导航按钮 -->
-    <div class="btn-group" role="btn-group" arial-label="navigation">
-      <% if @previous_tutor %>
-        <%= link_to t('.previous', :default => t("helpers.links.previous")), tutor_path(@previous_tutor), class: 'btn btn-default', tabindex: 80, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.previous', default: t("helpers.titles.previous"), :model => t("activerecord.models.tutor")) %>
-      <% end %>
-      <% if @next_tutor %>
-        <%= link_to t('.next', :default => t("helpers.links.next")), tutor_path(@next_tutor), class: 'btn btn-default', tabindex: 81, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.next', default: t("helpers.titles.next"), :model => t("activerecord.models.tutor")) %>
-      <% end %>
-        <%= link_to t('.up', :default => t("helpers.links.up")), lesson_url(@lesson), class: 'btn btn-default', tabindex: 82, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.lesson")) %>
-      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', tabindex: 83, "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
     </div>
   </div>
 </div>
@@ -127,6 +137,47 @@
   </div>
 </div>
 <!-- 为本辅导重新选择一篇课程 -->
+
+<!-- 将本辅导复制给其他课程 -->
+<div id="copy_to_another_lesson" class="collapse">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      请输入标题、选择一篇课文：
+    </div>
+    <div class="panel-body">
+      <%= form_tag "/tutor/copy_to_another_lesson", class: 'form-inline' do %>
+        <div class="control-group">
+          <%= autocomplete_field_tag :lesson_id, '', autocomplete_lesson_title_tutors_path, class: "form-control" %>
+        <%= submit_tag "提交", :class => 'btn btn-primary' %>
+        <a class="btn btn-default" data-toggle="collapse" href="#copy_to_another_lesson" aria-expanded="true" aria-controls="copy_to_another_lesson" >取消</a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<!-- 将本辅导复制给其他课程 -->
+
+<!-- 附加卡片盒链接 -->
+<% if session[:textbook_id] %>
+<div id="append_cardbox_link" class="collapse">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      请输入标题、选择一篇课文：
+    </div>
+    <div class="panel-body">
+      <%= form_tag "/tutor/append_cardbox_link", class: 'form-inline' do %>
+        <div class="control-group">
+          <% textbook = Textbook.find(session[:textbook_id]) %>
+          <%= select_tag :cardbox_id, options_for_select(Cardbox.where(lesson_id: textbook.lessons.pluck(:id)).collect{ |cardbox| [cardbox.id.to_s + " - " + cardbox.lesson.title + " >> " + cardbox.name, cardbox.id]}), {prompt: "请选择一个卡片盒", class: 'form-control col-md-4'} %>
+        <%= submit_tag "提交", :class => 'btn btn-primary' %>
+        <a class="btn btn-default" data-toggle="collapse" href="#append_cardbox_link" aria-expanded="true" aria-controls="append_cardbox_link" >取消</a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<% end %>
+<!-- 附加卡片盒链接 -->
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
   <div class="panel panel-default">

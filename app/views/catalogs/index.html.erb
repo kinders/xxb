@@ -41,6 +41,7 @@
   <p><strong>描述</strong>: <%= @textbook.description %></p>
   <p><strong>字数</strong>: <%= @textbook.lessons.sum("content_length").to_s(:human) %></p>
 </div>
+<%= paginate @catalogs %>
 <table class="table table-striped">
   <thead>
     <tr>

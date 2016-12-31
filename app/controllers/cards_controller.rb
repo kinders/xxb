@@ -262,6 +262,25 @@ class CardsController < ApplicationController
       end
     end
 
+#=begin
+  def download_practices
+    # cardbox = Cardbox.find(session[:cardbox_id])
+    # practice_id = cardbox.cards.map{|c|c.practice_id}
+    # @practices = Practice.where(id: practice_id)
+    # @filename = "卡片盒“#{cardbox.name}”里的练习题——#{Time.now.to_formatted_s(:number)}.csv"
+    # @output_encoding = "UTF-8"
+    respond_to do |format|
+      format.html
+    end 
+  end
+# =end
+  #
+  def jquerymobile
+    # respond_to do |format|
+      # format.html {render 'cards/jquerymobile', layout: nil, notice: "请打开源代码，将第209行起的代码复制到一个独立的html文件中，并全部替换\"&quot; &lt; &gt;\"三个字符"}
+    # end 
+      # render 'cards/jquerymobile', layout: nil, notice: "请打开源代码，将第209行起的代码复制到一个独立的html文件中，并全部替换\"&quot; &lt; &gt;\"三个字符"
+  end
 
 
     # Use callbacks to share common setup or constraints between actions.
