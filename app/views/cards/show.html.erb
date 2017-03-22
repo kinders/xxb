@@ -65,6 +65,9 @@
       </button>
       <ul class="dropdown-menu">
         <li><%= link_to "查看今天的成绩", list_right_cards_path, tabindex: 61 %></li>
+        <% if @card.practice.user_id == current_user.id %>
+          <li><%= link_to "修改练习", edit_practice_path(@card.practice_id), tabindex: 62 %></li>
+        <% end %>
       </ul>
     </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
@@ -81,7 +84,7 @@
   <div class="panel panel-success">
     <div class="panel-heading" role="tab" id="headingOne">
         <span class="pull-right">标签：<%= @practice.labelname || "无" %></span>
-        <p><%= @practice.title %></p>
+        <h3><%= @practice.title %></h3>
       <div class="paragraph">
         <p><%= sanitize(@practice.material, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %></p>
         <p><%= sanitize(@practice.question, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %></p>

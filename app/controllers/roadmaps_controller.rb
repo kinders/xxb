@@ -222,6 +222,18 @@ class RoadmapsController < ApplicationController
     end
   end
 
+  def copy_to_new_roadmap
+    @roadmap = Roadmap.find_by(id: params[:roadmap_id])
+    unless @roadmap
+      redirect_to :back, notice: '无法找到要复制的指定文路'
+      return
+    end
+    new_roadmap = Roadmap.create(name: @roadmap.name + Time.now.to_s, description: @roadmap.description, user_id: current_user.id, textbook_id: @roadmap.textbook_id)
+    @roadmap.paces.each do |pace|
+      Pace.create(user_id: current_user.id, roadmap_id: new_roadmap.id, lesson_id: pace.lesson_id, serial: pace.serial)
+    end
+    redirect_to :back, notice: '成功复制文路'
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

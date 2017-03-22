@@ -256,7 +256,7 @@ class CardsController < ApplicationController
         flash[:notice] = "《#{@cardbox.name}》里已经没有卡片值得复习了！"
         else
         @next_time = all_cards.where("nexttime > ?", Time.now ).order(:nexttime).first.nexttime
-        flash[:notice] << "恭喜！《#{@cardbox.name}》本轮复习结束，下一轮复习时间为 #{@next_time.strftime("%F %R")}。"
+        flash[:notice] << "恭喜！《#{@cardbox.name}》本轮复习结束，下一轮复习时间为 #{@next_time.strftime("%F %T")}。"
         end
         redirect_to cardboxes_url
       end

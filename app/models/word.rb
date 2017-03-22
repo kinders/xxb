@@ -112,4 +112,48 @@ class Word < ActiveRecord::Base
     end
   end
 
+  # 这个方法可以从有道词典里面获取英语单词的发音和含义
+  def load_explain_from_youdao_dict
+    require 'net/http'
+    require 'nokogiri'
+
+    @word = self
+
+    path = "/w/" + @word.name
+    response = Net::HTTP.get_response("dict.youdao.com", path)
+    # if response.body =~ /div class="error-typo"/
+      # return
+    # end
+
+    doc = Nokogiri::HTML(response.body)
+
+    pinyin = []
+    pronounce = doc.css("div#phrsListTab span.pronounce")
+    pronounce.each do |p|
+      pinyin << [p.css("span.phonetic").inner_html.gsub(/[\[\]]/,""), p.inner_html[0]]
+    end
+    pinyin.each do |py|
+      the_phonetic = Phonetic.find_by(content: py[0], label: py[1])
+      unless the_phonetic
+        the_phonetic = Phonetic.create(content: py[0], label: py[1])
+      end
+      @word.phonetic_notations.create(phonetic_id: the_phonetic.id)
+    end
+
+    explains = doc.css("div#phrsListTab div.trans-container").inner_html.gsub(/(\n)|(\r)| /, '')
+    @word.meanings.create(content: explains)
+=begin
+    if @word.name =~ /[A-Z]/
+      little_word = @word.name.downcase
+      path = "/w/" + little_word
+      response = Net::HTTP.get_response("dict.youdao.com", path)
+      doc = Nokogiri::HTML(response.body)
+      explains = "<div><strong>小写：#{little_word}<strong></div><div>"
+      explains << doc.css("div#phrsListTab div.trans-container").inner_html.gsub(/(\n)|(\r)| /, '')
+      explains << "</div>"
+      @word.meanings.create(content: explains)
+    end
+=end
+  end
+
 end

@@ -119,6 +119,7 @@
         <% else %>
           <li>
             <%= link_to "批量导入课程", "#choose_a_textbook", data: {toggle: "modal"}  %>
+            <%= link_to "复制文路", copy_to_new_roadmap_path(@roadmap.id)  %>
           </li>
         <% end %>
       </ul>

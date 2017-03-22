@@ -1,0 +1,65 @@
+<%- model_class = Practice -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3>为《<%= @tutor.title %>》一节选择练习</h3>
+</div>
+
+<% if current_user.id == @tutor.user_id %>
+  <button class="btn btn-default pull-right" type="button" data-toggle="collapse" data-target="#collapseCreatePracticesInBatch" aria-expanded="false" aria-controls="collapseCreatePracticesInBatch">
+    批量新添练习
+  </button>
+  <div class="collapse" id="collapseCreatePracticesInBatch">
+    <div class="well">
+      <p>注意：</p>
+      <ul>
+        <li>上传的文件必须是CVS文件，包含“标题”、“材料”、“问题”、“答案”、“分值”和“标签”六列。其中“分值”一栏可以为空</li>
+        <li>CVS文件是一种用逗号隔开数据的文本文件，这种文件也可使用Excel等程序通过“另存为”功能生成。
+      </ul>
+      <%= form_tag "/practices/create_practices_in_batch", multipart: true, class: 'form-inline' do %>
+        <div class="control-group">
+        <%= file_field_tag "csv_file", accept: "text/csv", class: 'form-control' %>
+        <%= submit_tag "上传文件", class: 'btn btn-info form-control' %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+
+<% if @practices.any? %>
+<%= form_tag "/add_many_practices", class: 'form-inline' do %>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><input type="checkbox" id="checkbox_select_all" /></th>
+      <th><%= model_class.human_attribute_name(:title) %></th>
+      <th><%= model_class.human_attribute_name(:material) %></th>
+      <th><%= model_class.human_attribute_name(:question) %></th>
+      <th><%= model_class.human_attribute_name(:score) %></th>
+      <th><%= model_class.human_attribute_name(:labelname) %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @practices.each do |practice| %>
+      <tr>
+        <td><%= check_box_tag "practice_id[]", practice.id %></td>
+        <td><%= practice.title %></td>
+        <td><%= practice.material %></td>
+        <td><%= link_to practice.question, practice_path(practice), class: "btn-xs btn-link" %></td>
+        <td><%= practice.score %></td>
+        <td><%= practice.labelname %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= submit_tag "将所选习题添加到辅导中", :class => 'btn btn-primary' %>
+<% end %>
+<% end %>

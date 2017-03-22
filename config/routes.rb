@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   post '/roadmaps/compare_with_roadmap', to: 'roadmaps#compare_with_roadmap'
   get '/create_roadmap_for_textbook', to: 'roadmaps#create_roadmap_for_textbook'
   get '/update_roadmap_for_textbook', to: 'roadmaps#update_roadmap_for_textbook'
+  get '/copy_to_new_roadmap', to: 'roadmaps#copy_to_new_roadmap'
 
   resources :meanings
 
@@ -41,6 +42,7 @@ Rails.application.routes.draw do
     get "change_meanful"
     get "load_explain_from_baidu_hanyu"
     get "load_explain_from_baidu_dict"
+    get "load_explain_from_youdao_dict"
   end
   post '/word/new_words_as_tutor', to: 'words#new_words_as_tutor'
 

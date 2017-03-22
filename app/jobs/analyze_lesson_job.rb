@@ -5,7 +5,8 @@ class AnalyzeLessonJob < ActiveJob::Base
     require 'digest/md5'
     # begin
     # 检查是否空白内容
-    @lesson = Lesson.find(lesson_id)
+    @lesson = Lesson.find_by(id: lesson_id)
+    return unless @lesson
     if @lesson.content == ""
         return "该课程内容为空，无需分析"
     end
@@ -17,7 +18,7 @@ class AnalyzeLessonJob < ActiveJob::Base
     end
     content = lesson_title + "。" + lesson_author + "。"+ @lesson.content
     # 获取并精简文本
-    content.gsub!(/(<\/p>)|(<\/div>)/, ".") # 补充句号到段落结尾，防止取出标签之后因为末尾没有标点而和第二行合并
+    content.gsub!(/(<\/h\d>)|(<\/p>)|(<\/div>)/, ".") # 补充句号到段落结尾，防止取出标签之后因为末尾没有标点而和第二行合并
     content.gsub!(/<(\w|\/)+[^>]*>/, "") # 除去html标签
     content.gsub!(/\r|\n|\f/, ".") # 除去换行符，也是防止因为末尾没有标点而和第二行合并
     new_md = Digest::MD5.hexdigest(content)
@@ -87,6 +88,7 @@ class AnalyzeLessonJob < ActiveJob::Base
       chinese_pattern = /[\u4e00-\u9fa5]/
       none_chinese_part = sentence.split(chinese_pattern).delete_if{|x| x == ""}
       none_chinese_part.each do |p|
+        next unless p
         sentence.gsub!(/#{p}/, " "+p+" ").squeeze(" ")
       end
       ## 将句子分隔为词语

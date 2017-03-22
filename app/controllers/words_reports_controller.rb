@@ -12,6 +12,9 @@ class WordsReportsController < ApplicationController
   # GET /words_reports/1
   # GET /words_reports/1.json
   def show
+    unless WordsReport.find_by(id: @words_report.id)
+      redirect_to :back, notice: "相关报告已被删除。"
+    end
     session[:words_report_id] = @words_report.id
     @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).order("id").page(params[:page]).per(10)
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq

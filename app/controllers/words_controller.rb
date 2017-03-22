@@ -224,6 +224,13 @@ class WordsController < ApplicationController
     redirect_to :back, notice: "成功从百度词典网站导入信息。"
   end
 
+  # get /words/1/load_explain_from_youdao_dict
+  def load_explain_from_youdao_dict
+    @word || @word = Word.find(session[:word_id])
+    @word.load_explain_from_youdao_dict
+    redirect_to :back, notice: "成功从有道词典网站导入信息。"
+  end
+
   def new_words_as_tutor
     unless session[:lesson_id]
       redirect_to textbooks_url, notice: "没有找到相应的课文。"
@@ -232,11 +239,14 @@ class WordsController < ApplicationController
     @lesson = Lesson.find(session[:lesson_id])
     @words = Word.where(id: params[:word_id])
     new_content = "<ol>"
+    new_proviso = "<ol>"
     @words.each do |word|
       new_content << "<li><strong> " + word.name + " </strong>" +  word.phonetics.map{|p|p.content}.to_s.delete("\"") + "<a target=\"_blank\" href=\"/words/" + word.id.to_s + "\" class=\"btn btn-link btn-xs\">查看详细解释</a></li>"
+      new_proviso << "<li>" + word.name + "</li>"
     end
     new_content << "</ol>"
-    @tutor = Tutor.create(title: "词汇表", difficulty: 10, page: new_content, user_id: current_user.id, lesson_id: @lesson.id, page_length: new_content.size)
+    new_proviso << "</ol>"
+    @tutor = Tutor.create(title: "词汇表", difficulty: 10, proviso: new_proviso, page: new_content, user_id: current_user.id, lesson_id: @lesson.id, page_length: new_content.size)
     redirect_to tutor_path(@tutor), notice: "成功生成辅导。"
   end
 
