@@ -129,7 +129,7 @@ class PracticesController < ApplicationController
   def create_practices_in_batch
     begin
       @lesson = Lesson.find(session[:lesson_id])
-      @tutor = Tutor.find(session[:tutor_id])
+      @tutor = Tutor.find(session[:tutor_id]) if session[:tutor_id]
       @practices = []
       name =  current_user.name + Time.now.to_s
       directory = "public/data_import"
@@ -150,10 +150,10 @@ class PracticesController < ApplicationController
           @practices << p
         end
       end
-      # respond_to do |format|
-        # format.html { redirect_to :back, notice: '成功导入练习！' }
-        # format.json { head :no_content }
-      # end
+      unless session[:tutor_id]
+        redirect_to :back, notice: '成功导入练习！'
+        return
+      end
     rescue 
       File.delete(path)
       respond_to do |format|

@@ -78,20 +78,19 @@
     </div>
   </div>
 </div>
+    <div class="page-header">
+      <!-- <p><small>课文：</small>《<%= link_to @sentence.lesson.title, lesson_url(@sentence.lesson_id) %>》<small>（<%= @sentence.lesson.author || '未知' %> <%= @sentence.lesson.time || '未知' %>）</small></p>-->
+      <h3><small><%=t '.title', default: model_class.model_name.human.titleize %>：</small><%= @sentence.name %></h3>
+    </div>
 
-<div class="page-header">
-<p><small>课文：</small>《<%= link_to @sentence.lesson.title, lesson_url(@sentence.lesson_id) %>》<small>（<%= @sentence.lesson.author || '未知' %> <%= @sentence.lesson.time || '未知' %>）</small></p>
-  <h3><small><%=t '.title', default: model_class.model_name.human.titleize %>：</small><%= @sentence.name %></h3>
-</div>
-
-<!-- Nav tabs -->
-<ul class="nav nav-tabs" role="tablist">
-  <li role="presentation" class="active"><a href="#comments" role="tab" data-toggle="tab">评注</a></li>
-  <li role="presentation"><a href="#single_words" role="tab" data-toggle="tab">字解</a></li>
-  <li role="presentation"><a href="#meanful_words" role="tab" data-toggle="tab">词解</a></li>
-  <li role="presentation"><a href="#words" role="tab" data-toggle="tab">析词</a></li>
-</ul>
-
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#comments" role="tab" data-toggle="tab">评注</a></li>
+      <li role="presentation"><a href="#single_words" role="tab" data-toggle="tab">字解</a></li>
+      <li role="presentation"><a href="#meanful_words" role="tab" data-toggle="tab">词解</a></li>
+      <li role="presentation"><a href="#words" role="tab" data-toggle="tab">析词</a></li>
+    </ul>
+    
 <!-- Tab panes -->
 <div class="tab-content">
   <div role="tabpanel" class="tab-pane" id="words">
@@ -145,7 +144,6 @@
         </li>
       <% end %>
     </ul>
-    
   </div>
   <div role="tabpanel" class="tab-pane" id="single_words">
     <table class="table table-striped">
@@ -190,3 +188,11 @@
     </table>
   </div>
 </div>
+
+<% if @lesson %>
+<div class="panel panel-default">
+    <h4><%= number_with_precision(@catalog.serial, precision: 2) if @catalog %> <%= @lesson.title %>  <small><%= @lesson.author if @lesson.author %></small></h2>
+    <p class="text-right">时间：<%= @lesson.time || "未知"%>；字数：<%= @lesson.content_length %></p>
+  <div><%= sanitize(@lesson.content) %></div>
+</div>
+<% end %>

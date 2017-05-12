@@ -10,6 +10,13 @@
 
 <%- model_class = Cardbox -%>
 
+<% unless session[:lesson_id] %>
+<div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>提示：</strong> 没有指定课文，不建议创建卡片盒。
+</div>
+<% end %>
+
 <div class="container col-xs-11 col-sm-10 col-md-8 affix">
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
     <div class="btn-group" role="btn-group" arial-label="manage">

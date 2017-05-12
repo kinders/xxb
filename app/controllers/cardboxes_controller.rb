@@ -144,7 +144,7 @@ class CardboxesController < ApplicationController
     begin
       @cardbox = Cardbox.find(params[:dest_id])
       params[:cardbox_id].each do |cardbox_id|
-        Cardbox.find(cardbox_id).cards.each do | card |
+        Cardbox.find(cardbox_id).cards.order(:sequence).each do | card |
           new_card = Card.create { |n_card|
           n_card.user_id = current_user.id
           n_card.practice_id = card.practice_id

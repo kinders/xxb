@@ -161,7 +161,7 @@ class ExercisesController < ApplicationController
           c.lesson_id = @tutor.lesson_id
           c.share = true if Master.find_by(id: current_user.id)
         }
-        @tutor.exercises.each_with_index {|e, i|
+        @tutor.exercises.order(:serial).each_with_index {|e, i|
           Card.create {|card|
             card.user_id = current_user.id
             card.practice_id = e.practice_id
