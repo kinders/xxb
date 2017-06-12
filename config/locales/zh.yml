@@ -4,6 +4,7 @@ zh-CN:
     models:
       agreement: "赞"
       badrecord: "不良记录"
+      booklist: '书单'
       cadre: "班干"
       cardbox: "卡片盒"
       card: "卡片"
@@ -72,6 +73,14 @@ zh-CN:
         finish: "是否完成"
         finish_man: "消除者"
         finish_time: "完成时间"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      booklist:
+        id: "标识号"
+        user_id: "所有者"
+        textbook_id: '书籍'
+        serial: '序号'
         deleted_at: "删除时间"
         created_at: "创建时间"
         updated_at: "更新时间"

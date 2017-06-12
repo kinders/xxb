@@ -6,6 +6,7 @@
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
     <div class="btn-group" role="btn-group" arial-label="manage">
       <%= link_to t('.new', :default => t("helpers.links.new")), new_textbook_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+      <%= link_to t('.back', :default => t("helpers.links.back")), booklists_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: '进入我的书单' %>
     </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <%= link_to t('.up', :default => t("helpers.links.up")), "/", class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.site")) %>
@@ -15,7 +16,7 @@
 </div>
 
 <div class="page-header">
-  <h3>所有的教科书</h3>
+  <h3>图书馆</h3>
 </div>
 
 <% @textbooks.to_a.each_slice(6).to_a.each do |tbs| %>

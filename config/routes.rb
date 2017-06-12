@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :booklists
+
   get 'agreements/like'
   get 'agreements/dislike'
 
@@ -223,6 +225,7 @@ Rails.application.routes.draw do
   post '/tutor/append_cardbox_link', to: "tutors#append_cardbox_link"
   get 'tutor_download_exercises', to: "tutors#download_exercises"
 
+  get 'lessons_in_content_length',  to: 'lessons#lessons_in_content_length'
   resources :lessons do
     get :autocomplete_lesson_title, on: :collection
     get 'delete_picture'

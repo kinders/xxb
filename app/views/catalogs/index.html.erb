@@ -12,6 +12,12 @@
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
+        <% unless Booklist.find_by(user_id: current_user.id, textbook_id: @textbook.id) %>
+        <li>
+          <%= link_to "将本书添加到书单中", new_booklist_path %>
+        </li>
+        <li role="separator" class="divider"></li>
+        <% end %>
         <li>
           <% if @textbook.roadmap %>
             <%= link_to "查看本书的文路", roadmap_path(@textbook.roadmap) %>

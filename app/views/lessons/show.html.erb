@@ -299,7 +299,7 @@
 <%# 标题部分 %>
 <div class="page-header">
   <%# number_with_precision(@catalog.serial, precision: 3) %>
-  <h2><%= @catalog.serial.to_f if @catalog %> <%= @lesson.title %>  <small><%= @lesson.author if @lesson.author %></small></h2>
+  <h2><%= @catalog.serial.to_f if @catalog %> <%= @lesson.title %> <br> <small><%= @lesson.author if @lesson.author %></small></h2>
 </div>
 <p class="text-right">
   时间：<%= @lesson.time || "未知"%>；字数：<%= @lesson.content_length %>；
@@ -318,6 +318,9 @@
   <%= sanitize(@lesson.content, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %>
 </div>
 
+<p class="text-right">
+  出处：<%= @lesson.source || "未知"%>
+</p>
 <%# 下面是管理员视图 %>
 <% else %>
 

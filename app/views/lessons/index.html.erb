@@ -7,6 +7,16 @@
     <div class="btn-group" role="btn-group" arial-label="manage">
       <%= link_to t('.new', :default => t("helpers.links.new")), new_lesson_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
     </div>
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" tabindex="61", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <%= link_to "按字数排序", lessons_in_content_length_path %>
+        </li>
+      </ul>
+    </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <% if session[:textbook_id] %>
       <%= link_to t('.up', :default => t("helpers.links.up")), textbook_url(session[:textbook_id]), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.textbook")) %>

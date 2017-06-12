@@ -5,6 +5,7 @@ class Textbook < ActiveRecord::Base
   has_many :catalogs, dependent: :destroy
   has_many :lessons, through: :catalogs
   has_many :discussions,  dependent: :destroy
+  has_many :booklists,  dependent: :destroy
   acts_as_paranoid
   validates :title, :serial, presence: true
 end

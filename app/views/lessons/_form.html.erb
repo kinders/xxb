@@ -75,6 +75,14 @@
     <%= error_span(@lesson[:content]) %>
   </div>
 
+  <div class="control-group">
+    <%= f.label "出处", :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :source, :class => 'form-control', rows: "30" %>
+    </div>
+    <%= error_span(@lesson[:source]) %>
+  </div>
+
 <% if current_user.has_role? :admin %>
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>

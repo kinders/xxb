@@ -11,6 +11,13 @@ class LessonsController < ApplicationController
       @lessons = Lesson.all.order("time").page(params[:page]).per("10")
   end
 
+  # GET /lessons_in_content_length
+  # GET /lessons.json
+  def lessons_in_content_length
+      @lessons = Lesson.all.order("content_length").page(params[:page]).per("100")
+      render :index
+  end
+
   # GET /lessons/1
   # GET /lessons/1.json
   def show
@@ -323,8 +330,8 @@ class LessonsController < ApplicationController
       redirect_to :back, notice: "请重新指定一片课文。"
       return
     end
-    @tutor = Tutor.create(title: @lesson.title + "（" + @lesson.author + "）", lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: @lesson.content_length)
-    Tutor.create(title: @target.title + "（" + @target.author + "）", lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: @target.content_length)
+    @tutor = Tutor.create(title: @lesson.title + "（" + @lesson.author + "）", lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "全文共" + @lesson.content_length.to_s + "字。<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: @lesson.content_length)
+    Tutor.create(title: @target.title + "（" + @target.author + "）", lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "全文共" + @target.content_length.to_s + "字。<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: @target.content_length)
     session[:lesson_id] = @target.id
     respond_to do |format|
       format.html { redirect_to @tutor, notice: "辅导《#{@tutor.title}》已经成功生成。" }
@@ -349,7 +356,7 @@ class LessonsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def lesson_params
-      params.require(:lesson).permit(:title, :content, :user_id, :picture, :time, :author)
+      params.require(:lesson).permit(:title, :content, :user_id, :picture, :time, :author, :source)
     end
 
     def be_a_master

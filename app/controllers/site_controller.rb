@@ -17,7 +17,10 @@ class SiteController < ApplicationController
     word = Word.find_by(md1: search_md[0..7], md2: search_md[8..15], md3: search_md[16..23], md4: search_md[24..31], md5: search_md[32..39], md6: search_md[40..47], md7: search_md[48..55], md8: search_md[56..63])
     if word
     word.word_parsers.select(:sentence_id).uniq.each{ |w|
-      @sentences << Sentence.find(w.sentence_id)
+      s = Sentence.find_by(id: w.sentence_id)
+      if s
+        @sentences << s
+      end
     }
     elsif @lessons.any?
     else

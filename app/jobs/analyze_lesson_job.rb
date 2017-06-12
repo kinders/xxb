@@ -21,9 +21,8 @@ class AnalyzeLessonJob < ActiveJob::Base
     content.gsub!(/(<\/h\d>)|(<\/p>)|(<\/div>)/, ".") # 补充句号到段落结尾，防止取出标签之后因为末尾没有标点而和第二行合并
     content.gsub!(/<(\w|\/)+[^>]*>/, "") # 除去html标签
     content.gsub!(/\r|\n|\f/, ".") # 除去换行符，也是防止因为末尾没有标点而和第二行合并
-    new_md = Digest::MD5.hexdigest(content)
-
     # 检查是否存在分析报告，若有则分析文本是否改动
+    new_md = Digest::MD5.hexdigest(content)
     @words_report = WordsReport.find_by(lesson_id: @lesson.id)
     if @words_report
       if new_md == @words_report.md
@@ -76,7 +75,7 @@ class AnalyzeLessonJob < ActiveJob::Base
     sentences = content.split(/[，；。？！……——：,;.?!:]/)
     # sentences = content.split(/[，；。？！……——：]|([,;.?!:] )/)
     sentences.each do |sentence|
-      word_parser = []
+      # word_parser = []
       ## 将句子中的引号去除
       sentence.gsub!(/(?<=[a-zA-Z])'(?=[a-zA-Z])/, "。") # 将两个单词中间的单引号转义，防止被删除
       sentence.gsub!(/['"“”‘’]/, "")
@@ -84,6 +83,8 @@ class AnalyzeLessonJob < ActiveJob::Base
       # next if sentence =~ /[,.?!:]/
       # next if sentence =~ /[,.?!:] /
       @sentence = Sentence.create(lesson_id: @lesson.id, name: sentence)
+      AnalyzeSentenceJob.perform_later @sentence.id, @lesson.id
+=begin
       ## 将句子中的非中文字符用空格隔开
       chinese_pattern = /[\u4e00-\u9fa5]/
       none_chinese_part = sentence.split(chinese_pattern).delete_if{|x| x == ""}
@@ -139,7 +140,8 @@ class AnalyzeLessonJob < ActiveJob::Base
         end
         a_size = a_size - 1
       end
-      WordParser.create(word_parser)
+      # WordParser.create(word_parser)
+=end
     end
 =begin
     rescue

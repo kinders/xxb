@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161104003202) do
+ActiveRecord::Schema.define(version: 20170611155639) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,19 @@ ActiveRecord::Schema.define(version: 20161104003202) do
   add_index "badrecords", ["deleted_at"], name: "index_badrecords_on_deleted_at", using: :btree
   add_index "badrecords", ["subject_id"], name: "index_badrecords_on_subject_id", using: :btree
   add_index "badrecords", ["user_id"], name: "index_badrecords_on_user_id", using: :btree
+
+  create_table "booklists", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "textbook_id"
+    t.decimal  "serial"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "booklists", ["deleted_at"], name: "index_booklists_on_deleted_at", using: :btree
+  add_index "booklists", ["textbook_id"], name: "index_booklists_on_textbook_id", using: :btree
+  add_index "booklists", ["user_id"], name: "index_booklists_on_user_id", using: :btree
 
   create_table "cadres", force: :cascade do |t|
     t.integer  "user_id"
@@ -367,6 +380,7 @@ ActiveRecord::Schema.define(version: 20161104003202) do
     t.integer  "content_length",       default: 0
     t.integer  "time"
     t.string   "author"
+    t.string   "source"
   end
 
   add_index "lessons", ["author"], name: "index_lessons_on_author", using: :btree
@@ -861,6 +875,8 @@ ActiveRecord::Schema.define(version: 20161104003202) do
 
   add_foreign_key "agreements", "comments"
   add_foreign_key "agreements", "users"
+  add_foreign_key "booklists", "textbooks"
+  add_foreign_key "booklists", "users"
   add_foreign_key "comments", "lessons"
   add_foreign_key "comments", "sentences"
   add_foreign_key "comments", "users"
