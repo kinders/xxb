@@ -330,8 +330,8 @@ class LessonsController < ApplicationController
       redirect_to :back, notice: "请重新指定一片课文。"
       return
     end
-    @tutor = Tutor.create(title: @lesson.title + "（" + @lesson.author + "）", lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "全文共" + @lesson.content_length.to_s + "字。<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: @lesson.content_length)
-    Tutor.create(title: @target.title + "（" + @target.author + "）", lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "全文共" + @target.content_length.to_s + "字。<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: @target.content_length)
+    @tutor = Tutor.create(title: @lesson.title + "（" + @lesson.author + "）", lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "全文" + @lesson.content_length.to_s + "字。<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: @lesson.content_length)
+    Tutor.create(title: @target.title + "（" + @target.author + "）", lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "全文" + @target.content_length.to_s + "字。<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: @target.content_length)
     session[:lesson_id] = @target.id
     respond_to do |format|
       format.html { redirect_to @tutor, notice: "辅导《#{@tutor.title}》已经成功生成。" }
