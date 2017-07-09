@@ -8,6 +8,31 @@
   </div>
 </div>
 
+<% if @textbooks.any? %>
+<div class="page-header">
+  <h3><small>包含</small> <%= @search %> <small>的课本：</small></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>编号</th>
+      <th>名称</th>
+      <th>描述</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @textbooks.each do |textbook| %>
+      <tr>
+        <td><%= textbook.id %></td>
+        <td><%= link_to textbook.title, textbook_path(textbook) %></td>
+        <td><%= textbook.description.first(50) if textbook.description %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
+<hr>
+
 <% if @lessons.any? %>
 <div class="page-header">
   <h3><small>包含</small> <%= @search %> <small>的课程：</small></h3>

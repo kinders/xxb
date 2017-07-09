@@ -10,6 +10,7 @@ class SiteController < ApplicationController
     @search = params[:title]
     words = Word.where("name LIKE ?", "%" + params[:title] +"%" ).where(is_meanful: true)
     @words = words.order("length")
+    @textbooks = Textbook.where("title LIKE ?", "%" + params[:title] +"%")
     @lessons = Lesson.where("title LIKE ?", "%" + params[:title] +"%" )
     @lessons_by_author = Lesson.where("author LIKE ?", "%" + params[:title] +"%" )
     @sentences = []

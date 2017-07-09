@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     get "load_explain_from_youdao_dict"
   end
   post '/word/new_words_as_tutor', to: 'words#new_words_as_tutor'
+  get '/search_words', to: 'words#search_words'
 
 
   resources :words_reports do
@@ -248,7 +249,7 @@ Rails.application.routes.draw do
 
   mount Ckeditor::Engine => '/ckeditor'
 
-  post '/search_lesson', to: 'site#search_lesson'
+  get '/search_lesson', to: 'site#search_lesson'
   root 'site#home'
 
 

@@ -250,7 +250,13 @@ class WordsController < ApplicationController
     redirect_to tutor_path(@tutor), notice: "成功生成辅导。"
   end
 
+  def search_words
+    word_pattern = "'" + params[:pattern].to_s + "'"
+    words = Word.find_by_sql("SELECT id, name, length FROM words WHERE is_meanful = 't' AND name ~ " + word_pattern).first(10000)
+    @words = Kaminari.paginate_array(words).page(params[:page]).per(100)
 
+    render :index
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
