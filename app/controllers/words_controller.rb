@@ -7,7 +7,7 @@ class WordsController < ApplicationController
   # GET /words.json
   def index
     # if current_user.has_role? :admin 
-      @words = Word.all.page(params[:page]).per(10)
+      @words = Word.all.page(params[:page]).per(100)
     # else
       # redirect_to root_path, notice: "您没有权限查看字典，请进行其他操作。"
     # end

@@ -16,7 +16,7 @@ class WordsReportsController < ApplicationController
       redirect_to :back, notice: "相关报告已被删除。"
     end
     session[:words_report_id] = @words_report.id
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).order("id").page(params[:page]).per(10)
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).order("id").page(params[:page]).per(100)
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
     @longest = Word.where(id: all_words).maximum(:length)
     # word_parsers_in_group = WordParser.includes("word").where(lesson_id: @words_report.lesson_id, words: {length: 1}).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
@@ -79,7 +79,7 @@ class WordsReportsController < ApplicationController
     @longest = Word.where(id: all_words).maximum(:length) || 1
     @num = params[:num] || 1
     word_parsers_in_group = WordParser.includes("word").where(lesson_id: @words_report.lesson_id, words: {length: @num}).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
-    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
+    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
   end
 
   # GET /words_reports/1/show_de1
@@ -115,7 +115,7 @@ class WordsReportsController < ApplicationController
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
     @longest = Word.where(id: all_words).maximum(:length) || 1
     word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
-    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
+    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
 
   end
 
@@ -152,7 +152,7 @@ class WordsReportsController < ApplicationController
       word_count = word.word_parsers.where(lesson_id: @words_report.lesson_id).size
       word_parsers_in_group << [word.id, word_count]
     end
-    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
+    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
   end
 
   def show_meanful_words
@@ -167,7 +167,7 @@ class WordsReportsController < ApplicationController
       word_parsers_in_group << [word.id, word_count]
     end
     word_parsers_in_group.sort! {|a, b| a[1]<=>b[1]}
-    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
+    @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
   end
 
   private
