@@ -225,6 +225,8 @@ Rails.application.routes.draw do
   post '/tutor/copy_to_another_lesson', to: "tutors#copy_to_another_lesson"
   post '/tutor/append_cardbox_link', to: "tutors#append_cardbox_link"
   get 'tutor_download_exercises', to: "tutors#download_exercises"
+  get '/tutor/create_multi_pinyin_tutor', to: "tutors#create_multi_pinyin_tutor"
+  get '/tutor_create_pinyin_page_for_tutor', to: "tutors#create_pinyin_page_for_tutor"
 
   get 'lessons_in_content_length',  to: 'lessons#lessons_in_content_length'
   resources :lessons do

@@ -94,15 +94,18 @@
           <li>
             <%= link_to "管理辅导的习题", exercises_path, tabindex: 64 %>
           </li>
+          <% end %>
           <li>
             <%= link_to "下载习题", tutor_download_exercises_path, tabindex: 65 %>
           </li>
           <li role="separator" class="divider"></li>
+          <% if current_user.id == @tutor.user_id  %>
           <li>
             <a data-toggle="collapse" href="#options" aria-expanded="true" aria-controls="options" >更改所属课文</a>
+            <%= link_to "生成拼音页面", tutor_create_pinyin_page_for_tutor_path(tutor_id: @tutor.id), tabindex: 66 %>
+          <% end %>
             <a data-toggle="collapse" href="#copy_to_another_lesson" aria-expanded="true" aria-controls="copy_to_another_lesson" >复制给其他课文</a>
           </li>
-          <% end %>
           <% if @tutor.exercises.any? %>
             <li role="separator" class="divider"></li>
             <li><%= link_to "查看卡片盒", cardboxes_path %></li>

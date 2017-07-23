@@ -2,6 +2,22 @@
 
 <div class="container col-xs-12 col-sm-10 col-md-8 affix">
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 附加功能 -->
+    <% if [1,4].include?(@num) %>
+    <div class="btn-group pull-right" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" tabindex="61", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <% if @num == 1  %>
+          <li><%= link_to "导出多音字", sentences_url %></li>
+        <% end %>
+        <% if @num == 4 %>
+          <li><%= link_to "导出四字成语", sentences_url %></li>
+        <% end %>
+      </ul>
+    </div>
+    <% end %>
     <!-- 导航按钮 -->
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <% if @previous_words_report %>
