@@ -212,6 +212,14 @@
   <%# end %>
 <%#</div>%>
 
+  <div class="control-group">
+    <%= f.label :score, :class => 'control-label' %>
+    <div class="controls">
+      <%= f.text_field :score, :class => 'form-control' %>
+    </div>
+    <%= error_span(@practice[:score]) %>
+  </div>
+
   <hr>
   <%= f.submit "保存这个练习", :class => 'btn btn-primary', tabindex: 20 %>
   <%= link_to t('.cancel', :default => t("helpers.links.cancel")),

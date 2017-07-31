@@ -96,7 +96,7 @@ class LessonsController < ApplicationController
 
     respond_to do |format|
       if @lesson.save
-        AnalyzeLessonJob.perform_later @lesson.id
+        # AnalyzeLessonJob.perform_later @lesson.id
         format.html { redirect_to @lesson, notice: "该课程\"#{@lesson.title}\"已经添加。" }
         format.json { render :show, status: :created, location: @lesson }
       else
@@ -113,7 +113,7 @@ class LessonsController < ApplicationController
       if @lesson.update(lesson_params)
         @lesson.content_length = @lesson.content.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
         @lesson.save
-        AnalyzeLessonJob.perform_later @lesson.id
+        # AnalyzeLessonJob.perform_later @lesson.id
         format.html { redirect_to @lesson, notice: "课程\"#{@lesson.title}\"已经更新完毕。" }
         format.json { render :show, status: :ok, location: @lesson }
       else

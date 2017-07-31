@@ -32,13 +32,13 @@ class AnalyzeSentenceJob < ActiveJob::Base
     a_size = real_words.size
     a_size.times do |i|
       a_size.times do |j|
-        words_with_blank =  real_words[i, j+1].join(" ")
+        words_with_blank =  real_words[i, j+1].join(" ") # 将字重新组合成句子
         words_with_blank.gsub!(/(?<=[\u4e00-\u9fa5]) (?=[\u4e00-\u9fa5])/, "") #去除中文中间多余的空格
+        next if /^\d*$/ =~ words_with_blank  # 纯数字的单词不予以分析。
         # p words_with_blank
         ### 至此完成拆分成最小单位
         ### 计算字符串的md值作为索引
          words_with_blank_id = Digest::MD5.hexdigest(words_with_blank).bytes.map{|b|b=b-38}.join
-        
         ### 下面计算单位的长度，有中文则按字计算，非中文按空格计算
         if words_with_blank =~ /[\u4e00-\u9fa5]/
           words_length = words_with_blank.size

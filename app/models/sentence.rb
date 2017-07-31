@@ -5,4 +5,15 @@ class Sentence < ActiveRecord::Base
   has_many :comments
   acts_as_paranoid
   validates :name, :lesson_id, presence: true
+
+=begin
+  # 将包含破折号和省略号的句子进行拆分，重新分析，然后删除包含这两种符号的word
+  def refund_sentence
+    Sentences.where("name LIKE ?", "%&hellip;%").each do |sentence|
+      
+    end
+  end
+=end
+
+
 end

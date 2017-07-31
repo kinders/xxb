@@ -64,9 +64,11 @@ class PracticesController < ApplicationController
   def create
     @practice = Practice.new(practice_params)
     unless current_user.has_role? :admin
-    @practice.user_id = current_user.id
-    @practice.lesson_id = session[:lesson_id]
-    @practice.score = (@practice.answer.to_s.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length.to_f / 10).ceil
+      @practice.user_id = current_user.id
+      @practice.lesson_id = session[:lesson_id]
+      unless @practice.score
+        @practice.score = (@practice.answer.to_s.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length.to_f / 10).ceil
+      end
     end
     respond_to do |format|
       if @practice.save
