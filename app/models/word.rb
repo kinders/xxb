@@ -1,5 +1,7 @@
 class Word < ActiveRecord::Base
   has_many :word_parsers
+  has_many :practice_parsers
+  has_many :lessons, through: :word_parsers
   has_many :phonetic_notations
   has_many :phonetics, through: :phonetic_notations
   has_many :meanings
@@ -179,7 +181,7 @@ class Word < ActiveRecord::Base
   end
 #=end
 
-=begin
+#=begin
   # 这个类方法补齐md5字段
   def self.add_md5
     require 'digest/md5'
@@ -189,7 +191,7 @@ class Word < ActiveRecord::Base
       word.update(md1: word_md5[0..7], md2: word_md5[8..15], md3: word_md5[16..23], md4: word_md5[24..31], md5: word_md5[32..39], md6: word_md5[40..47], md7: word_md5[48..55], md8: word_md5[56..63])
     end
   end
-=end
+#=end
 
 =begin
   # 这个方法用来清洗一些符号转义错误: 

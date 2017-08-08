@@ -15,5 +15,12 @@ class Sentence < ActiveRecord::Base
   end
 =end
 
+  # 找出没有分析的句子
+  def self.find_and_analysis
+    Sentence.find_each do |sentence|
+      next unless sentence.word_parsers.empty?
+      AnalyzeSentenceJob.perform_later sentence.id
+    end
+  end
 
 end

@@ -8,6 +8,7 @@ class Lesson < ActiveRecord::Base
   has_many :practices
   has_many :cardboxes
   has_many :word_parsers
+  has_many :words, through: :word_parsers
   has_one :words_report
   has_many :sentences
   has_many :paces

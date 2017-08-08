@@ -1,0 +1,1 @@
+json.partial! "practice_parsers/practice_parser", practice_parser: @practice_parser

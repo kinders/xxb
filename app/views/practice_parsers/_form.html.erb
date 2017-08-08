@@ -1,0 +1,29 @@
+<%= form_for(@practice_parser) do |f| %>
+  <% if @practice_parser.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@practice_parser.errors.count, "error") %> prohibited this practice_parser from being saved:</h2>
+
+      <ul>
+      <% @practice_parser.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :practice_id %><br>
+    <%= f.text_field :practice_id %>
+  </div>
+  <div class="field">
+    <%= f.label :word_id %><br>
+    <%= f.text_field :word_id %>
+  </div>
+  <div class="field">
+    <%= f.label :deleted_at %><br>
+    <%= f.datetime_select :deleted_at %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

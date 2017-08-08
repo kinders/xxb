@@ -18,7 +18,7 @@ class PracticesController < ApplicationController
         @practices = Practice.where(lesson_id: @lesson.id).order(:id)
       end
     else
-      redirect_to :back, notice: "需要指定课文。"
+      redirect_to list_all_practices_path, notice: "需要指定课文。"
     end
   end
 
@@ -48,6 +48,12 @@ class PracticesController < ApplicationController
 	      end
       end
     end
+    word_ids = PracticeParser.where(practice_id: @practice.id).pluck(:word_id)
+    @word_count = word_ids.count
+    all_similar_practices_id = PracticeParser.where(word_id: word_ids).pluck(:practice_id)
+    counter = Hash.new(0)
+    all_similar_practices_id.each {|practice_id| counter[practice_id]+=1 if all_similar_practices_id.include?(practice_id)}
+    @practices_id_with_count = counter.sort{|a,b| a[1]<=>b[1]}.last(21).reverse
   end
 
   # GET /practices/new
@@ -72,6 +78,8 @@ class PracticesController < ApplicationController
     end
     respond_to do |format|
       if @practice.save
+        # 对练习进行分析（标题，问题，答案，不包括材料）
+        @practice.analysis_practice
         format.html { redirect_to @practice, notice: "练习#{@practice.id}已经成功添加" }
         format.json { render :show, status: :created, location: @practice }
       else
@@ -89,6 +97,8 @@ class PracticesController < ApplicationController
     end
     respond_to do |format|
       if @practice.update(practice_params)
+        # 对练习进行分析（标题，问题，答案，不包括材料）
+        @practice.analysis_practice
         format.html { redirect_to @practice, notice: "练习#{@practice.id}已经更新成功" }
         format.json { render :show, status: :ok, location: @practice }
       else
@@ -179,6 +189,16 @@ class PracticesController < ApplicationController
       }
       redirect_to :back, notice: "成功将这道题添加到试卷中！"
     end
+  end
+
+  # get /list_all_practices
+  def list_all_practices
+    @practices = Practice.all.order(:id).page(params[:page]).per("100")
+  end
+
+  # get /search_practices
+  def search_practices
+
   end
 
   private

@@ -39,13 +39,13 @@
 
 <p>其他可用的分析：</p>
 <div class="btn-group" role="group">
-  <%= link_to "全部", words_report_path(@words_report), class: 'btn btn-default' %>
+  <%= link_to "全部", words_report_path(words_report_id: @words_report.id), class: 'btn btn-default' %>
   <% 1.upto(@longest) do |t| %>
-    <%= link_to "#{t}字", words_report_show_word_n_path(num: t), class: 'btn btn-default' %>
+    <%= link_to "#{t}字", words_report_show_word_n_path(words_report_id: @words_report.id, num: t), class: 'btn btn-default' %>
   <% end %>
-  <%= link_to "地字", words_report_show_de2_path(@words_report), class: 'btn btn-default' %>
-  <%= link_to "得字", words_report_show_de3_path(@words_report), class: 'btn btn-default' %>
-  <%= link_to "基本", words_report_show_basic_path(@words_report), class: 'btn btn-default' %>
+  <%= link_to "地字", words_report_show_de2_path(words_report_id: @words_report.id), class: 'btn btn-default' %>
+  <%= link_to "得字", words_report_show_de3_path(words_report_id: @words_report.id), class: 'btn btn-default' %>
+  <%= link_to "基本", words_report_show_basic_path(words_report_id: @words_report.id), class: 'btn btn-default' %>
   <%= link_to "句子", sentences_path, class: 'btn btn-default' %>
 </div>
 <hr>

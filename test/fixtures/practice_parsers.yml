@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  practice_id: 
+  word_id: 
+  deleted_at: 2017-08-02 12:09:23
+
+two:
+  practice_id: 
+  word_id: 
+  deleted_at: 2017-08-02 12:09:23

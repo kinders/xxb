@@ -74,7 +74,7 @@ class WordsReportsController < ApplicationController
 
   # GET /words_reports/1/show_word_n
   def show_word_n
-    @words_report = WordsReport.find(session[:words_report_id])
+    @words_report = WordsReport.find(params[:words_report_id])
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
     @longest = Word.where(id: all_words).maximum(:length) || 1
     @num = params[:num] || 1
@@ -84,7 +84,7 @@ class WordsReportsController < ApplicationController
 
   # GET /words_reports/1/show_de1
   def show_de1
-    @words_report = WordsReport.find(session[:words_report_id])
+    @words_report = WordsReport.find(params[:words_report_id])
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
     @longest = Word.where(id: all_words).maximum("length")
     # @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
@@ -94,7 +94,7 @@ class WordsReportsController < ApplicationController
 
   # GET /words_reports/1/show_de2
   def show_de2
-    @words_report = WordsReport.find(session[:words_report_id])
+    @words_report = WordsReport.find(params[:words_report_id])
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
     @longest = Word.where(id: all_words).maximum("length")
     @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
@@ -102,7 +102,7 @@ class WordsReportsController < ApplicationController
 
   # GET /words_reports/1/show_de3
   def show_de3
-    @words_report = WordsReport.find(session[:words_report_id])
+    @words_report = WordsReport.find(params[:words_report_id])
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
     @longest = Word.where(id: all_words).maximum("length")
     @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
@@ -111,7 +111,7 @@ class WordsReportsController < ApplicationController
   # GET /words_reports/1/show_basic
   # 词条统计分析
   def show_basic
-    @words_report = WordsReport.find(session[:words_report_id])
+    @words_report = WordsReport.find(params[:words_report_id])
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
     @longest = Word.where(id: all_words).maximum(:length) || 1
     word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
@@ -145,7 +145,7 @@ class WordsReportsController < ApplicationController
   end
 
   def show_unmeanful_words
-    @words_report = WordsReport.find(session[:words_report_id])
+    @words_report = WordsReport.find(params[:words_report_id])
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("word_id").uniq
     word_parsers_in_group = []
     Word.where(id: all_words, is_meanful: nil).order("length").each do |word|
@@ -156,7 +156,7 @@ class WordsReportsController < ApplicationController
   end
 
   def show_meanful_words
-    @words_report = WordsReport.find(session[:words_report_id])
+    @words_report = WordsReport.find(params[:words_report_id])
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck("word_id").uniq
     # 下面是将词语按词语的长度进行排列。
     # @word_parsers_in_group = Word.where(id: all_words, is_meanful: true).order("length").page(params[:page]).per(10)

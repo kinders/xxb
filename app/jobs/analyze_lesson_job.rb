@@ -86,7 +86,7 @@ class AnalyzeLessonJob < ActiveJob::Base
         next
       else
         @sentence = Sentence.create(lesson_id: @lesson.id, name: sentence)
-        AnalyzeSentenceJob.perform_later @sentence.id, @lesson.id
+        AnalyzeSentenceJob.perform_later @sentence.id
       end
     end
     new_sentences_id = @lesson.sentences.pluck(:id)

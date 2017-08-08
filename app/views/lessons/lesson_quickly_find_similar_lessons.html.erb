@@ -1,0 +1,42 @@
+<%- model_class = Lesson -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+    <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3>查看内容和《<%= @target_lesson.title %>》相似的课程</h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>编号</th>
+      <th>课程名称</th>
+      <th>作者</th>
+      <th>创作时间</th>
+      <th>字数/长度</th>
+      <th>相同字数</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @lessons_id_with_count.each do |lesson_with_count| %>
+      <% lesson = Lesson.find(lesson_with_count[0].to_i) %>
+      <% if lesson.id == @target_lesson.id %>
+      <tr class="info">
+      <% else %>
+      <tr>
+      <% end %>
+        <td><%= lesson.id %></td>
+        <td><%= link_to lesson.title, lesson_path(lesson) %></td>
+        <td><%= lesson.author %></td>
+        <td><%= lesson.time %></td>
+        <td><%= lesson.content_length %></td>
+        <td><%= lesson_with_count[1] %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

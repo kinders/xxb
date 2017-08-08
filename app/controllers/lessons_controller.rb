@@ -348,6 +348,23 @@ class LessonsController < ApplicationController
     end
   end
 
+  # GET /lesson_quickly_find_similar_lessons
+  def lesson_quickly_find_similar_lessons
+    @target_lesson = Lesson.find_by(id: params[:lesson_id])
+    unless @target_lesson
+      redirect_to :back, notice: '请先指定一个课程'
+      return
+    end
+    all_word_ids = WordParser.where(lesson_id: @target_lesson.id).pluck(:word_id).uniq
+    word_ids = Word.where(id: all_word_ids, length: 1).pluck(:id)
+    all_similar_lessons_id = WordParser.where(word_id: word_ids).pluck(:lesson_id)
+    all_similar_lessons_id_in_length = Lesson.where(id: all_similar_lessons_id).where("content_length < ?", @target_lesson.content_length*2).pluck(:id)
+    counter = Hash.new(0)
+    all_similar_lessons_id.each {|lesson_id| counter[lesson_id]+=1 if all_similar_lessons_id_in_length.include?(lesson_id)}
+    @lessons_id_with_count = counter.sort{|a,b| a[1]<=>b[1]}.last(21).reverse
+
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_lesson

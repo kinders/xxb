@@ -8,6 +8,7 @@ class Practice < ActiveRecord::Base
   has_many :exercises, dependent: :destroy
   has_many :cards, dependent: :destroy
   has_many :quiz_items, dependent: :destroy
+  has_many :practice_parsers
 
   has_attached_file :picture_q
   validates_attachment_file_name :picture_q, :matches => [/png\Z/, /jpe?g\Z/]
@@ -18,6 +19,33 @@ class Practice < ActiveRecord::Base
 
   acts_as_paranoid
   validates :title, :lesson_id, presence: true
+
+  # 这个方法对练习题进行分析。
+  def analysis_practice
+    practice_id = self.id
+    practice_content = self.question +  self.answer
+    practice_content.gsub!(/<(\w|\/)+[^>]*>/, "") # 除去html标签
+    word_part_content =  []
+
+    word_part_content << practice_content.scan(/\w+/)
+    word_part_content << practice_content.scan(/[\u4e00-\u9fa5]/)
+    word_part_content.flatten!
+    word_part_content.uniq!
+    word_parsers_params = []
+    if self.practice_parsers.empty?
+      words_id = Word.where(name: word_part_content).pluck(:id)
+      words_id.each{|w| word_parsers_params << {practice_id: practice_id, word_id: w} }
+    else
+        new_words_id = Word.where(name: word_part_content).pluck(:id)
+        old_words_id = PracticeParser.where(practice_id: practice_id).pluck(:word_id)
+        bad_words_id = old_words_id - new_words_id
+        PracticeParser.where(practice_id: practice_id, word_id: bad_words_id).destroy_all
+        good_words_id = new_words_id - old_words_id
+        good_words_id.each{|w| word_parsers_params << {practice_id: practice_id, word_id: w} }
+    end
+    PracticeParser.create(word_parsers_params)
+  end
+
 end
 
 =begin

@@ -1,0 +1,1 @@
+json.array! @practice_parsers, partial: 'practice_parsers/practice_parser', as: :practice_parser

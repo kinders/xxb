@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170611155639) do
+ActiveRecord::Schema.define(version: 20170802040923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -559,6 +559,18 @@ ActiveRecord::Schema.define(version: 20170611155639) do
   add_index "players", ["team_id"], name: "index_players_on_team_id", using: :btree
   add_index "players", ["user_id"], name: "index_players_on_user_id", using: :btree
 
+  create_table "practice_parsers", force: :cascade do |t|
+    t.integer  "practice_id"
+    t.integer  "word_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "practice_parsers", ["deleted_at"], name: "index_practice_parsers_on_deleted_at", using: :btree
+  add_index "practice_parsers", ["practice_id"], name: "index_practice_parsers_on_practice_id", using: :btree
+  add_index "practice_parsers", ["word_id"], name: "index_practice_parsers_on_word_id", using: :btree
+
   create_table "practices", force: :cascade do |t|
     t.string   "title"
     t.text     "question"
@@ -887,6 +899,8 @@ ActiveRecord::Schema.define(version: 20170611155639) do
   add_foreign_key "paces", "users"
   add_foreign_key "phonetic_notations", "phonetics"
   add_foreign_key "phonetic_notations", "words"
+  add_foreign_key "practice_parsers", "practices"
+  add_foreign_key "practice_parsers", "words"
   add_foreign_key "roadmaps", "textbooks"
   add_foreign_key "roadmaps", "users"
 end

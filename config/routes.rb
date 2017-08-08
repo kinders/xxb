@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :practice_parsers
+
   resources :booklists
 
   get 'agreements/like'
@@ -210,6 +212,7 @@ Rails.application.routes.draw do
     get 'add_to_paper'
   end
   post '/practices/create_practices_in_batch', to: 'practices#create_practices_in_batch'
+  get '/list_all_practices', to: 'practices#list_all_practices'
 
   resources :tutors do
     get :autocomplete_lesson_title, on: :collection
@@ -239,6 +242,7 @@ Rails.application.routes.draw do
   get '/lesson/as_tutor', to: 'lessons#as_tutor'
   post '/lesson/to_tutor', to: 'lessons#to_tutor'
   get '/choose_a_textbook', to: 'lessons#choose_a_textbook'
+  get '/lesson_quickly_find_similar_lessons', to: 'lessons#lesson_quickly_find_similar_lessons'
 
   devise_for :users, controllers: { sessions: "users/sessions" }
 

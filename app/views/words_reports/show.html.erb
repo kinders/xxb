@@ -77,12 +77,12 @@
     <%= link_to "#{t}字", words_report_show_word_n_path(words_report_id: @words_report.id, num: t), class: 'btn btn-default' %>
   <% end %>
   <% end %>
-  <%= link_to "的字", words_report_show_de1_path(@words_report), class: 'btn btn-default' %>
-  <%= link_to "地字", words_report_show_de2_path(@words_report), class: 'btn btn-default' %>
-  <%= link_to "得字", words_report_show_de3_path(@words_report), class: 'btn btn-default' %>
-  <%= link_to "基本", words_report_show_basic_path(@words_report), class: 'btn btn-default' %>
-  <%= link_to "有意义", words_report_show_meanful_words_path(@words_report), class: 'btn btn-default' %>
-  <%= link_to "无意义", words_report_show_unmeanful_words_path(@words_report), class: 'btn btn-default' %>
+  <%= link_to "的字", words_report_show_de1_path(words_report_id: @words_report.id), class: 'btn btn-default' %>
+  <%= link_to "地字", words_report_show_de2_path(words_report_id: @words_report.id), class: 'btn btn-default' %>
+  <%= link_to "得字", words_report_show_de3_path(words_report_id: @words_report.id), class: 'btn btn-default' %>
+  <%= link_to "基本", words_report_show_basic_path(words_report_id: @words_report.id), class: 'btn btn-default' %>
+  <%= link_to "有意义", words_report_show_meanful_words_path(words_report_id: @words_report.id), class: 'btn btn-default' %>
+  <%= link_to "无意义", words_report_show_unmeanful_words_path(words_report_id: @words_report.id), class: 'btn btn-default' %>
   <%= link_to "句子", sentences_path, class: 'btn btn-default' %>
   <%= link_to "比较", compare_with_another_path, class: 'btn btn-default' %>
 </div>

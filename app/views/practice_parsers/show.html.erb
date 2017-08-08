@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Practice:</strong>
+  <%= @practice_parser.practice %>
+</p>
+
+<p>
+  <strong>Word:</strong>
+  <%= @practice_parser.word %>
+</p>
+
+<p>
+  <strong>Deleted at:</strong>
+  <%= @practice_parser.deleted_at %>
+</p>
+
+<%= link_to 'Edit', edit_practice_parser_path(@practice_parser) %> |
+<%= link_to 'Back', practice_parsers_path %>

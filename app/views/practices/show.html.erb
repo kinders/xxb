@@ -26,6 +26,9 @@
           <%= link_to "在卡片盒中添加本习题", "#myCard", data: {toggle: "modal"}  %>
         </li>
         <li>
+          <%= link_to "显示类似习题", "#similar_practices", data: {toggle: "collapse"}  %>
+        </li>
+        <li>
           <%= link_to "管理卡片盒", cardboxes_url %>
         </li>
         <% if session[:paper_id] %>
@@ -155,6 +158,45 @@
   </div>
 </div>
 <% end %>
+
+<!-- 显示类似习题 -->
+    <div id="similar_practices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>相似度</th>
+      <th>序号</th>
+      <th>标题</th>
+      <th>问题</th>
+      <th>分值</th>
+      <th>标签</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @practices_id_with_count.each do |practice_id| %>
+      <% next if practice_id[0] == @practice.id %>
+      <% practice = Practice.find(practice_id[0]) %>
+      <tr>
+        <td><%= number_to_percentage(practice_id[1]*100/@word_count, precision: 0) %></td>
+        <td><%= practice.id %></td>
+        <td><%= practice.title %></td>
+        <td><%= link_to practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, ""), practice_path(practice), class: "btn-xs btn-link" %></td>
+        <td><%= practice.score %></td>
+        <td><%= practice.labelname %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+      </div>
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#similar_practices" aria-expanded="true" aria-controls="collapseOne" class="bg-success center-block">
+          <p class="text-center">隐藏</p>
+        </a>
+      </div>
+    </div>
+  </div>
+
+<!-- 显示类似习题 -->
 
 <% if current_user.has_role? :admin %>
 
