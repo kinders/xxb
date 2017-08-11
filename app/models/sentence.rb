@@ -13,7 +13,6 @@ class Sentence < ActiveRecord::Base
       
     end
   end
-=end
 
   # 找出没有分析的句子
   def self.find_and_analysis
@@ -22,5 +21,19 @@ class Sentence < ActiveRecord::Base
       AnalyzeSentenceJob.perform_later sentence.id
     end
   end
+
+  # 找到包含？的句子并重新划分
+  def self.refind_wrong_sentence
+    wrongs = Sentence.where('name LIKE ?', '%?%')
+    wrongs.each {|wrong|
+      old_name = wrong.name
+      old_lesson = wrong.lesson_id
+      old_name.split("?").each{|new_name|
+        Sentence.create(lesson_id: old_lesson, name: new_name)
+      }
+      wrong.destroy
+    }
+  end
+=end
 
 end

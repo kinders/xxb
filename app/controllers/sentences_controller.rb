@@ -1,6 +1,7 @@
 class SentencesController < ApplicationController
   before_action :authenticate_user!
-  load_and_authorize_resource
+  #load_and_authorize_resource
+  skip_authorization_check
   before_action :set_sentence, only: [:show, :edit, :update, :destroy]
 
   # GET /sentences
@@ -25,25 +26,24 @@ class SentencesController < ApplicationController
     @word_parsers = @sentence.word_parsers.order(:id)
     session[:sentence_id] = @sentence.id
     # 生成上一个和下一个句子
-    if session[:lesson_id]
+    if session[:lesson_id] && @sentence.lesson_id == session[:lesson_id]
       @lesson = Lesson.find(session[:lesson_id])
       all_sentences_id = Sentence.where(lesson_id: @lesson.id).pluck("id").sort
-    else
-      all_sentences_id = Sentence.all.pluck("id").sort
-    end
-    current_sentence_id = all_sentences_id.index(@sentence.id)
-    if current_sentence_id == 0
-      @previous_sentence = nil
-    else
-      @previous_sentence = all_sentences_id[current_sentence_id - 1]
-    end
-    if current_sentence_id == all_sentences_id.size
-      @next_sentence == nil
-    else
-      @next_sentence = all_sentences_id[current_sentence_id + 1]
+      current_sentence_id = all_sentences_id.index(@sentence.id)
+      if current_sentence_id == 0
+        @previous_sentence = nil
+      else
+        @previous_sentence = all_sentences_id[current_sentence_id - 1]
+      end
+      if current_sentence_id == all_sentences_id.size
+        @next_sentence == nil
+      else
+        @next_sentence = all_sentences_id[current_sentence_id + 1]
+      end
     end
   end
 
+=begin
   # GET /sentences/new
   def new
     @sentence = Sentence.new
@@ -92,6 +92,7 @@ class SentencesController < ApplicationController
       format.json { head :no_content }
     end
   end
+=end
 
   private
     # Use callbacks to share common setup or constraints between actions.

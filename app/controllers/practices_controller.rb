@@ -11,12 +11,13 @@ class PracticesController < ApplicationController
       @practices = Practice.all
     elsif session[:lesson_id]
       @lesson = Lesson.find(session[:lesson_id])
-      if session[:tutor_id]
-        @tutor = Tutor.find(session[:tutor_id])
-        @practices = Practice.where(tutor_id: @tutor.id).order(:id)
-      else
-        @practices = Practice.where(lesson_id: @lesson.id).order(:id)
-      end
+      @practices = @lesson.practices.order(:id)
+      # if session[:tutor_id]
+        # @tutor = Tutor.find(session[:tutor_id])
+        # @practices = Practice.where(tutor_id: @tutor.id).order(:id)
+      # else
+        # @practices = Practice.where(lesson_id: @lesson.id).order(:id)
+      # end
     else
       redirect_to list_all_practices_path, notice: "需要指定课文。"
     end
@@ -31,9 +32,11 @@ class PracticesController < ApplicationController
       h.entryid = @practice.id
     }
     session[:practice_id] = @practice.id
-    @lesson = Lesson.find_by(id: @practice.lesson_id)
+    # @lesson = Lesson.find_by(id: @practice.lesson_id)
+    if session[:lesson_id]
+    @lesson = Lesson.find_by(id: session[:lesson_id])
     #@tutor = Tutor.find_by(id: @practice.tutor_id)
-    @practices = Practice.where(lesson_id: session[:lesson_id])
+    @practices = @lesson.practices.order(:id)
     @practices.each_with_index do | practice, index |
       if practice == @practice
         if index - 1 < 0
@@ -47,6 +50,7 @@ class PracticesController < ApplicationController
 	        @next_practice = @practices[index + 1]
 	      end
       end
+    end
     end
     word_ids = PracticeParser.where(practice_id: @practice.id).pluck(:word_id)
     @word_count = word_ids.count
@@ -71,7 +75,6 @@ class PracticesController < ApplicationController
     @practice = Practice.new(practice_params)
     unless current_user.has_role? :admin
       @practice.user_id = current_user.id
-      @practice.lesson_id = session[:lesson_id]
       unless @practice.score
         @practice.score = (@practice.answer.to_s.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length.to_f / 10).ceil
       end
@@ -80,6 +83,9 @@ class PracticesController < ApplicationController
       if @practice.save
         # 对练习进行分析（标题，问题，答案，不包括材料）
         @practice.analysis_practice
+        if session[:lesson_id]
+          LessonPractice.create(lesson_id: session[:lesson_id], practice_id: @practice.id)
+        end
         format.html { redirect_to @practice, notice: "练习#{@practice.id}已经成功添加" }
         format.json { render :show, status: :created, location: @practice }
       else
@@ -92,9 +98,9 @@ class PracticesController < ApplicationController
   # PATCH/PUT /practices/1
   # PATCH/PUT /practices/1.json
   def update
-    unless current_user.has_role? :admin
-    @practice.score = (@practice.answer.to_s.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length.to_f / 10).ceil
-    end
+    # unless current_user.has_role? :admin
+    # @practice.score = (@practice.answer.to_s.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length.to_f / 10).ceil
+    # end
     respond_to do |format|
       if @practice.update(practice_params)
         # 对练习进行分析（标题，问题，答案，不包括材料）
@@ -151,7 +157,7 @@ class PracticesController < ApplicationController
         allline.each do |line|
           p = Practice.new 
           p.user_id = current_user.id
-          p.lesson_id = session[:lesson_id]
+          # p.lesson_id = session[:lesson_id]
           p.labelname = line[:标签]
           p.title = line[:标题]
           p.material = line[:材料]
@@ -159,6 +165,7 @@ class PracticesController < ApplicationController
           p.answer = line[:答案]
           p.score = line[:分值] || (p.answer.to_s.length.to_f / 10).ceil
           p.save!
+          LessonPractice.create(lesson_id: @lesson.id, practice_id: p.id)
           @practices << p
         end
       end
@@ -198,7 +205,49 @@ class PracticesController < ApplicationController
 
   # get /search_practices
   def search_practices
+    @search_key = params[:key_word]
+    word_content =  []
+    word_content << @search_key.scan(/\w+/)
+    word_content << @search_key.scan(/[\u4e00-\u9fa5]/)
+    word_content.flatten!
+    word_content.uniq!
+    words_id = Word.where(name: word_content).pluck(:id)
+    practices_id = []
+    practices_id = PracticeParser.where(word_id: words_id).pluck(:practice_id)
+    counter = Hash.new(0)
+    practices_id.each {|practice_id| counter[practice_id]+=1 if practices_id.include?(practice_id)}
+    search_practices_id = counter.keep_if{|k, v| v == words_id.size}.keys
+    @practices = Practice.where(id: search_practices_id).order(:id).page(params[:page]).per("100")
+    render :list_all_practices, notice: "成功找到这些匹配的习题。"
+  end
 
+  def practice_add_to_lesson
+   @lesson_practice = LessonPractice.find_by(lesson_id: params[:lesson_id], practice_id: params[:practice_id])
+   if @lesson_practice
+    redirect_to :back, notice: '习题已经在课程中。'
+   else
+    LessonPractice.create(lesson_id: params[:lesson_id], practice_id: params[:practice_id])
+    redirect_to :back, notice: '已经将习题添加到课程中。'
+   end
+  end
+
+  def practice_add_to_tutor
+   @lesson_practice = LessonPractice.find_by(lesson_id: params[:lesson_id], practice_id: params[:practice_id])
+    unless @lesson_practice
+      LessonPractice.create(lesson_id: params[:lesson_id], practice_id: params[:practice_id])
+    end
+   @exercise = Exercise.find_by(tutor_id: params[:tutor_id], practice_id: params[:practice_id])
+   if @exercise
+    redirect_to :back, notice: '习题已经在辅导中。'
+   else
+    last_exercise = Exercise.where(tutor_id: params[:tutor_id]).order(:serial).last
+    if last_exercise
+      Exercise.create(tutor_id: params[:tutor_id], practice_id: params[:practice_id], user_id: current_user.id, serial: last_exercise.serial + 1)
+    else
+      Exercise.create(tutor_id: params[:tutor_id], practice_id: params[:practice_id], user_id: current_user.id, serial: 1)
+    end
+    redirect_to :back, notice: '已经将习题添加到辅导中。'
+   end
   end
 
   private

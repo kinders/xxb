@@ -1,14 +1,16 @@
 class AnalyzeSentenceJob < ActiveJob::Base
   queue_as :default
 
-  def perform(sentence_id)
+  def perform(sentence_id, *lesson_id)
     require 'digest/md5'
     @sentence = Sentence.find_by(id: sentence_id)
-    @lesson = Lesson.find_by(id: @sentence.lesson_id)
     return unless @sentence
+    @sentence.word_parsers.destroy_all #if @sentence.word_parsers
+    @lesson = Lesson.find_by(id: @sentence.lesson_id)
     return unless @lesson
     word_parser = []
     sentence = @sentence.name
+    sentence.gsub!(/[*+()\/\\\.\[\]]/, "")
     ## 将句子中的非中文字符用空格隔开
     chinese_pattern = /[\u4e00-\u9fa5]/
     none_chinese_part = sentence.split(chinese_pattern).delete_if{|x| x == ""}.sort{|a, b| a.size<=>b.size}.reverse

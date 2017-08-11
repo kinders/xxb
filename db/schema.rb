@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170802040923) do
+ActiveRecord::Schema.define(version: 20170808055057) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -365,6 +365,18 @@ ActiveRecord::Schema.define(version: 20170802040923) do
   add_index "justices", ["evaluation_id"], name: "index_justices_on_evaluation_id", using: :btree
   add_index "justices", ["practice_id"], name: "index_justices_on_practice_id", using: :btree
   add_index "justices", ["user_id"], name: "index_justices_on_user_id", using: :btree
+
+  create_table "lesson_practices", force: :cascade do |t|
+    t.integer  "lesson_id"
+    t.integer  "practice_id"
+    t.datetime "deleted_at"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "lesson_practices", ["deleted_at"], name: "index_lesson_practices_on_deleted_at", using: :btree
+  add_index "lesson_practices", ["lesson_id"], name: "index_lesson_practices_on_lesson_id", using: :btree
+  add_index "lesson_practices", ["practice_id"], name: "index_lesson_practices_on_practice_id", using: :btree
 
   create_table "lessons", force: :cascade do |t|
     t.string   "title"
@@ -893,6 +905,8 @@ ActiveRecord::Schema.define(version: 20170802040923) do
   add_foreign_key "comments", "sentences"
   add_foreign_key "comments", "users"
   add_foreign_key "comments", "words"
+  add_foreign_key "lesson_practices", "lessons"
+  add_foreign_key "lesson_practices", "practices"
   add_foreign_key "meanings", "words"
   add_foreign_key "paces", "lessons"
   add_foreign_key "paces", "roadmaps"

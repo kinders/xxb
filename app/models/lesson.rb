@@ -13,6 +13,8 @@ class Lesson < ActiveRecord::Base
   has_many :sentences
   has_many :paces
   has_many :comments
+  has_many :lesson_practices
+  has_many :practices, through: :lesson_practices
 
   def self.titles
     all.collect{|lesson| [lesson.title, lesson.id]}

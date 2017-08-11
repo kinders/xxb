@@ -25,17 +25,13 @@ class AnalyzeLessonJob < ActiveJob::Base
     new_md = Digest::MD5.hexdigest(content)
     @words_report = WordsReport.find_by(lesson_id: @lesson.id)
     old_sentences_id = []
-    if @words_report && new_md == @words_report.md
+    if @words_report && (new_md == @words_report.md)
       return "别惊讶，这篇课文已经分析过了。"
     else
-      # @lesson.word_parsers.destroy_all
-      # @lesson.sentences.destroy_all
       old_sentences_id = @lesson.sentences.pluck(:id)
       @words_report.destroy
     end
     @words_report = WordsReport.create(lesson_id: @lesson.id, md: new_md)
-
-# =begin
     # 将括号里的语句提出来，单独作为一句附在内容之后。
     i = 1
     while  match_data = /[(（\[【].+?[)）\]】]/.match(content)
@@ -44,9 +40,6 @@ class AnalyzeLessonJob < ActiveJob::Base
       content << another_sentence + "。" # 添加到原有内容之后
       i = i + 1
     end
-    # p content
-# =end
-    
     # 处理ckeditor的html转义
     content.gsub!(/(&#39;)/, "'") # 转为原型：单引号
     content.gsub!(/(&quot;)/, "'") # 转为原型：单引号
@@ -74,24 +67,26 @@ class AnalyzeLessonJob < ActiveJob::Base
     content.gsub!(/(&aelig;)/, "æ") # 转为原型：
     content.gsub!(/(&theta;)/, "θ") # 转为原型：
     content.gsub!(/(&eth;)/, "ð") # 转为原型：
-
     # 将内容分割为句子，逐句分析
     sentences = content.split(/[，；。？！……——：,;.?!:]/)
+    new_sentences_id = []
     sentences.each do |sentence|
       sentence.gsub!(/(?<=[a-zA-Z])'(?=[a-zA-Z])/, "。") # 将两个单词中间的单引号转义，防止被删除
       sentence.gsub!(/['"“”‘’]/, "") # 将句子中的引号去除
       sentence.gsub!(/。/, "'") # 转为原型：单引号
-      @sentence = Sentence.where(lesson_id: @lesson.id, name: sentence)
+      @sentence = Sentence.find_by(lesson_id: @lesson.id, name: sentence)
       if @sentence
+        new_sentences_id << @sentence.id
         next
       else
         @sentence = Sentence.create(lesson_id: @lesson.id, name: sentence)
+        new_sentences_id << @sentence.id
         AnalyzeSentenceJob.perform_later @sentence.id
       end
     end
-    new_sentences_id = @lesson.sentences.pluck(:id)
     diff_sentences_id = old_sentences_id - new_sentences_id
     Sentence.where(id: diff_sentences_id).destroy_all
+    WordParser.where(sentence_id: diff_sentences_id).destroy_all
 =begin  
     rescue
       @lesson.sentences.destroy_all

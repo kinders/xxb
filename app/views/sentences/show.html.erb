@@ -4,21 +4,21 @@
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
     <!-- 管理功能 -->
     <div class="btn-group" role="group" arial-label="manage">
-        <%= link_to t('.new', default:  t("helpers.links.new")), 
+        <%# link_to t('.new', default:  t("helpers.links.new")), 
           new_sentence_path,
           class:  'btn btn-default', 
           tabindex: 21, 
           "data-toggle": "tooltip", 
           "data-placement": "bottom", 
           title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
-        <%= link_to t('.edit', default: t("helpers.links.edit")), 
+        <%# link_to t('.edit', default: t("helpers.links.edit")), 
           edit_sentence_path(@sentence),
           class: 'btn btn-default', 
           tabindex: 22, 
           "data-toggle": "tooltip", 
           "data-placement": "bottom", 
           title: t('.edit', default: [:"helpers.titles.edit"], model: model_class.model_name.human.titleize) %>
-        <%= link_to t('.destroy', default: t("helpers.links.destroy")),
+        <%# link_to t('.destroy', default: t("helpers.links.destroy")),
           sentence_path(@sentence),
           method: 'delete',
           data: { confirm: t('.confirm', default: t("helpers.links.confirm", default: 'Are you sure?')) },
@@ -79,7 +79,7 @@
   </div>
 </div>
     <div class="page-header">
-      <!-- <p><small>课文：</small>《<%= link_to @sentence.lesson.title, lesson_url(@sentence.lesson_id) %>》<small>（<%= @sentence.lesson.author || '未知' %> <%= @sentence.lesson.time || '未知' %>）</small></p>-->
+      <p><small>课文：</small>《<%= link_to @sentence.lesson.title, lesson_url(@sentence.lesson_id) %>》<small>（<%= @sentence.lesson.author || '未知' %> <%= @sentence.lesson.time || '未知' %>）</small></p>
       <h3><small><%=t '.title', default: model_class.model_name.human.titleize %>：</small><%= @sentence.name %></h3>
     </div>
 
@@ -96,6 +96,7 @@
   <div role="tabpanel" class="tab-pane" id="words">
     <div class="row">
       <% @word_parsers.each_with_index do |word_parser, index| %>
+        <% next unless word_parser.word %>
         <% if word_parser.word.length == 1 %>
           </div>
           <div class="row">
@@ -156,6 +157,7 @@
       </thead>
       <tbody>
       <% @word_parsers.each_with_index do |word_parser, index| %>
+        <% next unless word_parser.word %>
         <% next unless word_parser.word.length == 1 %>
         <tr>
           <td><%= link_to word_parser.word.name, word_url(word_parser.word_id) %></td>
@@ -177,6 +179,7 @@
       </thead>
       <tbody>
       <% @word_parsers.each_with_index do |word_parser, index| %>
+        <% next unless word_parser.word %>
         <% next if word_parser.word.length == 1 || word_parser.word.is_meanful == nil %>
         <tr>
           <td><%= word_parser.word.name %></td>

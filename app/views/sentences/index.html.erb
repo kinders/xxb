@@ -4,15 +4,16 @@
 
 <div class="container col-xs-12 col-sm-10 col-md-8 affix">
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!--
     <div class="btn-group" role="btn-group" arial-label="manage">
-      <%= link_to t('.new', default: t("helpers.links.new")), 
+      <%# link_to t('.new', default: t("helpers.links.new")), 
         new_sentence_path,
         class: 'btn btn-default', 
         tabindex: 21,
         "data-toggle": "tooltip", 
         "data-placement": "bottom", 
         title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
-    </div>
+  </div> -->
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
         :back, 

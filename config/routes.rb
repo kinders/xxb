@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+
   resources :practice_parsers
 
   resources :booklists
@@ -213,6 +216,9 @@ Rails.application.routes.draw do
   end
   post '/practices/create_practices_in_batch', to: 'practices#create_practices_in_batch'
   get '/list_all_practices', to: 'practices#list_all_practices'
+  get '/search_practices', to: 'practices#search_practices'
+  post'/practice_add_to_lesson', to: 'practices#practice_add_to_lesson'
+  post'/practice_add_to_tutor', to: 'practices#practice_add_to_tutor'
 
   resources :tutors do
     get :autocomplete_lesson_title, on: :collection

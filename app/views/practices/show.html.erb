@@ -25,6 +25,22 @@
         <li>
           <%= link_to "在卡片盒中添加本习题", "#myCard", data: {toggle: "modal"}  %>
         </li>
+        <% if session[:lesson_id] %>
+        <li>
+          <%= link_to "将本习题添加到课文中",
+            practice_add_to_lesson_path(practice_id: @practice.id, lesson_id: session[:lesson_id]),
+            :method => 'post',
+            :data => { :confirm => "确定要将本习题添加到课文《#{@lesson.title}》中吗？" } %>
+        </li>
+        <% if session[:tutor_id] %>
+        <li>
+          <%= link_to "将本习题添加到辅导中",
+            practice_add_to_tutor_path(practice_id: @practice.id, lesson_id: session[:lesson_id], tutor_id: session[:tutor_id]),
+            :method => 'post',
+            :data => { :confirm => "确定要将本习题添加到辅导《#{Tutor.find(session[:tutor_id]).title}》中吗？" } %>
+        </li>
+        <% end %>
+        <% end %>
         <li>
           <%= link_to "显示类似习题", "#similar_practices", data: {toggle: "collapse"}  %>
         </li>
@@ -46,7 +62,8 @@
       <% if @next_practice %>
         <%= link_to t('.next', :default => t("helpers.links.next")), practice_path(@next_practice), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.next', default: t("helpers.titles.next"), :model => t("activerecord.models.practice")) %>
       <% end %>
-      <% if session[:textbook_id] %>
+      <%# if session[:textbook_id] %>
+      <% if session[:lesson_id] %>
         <%= link_to t('.up', :default => t("helpers.links.up")), lesson_url(@lesson), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.lesson")) %>
       <% end %>
       <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
@@ -55,7 +72,14 @@
 </div>
 
 <div class="page-header">
-    <h5>《<%= @lesson.title %>》一课的练习</h5>
+  <% if @lesson %>
+    <h5>当前课文：《<%= link_to @lesson.title, lesson_path(@lesson) %>》</h5>
+    <% if session[:tutor_id] %>
+      <h5>当前辅导：《<%= link_to Tutor.find(session[:tutor_id]).title, tutor_path(session[:tutor_id]) %>》</h5>
+    <% end %>
+  <% else %>
+    <h5>练习</h5>
+  <% end %>
 </div>
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
@@ -97,7 +121,6 @@
 
 
 <!-- Modal -->
-<% if current_user %>
 <div class="modal fade" id="myCard" tabindex="-1" role="dialog" aria-labelledby="myCardLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -142,7 +165,11 @@
           <div class="control-group">
             <%= f.label :cardbox_id, :class => 'control-label col-md-2' %>
             <div class="controls">
+              <% if @lesson %>
               <%= f.select :cardbox_id, Cardbox.where(user_id: current_user.id, lesson_id: session[:lesson_id]).collect{ |cardbox| [cardbox.name, cardbox.id]}, {prompt: "请选择一个卡片盒"}, {:class => 'form-control col-md-4'} %>
+              <% else %>
+              <%= f.select :cardbox_id, Cardbox.where(user_id: current_user.id).collect{ |cardbox| [cardbox.name, cardbox.id]}, {prompt: "请选择一个卡片盒"}, {:class => 'form-control col-md-4'} %>
+              <% end %>
             </div>
             <%= error_span(@card[:cardbox_id]) %>
           </div>
@@ -157,7 +184,6 @@
     </div>
   </div>
 </div>
-<% end %>
 
 <!-- 显示类似习题 -->
     <div id="similar_practices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">

@@ -9,6 +9,8 @@ class Practice < ActiveRecord::Base
   has_many :cards, dependent: :destroy
   has_many :quiz_items, dependent: :destroy
   has_many :practice_parsers
+  has_many :lesson_practices
+  has_many :lessons, through: :lesson_practices
 
   has_attached_file :picture_q
   validates_attachment_file_name :picture_q, :matches => [/png\Z/, /jpe?g\Z/]
@@ -18,7 +20,7 @@ class Practice < ActiveRecord::Base
   validates_attachment_content_type :picture_a, :content_type => /\Aimage\/.*\Z/
 
   acts_as_paranoid
-  validates :title, :lesson_id, presence: true
+  validates :question, :answer, presence: true
 
   # 这个方法对练习题进行分析。
   def analysis_practice
@@ -45,6 +47,15 @@ class Practice < ActiveRecord::Base
     end
     PracticeParser.create(word_parsers_params)
   end
+
+=begin
+  # 将practice原来的lesson_id字段迁移到lesson_practice里。
+  def self.move_to_lesson_practices
+    Practice.find_each do |practice|
+      LessonPractice.create(practice_id: practice.id, lesson_id: practice.lesson_id)
+    end
+  end
+=end
 
 end
 

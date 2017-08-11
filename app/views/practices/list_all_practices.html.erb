@@ -22,10 +22,17 @@
 <div class="page-header">
   <h3>所有练习</h3>
 </div>
-
+<div>
+<%= form_tag "/search_practices", method: :get, class: 'form-inline' do %>
+  <div class="form-group">
+    <%= search_field_tag :key_word, "", class: "form-control" %>
+    <%= submit_tag "搜索习题", class: "form-control" %>
+  </div>
+<% end %>
+</div>
 <table class="table table-striped">
   <thead>
-    <tr>
+    <tr class="info">
       <th>id</th>
       <th>标题</th>
       <th>材料</th>

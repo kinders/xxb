@@ -84,7 +84,7 @@ class ExercisesController < ApplicationController
   def new_many_exercises
     @lesson = Lesson.find(session[:lesson_id])
     @tutor = Tutor.find(session[:tutor_id])
-    @practices = Practice.where(lesson_id: @lesson.id).order(:id)
+    @practices = @lesson.practices.order(:id)
   end
 
   # post add_many_practices

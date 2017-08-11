@@ -6,6 +6,8 @@
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
     <div class="btn-group" role="btn-group" arial-label="manage">
       <%= link_to t('.new', :default => t("helpers.links.new")), new_practice_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.new', :default => [:"helpers.titles.new"], :model => model_class.model_name.human.titleize) %>
+      <%= link_to t('.back', :default => t("helpers.links.back")),
+          list_all_practices_path, :class => 'btn btn-default', tabindex: 54, "data-toggle": "tooltip", "data-placement": "bottom", title: '所有习题'  %>
     </div>
     <div class="btn-group" role="btn-group" arial-label="operation">
       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" tabindex="60" >
