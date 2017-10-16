@@ -215,7 +215,7 @@
   <div class="control-group">
     <%= f.label :score, :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :score, :class => 'form-control' %>
+      <%= f.text_field :score, :class => 'form-control', tabindex: 15 %>
     </div>
     <%= error_span(@practice[:score]) %>
   </div>

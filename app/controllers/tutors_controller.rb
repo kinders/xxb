@@ -389,6 +389,34 @@ class TutorsController < ApplicationController
     redirect_to :back, notice: "已经生成辅导助读，请您对多音字进行选定修改。"
   end
 
+  def create_explain_page_for_tutor
+    unless session[:lesson_id]
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
+      return
+    end
+    @lesson = Lesson.find(session[:lesson_id])
+    @tutor = Tutor.find(params[:tutor_id])
+    unless @tutor.page.blank?
+      redirect_to :back, notice: '辅导页面已经存在内容。'
+      return
+    end
+    delete_pattern = /(<[^>]*>)|(\r)|(\n)/
+    contents = @tutor.proviso.gsub(delete_pattern, "").split("，")
+    new_content = ""
+    contents.each do |w|
+      word = Word.find_by(name: w)
+      if word
+        p = word.phonetics.pluck("content").join(", ")
+        m = word.meanings.pluck("content").join("！！！").gsub(delete_pattern, '')
+      else
+        p = ""
+        m = ""
+      end
+      new_content << "<p><b>" + w + "</b> [" + p + "] " + m + "</p>"
+    end
+    @tutor = @tutor.update(page: new_content, page_length: new_content.size)
+    redirect_to :back, notice: "已经生成词语解释，请您对内容进行选定修改。"
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

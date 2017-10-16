@@ -24,21 +24,25 @@ class AnalyzeLessonJob < ActiveJob::Base
     # 检查是否存在分析报告，若有则分析文本是否改动
     new_md = Digest::MD5.hexdigest(content)
     @words_report = WordsReport.find_by(lesson_id: @lesson.id)
-    old_sentences_id = []
-    if @words_report && (new_md == @words_report.md)
-      return "别惊讶，这篇课文已经分析过了。"
+    if @words_report
+      if new_md == @words_report.md
+        return "别惊讶，这篇课文已经分析过了。"
+      else
+        @words_report.destroy
+        old_sentences_id = @lesson.sentences.pluck(:id)
+        @words_report = WordsReport.create(lesson_id: @lesson.id, md: new_md)
+      end
     else
-      old_sentences_id = @lesson.sentences.pluck(:id)
-      @words_report.destroy
+      old_sentences_id = []
+      @words_report = WordsReport.create(lesson_id: @lesson.id, md: new_md)
     end
-    @words_report = WordsReport.create(lesson_id: @lesson.id, md: new_md)
     # 将括号里的语句提出来，单独作为一句附在内容之后。
-    i = 1
+    # 这是考虑到有很多括号里面往往存在完整的句子，如果不提前提取，很容易被截断
+    # 而如果一律将括号作为分句符号，往往会将部分包含解释性括号的句子截断
     while  match_data = /[(（\[【].+?[)）\]】]/.match(content)
-      content.sub!(/[(（\[【].+?[)）\]】]/, "") # 删除第一个括号里的内容。
+      content.sub!(/[(（\[【].+?[)）\]】]/, "") # 删除括号里的内容。
       another_sentence = match_data.to_s.gsub(/[()（）【】\[\]]/, "") # 清除括号
       content << another_sentence + "。" # 添加到原有内容之后
-      i = i + 1
     end
     # 处理ckeditor的html转义
     content.gsub!(/(&#39;)/, "'") # 转为原型：单引号

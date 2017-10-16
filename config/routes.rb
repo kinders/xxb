@@ -213,6 +213,7 @@ Rails.application.routes.draw do
     get 'delete_picture_q'
     get 'delete_picture_a'
     get 'add_to_paper'
+    get 'analysize'
   end
   post '/practices/create_practices_in_batch', to: 'practices#create_practices_in_batch'
   get '/list_all_practices', to: 'practices#list_all_practices'
@@ -236,6 +237,7 @@ Rails.application.routes.draw do
   get 'tutor_download_exercises', to: "tutors#download_exercises"
   get '/tutor/create_multi_pinyin_tutor', to: "tutors#create_multi_pinyin_tutor"
   get '/tutor_create_pinyin_page_for_tutor', to: "tutors#create_pinyin_page_for_tutor"
+  get '/tutor_create_explain_page_for_tutor', to: "tutors#create_explain_page_for_tutor"
 
   get 'lessons_in_content_length',  to: 'lessons#lessons_in_content_length'
   resources :lessons do
@@ -249,6 +251,9 @@ Rails.application.routes.draw do
   post '/lesson/to_tutor', to: 'lessons#to_tutor'
   get '/choose_a_textbook', to: 'lessons#choose_a_textbook'
   get '/lesson_quickly_find_similar_lessons', to: 'lessons#lesson_quickly_find_similar_lessons'
+  get '/lesson_same_author_lessons', to: 'lessons#lesson_same_author_lessons'
+  get '/lesson_similar_title_lessons', to: 'lessons#lesson_similar_title_lessons'
+  get '/lesson_similar_time_lessons', to: 'lessons#lesson_similar_time_lessons'
 
   devise_for :users, controllers: { sessions: "users/sessions" }
 

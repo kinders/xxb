@@ -103,6 +103,7 @@
           <li>
             <a data-toggle="collapse" href="#options" aria-expanded="true" aria-controls="options" >更改所属课文</a>
             <%= link_to "生成拼音页面", tutor_create_pinyin_page_for_tutor_path(tutor_id: @tutor.id), tabindex: 66 %>
+            <%= link_to "生成解释页面", tutor_create_explain_page_for_tutor_path(tutor_id: @tutor.id), tabindex: 67 %>
           <% end %>
             <a data-toggle="collapse" href="#copy_to_another_lesson" aria-expanded="true" aria-controls="copy_to_another_lesson" >复制给其他课文</a>
           </li>

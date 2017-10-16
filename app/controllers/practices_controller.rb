@@ -82,9 +82,17 @@ class PracticesController < ApplicationController
     respond_to do |format|
       if @practice.save
         # 对练习进行分析（标题，问题，答案，不包括材料）
-        @practice.analysis_practice
+        AnalyzePracticeJob.perform_later @practice.id
         if session[:lesson_id]
           LessonPractice.create(lesson_id: session[:lesson_id], practice_id: @practice.id)
+        end
+        if session[:tutor_id]
+          last_exercise = Exercise.where(tutor_id: session[:tutor_id]).order(:serial).last
+          if last_exercise
+            Exercise.create(tutor_id: session[:tutor_id], practice_id: @practice.id, user_id: current_user.id, serial: last_exercise.serial + 1)
+          else
+            Exercise.create(tutor_id: session[:tutor_id], practice_id: @practice.id, user_id: current_user.id, serial: 1)
+          end
         end
         format.html { redirect_to @practice, notice: "练习#{@practice.id}已经成功添加" }
         format.json { render :show, status: :created, location: @practice }
@@ -104,7 +112,7 @@ class PracticesController < ApplicationController
     respond_to do |format|
       if @practice.update(practice_params)
         # 对练习进行分析（标题，问题，答案，不包括材料）
-        @practice.analysis_practice
+        AnalyzePracticeJob.perform_later @practice.id
         format.html { redirect_to @practice, notice: "练习#{@practice.id}已经更新成功" }
         format.json { render :show, status: :ok, location: @practice }
       else
@@ -165,6 +173,7 @@ class PracticesController < ApplicationController
           p.answer = line[:答案]
           p.score = line[:分值] || (p.answer.to_s.length.to_f / 10).ceil
           p.save!
+          AnalyzePracticeJob.perform_later p.id
           LessonPractice.create(lesson_id: @lesson.id, practice_id: p.id)
           @practices << p
         end
@@ -248,6 +257,11 @@ class PracticesController < ApplicationController
     end
     redirect_to :back, notice: '已经将习题添加到辅导中。'
    end
+  end
+
+  def analysize
+    AnalyzePracticeJob.perform_later params[:practice_id]
+    redirect_to :back, notice: '已经将习题添加到分析队列中。'
   end
 
   private

@@ -348,7 +348,7 @@ class LessonsController < ApplicationController
     end
   end
 
-  # GET /lesson_quickly_find_similar_lessons
+  # GET /lesson_quickly_find_similar_lessons?lesson_id=num
   def lesson_quickly_find_similar_lessons
     @target_lesson = Lesson.find_by(id: params[:lesson_id])
     unless @target_lesson
@@ -361,9 +361,66 @@ class LessonsController < ApplicationController
     all_similar_lessons_id_in_length = Lesson.where(id: all_similar_lessons_id).where("content_length < ?", @target_lesson.content_length*2).pluck(:id)
     counter = Hash.new(0)
     all_similar_lessons_id.each {|lesson_id| counter[lesson_id]+=1 if all_similar_lessons_id_in_length.include?(lesson_id)}
-    @lessons_id_with_count = counter.sort{|a,b| a[1]<=>b[1]}.last(21).reverse
-
+    @lessons_id_with_count = counter.sort{|a,b| a[1]<=>b[1]}.last(101).reverse
   end
+
+  # get /lesson_similar_title_lessons?lesson_id=num
+  def lesson_similar_title_lessons
+    @target_lesson = Lesson.find_by(id: params[:lesson_id])
+    unless @target_lesson
+      redirect_to :back, notice: '请先指定一个课程'
+      return
+    end
+    lesson_titles = @target_lesson.title.split(/\s/).map{|word|(word =~ /[\u4e00-\u9fa5]/)? word.chars : word}.flatten.uniq
+    similar_title_lessons_id = []
+    lesson_titles.each do |title|
+      similar_title_lessons_id << Lesson.where("title LIKE ?", "%" + title +"%" ).pluck(:id)
+    end
+    similar_title_lessons_id.flatten!
+    @lessons_id = similar_title_lessons_id.sort_by{|i|similar_title_lessons_id.find_all{|j|j==i}.count}.uniq.reverse.first(101)
+    unless @lessons_id.any?
+      redirect_to :back, notice: '找不到标题类似的课文'
+    end
+  end 
+
+  # get /lesson_same_author_lessons?lesson_id=num
+  def lesson_same_author_lessons
+    @target_lesson = Lesson.find_by(id: params[:lesson_id])
+    unless @target_lesson
+      redirect_to :back, notice: '请先指定一个课程'
+      return
+    end
+    lesson_authors = @target_lesson.author.gsub(/[(（\[].+[)）\]]/, "").split(/\s|,|，|、/).flatten.uniq
+    similar_author_lessons_id = []
+    lesson_authors.each do |author|
+      similar_author_lessons_id << Lesson.where("author LIKE ?", "%" + author +"%" ).pluck(:id)
+    end 
+    similar_author_lessons_id.flatten!
+    @lessons_id = similar_author_lessons_id.sort_by{|i|similar_author_lessons_id.find_all{|j|j==i}.count}.uniq.reverse
+    if @lessons_id.size == 1
+      redirect_to :back, notice: '找不到同一作者写的其他课文'
+      return
+    end
+  end 
+
+  # get /lesson_similar_time_lessons?lesson_id=num
+  def lesson_similar_time_lessons
+    @target_lesson = Lesson.find_by(id: params[:lesson_id])
+    unless @target_lesson
+      redirect_to :back, notice: '请先指定一个课程'
+      return
+    end
+    similar_time_lessons = []
+    @lessons_id = Lesson.where(time: @target_lesson.time).pluck(:id)
+    if @lessons_id.size < 101
+      1.upto(100){|i|
+        @lessons_id << Lesson.where(time: @target_lesson.time-i).pluck(:id)
+        @lessons_id << Lesson.where(time: @target_lesson.time+i).pluck(:id)
+        @lessons_id.flatten!
+        break if @lessons_id.size >= 101
+      }
+    end
+  end 
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -153,145 +153,41 @@
   <% end %>
   <p>课文推荐</p>
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-  <%# 相似文章推荐 %>
-  <% lesson_titles = @lesson.title.split(/\s/).map{|word|(word =~ /[\u4e00-\u9fa5]/)? word.chars : word}.flatten.uniq %>
-  <% similar_title_lessons_id = [] %>
-  <% lesson_titles.each do |title| %>
-    <% similar_title_lessons_id << Lesson.where("title LIKE ?", "%" + title +"%" ).pluck(:id) %>
-  <% end %>
-  <% similar_title_lessons_id.flatten! %>
-  <% similar_title_lessons = similar_title_lessons_id.sort_by{|i|similar_title_lessons_id.find_all{|j|j==i}.count}.uniq.reverse %>
-  <% if similar_title_lessons.any? %>
+  <%# 相似标题的文章推荐 %>
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="headingOne">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          <a  href="/lesson_similar_title_lessons?lesson_id=<%= @lesson.id %>">
             标题相似作品
           </a>
         </h4>
       </div>
-      <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-        <div class="panel-body">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>序号</th>
-                <th>标题</th>
-                <th>作者</th>
-                <th>时间</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% similar_title_lessons.first(21).each do |l| %>
-                <% next if l == @lesson.id %>
-                <% lesson = Lesson.find(l) %>
-                <tr>
-                  <td><%= lesson.id %></td>
-                  <td><%= link_to lesson.title, lesson_path(lesson.id) %></td>
-                  <td><%= lesson.author %></td>
-                  <td><%= lesson.time %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
-  <% end %>
-  <%# if false %>
+  <%# 作者其他作品推荐 %>
   <% if @lesson.author %>
-  <% lesson_authors = @lesson.author.gsub(/[(（\[].+[)）\]]/, "").split(/\s|,|，|、/).flatten.uniq %>
-  <% similar_author_lessons_id = [] %>
-  <% lesson_authors.each do |author| %>
-    <% similar_author_lessons_id << Lesson.where("author LIKE ?", "%" + author +"%" ).pluck(:id) %>
-  <% end %>
-  <% similar_author_lessons_id.flatten! %>
-  <% similar_author_lessons = similar_author_lessons_id.sort_by{|i|similar_author_lessons_id.find_all{|j|j==i}.count}.uniq.reverse %>
-  <% if similar_author_lessons.size > 1 %>
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="headingOne">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-            作者其他作品和其他作者作品
+          <a  href="/lesson_same_author_lessons?lesson_id=<%= @lesson.id %>">
+            作者的其他作品
           </a>
         </h4>
       </div>
-      <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-        <div class="panel-body">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>序号</th>
-                <th>标题</th>
-                <th>作者</th>
-                <th>时间</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% similar_author_lessons.first(21).each do |l| %>
-                <% next if l == @lesson.id %>
-                <% lesson = Lesson.find(l) %>
-                <tr>
-                  <td><%= lesson.id %></td>
-                  <td><%= link_to lesson.title, lesson_path(lesson.id) %></td>
-                  <td><%= lesson.author %></td>
-                  <td><%= lesson.time %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   <% end %>
-  <% end %>
+  <%# 同一年代其他作品推荐 %>
   <% if @lesson.time %>
-  <% similar_time_lessons = [] %>
-  <% similar_time_lessons = Lesson.where(time: @lesson.time).pluck(:id) %>
-  <% if similar_time_lessons.size < 21 %>
-    <% 1.upto(50){|i| %>
-      <% similar_time_lessons << Lesson.where(time: @lesson.time-i).pluck(:id) %>
-      <% similar_time_lessons << Lesson.where(time: @lesson.time+i).pluck(:id) %>
-      <% similar_time_lessons.flatten! %>
-      <% break if similar_time_lessons.size >= 21 %>
-    <% } %>
-  <% end %>
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="headingOne">
         <h4 class="panel-title">
-          <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+          <a  href="/lesson_similar_time_lessons?lesson_id=<%= @lesson.id %>">
             课文所在年代的其他作品
           </a>
         </h4>
       </div>
-      <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
-        <div class="panel-body">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>序号</th>
-                <th>标题</th>
-                <th>作者</th>
-                <th>时间</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% similar_time_lessons.first(21).each do |l| %>
-                <% next if l == @lesson.id %>
-                <% lesson = Lesson.find(l) %>
-                <tr>
-                  <td><%= lesson.id %></td>
-                  <td><%= link_to lesson.title, lesson_path(lesson.id) %></td>
-                  <td><%= lesson.author %></td>
-                  <td><%= lesson.time %></td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
-        </div>
-      </div>
     </div>
   <% end %>
+  <%# 内容相似作品推荐 %>
     <div class="panel panel-default">
       <div class="panel-heading" role="tab" id="headingOne">
         <h4 class="panel-title">

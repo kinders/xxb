@@ -9,7 +9,7 @@
 </div>
 
 <div class="page-header">
-  <h3>查看内容和《<%= @target_lesson.title %>》相似的100个课程</h3>
+  <h3>查看创作时间和《<%= @target_lesson.title %>》相似的100个课程</h3>
 </div>
 <table class="table table-striped">
   <thead>
@@ -18,24 +18,21 @@
       <th>课程名称</th>
       <th>作者</th>
       <th>创作时间</th>
-      <th>字数/长度</th>
-      <th>相同字数</th>
+      <th>字数</th>
+      <th>时间偏移</th>
     </tr>
   </thead>
   <tbody>
-    <% @lessons_id_with_count.each do |lesson_with_count| %>
-      <% lesson = Lesson.find(lesson_with_count[0].to_i) %>
-      <% if lesson.id == @target_lesson.id %>
-      <tr class="info">
-      <% else %>
+    <% @lessons_id.each do |lesson_id| %>
+      <% next if lesson_id == @target_lesson.id %>
+      <% lesson = Lesson.find(lesson_id) %>
       <tr>
-      <% end %>
         <td><%= lesson.id %></td>
         <td><%= link_to lesson.title, lesson_path(lesson) %></td>
         <td><%= lesson.author %></td>
         <td><%= lesson.time %></td>
         <td><%= lesson.content_length %></td>
-        <td><%= lesson_with_count[1] %></td>
+        <td><%= lesson.time - @target_lesson.time %></td>
       </tr>
     <% end %>
   </tbody>

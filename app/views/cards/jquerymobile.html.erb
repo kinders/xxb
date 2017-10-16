@@ -5,7 +5,7 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://cdn.bootcss.com/jquery-mobile/1.4.4/jquery.mobile.min.css">
+  <link rel="stylesheet" href="http://cdn.bootcss.com/jquery-mobile/1.4.5/jquery.mobile.min.css">
 
   <style type="text/css">
     /* max-width */
@@ -16,7 +16,7 @@
     @media screen and (min-width: 600px) and (max-width: 900px) { .par {font-size: 40px; color: green;} .par_ti {font-size: 40px; color: black;}}
   </style>
   <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
-  <script src="http://cdn.bootcss.com/jquery-mobile/1.4.4/jquery.mobile.min.js"></script>
+  <script src="http://cdn.bootcss.com/jquery-mobile/1.4.5/jquery.mobile.min.js"></script>
   <script>
   var timer; //计时变量。
   function clear_timer(){ clearTimeout(timer); }; // 翻页时清除计时器
@@ -36,6 +36,8 @@
   var valid_click = 0;    // 有效点击的次数
   var neutral_click = 0;    // 中性点击（答案出示太快）的次数
   var invalid_click = 0;    // 无效点击（没有核对答案）的次数
+  var max_internal_time=0;   //两个点击间隔的最大时间长度
+  var start_practice_time = new Date();
   var select_unit = [];
   var each_maxtime=7000; //每个项目测试的时间；测试时超过该时间，该次测试被判定为不合格。
   var pass_time=1;  // 如果每个项目得到这个分数，则通过测试。
@@ -64,6 +66,7 @@
 // 第<%= i %>关
 /// 单元测试和分数变量
   <%= "var zi_unit_#{i} = #{units[i-1]};" %>
+  <%= "var zi_unit_#{i}_1 = [].concat(zi_unit_#{i});" %>
   <%= "var point_unit_#{i} = {};" %>
   for(var k=0; k < zi_unit_<%= i %>.length; k++){ 
     <%= "point_unit_#{i}[zi_unit_#{i}[k][0]]=0;" %>
@@ -124,7 +127,7 @@ $("#btn_test_zi_fail").click(function(){practice(zi_fail, point_zi_fail, "par_zi
     }
     // 检查chars是否有元素
     if (chars.length == 0){
-      alert("恭喜恭喜！大家恭喜！您已经顺利过关啦！\n\n还想再来一次吗？——那就刷新网页吧！\n——不过，右上角的分数会被清零哦！\n\n还是进入下一课吧！");
+      alert("恭喜恭喜！大家恭喜！您已经顺利过关啦！\n\n还想再来一次吗？——那就刷新网页吧！\n——不过，右上角的分数会被清零哦！\n\n还是进入下一关吧！");
       $(par).html(function(){ return ""; });
       $("button.show_answer").hide();
       $(answer).hide();
@@ -151,6 +154,13 @@ $("#btn_test_zi_fail").click(function(){practice(zi_fail, point_zi_fail, "par_zi
       $(answer).hide();
       $(answer).html(function(){ return ans; });
       pre_res = res;
+      // 开始记录最长时间间隔
+      var new_practice_time = new Date();
+      var internal_time = new_practice_time.valueOf() - start_practice_time.valueOf();
+      if(internal_time > max_internal_time){
+        max_internal_time = internal_time
+      }
+      start_practice_time =  new_practice_time;
       // 设置超时
       ans = ans.replace(/<[a-z]*>/g,"");
       ans = ans.replace(/<\/[a-z]*>/g,"");
@@ -205,6 +215,7 @@ $("#btn_test_zi_fail").click(function(){practice(zi_fail, point_zi_fail, "par_zi
 var zi_part_test = [];
 var point_part_test = {};
 var part_test_times = 0;
+var part_test_entry_num;
 $("#begin_org").click(function(){
   // 初始化测试
   select_unit = [].concat($("#select_unit").val());
@@ -213,7 +224,7 @@ $("#begin_org").click(function(){
   if (zi_part_test.length == 0){
     var zi_part_test_step=0;
     for (var i=0; i < select_unit.length; i++){
-      var single_unit = select_unit[i];
+      var single_unit = select_unit[i] + "_1";
       var trans_single_unit = eval(single_unit);
       for (var j=0; j < trans_single_unit.length; j++){
         zi_part_test[zi_part_test_step]=trans_single_unit[j];
@@ -221,23 +232,37 @@ $("#begin_org").click(function(){
       }
     }
     // alert(zi_part_test);
-    // 初始化项目次数
+    // 获取试题数目
+    part_test_entry_num = $("#part_test_entry_num").val();
+    if(part_test_entry_num > zi_part_test.length) {part_test_entry_num = zi_part_test.length};
+    var ori_arr = zi_part_test;
+    var arr = ori_arr;
+    var res = [];
+    for (var i = 0, len = arr.length; i < len; i++) {
+      var j = Math.floor(Math.random() * arr.length);
+      res[i] = arr[j];
+      arr.splice(j, 1);
+    }
+    zi_part_test = res;
+
+    // 初始化项目分数
     for(var s=0; s<zi_part_test.length; s++){point_part_test[zi_part_test[s]]=0;};
     //分数清零。
     practice_score = score;
     score = 0; $(".right-top-count").html(function(){return score});
     alert("测试开始，分数清零");
   };
-  // 获取试题数目
-  var part_test_entry_num = $("#part_test_entry_num").val();
   // 开始测试
   if (part_test_times < part_test_entry_num){
-    practice(zi_part_test,point_part_test,"par_part_test");
+    new_zi_part_test = [zi_part_test[part_test_times]];
+    new_point_part_test= [point_part_test[part_test_times]];
+    practice(new_zi_part_test,new_point_part_test,"par_part_test");
     ++part_test_times;
   }else{
     //结束测试
     $("#par_part_test").html(""); 
     $("#answer_par_part_test").html(""); 
+    $("button.show_answer").hide();
     test_score = Math.round(score*(100/part_test_entry_num));
     var part_test_message = "本次测试" + test_score + "分！"; 
     alert(part_test_message);
@@ -247,6 +272,9 @@ $("#begin_org").click(function(){
     zi_part_test = [];
     part_test_times = 0;
     $("#select_unit").val(null);
+    $(".ui-checkbox-on").addClass("ui-checkbox-off");
+		$(".ui-checkbox-off").removeClass("ui-checkbox-on");
+    $("#select_unit").selectmenu("refresh");
   };
 });
 
@@ -268,6 +296,12 @@ $(document).on("pageshow","#report",function(){
   $("#report_score").text(score);
   $("#report_test_score").text(test_score);
   $("#report_name").text(myname);
+  var new_practice_time = new Date();
+  var internal_time = new_practice_time.valueOf() - start_practice_time.valueOf();
+  if(internal_time > max_internal_time){
+    max_internal_time = internal_time
+  }
+  $("#report_max_internal_time").text(max_internal_time/1000);   //两个点击间隔的最大时间长度
   $("#report_each_maxtime").text(each_maxtime);
   $("#report_pass_time").text(pass_time);
   $("#report_select_unit").text(select_unit.length);
@@ -282,7 +316,7 @@ $(document).on("pageshow","#report",function(){
   <div data-role="header">
     <h1><%= cardbox.name %>·首页</h1>
   </div>
-  <div data-role="content">
+  <div data-role="main" class="ui-content">
     <div style="text-align: center;">
       <a href="#part_test" data-role="button" data-transition="pop" style="width: 33%; margin: auto;background-color: rgb(140,191,0);">点击这里，开始练习</a>
     </div>
@@ -290,8 +324,10 @@ $(document).on("pageshow","#report",function(){
       <h4>······使用提示······</h4>
       <p>使用之前，您需要准备好纸笔。</p>
       <p>打开软件之后，请输入您的姓名，以便生成报告。</p>
-      <p>使用时，您需要点击按钮，显示问题之后，要先写上问题的序号，再凭借记忆在纸张上写上答案，然后点击“显示答案”按钮进行校对。如果纸张上的答案不正确，您需要对照答案将它改正。然后就可以进入下一题了。</p>
-      <p>达到老师的使用要求之后，请打开“报告”页面，进行截图，然后将您书写答案的纸张进行拍照，将截图和拍照传给老师。</p>
+      <p>使用时，您需要点击按钮，以显示问题。</p>
+      <p>显示问题之后，要先在纸上写好问题的序号，再凭借记忆写上答案（写不出来，就在序号后面画个叉），然后点击“显示答案”按钮进行校对。如果纸张上的答案不正确，您需要对照答案将它改正。</p>
+      <p>然后就可以接着点击按钮进入下一题了。</p>
+      <p>达到老师的使用要求之后，请打开“报告”页面，进行截图，然后将您写了答案的纸张进行拍照，将截图和拍照传给老师。</p>
     </div>
     <div data-role="collapsible">
       <h4>······怎么版面乱七八糟的？······</h4>
@@ -325,7 +361,7 @@ $(document).on("pageshow","#report",function(){
       </ul>
     </div> <!-- navbar -->
   </div>
-  <div data-role="content" style="text-align: center;">
+  <div data-role="main" class="ui-content" style="text-align: center;">
     <h3>请选择适当的单元：</h3>
     <ul data-role="listview">
     <% 1.upto(units_count) do |i| %>
@@ -360,7 +396,7 @@ $(document).on("pageshow","#report",function(){
       </ul>
     </div><!-- navbar -->
   </div><!-- header -->
-  <div data-role="content">
+  <div data-role="main" class="ui-content">
     <div class="ui-grid-a">
       <div class="ui-block-a">
         <button id="btn_unit_<%= i %>" data-inline="true" style="width: 100%;">本关练习</button>
@@ -389,7 +425,7 @@ $(document).on("pageshow","#report",function(){
       </ul>
     </div> <!-- navbar -->
   </div><!-- header -->
-  <div data-role="content">
+  <div data-role="main" class="ui-content">
     <div class="ui-grid-a">
       <div class="ui-block-a">
         <button id="btn_show_zi_fail" data-inline="true" style="width: 100%;">显示没有通过的字</button>
@@ -417,23 +453,21 @@ $(document).on("pageshow","#report",function(){
       </ul>
     </div> <!-- navbar -->
   </div><!-- header -->
-  <div data-role="content">
-    <form method="post" action="#part_test">
-      <div data-role="fieldcontain">
-        <label for="select_unit">选择单元：</label>
-        <select name="select_unit" id="select_unit" multiple="multiple" data-native-menu="false">
-	  <option>单元</option>
-    <% 1.upto(units_count) do |i| %>
-    <option value="zi_unit_<%= i %>" selected>第<%= i %>关</option>
-    <% end %>
-        </select>
-      </div><!-- fieldcontain -->
-      <div data-role="fieldcontain">
-        <label for="part_test_entry_num">测试题数：</label>
-        <input type="range" name="part_test_entry_num" id="part_test_entry_num" value="10" min="10" max="200">
-      </div>
-      <input type="button" data-inline="true" value="开始测试" id="begin_org">
-    </form>
+  <div data-role="main" class="ui-content">
+    <div class="ui-field-contain">
+      <label for="select_unit">选择单元：</label>
+      <select name="select_unit" id="select_unit" multiple="multiple" data-native-menu="false">
+	      <option>单元</option>
+        <% 1.upto(units_count) do |i| %>
+        <option value="zi_unit_<%= i %>" selected>第<%= i %>关</option>
+        <% end %>
+      </select>
+    </div><!-- fieldcontain -->
+    <div data-role="fieldcontain">
+      <label for="part_test_entry_num">测试题数：</label>
+      <input type="range" name="part_test_entry_num" id="part_test_entry_num" value="10" min="2" max="200">
+    </div>
+    <input type="button" data-inline="true" value="开始测试" id="begin_org">
     <p id="par_part_test" class="par_ti" style="text-align: center; margin: 0px;"></p>
     <p id="answer_par_part_test" class="par" style="text-align: center; margin: 0px;"></p>
     <button class="show_answer" style="display: none;" >查看答案</button>
@@ -452,19 +486,19 @@ $(document).on("pageshow","#report",function(){
       </ul>
     </div> <!-- navbar -->
   </div><!-- header -->
-  <div data-role="content">
+  <div data-role="main" class="ui-content">
     <table>
       <tbody>
         <tr>
-          <td>任务<td>
-            <td><%= cardbox.name %></td>
+          <td>任&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务<td>
+            <td><%= cardbox.name.first(24) %></td>
         </tr>
         <tr>
-          <td>用户名<td>
+          <td>用&nbsp;&nbsp;户&nbsp;&nbsp;名<td>
           <td id="report_name"></td>
         </tr>
         <tr>
-          <td>时长<td>
+          <td>时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;长<td>
           <td id="report_time"></td>
         </tr>
         <tr>
@@ -486,6 +520,10 @@ $(document).on("pageshow","#report",function(){
         <tr>
           <td>无效点击<td>
           <td id="report_invalid_click"></td>
+        </tr>
+        <tr>
+          <td>最长间隔<td>
+          <td id="report_max_internal_time"></td>
         </tr>
         <tr>
           <td>单位时长<td>

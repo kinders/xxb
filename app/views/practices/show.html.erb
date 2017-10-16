@@ -42,9 +42,6 @@
         <% end %>
         <% end %>
         <li>
-          <%= link_to "显示类似习题", "#similar_practices", data: {toggle: "collapse"}  %>
-        </li>
-        <li>
           <%= link_to "管理卡片盒", cardboxes_url %>
         </li>
         <% if session[:paper_id] %>
@@ -91,6 +88,7 @@
         <p>
         <%= sanitize(@practice.material, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %>
         </p>
+      <hr>
         <p>
         <%= sanitize(@practice.question, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %>
         </p>
@@ -185,6 +183,10 @@
   </div>
 </div>
 
+<% if @practices_id_with_count.empty? %>
+  <%= link_to "分析习题，发现更多类似习题", practice_analysize_path(@practice.id) %>
+<% else %>
+    <%= link_to "显示类似习题", "#similar_practices", data: {toggle: "collapse"}  %>
 <!-- 显示类似习题 -->
     <div id="similar_practices" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
       <div class="panel-body">
@@ -202,7 +204,8 @@
   <tbody>
     <% @practices_id_with_count.each do |practice_id| %>
       <% next if practice_id[0] == @practice.id %>
-      <% practice = Practice.find(practice_id[0]) %>
+      <% practice = Practice.find_by(id: practice_id[0]) %>
+      <% next unless practice %>
       <tr>
         <td><%= number_to_percentage(practice_id[1]*100/@word_count, precision: 0) %></td>
         <td><%= practice.id %></td>
@@ -223,6 +226,7 @@
   </div>
 
 <!-- 显示类似习题 -->
+<% end %>
 
 <% if current_user.has_role? :admin %>
 

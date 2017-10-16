@@ -66,9 +66,13 @@
     <% @practices.each do |practice| %>
       <tr>
         <td><%= check_box_tag "practice_id[]", practice.id %></td>
-        <td><%= practice.title %></td>
-        <td><%= practice.material %></td>
-        <td><%= link_to practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, ""), practice_path(practice), class: "btn-xs btn-link" %></td>
+        <td><%= practice.title.first(20) %></td>
+        <td>
+          <% if practice.material %>
+            <%= practice.material.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").first(20) %>
+          <% end %>
+        </td>
+        <td><%= link_to practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").first(20), practice_path(practice), class: "btn-xs btn-link" %></td>
         <td><%= practice.score %></td>
         <td><%= practice.labelname %></td>
         <td>
