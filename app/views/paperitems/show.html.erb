@@ -179,24 +179,52 @@
   </div>
 </div>
 
-<% @practice = @paperitem.practice %>
+<% if @paperitem.practice_id == 0 %>
 
 <div class="page-header">
+  <h3><%= @paper.title %></h3>
+  <h4> >></h4>
+  <h3><%= @paperitem.memo %></h3>
+</div>
+
+<% else %>
+
+<% @practice = @paperitem.practice %>
+<div class="page-header">
   <p class="pull-right">分值：<%= number_with_precision(@paperitem.score, precision: 2) %> 分</p>
-  <h3><%= @paper.title %> >> <%= @paperitem.serial %>  <%= @practice.title %></h3>
+  <h3><%= @paper.title %></h3>
+  <h4> >> <%= @paperitem.serial %>  <%= @practice.title %></h3>
 </div>
 
-<div class="well paragraph">
+<div class="paragraph">
   <% if @practice.material %>
-    <span>材料：</span>
-    <p class="text-success"><%= sanitize(@practice.material.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></p>
+    <div class="text-success paragraph">
+      <%= sanitize(@practice.material, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u img), attributes: %w(href class style src)) %>
+      <%# sanitize(@practice.material.gsub(/(<(\w|\/)+[^>]*>|\s)/, ""), tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u img), attributes: %w(href class style src)) %>
+    </div>
+    <hr>
   <% end %>
-  <% if  @practice.question %>
-    <span>问题：</span>
-    <p class="text-success"><%= sanitize(@practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "")) %></p>
-  <% end %>
+  <div class="text-success paragraph">
+    <%= sanitize(@practice.question, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u img), attributes: %w(href class style src)) %>
+    <%# sanitize(@practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, ""), tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u img), attributes: %w(href class style src)) %>
+  </div>
+
+      <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="bg-success center-block">
+        <p class="text-center">...</p>
+      </a>
+
 </div>
 
+    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+      <div class="paragraph">
+      <p><%= sanitize(@practice.answer) %></p>
+      </div>
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="bg-success center-block">
+          <p class="text-center">...</p>
+        </a>
+      </div>
+<hr>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -227,4 +255,7 @@
     <% end %>
   </tbody>
 </table>
+
+<% end %>
+
 <% end %>

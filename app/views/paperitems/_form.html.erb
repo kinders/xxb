@@ -79,32 +79,51 @@
     </div>
   <% end %>
 
+<% if params[:action] == "edit" %>
+  <% unless @paperitem.practice_id == 0 %>
   <div class="form-group">
     <%= f.label :practice_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
-      <% if params[:action] == "new" %>
-        <%= f.select :practice_id, Practice.all.map{|p|p.lesson.title +   " " + p.title + " " + p.question }, {prompt: "请选择一道练习题"}, { class: 'form-control' } %>
-    <% else %>
+      <%# if params[:action] == "new" %>
+        <%# f.select :practice_id, Practice.all.map{|p|(p.lesson ? p.lesson.title : "") +   " " + p.title + " " + p.question }, {prompt: "请选择一道练习题"}, { class: 'form-control' } %>
+    <%# else %>
         <% practice = @paperitem.practice %>
-        <%= practice.lesson.title + "__" + practice.id.to_s + "_" + practice.title + "_" + practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %>
-      <% end %>
+        <%= (practice.lesson ? practice.lesson.title : "") + "__" + practice.id.to_s + "_" + practice.title + "_" + practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %>
+        <%# practice.lesson.title + "__" + practice.id.to_s + "_" + practice.title + "_" + practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %>
+      <%# end %>
     </div>
     <%= error_span(@paperitem[:practice_id]) %>
   </div>
+  <% end %>
+<% end %>
+
   <div class="form-group">
     <%= f.label :serial, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
-      <%= f.number_field :serial, min: 0, class: 'form-control' %>
+      <%= f.text_field :serial, class: 'form-control' %>
     </div>
     <%= error_span(@paperitem[:serial]) %>
   </div>
+
+<% if params[:action] == "edit" %>
   <div class="form-group">
     <%= f.label :score, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
-      <%= f.number_field :score, min: 0, class: 'form-control' %>
+      <%= f.text_field :score, class: 'form-control' %>
     </div>
     <%= error_span(@paperitem[:score]) %>
   </div>
+<% end %>
+
+<% if (@paperitem.practice_id == 0 || params[:action] == "new") %>
+  <div class="form-group">
+    <%= f.label :memo, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :memo, class: 'form-control' %>
+    </div>
+    <%= error_span(@paperitem[:memo]) %>
+  </div>
+<% end %>
 
   <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
   <%= link_to t('.cancel', default: t("helpers.links.cancel")),

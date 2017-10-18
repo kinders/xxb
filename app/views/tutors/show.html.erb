@@ -196,7 +196,7 @@
       </h2>
       <div class="text-right"><%= @tutor.page_length %></div>
       <% if @tutor.proviso && !@tutor.proviso.empty?%>
-        <div class="well well-sm paragraph"> <%= sanitize(@tutor.proviso, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %> </div>
+        <div class="well well-sm paragraph"> <%= sanitize(@tutor.proviso, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u img), attributes: %w(href class style src)) %> </div>
       <% end %>
       <% unless @tutor.page.blank? %>
       <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="bg-success center-block">
@@ -214,7 +214,7 @@
           <%= image_tag @tutor.picture2.url, class: "img-responsive center-block"  %>
         <hr>
         <% end %>
-        <div class="paragraph"> <%= sanitize(@tutor.page, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u), attributes: %w(href class style)) %> </div>
+        <div class="paragraph"> <%= sanitize(@tutor.page, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u img), attributes: %w(href class style src)) %> </div>
         <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="bg-success center-block">
           <p class="text-center">...</p>
         </a>

@@ -27,3 +27,6 @@
   <h3><%=t '.title', default: [:'helpers.titles.new', 'New %{model}'], model: model_class.model_name.human.titleize %></h3>
 </div>
 <%= render partial: 'form' %>
+<hr>
+<%= link_to "添加已有试题", textbooks_url, class: "paragraph primary" %> 
+<p class="text-success">请进入课程的习题库中，点击右上角的功能按钮，添加测验题目。</p>

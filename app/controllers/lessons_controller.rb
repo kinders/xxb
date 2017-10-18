@@ -58,23 +58,20 @@ class LessonsController < ApplicationController
       end
     end
     # 生成“前一课”和“后一课”按钮
-    all_catalogs = Catalog.where(textbook_id: session[:textbook_id]).order(:serial)
-    all_catalogs.each_with_index do | catalog, index |
-      if @lesson.id == catalog.lesson_id
-        if index - 1 < 0
-	        @previous_lesson = nil  
-	      else
-	        previous_catalog = all_catalogs[index - 1]
-	        @previous_lesson = Lesson.find(previous_catalog.lesson_id)
-	      end
-	      if index + 1 == all_catalogs.length
-	        @next_lesson = nil
-	      else
-	        next_catalog = all_catalogs[index + 1]
-	        @next_lesson = Lesson.find(next_catalog.lesson_id)
-	      end
-      end
-    end
+    all_catalogs = Catalog.where(textbook_id: session[:textbook_id]).order(:serial).pluck(:lesson_id)
+    index = all_catalogs.find_index(@lesson.id)
+    if index - 1 < 0
+	    @previous_lesson = nil  
+	  else
+	    previous_catalog = all_catalogs[index - 1]
+	    @previous_lesson = Lesson.find(previous_catalog)
+	  end
+	  if index + 1 == all_catalogs.length
+	    @next_lesson = nil
+	  else
+	    next_catalog = all_catalogs[index + 1]
+	    @next_lesson = Lesson.find(next_catalog)
+	  end
   end
 
   # GET /lessons/new

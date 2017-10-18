@@ -11,7 +11,7 @@ class PaperitemsController < ApplicationController
       @paperitems = Paperitem.all
     else
       @paper = Paper.find(session[:paper_id])
-      @paperitems = Paperitem.where(paper_id: @paper.id)
+      @paperitems = Paperitem.where(paper_id: @paper.id).order(:serial)
       ## 如果已经有了测验会话，则继续测验
       if session[:papertest_id]
       @papertest = Papertest.find(session[:papertest_id])
@@ -41,16 +41,27 @@ class PaperitemsController < ApplicationController
       @paper = @paperitem.paper
       @papertest_ids = @paper.papertests.map{|p|p.id}
       @evaluations = Evaluation.where(practice_id: @paperitem.practice_id, papertest: @papertest_ids).order(id: :desc)
+      # 下面生成“上一题”和“下一题”
+      all_paperitem_ids = Paperitem.where(paper_id: @paper.id).order(:serial).pluck(:id)
+      index = all_paperitem_ids.find_index(@paperitem.id)
+      if index - 1 < 0
+	      @previous_paperitem = nil  
+	    else
+	      previous_paperitem = all_paperitem_ids[index - 1]
+	      @previous_paperitem = Paperitem.find(previous_paperitem)
+	    end
+	    if index + 1 == all_paperitem_ids.length
+	      @next_paperitem = nil
+	    else
+	      next_paperitem = all_paperitem_ids[index + 1]
+	      @next_paperitem = Paperitem.find(next_paperitem)
+	    end
     end
   end
 
   # GET /paperitems/new
   def new
-    if current_user.has_role? :admin
-      @paperitem = Paperitem.new
-    else
-      redirect_to textbooks_url, notice: "请进入课程的习题库中，点击右上角的功能按钮，添加测验题目。"
-    end
+    @paperitem = Paperitem.new
   end
 
   # GET /paperitems/1/edit
@@ -61,7 +72,12 @@ class PaperitemsController < ApplicationController
   # POST /paperitems.json
   def create
     @paperitem = Paperitem.new(paperitem_params)
-
+    unless @paperitem.practice_id
+      @paperitem.practice_id = 0
+      @paperitem.user_id = current_user.id
+      @paperitem.paper_id = session[:paper_id]
+      @paperitem.score = 0
+    end
     respond_to do |format|
       if @paperitem.save
         format.html { redirect_to @paperitem, notice: 'Paperitem was successfully created.' }
@@ -105,7 +121,7 @@ class PaperitemsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def paperitem_params
-      params.require(:paperitem).permit(:user_id, :paper_id, :practice_id, :score, :serial, :deleted_at)
+      params.require(:paperitem).permit(:user_id, :paper_id, :practice_id, :score, :serial, :memo, :deleted_at)
     end
 
     def be_a_master

@@ -163,19 +163,31 @@
   <tbody>
     <% @paperitems.each do |paperitem| %>
       <tr>
-        <td><%= paperitem.serial %></td>
+        <% if paperitem.practice_id == 0 %>
+          <td></td>
+        <% else %>
+          <td><%= paperitem.serial %></td>
+        <% end %>
+        <% if paperitem.practice_id == 0 %>
+          <td><%= link_to paperitem.memo, paperitem_url(paperitem) %>
+        <% else %>
         <% if session[:papertest_id] %>
           <td><%= paperitem.practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %></td>
         <% else %>
           <td><%= link_to paperitem.practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, ""), paperitem_url(paperitem) %></td>
         <% end %>
+        <% end %>
         <% if session[:papertest_id] %>
+        <% if paperitem.practice_id == 0 %>
+          <td></td>
+        <% else %>
           <% e = Evaluation.find_by(papertest_id: session[:papertest_id], practice_id: paperitem.practice_id, user_id: current_user.id) %>
           <% if e %>
             <td><%= e.your_answer.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %></td>
           <% else %>
             <td>--</td>
           <% end %>
+        <% end %>
         <% end %>
         <td><%= paperitem.score %></td>
         <td>
