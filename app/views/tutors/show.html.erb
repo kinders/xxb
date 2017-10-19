@@ -194,7 +194,7 @@
           </button>
         <% end %>
       </h2>
-      <div class="text-right"><%= @tutor.page_length %></div>
+      <div class="text-right"><%= @tutor.page_length %>；<%= @tutor.difficulty %></div>
       <% if @tutor.proviso && !@tutor.proviso.empty?%>
         <div class="well well-sm paragraph"> <%= sanitize(@tutor.proviso, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u img), attributes: %w(href class style src)) %> </div>
       <% end %>

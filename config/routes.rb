@@ -195,6 +195,7 @@ Rails.application.routes.draw do
   resources :plans
 
   resources :teachings
+  get '/quit_teaching', to: 'teachings#quit'
 
   resources :catalogs do
     get :autocomplete_lesson_title, on: :collection
@@ -226,6 +227,7 @@ Rails.application.routes.draw do
     get 'delete_picture1'
     get 'delete_picture2'
     get 'show_with_lesson'
+    get 'just_for_show'
   end
   get '/tutor/new_link_to_lesson', to: 'tutors#new_link_to_lesson'
   post '/tutor/create_link_to_lesson', to: 'tutors#create_link_to_lesson'

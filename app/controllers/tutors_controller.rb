@@ -418,6 +418,10 @@ class TutorsController < ApplicationController
     redirect_to :back, notice: "已经生成词语解释，请您对内容进行选定修改。"
   end
 
+  def just_for_show
+    @tutor = Tutor.find(params[:tutor_id])
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_tutor
