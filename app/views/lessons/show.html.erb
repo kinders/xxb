@@ -76,6 +76,9 @@
         </li>
         <% end %>
         <li>
+          <%= link_to "将本课程内容作为习题材料", lesson_content_as_practice_material_path(lesson_id: @lesson.id) %>
+        </li>
+        <li>
           <%= link_to "添加习题", new_practice_path %>
         <% unless @lesson.cardboxes.empty? %>
           <%= link_to "查看卡片盒", cardboxes_path %>

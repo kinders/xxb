@@ -294,7 +294,8 @@ class LessonsController < ApplicationController
 =end
   end
 
-  # Get /lessons/1/as_tutor_link
+  # Get /lessons/1/as_tutor_link  
+  # 用于单独显示课程内容，隐去其他功能。
   def as_tutor_link
     @origin_lesson = Lesson.find_by(id: session[:lesson_id])
     unless @origin_lesson
@@ -309,6 +310,7 @@ class LessonsController < ApplicationController
   end
 
   # GET /lesson/as_tutor
+  # 用户可在本页面选择目标课程。
   def as_tutor
     @lesson = Lesson.find(session[:lesson_id])
   end
@@ -420,6 +422,21 @@ class LessonsController < ApplicationController
       }
     end
   end 
+
+  # get /lesson_content_as_practice_material
+  # 把课程正文当作 practice 的材料
+  def lesson_content_as_practice_material
+    @lesson = Lesson.find(params[:lesson_id])
+    if @lesson.content.blank?
+      redirect_to :back, notice: '课文正文不能为空。'
+      return
+    end
+    practice_material = '<p>请点击阅读《<a href="/lessons/' + @lesson.id.to_s + '/as_tutor_link">'+ @lesson.title + '</a>》，然后回答下面的问题。</p>'
+    @practice = Practice.create(user_id: current_user.id, title: '简答题', question: "输入问题", material: practice_material, answer: '输入答案')
+    LessonPractice.create(lesson_id: @lesson.id, practice_id: @practice.id)
+    redirect_to practice_path(@practice), notice: '已经根据课文正文生成一个练习，请修改问题和答案。'
+
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

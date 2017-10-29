@@ -215,12 +215,14 @@ Rails.application.routes.draw do
     get 'delete_picture_a'
     get 'add_to_paper'
     get 'analysize'
+    get :autocomplete_lesson_title, on: :collection
   end
   post '/practices/create_practices_in_batch', to: 'practices#create_practices_in_batch'
   get '/list_all_practices', to: 'practices#list_all_practices'
   get '/search_practices', to: 'practices#search_practices'
   post'/practice_add_to_lesson', to: 'practices#practice_add_to_lesson'
   post'/practice_add_to_tutor', to: 'practices#practice_add_to_tutor'
+  post '/practice_copy_to_another_lesson', to: "practices#copy_to_another_lesson"
 
   resources :tutors do
     get :autocomplete_lesson_title, on: :collection
@@ -240,6 +242,7 @@ Rails.application.routes.draw do
   get '/tutor/create_multi_pinyin_tutor', to: "tutors#create_multi_pinyin_tutor"
   get '/tutor_create_pinyin_page_for_tutor', to: "tutors#create_pinyin_page_for_tutor"
   get '/tutor_create_explain_page_for_tutor', to: "tutors#create_explain_page_for_tutor"
+  get '/tutor_proviso_as_practice_material', to: 'tutors#tutor_proviso_as_practice_material'
 
   get 'lessons_in_content_length',  to: 'lessons#lessons_in_content_length'
   resources :lessons do
@@ -256,6 +259,7 @@ Rails.application.routes.draw do
   get '/lesson_same_author_lessons', to: 'lessons#lesson_same_author_lessons'
   get '/lesson_similar_title_lessons', to: 'lessons#lesson_similar_title_lessons'
   get '/lesson_similar_time_lessons', to: 'lessons#lesson_similar_time_lessons'
+  get '/lesson_content_as_practice_material', to: 'lessons#lesson_content_as_practice_material'
 
   devise_for :users, controllers: { sessions: "users/sessions" }
 

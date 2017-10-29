@@ -3,6 +3,7 @@ class PracticesController < ApplicationController
   load_and_authorize_resource
   before_action :set_practice, only: [:show, :edit, :update, :destroy]
   before_action :be_a_master, except: [:index, :show]
+  autocomplete :lesson, :title, full: true, :display_value => :funky_method, extra_data: [:id]
 
   # GET /practices
   # GET /practices.json
@@ -263,6 +264,27 @@ class PracticesController < ApplicationController
     AnalyzePracticeJob.perform_later params[:practice_id]
     redirect_to :back, notice: '已经将习题添加到分析队列中。'
   end
+
+  # post /practices/1/copy_to_another_lesson
+  def copy_to_another_lesson
+    unless session[:practice_id]
+      redirect_to :back, notice: "无法找到相应的练习。"
+      return
+    end
+    another_lesson = Lesson.find_by(id: params[:lesson_id])
+    unless another_lesson
+      redirect_to :back, notice: "无法找到指定的课程。"
+      return
+    end
+   @lesson_practice = LessonPractice.find_by(lesson_id: params[:lesson_id], practice_id: session[:practice_id])
+   if @lesson_practice
+      redirect_to :back, notice: "指定课程已有本习题，无需重新添加。"
+    else
+      LessonPractice.create(lesson_id: params[:lesson_id], practice_id: session[:practice_id])
+      redirect_to :back, notice: "已经将本题复制到课文《#{another_lesson.title}》（#{another_lesson.id}）中。"
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

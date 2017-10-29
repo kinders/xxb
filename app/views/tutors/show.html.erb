@@ -90,9 +90,10 @@
           </li>
           <li>
             <%= link_to "将本辅导转为习题", tutor_to_practice_path, tabindex: 63 %>
+            <%= link_to "将本辅导提示作为习题材料", tutor_proviso_as_practice_material_path(tutor_id: @tutor.id), tabindex: 64 %>
           </li>
           <li>
-            <%= link_to "管理辅导的习题", exercises_path, tabindex: 64 %>
+            <%= link_to "管理辅导的习题", exercises_path, tabindex: 65 %>
           </li>
           <% end %>
           <li>

@@ -418,8 +418,24 @@ class TutorsController < ApplicationController
     redirect_to :back, notice: "已经生成词语解释，请您对内容进行选定修改。"
   end
 
+  # /tutors/1/just_for_show 
+  # 显示特定tutor的proviso，专门用于practice页面的链接。
   def just_for_show
     @tutor = Tutor.find(params[:tutor_id])
+  end
+
+  # /tutor_proviso_as_practice_material(tutor_id) 
+  # 生成一个practice，tutor的proviso将作为practice的material。
+  def tutor_proviso_as_practice_material
+    @tutor = Tutor.find(params[:tutor_id])
+    if @tutor.proviso.blank?
+      redirect_to :back, notice: '辅导提示不能为空。'
+      return
+    end
+    practice_material = '<p>请点击阅读《<a href="/tutors/' + @tutor.id.to_s + '/just_for_show">'+ @tutor.title + '</a>》，然后回答下面的问题。</p>'
+    @practice = Practice.create(user_id: current_user.id, title: '简答题', question: "输入问题", material: practice_material, answer: '输入答案')
+    LessonPractice.create(lesson_id: @tutor.lesson_id, practice_id: @practice.id)
+    redirect_to practice_path(@practice), notice: '已经根据辅导页面生成一个练习，请修改问题和答案。'
   end
 
   private
