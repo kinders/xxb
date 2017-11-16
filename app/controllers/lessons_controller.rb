@@ -331,8 +331,18 @@ class LessonsController < ApplicationController
       redirect_to :back, notice: "请重新指定一片课文。"
       return
     end
-    @tutor = Tutor.create(title: @lesson.title + "（" + @lesson.author + "）", lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "全文" + @lesson.content_length.to_s + "字。<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: @lesson.content_length)
-    Tutor.create(title: @target.title + "（" + @target.author + "）", lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "全文" + @target.content_length.to_s + "字。<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: @target.content_length)
+    if @lesson.author
+      lesson_title = @lesson.title + "（" + @lesson.author + "）"
+    else
+      lesson_title = @lesson.title
+    end
+    if @target.author
+      target_title = @target.title + "（" + @target.author + "）"
+    else
+      target_title = @target.title
+    end
+    @tutor = Tutor.create(title: lesson_title, lesson_id: @target.id, difficulty: 800, user_id: current_user.id, proviso: "全文" + @lesson.content_length.to_s + "字。<a href=\"/lessons/#{@lesson.id}/as_tutor_link\">点击阅读</a>", page_length: @lesson.content_length)
+    Tutor.create(title: target_title, lesson_id: @lesson.id, difficulty: 800, user_id: current_user.id, proviso: "全文" + @target.content_length.to_s + "字。<a href=\"/lessons/#{@target.id}/as_tutor_link\">点击阅读</a>", page_length: @target.content_length)
     session[:lesson_id] = @target.id
     respond_to do |format|
       format.html { redirect_to @tutor, notice: "辅导《#{@tutor.title}》已经成功生成。" }
@@ -432,7 +442,7 @@ class LessonsController < ApplicationController
       return
     end
     practice_material = '<p>请点击阅读《<a href="/lessons/' + @lesson.id.to_s + '/as_tutor_link">'+ @lesson.title + '</a>》，然后回答下面的问题。</p>'
-    @practice = Practice.create(user_id: current_user.id, title: '简答题', question: "输入问题", material: practice_material, answer: '输入答案')
+    @practice = Practice.create(user_id: current_user.id, title: '简答题', question: "问题", material: practice_material, answer: '答案')
     LessonPractice.create(lesson_id: @lesson.id, practice_id: @practice.id)
     redirect_to practice_path(@practice), notice: '已经根据课文正文生成一个练习，请修改问题和答案。'
 

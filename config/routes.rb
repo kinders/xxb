@@ -21,8 +21,10 @@ Rails.application.routes.draw do
   resources :roadmaps do
     post 'single_words'
     post 'single_words_in_freq'
+    post 'single_words_in_line'
     post 'meanful_words'
     post 'meanful_words_in_freq'
+    post 'meanful_words_in_line'
   end
   post '/roadmaps/choose_begin_and_end', to: 'roadmaps#choose_begin_and_end'
   post '/roadmaps/compare_with_roadmap', to: 'roadmaps#compare_with_roadmap'
@@ -243,6 +245,7 @@ Rails.application.routes.draw do
   get '/tutor_create_pinyin_page_for_tutor', to: "tutors#create_pinyin_page_for_tutor"
   get '/tutor_create_explain_page_for_tutor', to: "tutors#create_explain_page_for_tutor"
   get '/tutor_proviso_as_practice_material', to: 'tutors#tutor_proviso_as_practice_material'
+  get '/tutor_search_tutors', to: 'tutors#search_tutors'
 
   get 'lessons_in_content_length',  to: 'lessons#lessons_in_content_length'
   resources :lessons do

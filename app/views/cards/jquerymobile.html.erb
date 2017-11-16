@@ -220,7 +220,7 @@ $("#begin_org").click(function(){
   // 初始化测试
   select_unit = [].concat($("#select_unit").val());
   // alert(select_unit);
-  if (select_unit.toString() == "") {alert("请先选择合适的单元。"); return false;} 
+  if (select_unit.toString() == "") {alert("请先选择合适的关卡。"); return false;} 
   if (zi_part_test.length == 0){
     var zi_part_test_step=0;
     for (var i=0; i < select_unit.length; i++){
@@ -280,14 +280,15 @@ $("#begin_org").click(function(){
 
 // 生成报告
 $(document).on("pageshow","#report",function(){
-  $("#report_start_date").text(start_time.toLocaleDateString());
+  start_month = start_time.getMonth() + 1;
+  $("#report_start_date").text(start_time.getFullYear().toString() + "-" + start_month.toString() + "-" + start_time.getDate().toString());
   $("#report_start_time").text(start_time.toLocaleTimeString());
   now_time = new Date();
   $("#report_end_time").text(now_time.toLocaleTimeString());
   duration = now_time.valueOf() - start_time.valueOf();
   d_hour = Math.floor(duration/1000/60/60);
   d_minute = Math.floor(duration/1000/60%60);
-  d_second = Math.floor(duration/1000%3600);
+  d_second = Math.floor(duration/1000%60%60);
   $("#report_time").text(d_hour + "小时" + d_minute + "分钟" + d_second + "秒");
 
   $("#report_valid_click").text(valid_click + "次");
@@ -362,7 +363,7 @@ $(document).on("pageshow","#report",function(){
     </div> <!-- navbar -->
   </div>
   <div data-role="main" class="ui-content" style="text-align: center;">
-    <h3>请选择适当的单元：</h3>
+    <h3>请选择适当的关卡：</h3>
     <ul data-role="listview">
     <% 1.upto(units_count) do |i| %>
       <li> <a href="#unit_<%= i %>" data-transition="pop">第<%= i %>关</a></li>
@@ -455,9 +456,9 @@ $(document).on("pageshow","#report",function(){
   </div><!-- header -->
   <div data-role="main" class="ui-content">
     <div class="ui-field-contain">
-      <label for="select_unit">选择单元：</label>
+      <label for="select_unit">选择关卡：</label>
       <select name="select_unit" id="select_unit" multiple="multiple" data-native-menu="false">
-	      <option>单元</option>
+	      <option>关卡</option>
         <% 1.upto(units_count) do |i| %>
         <option value="zi_unit_<%= i %>" selected>第<%= i %>关</option>
         <% end %>

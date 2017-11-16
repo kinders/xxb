@@ -433,9 +433,23 @@ class TutorsController < ApplicationController
       return
     end
     practice_material = '<p>请点击阅读《<a href="/tutors/' + @tutor.id.to_s + '/just_for_show">'+ @tutor.title + '</a>》，然后回答下面的问题。</p>'
-    @practice = Practice.create(user_id: current_user.id, title: '简答题', question: "输入问题", material: practice_material, answer: '输入答案')
+    @practice = Practice.create(user_id: current_user.id, title: '简答题', question: "问题", material: practice_material, answer: '答案')
     LessonPractice.create(lesson_id: @tutor.lesson_id, practice_id: @practice.id)
+    last_exercise = Exercise.where(tutor_id: @tutor.id).order(:serial).last
+    if last_exercise
+      last_exercise_serial = last_exercise.serial
+    else
+      last_exercise_serial = 0
+    end
+    Exercise.create(user_id: current_user.id, tutor_id: @tutor.id, practice_id: @practice.id, serial: last_exercise_serial + 1 )
     redirect_to practice_path(@practice), notice: '已经根据辅导页面生成一个练习，请修改问题和答案。'
+  end
+
+  # get tutor_search_tutors
+  # 搜索所有辅导标题
+  def search_tutors
+    @search_word = params[:search_word]
+    @tutors = Tutor.where("title LIKE ?", "%" + params[:search_word] +"%" ).order(:id)
   end
 
   private

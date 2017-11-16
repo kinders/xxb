@@ -15,6 +15,7 @@
         <li role="separator" class="divider"></li>
         <li><%= link_to "创建拼音助读辅导", tutor_create_pinyin_help_tutor_path %></li>
         <li><%= link_to "导出多音字辅导", tutor_create_multi_pinyin_tutor_path %></li>
+        <li><a data-toggle="collapse" href="#search_tutors" aria-expanded="true" aria-controls="search_tutors" >搜索辅导</a></li>
         <li role="separator" class="divider"></li>
         <li><%= link_to "使用卡片盒练习", cardboxes_path %>
         <li role="separator" class="divider"></li>
@@ -45,6 +46,25 @@
     </div>
   </div>
 </div>
+
+<!-- 搜索辅导 -->
+<div id="search_tutors" class="collapse">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      搜索辅导标题：
+    </div>
+    <div class="panel-body">
+      <%= form_tag "/tutor_search_tutors", method: :get, class: 'form-inline' do %>
+        <div class="control-group">
+          <%= search_field_tag :search_word, "", class: "form-control", placeholder: '请输入要搜索的词汇' %>
+          <%= submit_tag "提交", :class => 'btn btn-primary' %>
+          <a class="btn btn-default" data-toggle="collapse" href="#search_tutors" aria-expanded="true" aria-controls="search_tutors" >取消</a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<!-- 搜索辅导 -->
 
 <div class="page-header">
   <h3>所有辅导</h3>

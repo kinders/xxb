@@ -14,7 +14,13 @@ class CardboxesController < ApplicationController
       @cardboxes = Cardbox.where(user_id: current_user.id, lesson_id: @lesson.id) 
     elsif session[:textbook_id]
       @textbook = Textbook.find(session[:textbook_id])
-      @cardboxes = Cardbox.where(user_id: current_user.id, lesson_id: @textbook.catalogs.map{|c|c.lesson.id}).order(:lesson_id) 
+      lesson_id_by_serial = Catalog.where(textbook_id: @textbook.id).order(:serial).pluck(:lesson_id)
+      @cardboxes = []
+      lesson_id_by_serial.each do |lesson_id|
+        @cardboxes = @cardboxes + Cardbox.where(user_id: current_user.id, lesson_id: lesson_id).to_a
+      end
+      # @cardboxes = Cardbox.where(user_id: current_user.id, lesson_id: @textbook.catalogs.map{|c|c.lesson.id}).order(:lesson_id)
+
     else
       @cardboxes = Cardbox.where(user_id: current_user.id)
     end

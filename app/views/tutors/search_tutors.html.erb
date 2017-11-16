@@ -1,0 +1,35 @@
+<%- model_class = Lesson -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<% if @tutors.any? %>
+<div class="page-header">
+  <h3><small>标题包含</small> <%= @search_word %> <small>的辅导：</small></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>编号</th>
+      <th>名称</th>
+      <th>提示</th>
+      <th>页面</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @tutors.each do |tutor| %>
+      <tr>
+        <td><%= tutor.id %></td>
+        <td><%= link_to tutor.title, tutor_path(tutor) %></td>
+        <td><%= tutor.proviso.first(50) if tutor.proviso %></td>
+        <td><%= tutor.page.first(50) if tutor.page %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
