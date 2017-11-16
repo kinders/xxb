@@ -1,0 +1,1 @@
+json.array! @wordorders, partial: 'wordorders/wordorder', as: :wordorder

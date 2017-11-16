@@ -1,0 +1,1 @@
+json.partial! "wordorders/wordorder", wordorder: @wordorder

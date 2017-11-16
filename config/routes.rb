@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  resources :wordorders
+
+  resources :wordmaps
+
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
 

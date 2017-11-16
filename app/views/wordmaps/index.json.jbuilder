@@ -1,0 +1,1 @@
+json.array! @wordmaps, partial: 'wordmaps/wordmap', as: :wordmap

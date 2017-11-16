@@ -43,6 +43,7 @@ class User < ActiveRecord::Base
   has_many :comments
   has_many :agreements
   has_many :booklists
+  has_many :wordmaps
 
   validates :active_time,  numericality: { only_integer: true, greater_than_or_equal_to: 0 }
 

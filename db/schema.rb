@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171017104848) do
+ActiveRecord::Schema.define(version: 20171116154524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -860,6 +860,34 @@ ActiveRecord::Schema.define(version: 20171017104848) do
   add_index "word_parsers", ["sentence_id"], name: "index_word_parsers_on_sentence_id", using: :btree
   add_index "word_parsers", ["word_id"], name: "index_word_parsers_on_word_id", using: :btree
 
+  create_table "wordmaps", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "roadmap_id"
+    t.string   "name"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "wordmaps", ["deleted_at"], name: "index_wordmaps_on_deleted_at", using: :btree
+  add_index "wordmaps", ["roadmap_id"], name: "index_wordmaps_on_roadmap_id", using: :btree
+  add_index "wordmaps", ["user_id"], name: "index_wordmaps_on_user_id", using: :btree
+
+  create_table "wordorders", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "wordmap_id"
+    t.integer  "word_id"
+    t.integer  "serial"
+    t.datetime "deleted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "wordorders", ["deleted_at"], name: "index_wordorders_on_deleted_at", using: :btree
+  add_index "wordorders", ["user_id"], name: "index_wordorders_on_user_id", using: :btree
+  add_index "wordorders", ["word_id"], name: "index_wordorders_on_word_id", using: :btree
+  add_index "wordorders", ["wordmap_id"], name: "index_wordorders_on_wordmap_id", using: :btree
+
   create_table "words", force: :cascade do |t|
     t.string   "name"
     t.integer  "length"
@@ -918,4 +946,9 @@ ActiveRecord::Schema.define(version: 20171017104848) do
   add_foreign_key "practice_parsers", "words"
   add_foreign_key "roadmaps", "textbooks"
   add_foreign_key "roadmaps", "users"
+  add_foreign_key "wordmaps", "roadmaps"
+  add_foreign_key "wordmaps", "users"
+  add_foreign_key "wordorders", "users"
+  add_foreign_key "wordorders", "wordmaps"
+  add_foreign_key "wordorders", "words"
 end

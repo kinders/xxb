@@ -6,6 +6,7 @@ class Word < ActiveRecord::Base
   has_many :phonetics, through: :phonetic_notations
   has_many :meanings
   has_many :comments
+  has_many :wordorders
   acts_as_paranoid
   validates :name, :length,  presence: true
 

@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user_id: 
+  wordmap_id: 
+  word_id: 
+  serial: 1
+  deleted_at: 2017-11-16 23:45:24
+
+two:
+  user_id: 
+  wordmap_id: 
+  word_id: 
+  serial: 1
+  deleted_at: 2017-11-16 23:45:24
