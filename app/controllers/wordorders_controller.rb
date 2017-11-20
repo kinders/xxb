@@ -9,10 +9,11 @@ class WordordersController < ApplicationController
     if current_user.has_role? :admin
       @wordorders = Wordorder.all
     elsif session[:wordmap_id]
-      @wordmap = wordmap.find(session[:wordmap_id])
+      @wordmap = Wordmap.find(session[:wordmap_id])
       @wordorders = Wordorder.where(user_id: current_user.id, wordmap_id: @wordmap.id).order(:serial)
     else
       redirect_to roadmaps_url, notice: "请先指定文路和词序表。"
+    end
   end
 
 =begin
@@ -59,6 +60,7 @@ class WordordersController < ApplicationController
       end
     end
   end
+=end
 
   # DELETE /wordorders/1
   # DELETE /wordorders/1.json
@@ -69,7 +71,6 @@ class WordordersController < ApplicationController
       format.json { head :no_content }
     end
   end
-=end
 
   private
     # Use callbacks to share common setup or constraints between actions.

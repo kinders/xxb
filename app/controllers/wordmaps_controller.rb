@@ -10,9 +10,10 @@ class WordmapsController < ApplicationController
     if current_user.has_role? :admin
       @wordmaps = Wordmap.all.order("id")
     elsif session[:roadmap_id]
+      @roadmap = Roadmap.find_by(id: session[:roadmap_id])
       @wordmaps = Wordmap.where(user_id: current_user.id, roadmap_id: session[:roadmap_id]).order("id")
     else
-      redirect_to :roadmaps_path, notice: '请先指定文路'
+      redirect_to roadmaps_url, notice: '请先指定文路'
     end
   end
 

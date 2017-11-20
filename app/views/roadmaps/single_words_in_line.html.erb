@@ -23,11 +23,11 @@
   <!-- Tab panes -->
 <div class="row">
   <% i = 0 %>
-  <% @word_parsers_in_group.each do |word_and_count| %>
+  <% @word_parsers_in_group.each do |word_id| %>
       <% i = i + 1 %>
-      <% word = Word.find(word_and_count[0]) %>
+      <% word = Word.find(word_id) %>
         <div class="col-md-2 col-sm-3 col-xs-4">
-          <%= i %>. <%= word.name %> <%= word_and_count[1] %>
+          <%= i %>. <%= word.name %>
       </div>
   <% end %>
 </div>

@@ -102,12 +102,18 @@ class RoadmapsController < ApplicationController
     @word_parsers_in_group = word_parsers_in_group.sort{|a, b| a[1]<=>b[1]}
   end
 
-  # 文路的单字排序
-  def single_words_in_line
+  # 文路的字词排序
+  def meanful_words_in_line
     @roadmap = Roadmap.find(session[:roadmap_id])
     # lesson_ids = @roadmap.lessons.pluck(:id)
     lesson_ids = Pace.where(roadmap: @roadmap.id, serial: params[:pace_begin_id]..params[:pace_end_id]).pluck(:lesson_id)
-    all_words = WordParser.includes(:word).where(lesson_id: lesson_ids, words: {length: 1}).pluck("word_id")
+    if params[:length_end] == 1
+      all_words = WordParser.includes(:word).where(lesson_id: lesson_ids, words: {length: 1}).pluck("word_id")
+    else 
+      params[:length_start] = 2 if params[:length_start] == 1
+      params[:length_end] = 10 if params[:length_end] > 10
+      all_words = WordParser.includes(:word).where(lesson_id: lesson_ids, words: {length: (params[:length_start].to_i)..(params[:length_end].to_i), is_meanful: true}).pluck("word_id")
+    end
     all_word_id_and_location = []  # [[word_id, location], [word_id, location]...]
     all_words.each_with_index do |w, i|
       all_word_id_and_location << [w, i]
@@ -120,14 +126,23 @@ class RoadmapsController < ApplicationController
     word_and_count = word_and_location_in_group.map{|i| [i[1].size, i[0]]} #=> [[size, word_id], [size, word_id]...] 
     word_and_size_in_group = word_and_count.group_by{|i|i[0]}.map{|i|[i[0], i[1].map{|j|j[1]}]}  # [[size, [word_id1, word_id2...]], [size, [word_id1, word_id2...]]... ]
     word_and_size_in_order = word_and_size_in_group.sort{|a, b| a[0]<=>b[0]}.reverse  # [[size, [word_id1, word_id2...]], [size, [word_id1, word_id2...]]... ]
-    word_parsers_in_group = []
-    word_and_size_in_order.each do |i|
-      word_parsers_in_group << i[1].sort{|a, b| word_scores[word_ids.index(a)] <=> word_scores[word_ids.index(b)]}
-    end
     @word_parsers_in_group = []
-    word_parsers_in_group.flatten.each_with_index do |w, i|
-      @word_parsers_in_group << [w, i]
+    word_and_size_in_order.each do |i|
+      @word_parsers_in_group << i[1].sort{|a, b| word_scores[word_ids.index(a)] <=> word_scores[word_ids.index(b)]}
     end
+    wordmap_name = @roadmap.name + "_pace_" + params[:pace_begin_id].to_s + "_" + params[:pace_end_id].to_s + "_length_" + params[:length_start].to_s + "_" + params[:length_end].to_s +  "_词序表_" + Time.now.strftime("%F %T")
+    @wordmap = Wordmap.create(user_id: current_user.id, roadmap_id: @roadmap.id, name: wordmap_name)
+    wordorders = []
+    @word_parsers_in_group.flatten.each_with_index {|w, i|
+      j = i + 1
+      wordorders << {user_id: current_user.id, wordmap_id: @wordmap.id, word_id: w, serial: j}
+      # if ( j % 500 ) == 0
+        # Wordorder.create(wordorders)
+        # wordorders = []
+      # end
+    }
+    Wordorder.create(wordorders)
+    redirect_to wordmap_url(@wordmap), notice: '成功生成词序表！'
   end
 
   # 文路的用词报告。
@@ -158,34 +173,6 @@ class RoadmapsController < ApplicationController
     # word_parsers_in_group = all_words.group_by {|word| [word, all_words.count(word)]}.keys.sort {|a, b| a[1]<=>b[1]}
 
     # @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(100)
-  end
-
-  # 文路的词语排序
-  def meanful_words_in_line
-    @roadmap = Roadmap.find(session[:roadmap_id])
-    # lesson_ids = @roadmap.lessons.pluck(:id)
-    lesson_ids = Pace.where(roadmap: @roadmap.id, serial: params[:pace_begin_id]..params[:pace_end_id]).pluck(:lesson_id)
-    all_words = WordParser.includes(:word).where(lesson_id: lesson_ids, words: {length: 2..10, is_meanful: true}).pluck("word_id")
-    all_word_id_and_location = []  # [[word_id, location], [word_id, location]...]
-    all_words.each_with_index do |w, i|
-      all_word_id_and_location << [w, i]
-    end
-    word_and_location_in_group = all_word_id_and_location.group_by{|i|i[0]}.map{|i|[i[0], i[1].map{|j|j[1]}]}  # [[word_id, [location1, location2...]], [word_id, [location1, location2...]]... ]
-    word_and_score = word_and_location_in_group.map{|i| [i[0], i[1].inject(:+)]}
-    #=> [[word_id, score], [word_id, score]...] 
-    word_ids = word_and_score.map{|i|i[0]} # [word_id, word_id...]
-    word_scores = word_and_score.map{|i|i[1]} # [score, score...]
-    word_and_count = word_and_location_in_group.map{|i| [i[1].size, i[0]]} #=> [[size, word_id], [size, word_id]...] 
-    word_and_size_in_group = word_and_count.group_by{|i|i[0]}.map{|i|[i[0], i[1].map{|j|j[1]}]}  # [[size, [word_id1, word_id2...]], [size, [word_id1, word_id2...]]... ]
-    word_and_size_in_order = word_and_size_in_group.sort{|a, b| a[0]<=>b[0]}.reverse  # [[size, [word_id1, word_id2...]], [size, [word_id1, word_id2...]]... ]
-    word_parsers_in_group = []
-    word_and_size_in_order.each do |i|
-      word_parsers_in_group << i[1].sort{|a, b| word_scores[word_ids.index(a)] <=> word_scores[word_ids.index(b)]}
-    end
-    @word_parsers_in_group = []
-    word_parsers_in_group.flatten.each_with_index do |w, i|
-      @word_parsers_in_group << [w, i]
-    end
   end
 
   def choose_begin_and_end

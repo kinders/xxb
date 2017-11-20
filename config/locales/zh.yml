@@ -52,6 +52,8 @@ zh-CN:
       user: "用户"
       withdraw: "结款"
       word_parser: "词汇分析"
+      wordmap: "词序表"
+      wordorder: "词序"
       word: "单词"
       words_report: "用词报告"
     attributes:
@@ -512,6 +514,23 @@ zh-CN:
         id: "标识号"
         word_id: "单词"
         lesson_id: "课程"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      wordmap:
+        id: "标识号"
+        user_id: "创建者"
+        roadmap_id: "文路"
+        name: "名称"
+        deleted_at: "删除时间"
+        created_at: "创建时间"
+        updated_at: "更新时间"
+      wordorder:
+        id: "标识号"
+        user_id: "创建者"
+        wordmap_id: "词序表"
+        word_id: "单词"
+        serial: '次序'
         deleted_at: "删除时间"
         created_at: "创建时间"
         updated_at: "更新时间"

@@ -99,13 +99,13 @@
           <%= link_to "查看字频表", "#choose_for_single_word_in_freq", data: {toggle: "modal"}  %>
         </li>
         <li>
-          <%= link_to "查看字序表", "#choose_for_single_word_in_line", data: {toggle: "modal"}  %>
-        </li>
-        <li>
           <%= link_to "查看词频表", "#choose_for_meanful_word_in_freq", data: {toggle: "modal"}  %>
         </li>
         <li>
-          <%= link_to "查看词序表", "#choose_for_meanful_word_in_line", data: {toggle: "modal"}  %>
+          <%= link_to "查看词序表", wordmaps_url  %>
+        </li>
+        <li>
+          <%= link_to "新建词序表", "#choose_for_meanful_word_in_line", data: {toggle: "modal"}  %>
         </li>
         <li role="separator" class="divider"></li>
         <% if session[:textbook_id] && @roadmap.textbook_id == session[:textbook_id] %>
@@ -395,6 +395,18 @@
             <%= label_tag "标准终点", nil, class: 'control-label col-sm-2' %>
             <div class="controls col-sm-10">
               <%= select_tag :pace_end_id, options_for_select(Pace.where(roadmap_id: @roadmap.id).order(:serial).collect{ |pace| [pace.serial.to_s + " - " + pace.lesson.title, pace.serial]}, @roadmap.paces.last.serial.to_s), {prompt: "请选择一个终点", class: 'form-control'} %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= label_tag "字数起点", nil, class: 'control-label col-sm-2' %>
+            <div class="controls col-sm-10">
+              <%= number_field_tag :length_start, '1', options={ min: 1, max: 10, class: 'form-control'} %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= label_tag "字数终点", nil, class: 'control-label col-sm-2' %>
+            <div class="controls col-sm-10">
+              <%= number_field_tag :length_end, '1', options={ min: 1, max: 10, class: 'form-control'} %>
             </div>
           </div>
           <%= submit_tag "生成词序表", :class => 'btn btn-primary col-sm-offset-2' %>
