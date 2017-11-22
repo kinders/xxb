@@ -110,8 +110,8 @@ class RoadmapsController < ApplicationController
     if params[:length_end] == 1
       all_words = WordParser.includes(:word).where(lesson_id: lesson_ids, words: {length: 1}).pluck("word_id")
     else 
-      params[:length_start] = 2 if params[:length_start] == 1
-      params[:length_end] = 10 if params[:length_end] > 10
+      params[:length_start] = 2 if params[:length_start].to_i == 1
+      params[:length_end] = 10 if params[:length_end].to_i > 10
       all_words = WordParser.includes(:word).where(lesson_id: lesson_ids, words: {length: (params[:length_start].to_i)..(params[:length_end].to_i), is_meanful: true}).pluck("word_id")
     end
     all_word_id_and_location = []  # [[word_id, location], [word_id, location]...]

@@ -16,9 +16,9 @@ class WordsReportsController < ApplicationController
       redirect_to :back, notice: "相关报告已被删除。"
     end
     session[:words_report_id] = @words_report.id
-    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).order("id").page(params[:page]).per(100)
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
     @longest = Word.where(id: all_words).maximum(:length)
+    @word_parsers_in_group = WordParser.where(lesson_id: @words_report.lesson_id).order("id").page(params[:page]).per(100)
     # word_parsers_in_group = WordParser.includes("word").where(lesson_id: @words_report.lesson_id, words: {length: 1}).select([:word_id]).group(:word_id).count.sort {|a, b| a[1]<=>b[1]}
     # @word_parsers_in_group = Kaminari.paginate_array(word_parsers_in_group).page(params[:page]).per(10)
   end

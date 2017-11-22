@@ -9,7 +9,7 @@
       </button>
       <ul class="dropdown-menu">
         <li>
-          <%= link_to "标准比对", "#compare_with_standard", data: {toggle: "modal"}  %>
+          <%= link_to "文路比对", "#compare_with_standard", data: {toggle: "modal"}  %>
         </li>
       </ul>
     </div>
@@ -52,16 +52,18 @@
 <p>本文所用全部词条：</p>
 <br>
 <ul class="list-group">
-  <% i = 0 %>
-  <% @word_parsers_in_group.each do |word_parser| %>
+  <% @word_parsers_in_group.each_with_index do |word_parser, index| %>
     <% word = word_parser.word %>
+    <% next unless word %>
     <% if word.is_meanful %>
       <li class="list-group-item list-group-item-success">
         <span class="badge"><%= link_to "标记为无意义词汇", word_change_meanful_path(word) %></span>
+        （<%= index + 1 %>）
       <%= link_to word.name, word_path(word.id) %>
     <% else %>
       <li class="list-group-item">
         <span class="badge"><%= link_to "标记为有意义词汇", word_change_meanful_path(word) %></span>
+        （<%= index + 1 %>）
         <%= link_to word.name, word_path(word.id) %>
     <% end %>
     </li>
@@ -88,21 +90,20 @@
 </div>
 
 
-<!-- Modal 选择一个标准进行比较 -->
-<div class="modal fade" id="compare_with_standard" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!-- Modal 选择一个文路进行比较 -->
+<div class="modal fade" id="compare_with_standard" tabindex="-1" role="dialog" aria-labelledby="compare_with_standard" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalTitle">请选择一个标准：</h4>
+        <h4 class="modal-title" id="myModalTitle">请选择一个文路：</h4>
       </div>
       <div class="modal-body">
         <%= form_tag "/roadmaps/choose_begin_and_end", class: 'form-inline' do %>
-            <%= label_tag "请选择一个标准，再进行比较", nil, class: 'control-label' %>
           <div class="control-group">
             <% current_textbook_roadmap = Textbook.find(session[:textbook_id]).roadmap %>
             <% current_textbook_roadmap_id = current_textbook_roadmap.id if current_textbook_roadmap %>
-            <%= select_tag :roadmap_id, options_for_select(Roadmap.where(user_id: current_user.id).order(:id).collect{ |roadmap| [roadmap.id.to_s + " - " + roadmap.name, roadmap.id]}, (current_textbook_roadmap_id || nil)), {prompt: "请选择一个标准，再进行比较", class: 'form-control col-md-4'} %>
+            <%= select_tag :roadmap_id, options_for_select(Roadmap.where(user_id: current_user.id).order(:id).collect{ |roadmap| [roadmap.id.to_s + " - " + roadmap.name, roadmap.id]}, (current_textbook_roadmap_id || nil)), {prompt: "请选择一个文路，再进行比较", class: 'form-control col-md-4'} %>
           </div>
           <%= submit_tag "提交", :class => 'btn btn-primary' %>
         <% end %>
@@ -110,4 +111,4 @@
     </div>
   </div>
 </div>
-<!-- Modal 选择一个标准进行比较 -->
+<!-- Modal 选择一个文路进行比较 -->

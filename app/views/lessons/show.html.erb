@@ -104,15 +104,23 @@
         <%= link_to "转为另一课程的辅导", lesson_as_tutor_url  %>
         </li>
         <li role="separator" class="divider"></li>
-        <li>
         <% unless @lesson.content == "" %>
           <% if @words_report %>
-            <%= link_to "查看已有的用词报告", words_report_path(@words_report) %>
+            <li>
+              <%= link_to "查看已有的用词报告", words_report_path(@words_report) %>
+            </li>
+            <li>
+              <%= link_to "用词测评", "#compare_with_wordmap", data: {toggle: "modal"}  %>
+            </li>
+            <li>
+              <%= link_to "用字测评", "#compare_single_with_wordmap", data: {toggle: "modal"}  %>
+            </li>
           <% end %>
-          <% need_time = (@lesson.content_length/100)+1 %>
-          <%= link_to "进行用词分析（可能需要#{need_time}分钟）", lesson_words_analysis_path(@lesson.id), :data => { :confirm => "耗时#{need_time}分钟！您确定要进行分析吗？"} %>
+          <li>
+            <% need_time = (@lesson.content_length/100)+1 %>
+            <%= link_to "进行用词分析（可能需要#{need_time}分钟）", lesson_words_analysis_path(@lesson.id), :data => { :confirm => "耗时#{need_time}分钟！您确定要进行分析吗？"} %>
+          <li>
         <% end %>
-        </li>
       </ul>
     </div>
     <% else %>
@@ -229,8 +237,55 @@
 <p class="text-right">
   出处：<%= @lesson.source || "未知"%>
 </p>
-<%# 下面是管理员视图 %>
+
+
+<!-- Modal 选择一个词序进行测评 -->
+<div class="modal fade" id="compare_with_wordmap" tabindex="-1" role="dialog" aria-labelledby="compare_with_wordmap" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalTitle">请选择一个词序：</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_tag "/lesson_compare_with_wordmap", class: 'form' do %>
+          <%= hidden_field_tag :lesson_id, @lesson.id %>
+          <div class="control-group">
+            <%= select_tag :wordmap_id, options_for_select(Wordmap.where(user_id: current_user.id).order(:id).collect{ |wordmap| [wordmap.id.to_s + " - " + wordmap.name, wordmap.id]}, nil), {prompt: "请选择一个词序，再进行比较", class: 'form-control col-md-4'} %>
+          </div>
+          <%= submit_tag "提交", :class => 'btn btn-primary' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal 选择一个词序进行比较 -->
+
+<!-- Modal 选择一个字序进行测评 -->
+<div class="modal fade" id="compare_single_with_wordmap" tabindex="-1" role="dialog" aria-labelledby="compare_single_with_wordmap" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalTitle">请选择一个字序：</h4>
+      </div>
+      <div class="modal-body">
+        <%= form_tag "/lesson_compare_single_with_wordmap", class: 'form' do %>
+          <%= hidden_field_tag :lesson_id, @lesson.id %>
+          <div class="control-group">
+            <%= select_tag :wordmap_id, options_for_select(Wordmap.where(user_id: current_user.id).order(:id).collect{ |wordmap| [wordmap.id.to_s + " - " + wordmap.name, wordmap.id]}, nil), {prompt: "请选择一个字序，再进行比较", class: 'form-control col-md-4'} %>
+          </div>
+          <%= submit_tag "提交", :class => 'btn btn-primary' %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal 选择一个字序进行比较 -->
+
 <% else %>
+
+<%# 下面是管理员视图 %>
 
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>

@@ -267,6 +267,8 @@ Rails.application.routes.draw do
   get '/lesson_similar_title_lessons', to: 'lessons#lesson_similar_title_lessons'
   get '/lesson_similar_time_lessons', to: 'lessons#lesson_similar_time_lessons'
   get '/lesson_content_as_practice_material', to: 'lessons#lesson_content_as_practice_material'
+  post '/lesson_compare_with_wordmap', to: 'lessons#compare_with_wordmap'
+  post '/lesson_compare_single_with_wordmap', to: 'lessons#compare_single_with_wordmap'
 
   devise_for :users, controllers: { sessions: "users/sessions" }
 

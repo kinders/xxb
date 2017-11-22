@@ -445,8 +445,43 @@ class LessonsController < ApplicationController
     @practice = Practice.create(user_id: current_user.id, title: '简答题', question: "问题", material: practice_material, answer: '答案')
     LessonPractice.create(lesson_id: @lesson.id, practice_id: @practice.id)
     redirect_to practice_path(@practice), notice: '已经根据课文正文生成一个练习，请修改问题和答案。'
-
   end
+
+  # post compare_with_wordmap
+  def compare_with_wordmap
+    @wordmap = Wordmap.find(params[:wordmap_id]) # 标准
+    @wordmap_size = @wordmap.wordorders.last.serial # 标准长度
+    @wordmap_average = @wordmap_size / 2  # 标准平均分数
+    @lesson = Lesson.find(params[:lesson_id]) # 课程
+    words_from_lesson = WordParser.includes(:word).where(lesson_id: @lesson.id, words: {length: 2..10, is_meanful: true}).pluck(:word_id).uniq 
+    @words_from_lesson_size = words_from_lesson.size # 课程词汇总数
+    words_from_wordmap = @wordmap.wordorders.pluck(:word_id)
+    @same_words = words_from_lesson & words_from_wordmap
+    @totalmark = Wordorder.where(wordmap: @wordmap.id, word_id: @same_words).pluck(:serial).inject(:+)
+    @average = @totalmark/@same_words.size
+    @benchmark = @average.to_f/(@wordmap_size/2)
+    @same_percent_in_lesson = @same_words.size.to_f * 100  / words_from_lesson.size
+    @diff_words_from_lesson =  words_from_lesson - words_from_wordmap
+  end
+
+  # post compare_single_with_wordmap
+  def compare_single_with_wordmap
+    @wordmap = Wordmap.find(params[:wordmap_id]) # 标准
+    @wordmap_size = @wordmap.wordorders.last.serial # 标准长度
+    @wordmap_average = @wordmap_size / 2  # 标准平均分数
+    @lesson = Lesson.find(params[:lesson_id]) # 课程
+    words_from_lesson = WordParser.includes(:word).where(lesson_id: @lesson.id, words: {length: 1}).pluck(:word_id).uniq 
+    @words_from_lesson_size = words_from_lesson.size # 课程字符总数
+    words_from_wordmap = @wordmap.wordorders.pluck(:word_id)
+    @same_words = words_from_lesson & words_from_wordmap
+    @totalmark = Wordorder.where(wordmap: @wordmap.id, word_id: @same_words).pluck(:serial).inject(:+)
+    @average = @totalmark/@same_words.size
+    @benchmark = @average.to_f/(@wordmap_size/2)
+    @same_percent_in_lesson = @same_words.size.to_f * 100  / words_from_lesson.size
+    @diff_words_from_lesson =  words_from_lesson - words_from_wordmap
+    render :compare_with_wordmap
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
