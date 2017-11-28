@@ -452,6 +452,8 @@ class LessonsController < ApplicationController
     @wordmap = Wordmap.find(params[:wordmap_id]) # 标准
     @wordmap_size = @wordmap.wordorders.last.serial # 标准长度
     @wordmap_average = @wordmap_size / 2  # 标准平均分数
+    @wordmap_quarter = @wordmap_average / 2  # 标准四分之一
+    @wordmap_3quarter = @wordmap_average + @wordmap_quarter  # 标准四分之三
     @lesson = Lesson.find(params[:lesson_id]) # 课程
     words_from_lesson = WordParser.includes(:word).where(lesson_id: @lesson.id, words: {length: 2..10, is_meanful: true}).pluck(:word_id).uniq 
     @words_from_lesson_size = words_from_lesson.size # 课程词汇总数
@@ -469,16 +471,21 @@ class LessonsController < ApplicationController
     @wordmap = Wordmap.find(params[:wordmap_id]) # 标准
     @wordmap_size = @wordmap.wordorders.last.serial # 标准长度
     @wordmap_average = @wordmap_size / 2  # 标准平均分数
+    @wordmap_quarter = @wordmap_average / 2  # 标准四分之一
+    @wordmap_3quarter = @wordmap_average + @wordmap_quarter  # 标准四分之三
     @lesson = Lesson.find(params[:lesson_id]) # 课程
+    # words_from_lesson = WordParser.includes(:word).where(lesson_id: @lesson.id, words: {length: 1}).pluck(:word_id).uniq 
+    word_from_lesson = @lesson.content.chars.uniq
+    words_from_lesson = Word.where(name: word_from_lesson)
     words_from_lesson = WordParser.includes(:word).where(lesson_id: @lesson.id, words: {length: 1}).pluck(:word_id).uniq 
     @words_from_lesson_size = words_from_lesson.size # 课程字符总数
-    words_from_wordmap = @wordmap.wordorders.pluck(:word_id)
-    @same_words = words_from_lesson & words_from_wordmap
-    @totalmark = Wordorder.where(wordmap: @wordmap.id, word_id: @same_words).pluck(:serial).inject(:+)
-    @average = @totalmark/@same_words.size
-    @benchmark = @average.to_f/(@wordmap_size/2)
-    @same_percent_in_lesson = @same_words.size.to_f * 100  / words_from_lesson.size
-    @diff_words_from_lesson =  words_from_lesson - words_from_wordmap
+    words_from_wordmap = @wordmap.wordorders.pluck(:word_id) # 标准里的单词
+    @same_words = words_from_lesson & words_from_wordmap  # 课程和标准里共同有的单词
+    @totalmark = Wordorder.where(wordmap: @wordmap.id, word_id: @same_words).pluck(:serial).inject(:+) # 共有单词总得分
+    @average = @totalmark/@same_words.size  # 共有单词平均得分
+    @benchmark = @average.to_f/(@wordmap_size/2)  # 共有单词平均得分和标准平均分比率
+    @same_percent_in_lesson = @same_words.size.to_f * 100  / words_from_lesson.size # 共有单词占课程单词的比率
+    @diff_words_from_lesson =  words_from_lesson - words_from_wordmap  # 课程超出标准的单词
     render :compare_with_wordmap
   end
 

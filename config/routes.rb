@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
   resources :wordorders
+  post '/wordorder_update_serial', to: 'wordorders#update_serial'
 
   resources :wordmaps
 

@@ -43,9 +43,36 @@
     <h3 class="panel-title">相同部分（<%= @same_words.size %>个）</h3>
   </div>
   <div class="panel-body">
-    <% @same_words.each_with_index do |word, index| %>
-      (<%= index + 1 %>)<%= Word.find(word).name %>,  
+    <% wordmap_quarter_count = 0 %>
+    <% wordmap_average_count = 0 %>
+    <% wordmap_3quarter_count = 0 %>
+    <% wordmap_4quarter_count = 0 %>
+    <% @same_words.each_with_index do |word_id, index| %>
+      (<%= index + 1 %>)
+      <% word = Word.find(word_id) %>  
+      <%= link_to word.name, word_path(word) %>
+      <% serial =  Wordorder.find_by(wordmap: @wordmap, word_id: word_id).serial %>  
+      <% if serial < @wordmap_quarter %>
+        <% wordmap_quarter_count += 1 %>
+        <span style="color: green"><%= serial %></span>
+      <% elsif serial < @wordmap_average %>
+        <% wordmap_average_count += 1 %>
+        <span style="color: yellow"><%= serial %></span>
+      <% elsif serial < @wordmap_3quarter %>
+        <% wordmap_3quarter_count += 1 %>
+        <span style="color: oranger"><%= serial %></span>
+      <% else %>
+        <% wordmap_4quarter_count += 1 %>
+        <span style="color: red"><%= serial %></span>
+      <% end %>
+      ;
     <% end %>
+  </div>
+  <div class="panel-footer">
+    <p>最简词汇： <%= wordmap_quarter_count %> 个， 占总数的 <%= number_to_percentage(wordmap_quarter_count.to_f / @same_words.size * 100, precision: 2 )%></p>
+    <p>较简词汇： <%= wordmap_average_count %> 个， 占总数的 <%= number_to_percentage(wordmap_average_count.to_f / @same_words.size * 100, precision: 2 ) %> </p>
+    <p>较难词汇： <%= wordmap_3quarter_count %> 个， 占总数的 <%= number_to_percentage(wordmap_3quarter_count.to_f / @same_words.size * 100, precision: 2 ) %> </p>
+    <p>最难词汇： <%= wordmap_4quarter_count %> 个， 占总数的 <%= number_to_percentage(wordmap_4quarter_count.to_f / @same_words.size * 100, precision: 2 ) %> </p>
   </div>
 </div>
 

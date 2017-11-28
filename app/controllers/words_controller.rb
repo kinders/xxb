@@ -252,8 +252,8 @@ class WordsController < ApplicationController
 
   def search_words
     word_pattern = "'" + params[:pattern].to_s + "'"
-    words = Word.find_by_sql("SELECT id, name, length FROM words WHERE is_meanful = 't' AND name ~ " + word_pattern).first(10000)
-    @words = Kaminari.paginate_array(words).page(params[:page]).per(100)
+    words = Word.find_by_sql("SELECT id, name, length FROM words WHERE is_meanful = 't' AND name ~ " + word_pattern).first(100000)
+    @words = Kaminari.paginate_array(words).page(params[:page]).per(1000)
 
     render :index
   end

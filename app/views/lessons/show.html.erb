@@ -112,10 +112,10 @@
             <li>
               <%= link_to "用词测评", "#compare_with_wordmap", data: {toggle: "modal"}  %>
             </li>
-            <li>
-              <%= link_to "用字测评", "#compare_single_with_wordmap", data: {toggle: "modal"}  %>
-            </li>
           <% end %>
+          <li>
+            <%= link_to "用字测评", "#compare_single_with_wordmap", data: {toggle: "modal"}  %>
+          </li>
           <li>
             <% need_time = (@lesson.content_length/100)+1 %>
             <%= link_to "进行用词分析（可能需要#{need_time}分钟）", lesson_words_analysis_path(@lesson.id), :data => { :confirm => "耗时#{need_time}分钟！您确定要进行分析吗？"} %>
