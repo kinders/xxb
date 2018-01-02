@@ -61,12 +61,12 @@
       <li class="list-group-item list-group-item-success">
         <span class="badge"><%= word_parser[1]%></span>
         <span class="badge"><%= link_to "标记为无意义词汇", word_change_meanful_path(word) %></span>
-      <%= i %> <%= Word.find(word_parser[0]).name %>
+      <%= i %> <%= link_to word.name, word_path(word.id) %>
     <% else %>
       <li class="list-group-item">
         <span class="badge"><%= word_parser[1]%></span>
         <span class="badge"><%= link_to "标记为有意义词汇", word_change_meanful_path(word) %></span>
-        <%= i %> <%= Word.find(word_parser[0]).name %>
+        <%= i %> <%= link_to word.name, word_path(word.id) %>
     <% end %>
     </li>
   <% end %>

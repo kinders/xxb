@@ -42,7 +42,7 @@
   <div class="control-group">
     <%= f.label "出处", :class => 'control-label' %>
     <div class="controls">
-      <%= f.text_field :source, :class => 'form-control', rows: "30" %>
+      <%= f.text_field :source, :class => 'form-control', rows: "30", tabindex: 12  %>
     </div>
     <%= error_span(@lesson[:source]) %>
   </div>
@@ -56,7 +56,7 @@
       <%= image_tag @lesson.picture.url, size: "300x300" %>
       <div class="caption">
 	<p>
-          <%= link_to "删除图片", lesson_delete_picture_path(@lesson), class: "btn btn-default", tabindex: 12 %>
+          <%= link_to "删除图片", lesson_delete_picture_path(@lesson), class: "btn btn-default", tabindex: 13 %>
 	</p>
       </div>
     </div>

@@ -65,7 +65,7 @@
         <span class="badge"><%= word_parser[1]%></span>
         <span class="badge"><%= link_to "标记为有意义词汇", word_change_meanful_path(word) %></span>
     <% end %>
-      <%= Word.find(word_parser[0]).name %>
+      <%= link_to word.name, word_path(word.id) %>
     </li>
   <% end %>
 </ul>
