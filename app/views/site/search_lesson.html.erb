@@ -8,6 +8,22 @@
   </div>
 </div>
 
+
+<% if @words.any? %>
+<div class="panel panel-default">
+  <div class="panel-heading"><small>包含</small><%= @search %><small>的词汇</small>（共 <%= @words.size %> 个）：</div>
+  <div class="panel-body">
+    <%# @words.join("; ") %>
+    <% @words.each do |w| %>
+      <%= link_to w.name, word_path(w.id) %> 
+    <% end %>
+  </div>
+</div>
+<% else %>
+  <p>没有找到包含<small> <%= @search %> </small>的词语</p>
+<% end %>
+<hr>
+
 <% if @textbooks.any? %>
 <div class="page-header">
   <h3><small>包含</small> <%= @search %> <small>的课本：</small></h3>
@@ -30,6 +46,8 @@
     <% end %>
   </tbody>
 </table>
+<% else %>
+  <p>没有找到名称包含<small> <%= @search %> </small>的课本</p>
 <% end %>
 <hr>
 
@@ -57,6 +75,8 @@
     <% end %>
   </tbody>
 </table>
+<% else %>
+  <p>没有找到标题包含<small> <%= @search %> </small>的课程</p>
 <% end %>
 <hr>
 
@@ -82,41 +102,9 @@
     <% end %>
   </tbody>
 </table>
+<% else %>
+  <p>没有找到作者包含<small> <%= @search %> </small>的课程</p>
 <% end %>
 <hr>
 
-<% if @sentences.any? %>
-<div class="page-header">
-  <h3><small>包含</small> <%= @search %> <small>的语句：</small></h3>
-</div>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th>序号</th>
-      <th>句子</th>
-      <th>出处</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @sentences.each_with_index do |sentence, index| %>
-      <tr>
-        <td><%= index + 1 %></td>
-        <td><%= sentence.name %></td>
-        <td><%= link_to sentence.lesson.title, lesson_path(sentence.lesson) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-<% end %>
-
-<% if @words.any? %>
-<div class="panel panel-default">
-  <div class="panel-heading"><small>包含</small><%= @search %><small>的词汇</small>（共 <%= @words.size %> 个）：</div>
-  <div class="panel-body">
-    <%# @words.join("; ") %>
-    <% @words.each do |w| %>
-      <%= link_to w.name, word_path(w.id) %> 
-    <% end %>
-  </div>
-</div>
-<% end %>
+<%= link_to "接着搜索包含 #{@search} 的句子", search_sentences_path(title: @search), class: "btn btn-primary" %>

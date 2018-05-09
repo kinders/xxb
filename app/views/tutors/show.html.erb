@@ -105,6 +105,7 @@
             <a data-toggle="collapse" href="#options" aria-expanded="true" aria-controls="options" >更改所属课文</a>
             <%= link_to "生成拼音页面", tutor_create_pinyin_page_for_tutor_path(tutor_id: @tutor.id), tabindex: 66 %>
             <%= link_to "生成解释页面", tutor_create_explain_page_for_tutor_path(tutor_id: @tutor.id), tabindex: 67 %>
+            <%= link_to "生成填空页面", tutor_find_sentences_with_words_path(tutor_id: @tutor.id), tabindex: 68 %>
           <% end %>
             <a data-toggle="collapse" href="#copy_to_another_lesson" aria-expanded="true" aria-controls="copy_to_another_lesson" >复制给其他课文</a>
           </li>
@@ -197,7 +198,8 @@
       </h2>
       <div class="text-right"><%= @tutor.page_length %>；<%= @tutor.difficulty %></div>
       <% if @tutor.proviso && !@tutor.proviso.empty?%>
-        <div class="well well-sm paragraph"> <%= sanitize(@tutor.proviso, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u img), attributes: %w(href class style src)) %> </div>
+        <hr>
+        <div class="paragraph"> <%= sanitize(@tutor.proviso, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u img), attributes: %w(href class style src)) %> </div>
       <% end %>
       <% unless @tutor.page.blank? %>
       <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="bg-success center-block">

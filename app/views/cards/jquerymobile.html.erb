@@ -21,6 +21,14 @@
   function clear_timer(){ clearTimeout(timer); }; // 翻页时清除计时器
 
   $(document).ready(function(){
+  // 强制要求输入用户序号
+  var myindex="";  // 用户序号
+  while(myindex == ""){
+  myindex=prompt("请输入您的序号：");
+  if(myindex === null){myindex = "";};
+  var temp_index = myindex.replace(/\s/g, "");
+  if(/^[0-9]+$/.test(temp_index)){myindex = temp_index}else{myindex = "";};
+  };
   // 强制要求输入用户名
   var myname="";  // 用户名
   while(myname == ""){
@@ -114,6 +122,7 @@
     answer = "#answer_" + level;
     // 解除计时
     clearTimeout(timer);
+    clearTimeout(t_show);
     // 如果有元素得分为pass_time变量,则将该元素从chars中删去
     var i=0;
     for(i; i<chars.length; i++){
@@ -170,7 +179,7 @@
       maxtime = ans.length * each_maxtime;
       // alert(ans.length.toString() + ans);
       var res_start_time = new Date();
-      res_mid_time = res_start_time.valueOf() + maxtime / 3;
+      res_mid_time = res_start_time.valueOf() + maxtime / 2;
       res_end_time = res_start_time.valueOf() + maxtime;
       t_show = setTimeout(function(){
         $("button.show_answer").parent().show();
@@ -302,7 +311,8 @@
     $("#report_invalid_click").text(invalid_click + "次");
     $("#report_score").text(score);
     $("#report_test_score").text(test_score);
-    $("#report_name").text(myname);
+    var my_index_name = myindex + "_" + myname;
+    $("#report_name").text(my_index_name);
     var new_practice_time = new Date();
     var internal_time = new_practice_time.valueOf() - start_practice_time.valueOf();
     if(internal_time > max_internal_time){

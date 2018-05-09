@@ -90,6 +90,13 @@
               :method => :delete, 
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, 
               :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
+            <% if session[:lesson_id] %>
+              <%= link_to "删除连接", 
+                practice_delete_from_lesson_path(practice_id: practice.id, lesson_id: session[:lesson_id]), 
+                :method => :post, 
+                :data => { :confirm => "确定不再作为本文的习题？" }, 
+                :class => 'btn btn-xs btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.delete', :default => [:"helpers.titles.delete"], :model => model_class.model_name.human.titleize) %>
+            <% end %>
           <% end %>
         </td>
       </tr>

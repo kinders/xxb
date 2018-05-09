@@ -228,8 +228,10 @@ Rails.application.routes.draw do
   get '/list_all_practices', to: 'practices#list_all_practices'
   get '/search_practices', to: 'practices#search_practices'
   post'/practice_add_to_lesson', to: 'practices#practice_add_to_lesson'
+  post'/practice_delete_from_lesson', to: 'practices#practice_delete_from_lesson'
   post'/practice_add_to_tutor', to: 'practices#practice_add_to_tutor'
   post '/practice_copy_to_another_lesson', to: "practices#copy_to_another_lesson"
+  post'/practice_change_to_lesson', to: 'practices#practice_change_to_lesson'
 
   resources :tutors do
     get :autocomplete_lesson_title, on: :collection
@@ -249,8 +251,10 @@ Rails.application.routes.draw do
   get '/tutor/create_multi_pinyin_tutor', to: "tutors#create_multi_pinyin_tutor"
   get '/tutor_create_pinyin_page_for_tutor', to: "tutors#create_pinyin_page_for_tutor"
   get '/tutor_create_explain_page_for_tutor', to: "tutors#create_explain_page_for_tutor"
+  get '/tutor_find_sentences_with_words', to: "tutors#find_sentences_with_words"
   get '/tutor_proviso_as_practice_material', to: 'tutors#tutor_proviso_as_practice_material'
   get '/tutor_search_tutors', to: 'tutors#search_tutors'
+  get '/tutor_new_sentences_show', to: 'tutors#new_sentences_show'
 
   get 'lessons_in_content_length',  to: 'lessons#lessons_in_content_length'
   resources :lessons do
@@ -283,6 +287,7 @@ Rails.application.routes.draw do
   mount Ckeditor::Engine => '/ckeditor'
 
   get '/search_lesson', to: 'site#search_lesson'
+  get '/search_sentences', to: 'site#search_sentences'
   root 'site#home'
 
 

@@ -1,0 +1,35 @@
+<%- model_class = Lesson -%>
+
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.retreat', :default => t("helpers.links.retreat")), :back, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.retreat', :default => [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<% if @sentences.any? %>
+<div class="page-header">
+  <h3><small>包含</small> <%= @search %> <small>的语句：</small></h3>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>序号</th>
+      <th>句子</th>
+      <th>出处</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @sentences.each_with_index do |sentence, index| %>
+      <tr>
+        <td><%= index + 1 %></td>
+        <td><%= sentence.name %></td>
+        <td><%= link_to sentence.lesson.title, lesson_path(sentence.lesson) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<% else %>
+  <p>没有找到包含<small> <%= @search %> </small>的句子</p>
+<% end %>

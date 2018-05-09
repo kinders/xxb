@@ -12,7 +12,7 @@ class PracticesController < ApplicationController
       @practices = Practice.all
     elsif session[:lesson_id]
       @lesson = Lesson.find(session[:lesson_id])
-      @practices = @lesson.practices.order(:id)
+      @practices = @lesson.practices.order(:score, :id)
       # if session[:tutor_id]
         # @tutor = Tutor.find(session[:tutor_id])
         # @practices = Practice.where(tutor_id: @tutor.id).order(:id)
@@ -37,7 +37,7 @@ class PracticesController < ApplicationController
     if session[:lesson_id]
     @lesson = Lesson.find_by(id: session[:lesson_id])
     #@tutor = Tutor.find_by(id: @practice.tutor_id)
-    @practices = @lesson.practices.order(:id)
+    @practices = @lesson.practices.order(:score)
     @practices.each_with_index do | practice, index |
       if practice == @practice
         if index - 1 < 0
@@ -241,6 +241,12 @@ class PracticesController < ApplicationController
    end
   end
 
+  def practice_delete_from_lesson
+    @lesson_practice = LessonPractice.find_by(lesson_id: params[:lesson_id], practice_id: params[:practice_id])
+    @lesson_practice.destroy
+    redirect_to practices_path, notice: '习题已经被清理出课程。'
+  end
+
   def practice_add_to_tutor
    @lesson_practice = LessonPractice.find_by(lesson_id: params[:lesson_id], practice_id: params[:practice_id])
     unless @lesson_practice
@@ -283,6 +289,29 @@ class PracticesController < ApplicationController
       LessonPractice.create(lesson_id: params[:lesson_id], practice_id: session[:practice_id])
       redirect_to :back, notice: "已经将本题复制到课文《#{another_lesson.title}》（#{another_lesson.id}）中。"
     end
+  end
+
+  def practice_change_to_lesson
+    unless session[:lesson_id]
+      redirect_to :back, notice: "无法找到相应的课程。"
+      return
+    end
+    unless session[:practice_id]
+      redirect_to :back, notice: "无法找到相应的练习。"
+      return
+    end
+    another_lesson = Lesson.find_by(id: params[:lesson_id])
+    unless another_lesson
+      redirect_to :back, notice: "无法找到指定的课程。"
+      return
+    end
+    @lesson_practice = LessonPractice.find_by(lesson_id: params[:lesson_id], practice_id: session[:practice_id])
+    if @lesson_practice
+      LessonPractice.find_by(lesson_id: session[:lesson_id], practice_id: session[:practice_id]).destroy
+    else
+      LessonPractice.find_by(lesson_id: session[:lesson_id], practice_id: session[:practice_id]).update(lesson_id: params[:lesson_id])
+    end
+    redirect_to :back, notice: '已经将习题转移到指定的课程中。'
   end
 
 

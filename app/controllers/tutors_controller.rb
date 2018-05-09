@@ -218,6 +218,7 @@ class TutorsController < ApplicationController
       p.answer = @tutor.page
       p.score = (p.answer.to_s.length.to_f / 10).ceil
     } 
+    LessonPractice.create(lesson_id: @lesson.id, practice_id: p.id)
     last_exercise = Exercise.where(tutor_id: @tutor.id).order(:serial).last
     if last_exercise
       last_exercise_serial = last_exercise.serial
@@ -460,6 +461,48 @@ class TutorsController < ApplicationController
   def search_tutors
     @search_word = params[:search_word]
     @tutors = Tutor.where("title LIKE ?", "%" + params[:search_word] +"%" ).order(:id)
+  end
+
+  # get create_sentences_show
+  # 将正文转化为逐行显示形式
+  def new_sentences_show
+    unless session[:lesson_id]
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
+      return
+    end
+    @lesson = Lesson.find(session[:lesson_id])
+    proviso = @lesson.content.gsub('<p>', '<div class="well lesson_paragraph"><p>').gsub('</p>', '</p></div>').gsub('. ','.</p><p>').gsub('? ','?</p><p>').gsub('! ','!</p><p>').gsub('。','。</p><p>').gsub('？','？</p><p>').gsub('！','！</p><p>')
+    @tutor = Tutor.create(title: "逐句分解：" + @lesson.title, difficulty: 0, proviso: proviso, user_id: current_user.id, lesson_id: @lesson.id, page_length: proviso.size)
+    redirect_to @tutor, notice: "已经创建逐句辅导，请您对辅导页面进行修改。"
+  end
+
+  # get find_sentences_with_words
+  # 在课文中抓取包含词语的句子。
+  def find_sentences_with_words
+    unless session[:lesson_id]
+      redirect_to me_summary_url, notice: "无法找到相应的课程。"
+      return
+    end
+    @lesson = Lesson.find(session[:lesson_id])
+    @tutor = Tutor.find(params[:tutor_id])
+    unless @tutor.page.blank?
+      redirect_to :back, notice: '辅导页面已经存在内容。'
+      return
+    end
+    delete_pattern = /(<[^>]*>)|(\r)|(\n)/
+    contents = @tutor.proviso.gsub(delete_pattern, "").split(/[,，]/)
+    new_content = []
+    contents.each do |w|
+      re_str = "[^.?!。？！]*" + w + "[^.?!。？！]*[.?!。？！]"
+      re = Regexp.new(re_str)
+      new_w = "(<span style='color:#FFFFFF;'>" + w + "</span>)"
+      new_content << @lesson.content.scan(re).map{|i|i.sub(w, new_w)}
+    end
+    new_content.flatten!
+    page_content = "<div class='well lesson_paragraph'><p>" + new_content.join("</p><p>") + "</p></div>"
+    @tutor = @tutor.update(page: page_content, page_length: page_content.size)
+    redirect_to :back, notice: "已经生成词语解释，请您对内容进行选定修改。"
+
   end
 
   private

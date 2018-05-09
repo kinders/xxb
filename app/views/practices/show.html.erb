@@ -44,6 +44,11 @@
         <li>
           <a data-toggle="collapse" href="#copy_to_another_lesson" aria-expanded="true" aria-controls="copy_to_another_lesson" >复制给其他课文</a>
         </li>
+        <% if session[:lesson_id] %>
+        <li>
+          <a data-toggle="collapse" href="#change_to_another_lesson" aria-expanded="true" aria-controls="change_to_another_lesson" >转移给其他课文</a>
+        </li>
+        <% end %>
         <li>
           <%= link_to "管理卡片盒", cardboxes_url %>
         </li>
@@ -94,6 +99,25 @@
           <%= autocomplete_field_tag :lesson_id, '', autocomplete_lesson_title_practices_path, class: "form-control" %>
         <%= submit_tag "提交", :class => 'btn btn-primary' %>
         <a class="btn btn-default" data-toggle="collapse" href="#copy_to_another_lesson" aria-expanded="true" aria-controls="copy_to_another_lesson" >取消</a>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<!-- 将本辅导复制给其他课程 -->
+
+<!-- 将本习题转移给其他课程 -->
+<div id="change_to_another_lesson" class="collapse">
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      请输入标题、选择一篇课文：
+    </div>
+    <div class="panel-body">
+      <%= form_tag "/practice_change_to_lesson", class: 'form-inline' do %>
+        <div class="control-group">
+          <%= autocomplete_field_tag :lesson_id, '', autocomplete_lesson_title_practices_path, class: "form-control" %>
+        <%= submit_tag "提交", :class => 'btn btn-primary' %>
+        <a class="btn btn-default" data-toggle="collapse" href="#change_to_another_lesson" aria-expanded="true" aria-controls="change_to_another_lesson" >取消</a>
         </div>
       <% end %>
     </div>
