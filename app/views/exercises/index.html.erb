@@ -86,6 +86,7 @@
       <th><%= model_class.human_attribute_name(:id) %></th>
       <th><%= model_class.human_attribute_name(:user_id) %></th>
       <th><%= model_class.human_attribute_name(:serial) %></th>
+      <th>难度</th>
       <th>标题</th>
       <th><%= model_class.human_attribute_name(:practice_id) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
@@ -97,6 +98,7 @@
         <td><%= exercise.id %></td>
         <td><%= exercise.user.name %></td>
         <td><%= exercise.serial %></td>
+        <td><%= exercise.practice.difficulty %></td>
         <td><%= exercise.practice.title %></td>
         <td><%= exercise.practice.question %></td>
         <td>

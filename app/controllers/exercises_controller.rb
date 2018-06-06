@@ -84,7 +84,24 @@ class ExercisesController < ApplicationController
   def new_many_exercises
     @lesson = Lesson.find(session[:lesson_id])
     @tutor = Tutor.find(session[:tutor_id])
-    @practices = @lesson.practices.order(:id)
+    @practices_id = @tutor.exercises.pluck(:practice_id)
+    case params[:order_type]
+    when nil
+      @practices = @lesson.practices.order(:id)
+      @order_type = nil
+    when "title"
+      @practices = @lesson.practices.order(:title, :id)
+      @order_type = "title"
+    when "labelname"
+      @practices = @lesson.practices.order(:labelname, :id)
+      @order_type = "labelname"
+    when "score"
+      @practices = @lesson.practices.order(:score, :id)
+      @order_type = "score"
+    when "question"
+      @practices = @lesson.practices.order(:question, :id)
+      @order_type = "question"
+    end
   end
 
   # post add_many_practices

@@ -112,12 +112,12 @@
     <p class="paragraph"><strong>标题：</strong><%= @evaluation.title || @practice.title %>（<strong>分值：</strong><%= @evaluation.practice_score || @practice.score %>）</p> 
     <p class="paragraph"><strong>问题：</strong></p>
     <div class="well well-sm paragraph">
-      <%= sanitize(@evaluation.question || @practice.question, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %>
+      <%= sanitize(@evaluation.question || @practice.question, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp img table tr td span u ), attributes: %w(href class style)) %>
     </div>
     <% unless @evaluation.material.blank? || @practice.material.blank? %>
     <p class="paragraph"><strong>材料：</strong></p>
     <div class="well well-sm paragraph">
-      <%= sanitize( @evaluation.material || @practice.material, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)) %>
+      <%= sanitize( @evaluation.material || @practice.material, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp img table tr td span u ), attributes: %w(href class style)) %>
     </div>
     <% end %>
     <% if @practice.picture_q_file_name %>

@@ -20,7 +20,14 @@
 </div>
 
 <div class="page-header">
-  <h3>添加练习</h3>
+  <% if session[:lesson_id] %>
+    <h5>当前课文：《<%= link_to Lesson.find(session[:lesson_id]).title, lesson_path(session[:lesson_id]) %>》</h5>
+    <% if session[:tutor_id] %>
+      <h5>当前辅导：《<%= link_to Tutor.find(session[:tutor_id]).title, tutor_path(session[:tutor_id]) %>》</h5>
+    <% end %>
+  <% else %>
+    <h5>添加练习</h3>
+  <% end %>
 </div>
 <%= render :partial => 'form' %>
 

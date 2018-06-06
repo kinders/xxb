@@ -28,6 +28,22 @@
   <h3>《<%= @lesson.title %>》一课的所有练习</h3>
 </div>
 
+<% unless @order_type == nil %> 
+<%= link_to '默认按分数排序', practices_url, class: "btn btn-default" %>
+<% end %>
+<% unless @order_type == "created_at" %> 
+<%= link_to '按创建时间排序', practices_url(order_type: 'created_at'), class: "btn btn-default" %>
+<% end %>
+<% unless @order_type == "title" %> 
+<%= link_to '按标题排序', practices_url(order_type: 'title'), class: "btn btn-default" %>
+<% end %>
+<% unless @order_type == "labelname" %> 
+<%= link_to '按标签排序', practices_url(order_type: 'labelname'), class: "btn btn-default" %>
+<% end %>
+<% unless @order_type == "question" %> 
+<%= link_to '按问题排序', practices_url(order_type: 'question'), class: "btn btn-default" %>
+<% end %>
+
 <% if current_user.id == @lesson.user_id %>
   <button class="btn btn-default pull-right" type="button" data-toggle="collapse" data-target="#collapseCreatePracticesInBatch" aria-expanded="false" aria-controls="collapseCreatePracticesInBatch">
     批量新添练习

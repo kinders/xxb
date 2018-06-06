@@ -12,13 +12,23 @@ class PracticesController < ApplicationController
       @practices = Practice.all
     elsif session[:lesson_id]
       @lesson = Lesson.find(session[:lesson_id])
-      @practices = @lesson.practices.order(:score, :id)
-      # if session[:tutor_id]
-        # @tutor = Tutor.find(session[:tutor_id])
-        # @practices = Practice.where(tutor_id: @tutor.id).order(:id)
-      # else
-        # @practices = Practice.where(lesson_id: @lesson.id).order(:id)
-      # end
+      case params[:order_type]
+      when nil
+        @practices = @lesson.practices.order(:score, :id)
+        @order_type = nil
+      when "created_at"
+        @practices = @lesson.practices.order(:id)
+        @order_type = "created_at"
+      when "title"
+        @practices = @lesson.practices.order(:title, :id)
+        @order_type = "title"
+      when "labelname"
+        @practices = @lesson.practices.order(:labelname, :id)
+        @order_type = "labelname"
+      when "question"
+        @practices = @lesson.practices.order(:question, :id)
+        @order_type = "question"
+      end
     else
       redirect_to list_all_practices_path, notice: "需要指定课文。"
     end
