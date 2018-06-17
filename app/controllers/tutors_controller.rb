@@ -495,8 +495,18 @@ class TutorsController < ApplicationController
     contents.each do |w|
       re_str = "[^.?!。？！]*" + w + "[^.?!。？！]*[.?!。？！]"
       re = Regexp.new(re_str)
-      new_w = "(<span style='color:#FFFFFF;'>" + w + "</span>)"
-      new_content << @lesson.content.scan(re).map{|i|i.sub(w, new_w)}
+      new_w = "<span style='color:#FFFFFF;'>," + w + "</span>"
+      if params[:is_with_phonetics]
+        new_w2 = Word.find_by(name: w)
+        if new_w2
+          new_s = new_w2.phonetics.map{|i|i.content}.join + ("⃞"*(w.length))
+        else
+          new_s = "<span style='color: red;'>没有找到音标</span> " + "⃞"*(w.length)
+        end
+      else
+        new_s = " " + "⃞"*(w.length)
+      end
+      new_content << @lesson.content.scan(re).map{|i|i.gsub(w, new_s) + new_w}
     end
     new_content.flatten!
     page_content = "<div class='well lesson_paragraph'><p>" + new_content.join("</p><p>") + "</p></div>"

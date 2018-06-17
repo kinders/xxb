@@ -100,7 +100,7 @@
         <td><%= exercise.serial %></td>
         <td><%= exercise.practice.difficulty %></td>
         <td><%= exercise.practice.title %></td>
-        <td><%= exercise.practice.question %></td>
+        <td><%= link_to exercise.practice.question, practice_url(exercise.practice_id) %></td>
         <td>
           <%= link_to t('.edit', :default => t("helpers.links.edit")),
                       edit_exercise_path(exercise), :class => 'btn btn-default btn-xs', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.edit', :default => [:"helpers.titles.edit"], :model => model_class.model_name.human.titleize) %>
