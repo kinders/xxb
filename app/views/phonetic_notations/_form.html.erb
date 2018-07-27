@@ -25,8 +25,8 @@
   <div class="form-group">
     <%= f.label :phonetic_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
-      <%# f.text_field :phonetic_id, class: 'form-control' %>
-      <%= f.select :phonetic_id, Phonetic.all.collect { |p| [ p.content, p.id ] }, {prompt: "请选择一个拼音"},  {class: 'form-control'}  %>
+      <%= f.text_field :phonetic_id, class: 'form-control' %>
+      <%# f.select :phonetic_id, Phonetic.all.collect { |p| [ p.content, p.id ] }, {prompt: "请选择一个拼音"},  {class: 'form-control'}  %>
     </div>
     <%= error_span(@phonetic_notation[:phonetic_id]) %>
   </div>

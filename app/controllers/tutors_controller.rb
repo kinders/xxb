@@ -244,13 +244,20 @@ class TutorsController < ApplicationController
       return
     end
     @lesson = Lesson.find(session[:lesson_id])
+    if Tutor.find_by(title: "注音助读", difficulty: 1, lesson_id: @lesson.id)
+      redirect_to tutors_path, notice: "已有注音助读。"
+      return
+    end
     content = "<h2>" + @lesson.title + "</h2><hr>" + @lesson.content
     contents = content.chars
+    words = Word.select(:id, :name).where(name: contents)
     contents.map! do |char|
-      word = Word.find_by(name: char.to_s)
+      # word = Word.select(:id).find_by(length: 1, name: char.to_s)
+      word = nil
+      words.each {|w| word = w if w.name == char}
       if word
-        if word.name =~ /[\u4e00-\u9fa5]/
-          pinyins = word.phonetics.map{|p| p.content}.join(" ")
+        if char =~ /[\u4e00-\u9fa5]/
+          pinyins = word.phonetics.pluck(:content).join(" ")
           char = "<ruby>" + char.to_s + "<rp>【</rp><rt> " + pinyins + " </rt><rp>】</rp></ruby>"
         else
         char
