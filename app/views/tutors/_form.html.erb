@@ -20,7 +20,7 @@
     <div class="controls">
       <%= f.text_field :title, :class => 'form-control', tabindex: 1 %>
     </div>
-    <%= error_span(@tutor[:title]) %>
+    <%= f.error_span(:title) %>
   </div>
 
 <%#<div class="row">%>
@@ -55,7 +55,7 @@
     <%#<div class="controls">%>
       <%# f.file_field :picture1, :class => 'form-control', tabindex: 4 %>
     <%#</div>%>
-    <%# error_span(@tutor[:picture1]) %>
+    <%# f.error_span(:picture1) %>
   <%#</div>%>
 
 
@@ -64,7 +64,7 @@
     <%#<div class="controls">%>
       <%# f.file_field :picture2, :class => 'form-control', tabindex: 5 %>
     <%#</div>%>
-    <%# error_span(@tutor[:picture2]) %>
+    <%# f.error_span(:picture2) %>
   <%#</div>%>
 
 
@@ -73,7 +73,7 @@
     <div class="controls">
       <%= f.text_field :difficulty, :class => 'form-control', tabindex: 6 %>
     </div>
-    <%= error_span(@tutor[:difficulty]) %>
+    <%= f.error_span(:difficulty) %>
   </div>
 
   <div class="control-group">
@@ -83,7 +83,7 @@
       <%# f.text_area :proviso, :class => 'tinymce form-control', rows: "3", tabindex: 8   %>
       <%= cktext_area :tutor, :proviso, :rows => 10, tabindex: 7 %>
     </div>
-    <%= error_span(@tutor[:proviso]) %>
+    <%= f.error_span(:proviso) %>
   </div>
 
   <div class="control-group">
@@ -94,7 +94,7 @@
       <%# tinymce %>
       <%= cktext_area :tutor, :page, :rows => 10, tabindex: 8 %>
     </div>
-    <%= error_span(@tutor[:page]) %>
+    <%= f.error_span(:page) %>
   </div>
 
 
@@ -105,7 +105,7 @@
     <div class="controls">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@tutor[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
 
   <div class="control-group">
@@ -113,7 +113,7 @@
     <div class="controls">
       <%= f.text_field :lesson_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@tutor[:lesson_id]) %>
+    <%= f.error_span(:lesson_id) %>
   </div>
 
 <% end %>

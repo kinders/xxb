@@ -20,7 +20,7 @@
     <div class="controls col-sm-10">
       <%= f.select :user_id, User.all.collect{|u| [u.id.to_s + "_" + u.name + "_" + u.email]}, {prompt: "请选择一个用户"}, {class: 'form-control'} %>
     </div>
-    <%= error_span(@cashier[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
 
   <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>

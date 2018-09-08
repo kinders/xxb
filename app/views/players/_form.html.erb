@@ -22,28 +22,28 @@
     <div class="controls col-sm-10">
       <%= f.text_field :user_id, class: 'form-control' %>
     </div>
-    <%= error_span(@player[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="form-group">
     <%= f.label :team_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :team_id, class: 'form-control' %>
     </div>
-    <%= error_span(@player[:team_id]) %>
+    <%= f.error_span(:team_id) %>
   </div>
   <div class="form-group">
     <%= f.label :member_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :member_id, class: 'form-control' %>
     </div>
-    <%= error_span(@player[:member_id]) %>
+    <%= f.error_span(:member_id) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, class: 'form-control' %>
     </div>
-    <%= error_span(@player[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
 
 
@@ -88,7 +88,7 @@
       <%= f.select :member_id, Member.where(classroom_id: session[:classroom_id]).order(:serial).collect {|member| [member.serial.to_s + " " + User.find(member.student).name, member.id] }, {prompt: "请选择一个用户"}, {class: 'form-control'} %>
     </div>
     <% end %>
-    <%= error_span(@player[:member_id]) %>
+    <%= f.error_span(:member_id) %>
   </div>
 
 

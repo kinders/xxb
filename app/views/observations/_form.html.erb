@@ -22,42 +22,42 @@
     <div class="controls col-sm-10">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@observation[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="form-group">
     <%= f.label :student, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :student, :class => 'form-control' %>
     </div>
-    <%= error_span(@observation[:student]) %>
+    <%= f.error_span(:student) %>
   </div>
   <div class="form-group">
     <%= f.label :point, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :point, :class => 'form-control' %>
     </div>
-    <%= error_span(@observation[:point]) %>
+    <%= f.error_span(:point) %>
   </div>
   <div class="form-group">
     <%= f.label :mark, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :mark, :class => 'form-control' %>
     </div>
-    <%= error_span(@observation[:mark]) %>
+    <%= f.error_span(:mark) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, :class => 'form-control' %>
     </div>
-    <%= error_span(@observation[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
   <div class="form-group">
     <%= f.label :homework_id, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :homework_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@observation[:homework_id]) %>
+    <%= f.error_span(:homework_id) %>
   </div>
 
 
@@ -93,7 +93,7 @@
       <%= f.select :student, @members.collect{|item| [item.serial.to_i.to_s + User.find(item.student).name, User.find(item.student).id]}, {prompt: "可以选择一个学生"}, {class: 'form-control'}  %>
       <%# f.text_field :student, :class => 'form-control' %>
     </div>
-    <%= error_span(@observation[:student]) %>
+    <%= f.error_span(:student) %>
   </div>
   <% end %>
   <div class="form-group">
@@ -101,14 +101,14 @@
     <div class="controls col-sm-10">
       <%= f.text_field :point, :class => 'form-control' %>
     </div>
-    <%= error_span(@observation[:point]) %>
+    <%= f.error_span(:point) %>
   </div>
   <div class="form-group">
     <%= f.label "详细评语", :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :mark, :class => 'form-control' %>
     </div>
-    <%= error_span(@observation[:mark]) %>
+    <%= f.error_span(:mark) %>
   </div>
 
 

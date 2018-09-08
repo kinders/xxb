@@ -1,4 +1,4 @@
-class Subject < ActiveRecord::Base
+class Subject < ApplicationRecord
   belongs_to :user
   has_many :teachers
   resourcify

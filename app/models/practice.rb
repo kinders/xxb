@@ -1,4 +1,4 @@
-class Practice < ActiveRecord::Base
+class Practice < ApplicationRecord
   resourcify
   belongs_to :user
   belongs_to :tutor

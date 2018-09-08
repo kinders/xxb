@@ -1,4 +1,4 @@
-class Examroom < ActiveRecord::Base
+class Examroom < ApplicationRecord
   belongs_to :user
   belongs_to :classroom
   belongs_to :paper

@@ -1,4 +1,4 @@
-class Sentence < ActiveRecord::Base
+class Sentence < ApplicationRecord
   belongs_to :lesson
   has_many :word_parsers
   has_many :words, through: :word_parsers

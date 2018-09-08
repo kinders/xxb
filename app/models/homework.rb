@@ -1,4 +1,4 @@
-class Homework < ActiveRecord::Base
+class Homework < ApplicationRecord
   belongs_to :user
   belongs_to :classroom
   belongs_to :subject

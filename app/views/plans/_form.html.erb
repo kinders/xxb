@@ -21,7 +21,7 @@
     <div class="controls">
       <%= f.text_field :serial, :class => 'form-control' %>
     </div>
-    <%= error_span(@plan[:serial]) %>
+    <%= f.error_span(:serial) %>
   </div>
   <div class="control-group">
     <%= f.label "辅导", :class => 'control-label' %>
@@ -29,7 +29,7 @@
       <%= f.select :tutor_id, Tutor.where(lesson_id: session[:lesson_id]).order("difficulty").collect{|tutor| [tutor.title[0,20] + "； 作者：" + tutor.user_id.to_s , tutor.id]}, { prompt: "请选择一个辅导"}, {class: "form-control" } %>
       <%# f.select :tutor_id, Tutor.where(lesson_id: session[:lesson_id]).order("difficulty").collect{|tutor| [tutor.title[0,20] + "； 作者：" + tutor.user_id.to_s + "； 页面：" + tutor.page[0,30], tutor.id]}, { prompt: "请选择一个辅导"}, {class: "form-control" } %>
     </div>
-    <%= error_span(@plan[:tutor_id]) %>
+    <%= f.error_span(:tutor_id) %>
   </div>
   <hr>
   <%= f.submit "添加到教学计划中", :class => 'btn btn-primary' %>
@@ -43,28 +43,28 @@
     <div class="controls">
       <%= f.text_field :serial, :class => 'form-control' %>
     </div>
-    <%= error_span(@plan[:serial]) %>
+    <%= f.error_span(:serial) %>
   </div>
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@plan[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="control-group">
     <%= f.label :teaching_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :teaching_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@plan[:teaching_id]) %>
+    <%= f.error_span(:teaching_id) %>
   </div>
   <div class="control-group">
     <%= f.label :tutor_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :tutor_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@plan[:tutor_id]) %>
+    <%= f.error_span(:tutor_id) %>
   </div>
   <hr>
   <%= f.submit nil, :class => 'btn btn-primary' %>

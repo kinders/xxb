@@ -1,4 +1,4 @@
-class Justice < ActiveRecord::Base
+class Justice < ApplicationRecord
   resourcify
   belongs_to :user
   belongs_to :evaluation

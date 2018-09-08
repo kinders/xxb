@@ -21,28 +21,28 @@
     <div class="controls">
       <%= f.text_field :title, :class => 'form-control' %>
     </div>
-    <%= error_span(@textbook[:title]) %>
+    <%= f.error_span(:title) %>
   </div>
   <div class="control-group">
     <%= f.label :description, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :description, :class => 'form-control' %>
     </div>
-    <%= error_span(@textbook[:description]) %>
+    <%= f.error_span(:description) %>
   </div>
   <div class="control-group">
     <%= f.label :serial, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :serial, :class => 'form-control' %>
     </div>
-    <%= error_span(@textbook[:serial]) %>
+    <%= f.error_span(:serial) %>
   </div>
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@textbook[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
 
 
@@ -76,21 +76,21 @@
     <div class="controls">
       <%= f.text_field :serial, :class => 'form-control' %>
     </div>
-    <%= error_span(@textbook[:serial]) %>
+    <%= f.error_span(:serial) %>
   </div>
   <div class="control-group">
     <%= f.label "教科书的名称", :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :title, :class => 'form-control' %>
     </div>
-    <%= error_span(@textbook[:title]) %>
+    <%= f.error_span(:title) %>
   </div>
   <div class="control-group">
     <%= f.label "关于这本书的简要描述", :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :description, :class => 'form-control' %>
     </div>
-    <%= error_span(@textbook[:description]) %>
+    <%= f.error_span(:description) %>
   </div>
 
   <hr>

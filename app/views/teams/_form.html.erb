@@ -22,28 +22,28 @@
     <div class="controls col-sm-10">
       <%= f.text_field :user_id, class: 'form-control' %>
     </div>
-    <%= error_span(@team[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="form-group">
     <%= f.label :sectionalization_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :sectionalization_id, class: 'form-control' %>
     </div>
-    <%= error_span(@team[:sectionalization_id]) %>
+    <%= f.error_span(:sectionalization_id) %>
   </div>
   <div class="form-group">
     <%= f.label :name, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :name, class: 'form-control' %>
     </div>
-    <%= error_span(@team[:name]) %>
+    <%= f.error_span(:name) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, class: 'form-control' %>
     </div>
-    <%= error_span(@team[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
 
 
@@ -77,7 +77,7 @@
     <div class="controls col-sm-10">
       <%= f.text_field :name, class: 'form-control' %>
     </div>
-    <%= error_span(@team[:name]) %>
+    <%= f.error_span(:name) %>
   </div>
 
 

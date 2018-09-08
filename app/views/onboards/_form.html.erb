@@ -20,49 +20,49 @@
     <div class="controls col-sm-10">
       <%= f.text_field :user_id, class: 'form-control' %>
     </div>
-    <%= error_span(@onboard[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="form-group">
     <%= f.label :begin_at, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :begin_at, class: 'form-control' %>
     </div>
-    <%= error_span(@onboard[:begin_at]) %>
+    <%= f.error_span(:begin_at) %>
   </div>
   <div class="form-group">
     <%= f.label :expire_at, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :expire_at, class: 'form-control' %>
     </div>
-    <%= error_span(@onboard[:expire_at]) %>
+    <%= f.error_span(:expire_at) %>
   </div>
   <div class="form-group">
     <%= f.label :end_at, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :end_at, class: 'form-control' %>
     </div>
-    <%= error_span(@onboard[:end_at]) %>
+    <%= f.error_span(:end_at) %>
   </div>
   <div class="form-group">
     <%= f.label :remote_ip, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :remote_ip, class: 'form-control' %>
     </div>
-    <%= error_span(@onboard[:remote_ip]) %>
+    <%= f.error_span(:remote_ip) %>
   </div>
   <div class="form-group">
     <%= f.label :http_user_agent, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :http_user_agent, class: 'form-control' %>
     </div>
-    <%= error_span(@onboard[:http_user_agent]) %>
+    <%= f.error_span(:http_user_agent) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, class: 'form-control' %>
     </div>
-    <%= error_span(@onboard[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
 
 

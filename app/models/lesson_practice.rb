@@ -1,4 +1,4 @@
-class LessonPractice < ActiveRecord::Base
+class LessonPractice < ApplicationRecord
   belongs_to :lesson
   belongs_to :practice
   acts_as_paranoid

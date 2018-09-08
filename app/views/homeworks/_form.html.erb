@@ -21,49 +21,49 @@
     <div class="controls">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@homework[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="control-group">
     <%= f.label :classroom_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :classroom_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@homework[:classroom_id]) %>
+    <%= f.error_span(:classroom_id) %>
   </div>
   <div class="control-group">
     <%= f.label :subject_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :subject_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@homework[:subject_id]) %>
+    <%= f.error_span(:subject_id) %>
   </div>
   <div class="control-group">
     <%= f.label :title, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :title, :class => 'form-control' %>
     </div>
-    <%= error_span(@homework[:title]) %>
+    <%= f.error_span(:title) %>
   </div>
   <div class="control-group">
     <%= f.label :description, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :description, :class => 'form-control' %>
     </div>
-    <%= error_span(@homework[:description]) %>
+    <%= f.error_span(:description) %>
   </div>
   <div class="control-group">
     <%= f.label :deleted_at, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :deleted_at, :class => 'form-control' %>
     </div>
-    <%= error_span(@homework[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
   <div class="control-group">
     <%= f.label :student, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :student, :class => 'form-control' %>
     </div>
-    <%= error_span(@homework[:student]) %>
+    <%= f.error_span(:student) %>
   </div>
 
 
@@ -102,7 +102,7 @@
         <%= f.select :classroom_id, Classroom.where(end: false).collect{ |item| [item.name, item.id] }, {prompt: "可以选择一个班级"}, { :class => 'form-control'} %>
       <% end %>
     </div>
-    <%= error_span(@homework[:classroom_id]) %>
+    <%= f.error_span(:classroom_id) %>
   </div>
   <% if @classroom %>
   <div class="form-group">
@@ -111,7 +111,7 @@
       <% @members = Member.where(classroom_id: @classroom.id) %>
       <%= f.select :student, @members.collect{|item| [item.serial.to_i.to_s + User.find(item.student).name, User.find(item.student).id]}, {prompt: "可以选择一个学生"}, {class: 'form-control'}  %>
     </div>
-    <%= error_span(@homework[:student]) %>
+    <%= f.error_span(:student) %>
   </div>
   <%  end %>
   <div class="form-group">
@@ -119,21 +119,21 @@
     <div class="controls col-sm-10">
       <%= f.select :subject_id, Subject.all.collect{|item| [item.name, item.id]},{prompt: "需要选择一个科目"}, {:class => 'form-control'} %>
     </div>
-    <%= error_span(@homework[:subject_id]) %>
+    <%= f.error_span(:subject_id) %>
   </div>
   <div class="form-group">
     <%= f.label "标题", :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :title, :class => 'form-control' %>
     </div>
-    <%= error_span(@homework[:title]) %>
+    <%= f.error_span(:title) %>
   </div>
   <div class="form-group">
     <%= f.label "详情", :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_area :description, :class => 'form-control' %>
     </div>
-    <%= error_span(@homework[:description]) %>
+    <%= f.error_span(:description) %>
   </div>
 
   <div class="form-group" >

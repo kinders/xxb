@@ -1,4 +1,4 @@
-class Booklist < ActiveRecord::Base
+class Booklist < ApplicationRecord
   resourcify
   belongs_to :user
   belongs_to :textbook

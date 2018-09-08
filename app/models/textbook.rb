@@ -1,4 +1,4 @@
-class Textbook < ActiveRecord::Base
+class Textbook < ApplicationRecord
   resourcify
   belongs_to :user
   has_one :roadmap

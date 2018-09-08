@@ -1,4 +1,4 @@
-class Withdraw < ActiveRecord::Base
+class Withdraw < ApplicationRecord
   belongs_to :user
   resourcify
   acts_as_paranoid

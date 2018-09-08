@@ -1,4 +1,4 @@
-class Evaluation < ActiveRecord::Base
+class Evaluation < ApplicationRecord
   resourcify
   belongs_to :user
   belongs_to :practice

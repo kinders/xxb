@@ -1,4 +1,4 @@
-class GetWordExplainJob < ActiveJob::Base
+class GetWordExplainJob < ApplicationJob
   queue_as :default
 
   def perform(word_id)

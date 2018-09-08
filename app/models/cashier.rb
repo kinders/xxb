@@ -1,4 +1,4 @@
-class Cashier < ActiveRecord::Base
+class Cashier < ApplicationRecord
   belongs_to :user
   resourcify
   acts_as_paranoid

@@ -1,4 +1,4 @@
-class Complaint < ActiveRecord::Base
+class Complaint < ApplicationRecord
   belongs_to :user
   resourcify
   acts_as_paranoid

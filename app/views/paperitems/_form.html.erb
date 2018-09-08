@@ -22,35 +22,35 @@
     <div class="controls col-sm-10">
       <%= f.text_field :user_id, class: 'form-control' %>
     </div>
-    <%= error_span(@paperitem[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="form-group">
     <%= f.label :paper_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :paper_id, class: 'form-control' %>
     </div>
-    <%= error_span(@paperitem[:paper_id]) %>
+    <%= f.error_span(:paper_id) %>
   </div>
   <div class="form-group">
     <%= f.label :practice_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :practice_id, class: 'form-control' %>
     </div>
-    <%= error_span(@paperitem[:practice_id]) %>
+    <%= f.error_span(:practice_id) %>
   </div>
   <div class="form-group">
     <%= f.label :score, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :score, class: 'form-control' %>
     </div>
-    <%= error_span(@paperitem[:score]) %>
+    <%= f.error_span(:score) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, class: 'form-control' %>
     </div>
-    <%= error_span(@paperitem[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
 
 
@@ -92,7 +92,7 @@
         <%# practice.lesson.title + "__" + practice.id.to_s + "_" + practice.title + "_" + practice.question.gsub(/(<(\w|\/)+[^>]*>|\s)/, "") %>
       <%# end %>
     </div>
-    <%= error_span(@paperitem[:practice_id]) %>
+    <%= f.error_span(:practice_id) %>
   </div>
   <% end %>
 <% end %>
@@ -102,7 +102,7 @@
     <div class="controls col-sm-10">
       <%= f.text_field :serial, class: 'form-control' %>
     </div>
-    <%= error_span(@paperitem[:serial]) %>
+    <%= f.error_span(:serial) %>
   </div>
 
 <% if params[:action] == "edit" %>
@@ -111,7 +111,7 @@
     <div class="controls col-sm-10">
       <%= f.text_field :score, class: 'form-control' %>
     </div>
-    <%= error_span(@paperitem[:score]) %>
+    <%= f.error_span(:score) %>
   </div>
 <% end %>
 
@@ -121,7 +121,7 @@
     <div class="controls col-sm-10">
       <%= f.text_field :memo, class: 'form-control' %>
     </div>
-    <%= error_span(@paperitem[:memo]) %>
+    <%= f.error_span(:memo) %>
   </div>
 <% end %>
 

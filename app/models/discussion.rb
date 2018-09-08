@@ -1,4 +1,4 @@
-class Discussion < ActiveRecord::Base
+class Discussion < ApplicationRecord
   belongs_to :user
   belongs_to :classroom
   belongs_to :lesson

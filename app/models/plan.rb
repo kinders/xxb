@@ -1,4 +1,4 @@
-class Plan < ActiveRecord::Base
+class Plan < ApplicationRecord
   resourcify
   belongs_to :user
   belongs_to :teaching

@@ -1,4 +1,4 @@
-class Paper < ActiveRecord::Base
+class Paper < ApplicationRecord
   belongs_to :user
   has_many :paperitems, dependent: :destroy
   has_many :papertests, dependent: :destroy

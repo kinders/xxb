@@ -1,4 +1,4 @@
-class Cadre < ActiveRecord::Base
+class Cadre < ApplicationRecord
   belongs_to :user
   belongs_to :classroom
   belongs_to :member

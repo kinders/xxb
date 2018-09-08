@@ -22,35 +22,35 @@
     <div class="controls col-sm-10">
       <%= f.text_field :user_id, class: 'form-control' %>
     </div>
-    <%= error_span(@examroom[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="form-group">
     <%= f.label :classroom_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :classroom_id, class: 'form-control' %>
     </div>
-    <%= error_span(@examroom[:classroom_id]) %>
+    <%= f.error_span(:classroom_id) %>
   </div>
   <div class="form-group">
     <%= f.label :paper_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :paper_id, class: 'form-control' %>
     </div>
-    <%= error_span(@examroom[:paper_id]) %>
+    <%= f.error_span(:paper_id) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, class: 'form-control' %>
     </div>
-    <%= error_span(@examroom[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
   <div class="form-group">
     <%= f.label :isactive, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :isactive, class: 'form-control' %>
     </div>
-    <%= error_span(@examroom[:isactive]) %>
+    <%= f.error_span(:isactive) %>
   </div>
 
 
@@ -84,7 +84,7 @@
     <div class="controls col-sm-10">
       <%= f.select :paper_id, Paper.all.reverse.map{|paper| [paper.id.to_s + " " + paper.title + " " +  paper.user.name + " " + paper.duration.to_s + '分钟', paper.id]}, { prompt: "请选择一张试卷"}, {class: 'form-control'} %>
     </div>
-    <%= error_span(@examroom[:paper_id]) %>
+    <%= f.error_span(:paper_id) %>
   </div>
   <div class="form-group">
     <%= f.label :isactive, class: 'control-label col-sm-2' %>
@@ -98,7 +98,7 @@
       禁用
       </label>
     </div>
-    <%= error_span(@examroom[:isactive]) %>
+    <%= f.error_span(:isactive) %>
   </div>
 
 

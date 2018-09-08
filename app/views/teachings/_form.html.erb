@@ -21,21 +21,21 @@
     <div class="controls">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@teaching[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="control-group">
     <%= f.label :lesson_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :lesson_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@teaching[:lesson_id]) %>
+    <%= f.error_span(:lesson_id) %>
   </div>
   <div class="control-group">
     <%= f.label :title, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :title, :class => 'form-control' %>
     </div>
-    <%= error_span(@teaching[:title]) %>
+    <%= f.error_span(:title) %>
   </div>
 
   <hr>
@@ -50,7 +50,7 @@
     <div class="controls col-sm-10">
       <%= f.text_field :title, :class => 'form-control' %>
     </div>
-    <%= error_span(@teaching[:title]) %>
+    <%= f.error_span(:title) %>
   </div>
 
   <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>

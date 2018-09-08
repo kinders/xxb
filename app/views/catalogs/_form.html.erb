@@ -20,7 +20,7 @@
     <div class="controls">
       <%= f.text_field :serial, :class => 'form-control', tabindex: 1 %>
     </div>
-    <%= error_span(@catalog[:serial]) %>
+    <%= f.error_span(:serial) %>
   </div>
 <% if current_user.has_role? :admin %>
   <div class="control-group">
@@ -28,14 +28,14 @@
     <div class="controls">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@catalog[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="control-group">
     <%= f.label "教科书", :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :textbook_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@catalog[:textbook_id]) %>
+    <%= f.error_span(:textbook_id) %>
   </div>
 <% end %>
   <div class="control-group">
@@ -44,7 +44,7 @@
       <%= f.autocomplete_field :lesson_id, autocomplete_lesson_title_catalogs_path, 'data-auto-focus': true, class: "form-control", tabindex: 2 %>
       <%# f.select :lesson_id, Lesson.titles, prompt: "请选择一个课程", class: 'form-control' %>
     </div>
-    <%= error_span(@catalog[:lesson_id]) %>
+    <%= f.error_span(:lesson_id) %>
   </div>
 
   <hr>

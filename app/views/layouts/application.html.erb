@@ -180,27 +180,27 @@
     <div class="controls">
       <%= f.hidden_field :url, :class => 'form-control' %>
     </div>
-    <%= error_span(@complaint[:url]) %>
+    <%= f.error_span(:url) %>
   </div>
   <div class="control-group">
     <div class="controls">
       <%= f.hidden_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@complaint[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="control-group">
     <%= f.label "正文：", :class => 'control-label' %>
     <div class="controls">
       <%= f.text_area :content, :class => 'form-control', rows: 5 %>
     </div>
-    <%= error_span(@complaint[:content]) %>
+    <%= f.error_span(:content) %>
   </div>
   <div class="control-group">
     <%= f.label "附图：", :class => 'control-label' %>
     <div class="controls">
       <%= f.file_field :picture, :class => 'form-control' %>
     </div>
-    <%= error_span(@complaint[:picture_file_name]) %>
+    <%= f.error_span(:picture_file_name) %>
   </div>
       </div>
       <div class="modal-footer">

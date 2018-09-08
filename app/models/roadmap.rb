@@ -1,4 +1,4 @@
-class Roadmap < ActiveRecord::Base
+class Roadmap < ApplicationRecord
   resourcify
   belongs_to :user
   belongs_to :textbook

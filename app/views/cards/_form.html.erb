@@ -22,70 +22,70 @@
     <div class="controls col-sm-10">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@card[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="form-group">
     <%= f.label :practice_id, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :practice_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@card[:practice_id]) %>
+    <%= f.error_span(:practice_id) %>
   </div>
   <div class="form-group">
     <%= f.label :cardbox_id, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :cardbox_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@card[:cardbox_id]) %>
+    <%= f.error_span(:cardbox_id) %>
   </div>
   <div class="form-group">
     <%= f.label :sequence, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :sequence, :class => 'form-control' %>
     </div>
-    <%= error_span(@card[:sequence]) %>
+    <%= f.error_span(:sequence) %>
   </div>
   <div class="form-group">
     <%= f.label :serial, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :serial, :class => 'form-control' %>
     </div>
-    <%= error_span(@card[:serial]) %>
+    <%= f.error_span(:serial) %>
   </div>
   <div class="form-group">
     <%= f.label :degree, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :degree, :class => 'form-control' %>
     </div>
-    <%= error_span(@card[:degree]) %>
+    <%= f.error_span(:degree) %>
   </div>
   <div class="form-group">
     <%= f.label :nexttime, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :nexttime, :class => 'form-control' %>
     </div>
-    <%= error_span(@card[:nexttime]) %>
+    <%= f.error_span(:nexttime) %>
   </div>
   <div class="form-group">
     <%= f.label :foul, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :foul, :class => 'form-control' %>
     </div>
-    <%= error_span(@card[:foul]) %>
+    <%= f.error_span(:foul) %>
   </div>
   <div class="form-group">
     <%= f.label :count, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :count, :class => 'form-control' %>
     </div>
-    <%= error_span(@card[:count]) %>
+    <%= f.error_span(:count) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, :class => 'form-control' %>
     </div>
-    <%= error_span(@card[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
 
 
@@ -120,7 +120,7 @@
     <div class="controls col-sm-10">
       <%= f.select :cardbox_id, Cardbox.where(user_id: current_user.id).collect{|cardbox| [cardbox.name, cardbox.id]}, {prompt: "请选择一个卡片盒"}, {:class => 'form-control'} %>
     </div>
-    <%= error_span(@card[:cardbox_id]) %>
+    <%= f.error_span(:cardbox_id) %>
   </div>
   <% end %>
   <div class="form-group">
@@ -128,14 +128,14 @@
     <div class="controls col-sm-10">
       <%= f.text_field :sequence, :class => 'form-control' %>
     </div>
-    <%= error_span(@card[:sequence]) %>
+    <%= f.error_span(:sequence) %>
   </div>
   <div class="form-group">
     <%= f.label :serial, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :serial, :class => 'form-control' %>
     </div>
-    <%= error_span(@card[:serial]) %>
+    <%= f.error_span(:serial) %>
   </div>
 
   <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>

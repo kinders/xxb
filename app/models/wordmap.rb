@@ -1,4 +1,4 @@
-class Wordmap < ActiveRecord::Base
+class Wordmap < ApplicationRecord
   belongs_to :user
   belongs_to :roadmap
   has_many :wordorders

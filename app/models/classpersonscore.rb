@@ -1,4 +1,4 @@
-class Classpersonscore < ActiveRecord::Base
+class Classpersonscore < ApplicationRecord
   belongs_to :user
   belongs_to :member
   belongs_to :classgroupscore

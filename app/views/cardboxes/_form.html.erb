@@ -22,14 +22,14 @@
     <div class="controls col-sm-10">
       <%= f.hidden_field :lesson_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@cardbox[:lesson_id]) %>
+    <%= f.error_span(:lesson_id) %>
   </div>
   <div class="form-group">
     <%= f.label :name, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :name, :class => 'form-control' %>
     </div>
-    <%= error_span(@cardbox[:name]) %>
+    <%= f.error_span(:name) %>
   </div>
   <div class="form-group">
     <%= f.label :share, :class => 'control-label col-sm-2' %>
@@ -43,7 +43,7 @@
       不共享
       </label>
     </div>
-    <%= error_span(@cardbox[:share]) %>
+    <%= f.error_span(:share) %>
   </div>
 
 
@@ -78,35 +78,35 @@
     <div class="controls col-sm-10">
       <%= f.text_field :lesson_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@cardbox[:lesson_id]) %>
+    <%= f.error_span(:lesson_id) %>
   </div>
   <div class="form-group">
     <%= f.label :user_id, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@cardbox[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="form-group">
     <%= f.label :name, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :name, :class => 'form-control' %>
     </div>
-    <%= error_span(@cardbox[:name]) %>
+    <%= f.error_span(:name) %>
   </div>
   <div class="form-group">
     <%= f.label :share, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :share, :class => 'form-control' %>
     </div>
-    <%= error_span(@cardbox[:share]) %>
+    <%= f.error_span(:share) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, :class => 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, :class => 'form-control' %>
     </div>
-    <%= error_span(@cardbox[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
 
 

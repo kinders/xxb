@@ -22,28 +22,28 @@
     <div class="controls col-sm-10">
       <%= f.text_field :name, class: 'form-control' %>
     </div>
-    <%= error_span(@roadmap[:name]) %>
+    <%= f.error_span(:name) %>
   </div>
   <div class="form-group">
     <%= f.label :description, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :description, class: 'form-control' %>
     </div>
-    <%= error_span(@roadmap[:description]) %>
+    <%= f.error_span(:description) %>
   </div>
   <div class="form-group">
     <%= f.label :user_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :user_id, class: 'form-control' %>
     </div>
-    <%= error_span(@roadmap[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, class: 'form-control' %>
     </div>
-    <%= error_span(@roadmap[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
 
 
@@ -77,14 +77,14 @@
     <div class="controls col-sm-10">
       <%= f.text_field :name, class: 'form-control' %>
     </div>
-    <%= error_span(@roadmap[:name]) %>
+    <%= f.error_span(:name) %>
   </div>
   <div class="form-group">
     <%= f.label :description, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_area :description, class: 'form-control' %>
     </div>
-    <%= error_span(@roadmap[:description]) %>
+    <%= f.error_span(:description) %>
   </div>
 
   <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>

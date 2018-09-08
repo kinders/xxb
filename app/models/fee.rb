@@ -1,4 +1,4 @@
-class Fee < ActiveRecord::Base
+class Fee < ApplicationRecord
   belongs_to :user
   resourcify
   acts_as_paranoid

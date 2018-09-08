@@ -1,4 +1,4 @@
-class PracticeParser < ActiveRecord::Base
+class PracticeParser < ApplicationRecord
   belongs_to :practice
   belongs_to :word
   acts_as_paranoid

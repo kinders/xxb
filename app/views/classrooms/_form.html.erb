@@ -21,28 +21,28 @@
     <div class="controls">
       <%= f.text_field :name, :class => 'form-control' %>
     </div>
-    <%= error_span(@classroom[:name]) %>
+    <%= f.error_span(:name) %>
   </div>
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@classroom[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="control-group">
     <%= f.label :end, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :end, :class => 'form-control' %>
     </div>
-    <%= error_span(@classroom[:end]) %>
+    <%= f.error_span(:end) %>
   </div>
   <div class="control-group">
     <%= f.label :deleted_at, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :deleted_at, :class => 'form-control' %>
     </div>
-    <%= error_span(@classroom[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
 
 
@@ -76,12 +76,12 @@
     <div class="controls">
       <%= f.text_field :name, :class => 'form-control' %>
     </div>
-    <%= error_span(@classroom[:name]) %>
+    <%= f.error_span(:name) %>
   </div>
   <div class="control-group">
     <%= f.check_box :end %>
     <%= f.label '是否关闭', :class => 'control-label' %>
-    <%= error_span(@classroom[:end]) %>
+    <%= f.error_span(:end) %>
   </div>
 
   <hr>

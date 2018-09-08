@@ -20,7 +20,7 @@
     <div class="controls">
       <%= f.text_field :title, :class => 'form-control', tabindex: 11 %>
     </div>
-    <%= error_span(@lesson[:title]) %>
+    <%= f.error_span(:title) %>
   </div>
 
   <div class="control-group">
@@ -28,7 +28,7 @@
     <div class="controls">
       <%= f.text_field :author, :class => 'form-control', tabindex: 11 %>
     </div>
-    <%= error_span(@lesson[:author]) %>
+    <%= f.error_span(:author) %>
   </div>
 
   <div class="control-group">
@@ -36,7 +36,7 @@
     <div class="controls">
       <%= f.text_field :time, :class => 'form-control', tabindex: 11 %>
     </div>
-    <%= error_span(@lesson[:time]) %>
+    <%= f.error_span(:time) %>
   </div>
 
   <div class="control-group">
@@ -44,7 +44,7 @@
     <div class="controls">
       <%= f.text_field :source, :class => 'form-control', rows: "30", tabindex: 12  %>
     </div>
-    <%= error_span(@lesson[:source]) %>
+    <%= f.error_span(:source) %>
   </div>
 
   <p></p>
@@ -69,7 +69,7 @@
     <%#<div class="controls">%>
       <%# f.file_field :picture, :class => 'form-control', tabindex: 13 %>
     <%#</div>%>
-    <%# error_span(@lesson[:picture]) %>
+    <%# f.error_span(:picture) %>
   <%#</div>%>
 
   <div class="control-group">
@@ -81,7 +81,7 @@
       <%= f.cktext_area :content, :rows => 10, tabindex: 14 %>
 
     </div>
-    <%= error_span(@lesson[:content]) %>
+    <%= f.error_span(:content) %>
   </div>
 
 <% if current_user.has_role? :admin %>
@@ -90,7 +90,7 @@
     <div class="controls">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@lesson[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
 <% end %>
 

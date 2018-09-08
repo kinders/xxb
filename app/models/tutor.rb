@@ -1,4 +1,4 @@
-class Tutor < ActiveRecord::Base
+class Tutor < ApplicationRecord
   resourcify
   belongs_to :user
   belongs_to :lesson

@@ -1,4 +1,4 @@
-class Pace < ActiveRecord::Base
+class Pace < ApplicationRecord
   resourcify
 
   belongs_to :user

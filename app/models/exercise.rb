@@ -1,4 +1,4 @@
-class Exercise < ActiveRecord::Base
+class Exercise < ApplicationRecord
   resourcify
   belongs_to :user
   belongs_to :tutor

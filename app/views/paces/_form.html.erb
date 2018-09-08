@@ -22,35 +22,35 @@
     <div class="controls col-sm-10">
       <%= f.text_field :user_id, class: 'form-control' %>
     </div>
-    <%= error_span(@pace[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="form-group">
     <%= f.label :roadmap_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :roadmap_id, class: 'form-control' %>
     </div>
-    <%= error_span(@pace[:roadmap_id]) %>
+    <%= f.error_span(:roadmap_id) %>
   </div>
   <div class="form-group">
     <%= f.label :lesson_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :lesson_id, class: 'form-control' %>
     </div>
-    <%= error_span(@pace[:lesson_id]) %>
+    <%= f.error_span(:lesson_id) %>
   </div>
   <div class="form-group">
     <%= f.label :serial, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :serial, class: 'form-control' %>
     </div>
-    <%= error_span(@pace[:serial]) %>
+    <%= f.error_span(:serial) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, class: 'form-control' %>
     </div>
-    <%= error_span(@pace[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
 
 
@@ -85,14 +85,14 @@
       <%= f.autocomplete_field :lesson_id, autocomplete_lesson_title_paces_path, 'data-auto-focus': true, class: "form-control", tabindex: 2 %>
       <%# f.text_field :lesson_id, class: 'form-control' %>
     </div>
-    <%= error_span(@pace[:lesson_id]) %>
+    <%= f.error_span(:lesson_id) %>
   </div>
   <div class="form-group">
     <%= f.label :serial, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :serial, class: 'form-control' %>
     </div>
-    <%= error_span(@pace[:serial]) %>
+    <%= f.error_span(:serial) %>
   </div>
 
 

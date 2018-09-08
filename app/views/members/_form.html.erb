@@ -21,28 +21,28 @@
     <div class="controls">
       <%= f.text_field :serial, :class => 'form-control' %>
     </div>
-    <%= error_span(@member[:serial]) %>
+    <%= f.error_span(:serial) %>
   </div>
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@member[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="control-group">
     <%= f.label :classroom_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :classroom_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@member[:classroom_id]) %>
+    <%= f.error_span(:classroom_id) %>
   </div>
   <div class="control-group">
     <%= f.label :deleted_at, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :deleted_at, :class => 'form-control' %>
     </div>
-    <%= error_span(@member[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
 
 
@@ -76,14 +76,14 @@
     <div class="controls">
       <%= f.text_field :serial, :class => 'form-control' %>
     </div>
-    <%= error_span(@member[:serial]) %>
+    <%= f.error_span(:serial) %>
   </div>
   <div class="control-group">
     <%= f.label '成员', :class => 'control-label' %>
     <div class="controls">
       <%= f.select :student, User.all.order("name").collect{ |user| [user.id.to_s + " " + user.name.to_s, user.id]}, {prompt: "请选择一个用户"}, {class: 'form-control'}  %>
     </div>
-    <%= error_span(@member[:student]) %>
+    <%= f.error_span(:student) %>
   </div>
   <hr>
   <%= f.submit nil, :class => 'btn btn-primary' %>

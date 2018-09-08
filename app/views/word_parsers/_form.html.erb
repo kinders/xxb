@@ -20,21 +20,21 @@
     <div class="controls col-sm-10">
       <%= f.text_field :word_id, class: 'form-control' %>
     </div>
-    <%= error_span(@word_parser[:word_id]) %>
+    <%= f.error_span(:word_id) %>
   </div>
   <div class="form-group">
     <%= f.label :lesson_id, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :lesson_id, class: 'form-control' %>
     </div>
-    <%= error_span(@word_parser[:lesson_id]) %>
+    <%= f.error_span(:lesson_id) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, class: 'form-control' %>
     </div>
-    <%= error_span(@word_parser[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
 
 

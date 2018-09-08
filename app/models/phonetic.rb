@@ -1,4 +1,4 @@
-class Phonetic < ActiveRecord::Base
+class Phonetic < ApplicationRecord
   has_many :phonetic_notations
   has_many :words, through: :phonetic_notations
   acts_as_paranoid

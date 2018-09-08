@@ -1,4 +1,4 @@
-class Team < ActiveRecord::Base
+class Team < ApplicationRecord
   belongs_to :user
   belongs_to :sectionalization
   has_many :players, dependent: :destroy

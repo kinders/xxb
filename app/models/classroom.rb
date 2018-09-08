@@ -1,4 +1,4 @@
-class Classroom < ActiveRecord::Base
+class Classroom < ApplicationRecord
   belongs_to :user
   has_many :members, dependent: :destroy
   has_many :teachers, dependent: :destroy

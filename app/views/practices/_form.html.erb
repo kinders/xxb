@@ -22,98 +22,98 @@
     <div class="controls">
       <%= f.text_field :title, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:title]) %>
+    <%= f.error_span(:title) %>
   </div>
   <div class="control-group">
     <%= f.label :material, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :material, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:material]) %>
+    <%= f.error_span(:material) %>
   </div>
   <div class="control-group">
     <%= f.label :question, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :question, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:question]) %>
+    <%= f.error_span(:question) %>
   </div>
   <div class="control-group">
     <%= f.label :answer, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :answer, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:answer]) %>
+    <%= f.error_span(:answer) %>
   </div>
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="control-group">
     <%= f.label :tutor_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :tutor_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:tutor_id]) %>
+    <%= f.error_span(:tutor_id) %>
   </div>
   <div class="control-group">
     <%= f.label :lesson_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :lesson_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:lesson_id]) %>
+    <%= f.error_span(:lesson_id) %>
   </div>
   <div class="control-group">
     <%= f.label :activate, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :activate, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:activate]) %>
+    <%= f.error_span(:activate) %>
   </div>
   <div class="control-group">
     <%= f.label :score, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :score, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:score]) %>
+    <%= f.error_span(:score) %>
   </div>
   <div class="control-group">
     <%= f.label :labelname, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :labelname, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:labelname]) %>
+    <%= f.error_span(:labelname) %>
   </div>
   <div class="control-group">
     <%= f.label :mean, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :mean, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:mean]) %>
+    <%= f.error_span(:mean) %>
   </div>
   <div class="control-group">
     <%= f.label :mode, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :mode, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:mode]) %>
+    <%= f.error_span(:mode) %>
   </div>
   <div class="control-group">
     <%= f.label :stdve, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :stdve, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:stdve]) %>
+    <%= f.error_span(:stdve) %>
   </div>
   <div class="control-group">
     <%= f.label :difficulty, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :difficulty, :class => 'form-control' %>
     </div>
-    <%= error_span(@practice[:difficulty]) %>
+    <%= f.error_span(:difficulty) %>
   </div>
 
   <hr>
@@ -128,7 +128,7 @@
     <div class="controls">
       <%= f.text_field :labelname, :class => 'form-control', tabindex: 10 %>
     </div>
-    <%= error_span(@practice[:labelname]) %>
+    <%= f.error_span(:labelname) %>
   </div>
 
   <div class="control-group">
@@ -136,7 +136,7 @@
     <div class="controls">
       <%= f.text_field :title, :class => 'form-control', tabindex: 11%>
     </div>
-    <%= error_span(@practice[:title]) %>
+    <%= f.error_span(:title) %>
   </div>
 
   <div class="control-group">
@@ -145,7 +145,7 @@
       <%# f.text_area :material, :class => 'form-control', rows: 3 %>
       <%= cktext_area :practice, :material, :rows => 10, tabindex: 12 %>
     </div>
-    <%= error_span(@practice[:material]) %>
+    <%= f.error_span(:material) %>
   </div>
 
   <div class="control-group">
@@ -154,7 +154,7 @@
       <%# f.text_area :question, :class => 'form-control', rows: 3 %>
       <%= cktext_area :practice, :question, :rows => 10, tabindex: 13 %>
     </div>
-    <%= error_span(@practice[:question]) %>
+    <%= f.error_span(:question) %>
   </div>
 
   <div class="control-group">
@@ -162,7 +162,7 @@
     <div class="controls">
       <%# f.file_field :picture_q, :class => 'form-control' %>
     </div>
-    <%# error_span(@practice[:picture_q]) %>
+    <%# f.error_span(:picture_q) %>
   </div>
 
   <div class="control-group">
@@ -171,7 +171,7 @@
       <%# f.text_area :answer, :class => 'form-control', rows: 3 %>
       <%= cktext_area :practice, :answer, :rows => 10, tabindex: 14 %>
     </div>
-    <%= error_span(@practice[:answer]) %>
+    <%= f.error_span(:answer) %>
   </div>
 
 
@@ -180,7 +180,7 @@
     <%#<div class="controls">%>
       <%# f.file_field :picture_a, :class => 'form-control' %>
     <%#</div>%>
-    <%# error_span(@practice[:picture_a]) %>
+    <%# f.error_span(:picture_a) %>
   <%#</div>%>
 
   <%#<p></p>%>
@@ -217,7 +217,7 @@
     <div class="controls">
       <%= f.text_field :score, :class => 'form-control', tabindex: 15 %>
     </div>
-    <%= error_span(@practice[:score]) %>
+    <%= f.error_span(:score) %>
   </div>
 
   <hr>

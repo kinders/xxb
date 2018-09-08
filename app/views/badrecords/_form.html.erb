@@ -40,7 +40,7 @@
       <label>（提示：全选操作无效时可刷新页面再点击）</label>
     </div>
     </div>
-    <%= error_span(@badrecord[:troublemaker]) %>
+    <%= f.error_span(:troublemaker) %>
   </div>
   <% end %>
 
@@ -49,7 +49,7 @@
     <div class="controls col-sm-10">
       <%= f.date_select :troubletime, :class => 'form-control' %>
     </div>
-    <%= error_span(@badrecord[:troubletime]) %>
+    <%= f.error_span(:troubletime) %>
   </div>
 
   <div class="form-group">
@@ -74,7 +74,7 @@
       <%= f.select :subject_id, Subject.all.collect { |s| [s.name, s.id]}, :class => 'form-control' %>
       <% end %>
     </div>
-    <%= error_span(@badrecord[:subject_id]) %>
+    <%= f.error_span(:subject_id) %>
   </div>
 
   <div class="form-group">
@@ -82,7 +82,7 @@
     <div class="controls col-sm-10">
       <%= f.text_field :description, :class => 'form-control' %>
     </div>
-    <%= error_span(@badrecord[:description]) %>
+    <%= f.error_span(:description) %>
   </div>
 
   <%= f.submit nil, :class => 'btn btn-primary col-sm-offset-2' %>

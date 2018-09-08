@@ -1,4 +1,4 @@
-class AnalyzeSentenceJob < ActiveJob::Base
+class AnalyzeSentenceJob < ApplicationJob
   queue_as :default
 
   def perform(sentence_id, *lesson_id)

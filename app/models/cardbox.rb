@@ -1,4 +1,4 @@
-class Cardbox < ActiveRecord::Base
+class Cardbox < ApplicationRecord
   resourcify
   belongs_to :user
   belongs_to :lesson

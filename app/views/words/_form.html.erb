@@ -20,21 +20,21 @@
     <div class="controls col-sm-10">
       <%= f.text_field :name, class: 'form-control' %>
     </div>
-    <%= error_span(@word[:name]) %>
+    <%= f.error_span(:name) %>
   </div>
   <div class="form-group">
     <%= f.label :length, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :length, class: 'form-control' %>
     </div>
-    <%= error_span(@word[:length]) %>
+    <%= f.error_span(:length) %>
   </div>
   <div class="form-group">
     <%= f.label :deleted_at, class: 'control-label col-sm-2' %>
     <div class="controls col-sm-10">
       <%= f.text_field :deleted_at, class: 'form-control' %>
     </div>
-    <%= error_span(@word[:deleted_at]) %>
+    <%= f.error_span(:deleted_at) %>
   </div>
 
 

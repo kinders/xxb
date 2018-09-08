@@ -1,4 +1,4 @@
-class Catalog < ActiveRecord::Base
+class Catalog < ApplicationRecord
   resourcify
   belongs_to :user
   belongs_to :textbook

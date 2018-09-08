@@ -1,4 +1,4 @@
-class Card < ActiveRecord::Base
+class Card < ApplicationRecord
   belongs_to :user
   belongs_to :practice
   belongs_to :cardbox

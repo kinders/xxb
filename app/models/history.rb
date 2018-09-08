@@ -1,4 +1,4 @@
-class History < ActiveRecord::Base
+class History < ApplicationRecord
   resourcify
   belongs_to :user
 end

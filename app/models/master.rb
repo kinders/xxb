@@ -1,4 +1,4 @@
-class Master < ActiveRecord::Base
+class Master < ApplicationRecord
   resourcify
   belongs_to :user
   acts_as_paranoid

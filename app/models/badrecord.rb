@@ -1,4 +1,4 @@
-class Badrecord < ActiveRecord::Base
+class Badrecord < ApplicationRecord
   belongs_to :user
   belongs_to :classroom
   belongs_to :subject

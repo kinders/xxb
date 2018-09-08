@@ -1,4 +1,4 @@
-class Sectionalization < ActiveRecord::Base
+class Sectionalization < ApplicationRecord
   belongs_to :user
   belongs_to :classroom
   has_many :teams, dependent: :destroy

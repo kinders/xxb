@@ -1,4 +1,4 @@
-class Paperitem < ActiveRecord::Base
+class Paperitem < ApplicationRecord
   belongs_to :user
   belongs_to :paper
   belongs_to :practice

@@ -13,7 +13,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require ckeditor/init
-//= require jquery-ui/autocomplete
+//= require jquery-ui/widgets/autocomplete
 //= require autocomplete-rails
 //= require twitter/bootstrap
 // require tinymce

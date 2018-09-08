@@ -1,4 +1,4 @@
-class AnalyzePracticeJob < ActiveJob::Base
+class AnalyzePracticeJob < ApplicationJob
   queue_as :default
 
   def perform(practice_id)

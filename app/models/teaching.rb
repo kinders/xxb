@@ -1,4 +1,4 @@
-class Teaching < ActiveRecord::Base
+class Teaching < ApplicationRecord
   belongs_to :user
   belongs_to :lesson
   has_many :plans, dependent: :destroy

@@ -1,4 +1,4 @@
-class Word < ActiveRecord::Base
+class Word < ApplicationRecord
   has_many :word_parsers
   has_many :practice_parsers
   has_many :lessons, through: :word_parsers

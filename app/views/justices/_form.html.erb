@@ -22,35 +22,35 @@
     <div class="controls">
       <%= f.text_field :score, :class => 'form-control' %>
     </div>
-    <%= error_span(@justice[:score]) %>
+    <%= f.error_span(:score) %>
   </div>
   <div class="control-group">
     <%= f.label :remark, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :remark, :class => 'form-control' %>
     </div>
-    <%= error_span(@justice[:remark]) %>
+    <%= f.error_span(:remark) %>
   </div>
   <div class="control-group">
     <%= f.label :activity, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :activity, :class => 'form-control' %>
     </div>
-    <%= error_span(@justice[:activity]) %>
+    <%= f.error_span(:activity) %>
   </div>
   <div class="control-group">
     <%= f.label :user_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :user_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@justice[:user_id]) %>
+    <%= f.error_span(:user_id) %>
   </div>
   <div class="control-group">
     <%= f.label :evaluation_id, :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :evaluation_id, :class => 'form-control' %>
     </div>
-    <%= error_span(@justice[:evaluation_id]) %>
+    <%= f.error_span(:evaluation_id) %>
   </div>
  <hr>
   <%= f.submit nil, :class => 'btn btn-primary' %>
@@ -109,14 +109,14 @@
     <div class="controls">
       <%= f.number_field :score, in: 0..@evaluation.practice_score, :class => 'form-control' %>
     </div>
-    <%= error_span(@justice[:score]) %>
+    <%= f.error_span(:score) %>
   </div>
   <div class="control-group">
     <%= f.label "给学友的评语", :class => 'control-label' %>
     <div class="controls">
       <%= f.text_field :remark, :class => 'form-control' %>
     </div>
-    <%= error_span(@justice[:remark]) %>
+    <%= f.error_span(:remark) %>
   </div>
  <hr>
   <%= f.submit "提交评分", :class => 'btn btn-primary' %>

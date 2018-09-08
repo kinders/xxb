@@ -1,4 +1,4 @@
-class Wordorder < ActiveRecord::Base
+class Wordorder < ApplicationRecord
   belongs_to :user
   belongs_to :wordmap
   belongs_to :word
