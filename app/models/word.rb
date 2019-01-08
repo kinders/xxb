@@ -159,7 +159,7 @@ class Word < ApplicationRecord
 =end
   end
 
-#=begin
+=begin
   # 这个类方法可以解决词语包含的问题。
   def self.find_words_in_word(start_id, end_id)
     Word.where(id: start_id..end_id).each do | word|
@@ -180,9 +180,9 @@ class Word < ApplicationRecord
     end
     logger.info('完成分析')
   end
-#=end
+=end
 
-#=begin
+=begin
   # 这个类方法补齐md5字段
   def self.add_md5
     require 'digest/md5'
@@ -192,7 +192,7 @@ class Word < ApplicationRecord
       word.update(md1: word_md5[0..7], md2: word_md5[8..15], md3: word_md5[16..23], md4: word_md5[24..31], md5: word_md5[32..39], md6: word_md5[40..47], md7: word_md5[48..55], md8: word_md5[56..63])
     end
   end
-#=end
+=end
 
 =begin
   # 这个方法用来清洗一些符号转义错误: 

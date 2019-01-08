@@ -21,17 +21,17 @@
         <li><%= link_to "使用卡片盒练习", cardboxes_path %>
         <li role="separator" class="divider"></li>
         <% unless @lesson.teachings.empty? %>
-        <li>
-          <%= link_to "教案列表", teachings_path  %>
-        </li>
-        <% if session[:teaching_id] %>
+          <% if session[:teaching_id] %>
+            <li>
+            <%= link_to "查看当前教案详情", plans_path %>
+            </li>
+            <li>
+            <%= link_to "退出当前教案安排", quit_teaching_path %>
+            </li>
+          <% end %>
           <li>
-          <%= link_to "查看教案详情", plans_path %>
+            <%= link_to "教案列表", teachings_path  %>
           </li>
-          <li>
-          <%= link_to "退出当前教案安排", quit_teaching_path %>
-          </li>
-        <% end %>
         <% end %>
         <li>
           <%= link_to "添加教案", new_teaching_path %>

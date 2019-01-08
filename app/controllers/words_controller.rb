@@ -17,8 +17,6 @@ class WordsController < ApplicationController
   # GET /words/1.json
   def show
     session[:word_id] = @word.id
-    @words_has_word = Word.where(is_meanful: true).where("name LIKE ?", "%" + @word.name + "%" ).order(:length)
-    @lessons_has_word = WordParser.where(word_id: @word.id).pluck(:lesson_id).uniq
     # 生成上一个和下一个词语
     all_words_id = Word.where(id: (@word.id - 50)..(@word.id + 50)).pluck("id")
     current_word_id = all_words_id.index(@word.id)
@@ -256,6 +254,43 @@ class WordsController < ApplicationController
     @words = Kaminari.paginate_array(words).page(params[:page]).per(1000)
 
     render :index
+  end
+
+  def show_words
+    @chengyu
+    @aab
+    @abb
+    @aabb
+    @abab
+    @aabc
+    @abac
+    @abcc
+  end
+
+  def words_have_word
+    @word = Word.find(params[:word_id])
+    @words_have_word = Word.where(is_meanful: true).where("name LIKE ?", "%" + @word.name + "%" ).order(:length)
+    if @words_have_word.size < 2
+      redirect_to :back, notice: "没有找到包含的词语。"
+      return
+    end
+  end
+
+  def lessons_have_word
+    @word = Word.find(params[:word_id])
+    @lessons_have_word = WordParser.where(word_id: @word.id).pluck(:lesson_id).uniq
+    if @lessons_have_word.blank?
+      redirect_to :back, notice: "没有找到相应的课文。"
+      return
+    end
+  end
+
+  def word_comments
+    @comments = Comment.where(word_id: params[:word_id])
+    if @comments.blank?
+      redirect_to :back, notice: "没有找到相应的注释。"
+      return
+    end
   end
 
   private

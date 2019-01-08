@@ -82,6 +82,20 @@ class PlansController < ApplicationController
     end
   end
 
+  # GET /talkshow_yml?teaching_id=123
+  def talkshow_yml
+    if params[:teaching_id]
+      teaching_id = params[:teaching_id]
+      @teaching = Teaching.find(teaching_id)
+      @lesson = Lesson.find(@teaching.lesson_id)
+      @plans = Plan.where(teaching_id: teaching_id).order('serial')
+    else
+      respond_to do |format|
+        format.html { redirect_to :back, notice: '需要指定一个教学计划'}
+      end 
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_plan

@@ -1,0 +1,14 @@
+<h3>词汇指南</h3>
+<%= form_tag "/search_words", method: :get, class: 'form-inline' do %>
+<div class="control-group">
+  <%= search_field_tag :pattern %>
+</div>
+<% end %>
+<p>查看以某个字开头的词语：^X</p>
+<p>查看以某个字结尾的词语：X$</p>
+<p>查看成语：^[\u4e00-\u95fa][\u4e00-\u95fa][\u4e00-\u95fa][\u4e00-\u95fa]$</p>
+<p>查看ABB式词语：^[\u4e00-\u95fa][\u4e00-\u95fa]{2}$</p>
+<p>查看AABB式词语：^[\u4e00-\u95fa]{2}[\u4e00-\u95fa]{2}$</p>
+<p>查看以押中某个韵母的字词<p>
+<p>查看符合某种平仄变化的字词<p>
+<p>字表</p>

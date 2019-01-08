@@ -22,14 +22,17 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-sm-3 col-md-3">
-  <%= link_to "上教学楼听课", classrooms_url, html_options= {class: "btn btn-lg btn-info"} %>
+    <div class="col-sm-2 col-md-2">
+      <%= link_to "去词典库积累", show_words_url, html_options= {class: "btn btn-lg btn-info"} %>
     </div>
-    <div class="col-sm-3 col-md-3">
-    <%= link_to "去图书馆找书", textbooks_url, html_options= {class: "btn btn-lg btn-info"} %>
+    <div class="col-sm-2 col-md-2">
+      <%= link_to "去图书馆找书", textbooks_url, html_options= {class: "btn btn-lg btn-info"} %>
     </div>
-    <div class="col-sm-3 col-md-3">
-    <%= link_to "到教导处改卷", me_justify_path, html_options= {class: "btn btn-lg btn-info"} %>
+    <div class="col-sm-2 col-md-2">
+      <%= link_to "上教学楼听课", classrooms_url, html_options= {class: "btn btn-lg btn-info"} %>
+    </div>
+    <div class="col-sm-2 col-md-2">
+      <%= link_to "到教导处改卷", me_justify_path, html_options= {class: "btn btn-lg btn-info"} %>
     </div>
   </div>
 </div>

@@ -18,6 +18,9 @@
         <li>
           <%= link_to t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.lesson")), lesson_url(@lesson) %>
         </li>
+        <li>
+          <%= link_to "导出教案yml文件", talkshow_yml_url(teaching_id: @teaching.id) %>
+        </li>
       </ul>
     </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">

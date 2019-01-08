@@ -32,6 +32,11 @@
         <li>
           <%= link_to "查看本书的卡片盒", cardboxes_path %>
         </li>
+        <li role="separator" class="divider"></li>
+        <li>
+          <%= link_to "按序号排序", catalogs_path %>
+          <%= link_to "按字数排序", catalogs_path(order: 'length') %>
+        </li>
       </ul>
     </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
@@ -63,6 +68,9 @@
   </thead>
   <tbody>
     <% @catalogs.each do |catalog| %>
+    <% if catalog.class == 0.class %>
+      <% catalog = Catalog.find(catalog) %>
+    <% end %>
     <% catalog_lesson = Lesson.find(catalog.lesson_id) %>
       <%# if catalog.lesson.content_length == 0 %>
       <% if catalog.serial == catalog.serial.round %>

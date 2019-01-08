@@ -1,0 +1,62 @@
+<%- model_class = Card -%>
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.up', :default => t("helpers.links.back")), plans_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', :default => [:"helpers.titles.back"], :model => model_class.model_name.human.titleize) %>
+    </div>
+  </div>
+</div>
+<textarea rows="20" cols="80">
+brand: 学学半
+nav:
+  - <%= @lesson.title %>
+---
+type: cover
+title: <%= @lesson.title %>
+<% if @lesson.author %>
+subtitle:
+  -  <%= @lesson.author %>
+<% end %>
+---
+type: tw
+title: <%= @lesson.title %>（原文）
+word: 
+<% content = "<div class=\"lesson_paragraph\">" + @lesson.content + "</div>" %>
+- <%= content.inspect %>
+<% @plans.each do |plan| %>
+  <% tutor = Tutor.find(plan.tutor_id) %>
+  <% if tutor.proviso == "" %>
+    <% if tutor.page == "" %>
+---
+type: cover
+title: <%= tutor.title %>
+    <% else %>
+---
+type: exam
+title: <%= tutor.title %>
+q:
+  - <%= tutor.title %>
+a: 
+  - <%= tutor.page.inspect %>
+    <% end %>
+  <% else %>
+    <% if tutor.page == "" %>
+---
+type: tw
+title: <%= tutor.title %>
+word: 
+  - <%= tutor.proviso.inspect %>
+    <% else %>
+---
+type: exam
+title: <%= tutor.title %>
+q:
+  - <%= tutor.title %>
+o: 
+  - <%= tutor.proviso.inspect %>
+a: 
+  - <%= tutor.page.inspect %>
+    <% end %>
+  <% end %>
+<% end %>
+</textarea>

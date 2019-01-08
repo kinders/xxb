@@ -197,13 +197,13 @@
             <div class="controls">
               <%= f.hidden_field :user_id, :class => 'form-control' %>
             </div>
-            <%= error_span(@card[:user_id]) %>
+            <%= f.error_span(:user_id) %>
           </div>
           <div class="control-group">
             <div class="controls">
               <%= f.hidden_field :practice_id, :class => 'form-control' %>
             </div>
-            <%= error_span(@card[:practice_id]) %>
+            <%= f.error_span(:practice_id) %>
           </div>
           <div class="control-group">
             <%= f.label :cardbox_id, :class => 'control-label col-md-2' %>
@@ -214,7 +214,7 @@
               <%= f.select :cardbox_id, Cardbox.where(user_id: current_user.id).collect{ |cardbox| [cardbox.name, cardbox.id]}, {prompt: "请选择一个卡片盒"}, {:class => 'form-control col-md-4'} %>
               <% end %>
             </div>
-            <%= error_span(@card[:cardbox_id]) %>
+            <%= f.error_span(:cardbox_id) %>
           </div>
         </div>
 

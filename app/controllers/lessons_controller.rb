@@ -4,6 +4,7 @@ class LessonsController < ApplicationController
   before_action :set_lesson, only: [:show, :edit, :update, :destroy]
   before_action :be_a_master, except: [:index, :show]
   autocomplete :lesson, :title, full: true, :display_value => :funky_method, extra_data: [:id]
+  after_action :update_length, only: [:create, :update]
 
   # GET /lessons
   # GET /lessons.json
@@ -91,7 +92,7 @@ class LessonsController < ApplicationController
   def create
     @lesson = Lesson.new(lesson_params)
     @lesson.user_id = current_user.id
-    @lesson.content_length = @lesson.content.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
+    # @lesson.content_length = @lesson.content.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
 
     respond_to do |format|
       if @lesson.save
@@ -110,7 +111,7 @@ class LessonsController < ApplicationController
   def update
     respond_to do |format|
       if @lesson.update(lesson_params)
-        @lesson.content_length = @lesson.content.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
+        # @lesson.content_length = @lesson.content.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
         @lesson.save
         # AnalyzeLessonJob.perform_later @lesson.id
         format.html { redirect_to @lesson, notice: "课程\"#{@lesson.title}\"已经更新完毕。" }
@@ -506,5 +507,11 @@ class LessonsController < ApplicationController
         redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
       end
     end
+
+  # after_save的回调方法
+  def update_length
+    @lesson.content_length = @lesson.content.gsub(/(<(\w|\/)+[^>]*>|\s)/, "").length
+    @lesson.save
+  end
 
 end

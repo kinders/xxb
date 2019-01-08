@@ -214,7 +214,7 @@ class CardsController < ApplicationController
       Card.where(id: params[:card_id]).destroy_all
       redirect_to :back, notice: "删除所选的多个卡片。"
     elsif params[:commit] == "追加"
-      @cardbox = Cardbox.find(params[:card_id])
+      @cardbox = Cardbox.find(params[:cardbox_id])
       Card.where(id: params[:card_id]).each do | card |
         new_card = Card.create { |n_card|
         n_card.user_id = current_user.id

@@ -60,6 +60,10 @@ Rails.application.routes.draw do
   end
   post '/word/new_words_as_tutor', to: 'words#new_words_as_tutor'
   get '/search_words', to: 'words#search_words'
+  get '/show_words', to: 'words#show_words'
+  get '/words_have_word', to: 'words#words_have_word'
+  get '/lessons_have_word', to: 'words#lessons_have_word'
+  get '/word_comments', to: 'words#word_comments'
 
 
   resources :words_reports do
@@ -200,6 +204,7 @@ Rails.application.routes.draw do
   get 'me/my_receipts'
 
   resources :plans
+  get '/talkshow_yml', to: 'plans#talkshow_yml'
 
   resources :teachings
   get '/quit_teaching', to: 'teachings#quit'

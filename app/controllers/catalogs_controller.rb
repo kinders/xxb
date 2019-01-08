@@ -13,7 +13,21 @@ class CatalogsController < ApplicationController
     elsif session[:textbook_id]
       textbook_id = session[:textbook_id]
       @textbook = Textbook.find(textbook_id)
-      @catalogs = @textbook.catalogs.order(:serial).page(params[:page]).per("100")
+      if params[:order] == "length"
+        lessons_id = @textbook.lessons.order(:content_length).pluck(:id)
+        catalogs_id = Catalog.where(textbook_id: textbook_id, lesson_id: lessons_id).pluck(:id, :lesson_id)
+        catalogs_order_length = []
+        lessons_id.each do |i|
+          catalogs_id.each do |j|
+            if j[1] == i
+              catalogs_order_length << j[0]
+            end
+          end
+        end
+        @catalogs = Kaminari.paginate_array(catalogs_order_length).page(params[:page]).per("100")
+      else
+        @catalogs = @textbook.catalogs.order(:serial).page(params[:page]).per("100")
+      end
     else
       redirect_to textbooks_path, notice: "请先指定一本书。"
     end

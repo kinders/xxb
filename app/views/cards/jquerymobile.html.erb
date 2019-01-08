@@ -1,3 +1,12 @@
+<%- model_class = Card -%>
+<div class="container col-xs-11 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="manage">
+      <%= link_to t('.back', :default => t("helpers.links.back")), cards_path, :class => 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.back', :default => [:"helpers.titles.back"], :model => model_class.model_name.human.titleize) %>
+    </div>
+  </div>
+</div>
+<p>请务必留意代码max_time的设定。因为<span style="color:red">单个中文</pan>的书写时间一般比<span style="color:red">单个英文字母</pan>的长。</p>
 <textarea rows="20" cols="80">
 <!DOCTYPE html>
 <html>
@@ -219,7 +228,7 @@
   // 设置训练强度
   $(".settings").click(function(){
     var prompt_time=prompt("每个项目的测试时间\n单位：秒", "5");
-    if(prompt_time < 1){ prompt_time = 5;};
+    if(prompt_time < 1){ prompt_time = 7;};
     each_maxtime = prompt_time * 1000;
     pass_time=prompt("每个项目的测试次数", "1");
     if(pass_time < 1){pass_time = 1};
@@ -337,12 +346,12 @@
     </div>
     <div data-role="collapsible" data-collapsed="false">
       <h4>······使用提示······</h4>
-      <p>使用之前，您需要准备好纸笔。</p>
+      <p>使用之前，您需要准备好纸笔，并写上<span style="color:red">序号、姓名和日期时间</span>。</p>
       <p>打开软件之后，请输入您的姓名，以便生成报告。</p>
-      <p>使用时，您需要点击按钮，以显示问题。</p>
-      <p>显示问题之后，要先在纸上写好问题的序号，再凭借记忆写上答案（写不出来，就在序号后面画个叉），然后点击“显示答案”按钮进行校对。如果纸张上的答案不正确，您需要对照答案将它改正。</p>
+      <p>使用时，您需要点击按钮，以<span style="color:red">显示问题</span>。</p>
+      <p>显示问题之后，要先在纸上写好<span style="color:red">问题的序号</span>，再凭借记忆写上<span style="color:red">答案</span>（写不出来，就在序号后面画个叉），然后点击“显示答案”按钮进行<span style="color:red">校对</span>。如果纸张上的答案不正确，您需要对照答案将它改正，最好多写七遍，加深印象。</p>
       <p>然后就可以接着点击按钮进入下一题了。</p>
-      <p>达到老师的使用要求之后，请打开“报告”页面，进行截图，然后将您写了答案的纸张进行拍照，将截图和拍照传给老师。</p>
+      <p>达到老师的使用要求之后，请打开<span style="color:red">“报告”</span>页面，进行截图，然后将您写了答案的纸张进行<span style="color:red">拍照</span>，将截图和拍照传给老师。</p>
     </div>
     <div data-role="collapsible">
       <h4>······怎么版面乱七八糟的？······</h4>
