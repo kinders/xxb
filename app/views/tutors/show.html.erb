@@ -74,7 +74,8 @@
           <li role="separator" class="divider"></li>
         <% if session[:teaching_id] %>
           <li>
-          <%= link_to "查看辅导的安排", plans_path, tabindex: 61 %>
+          <%= link_to "查看辅导的安排", plans_path %>
+          <%= link_to "退出当前教案安排", quit_teaching_path, tabindex: 61  %>
           </li>
           <li role="separator" class="divider"></li>
         <% end %>

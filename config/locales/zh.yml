@@ -341,6 +341,7 @@ zh-CN:
         word_id: "词语"
         content: "内容"
         label: "标签"
+        rhyme: "韵脚"
         deleted_at: "删除时间"
         created_at: "创建时间"
         updated_at: "更新时间"

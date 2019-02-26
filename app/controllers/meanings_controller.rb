@@ -31,6 +31,9 @@ class MeaningsController < ApplicationController
 
     respond_to do |format|
       if @meaning.save
+        word = Word.find(@meaning.word_id)
+        word_m_count = word.meanings_count + 1
+        word.update(meanings_count: word_m_count)
         format.html { redirect_to :back, notice: '成功新增一种词义。' }
         # format.html { redirect_to @meaning, notice: 'Meaning was successfully created.' }
         format.json { render :show, status: :created, location: @meaning }
@@ -46,7 +49,8 @@ class MeaningsController < ApplicationController
   def update
     respond_to do |format|
       if @meaning.update(meaning_params)
-        format.html { redirect_to @meaning, notice: '成功更新词义。' }
+        format.html { redirect_to word_path(@meaning.word_id), notice: '成功更新词义。' }
+        # format.html { redirect_to @meaning, notice: '成功更新词义。' }
         format.json { render :show, status: :ok, location: @meaning }
       else
         format.html { render :edit }
@@ -58,11 +62,19 @@ class MeaningsController < ApplicationController
   # DELETE /meanings/1
   # DELETE /meanings/1.json
   def destroy
+    word = Word.find(@meaning.word_id)
+    word_m_count = word.meanings_count - 1
+    word.update(meanings_count: word_m_count)
     @meaning.destroy
     respond_to do |format|
       format.html { redirect_to meanings_url, notice: 'Meaning was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def search_meanings
+    @search = params[:pattern]
+    @words = Word.where("name LIKE ?", "%" + params[:pattern] +"%" ).where(is_meanful: true)
   end
 
   private

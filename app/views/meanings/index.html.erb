@@ -11,6 +11,14 @@
         "data-placement": "bottom", 
         title: t('.new', default: [:"helpers.titles.new"], model: model_class.model_name.human.titleize) %>
     </div>
+    <div class="btn-group" role="btn-group" arial-label="operation">
+      <button type="button" class="btn btn-default dropdown-toggle" tabindex="61", data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a  data-toggle="modal" href="#searchModal">搜索</a></li>
+      </ul>
+    </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
         :back, 
@@ -66,3 +74,31 @@
 </table>
 
 <%= paginate @meanings %>
+
+<div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <%= form_tag "/search_meanings", method: :get, class: 'form-inline' do %>
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+        <h4 class="modal-title">使用正则表达式搜索包含该词义的词语</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+        <p>如果您不了解 postgres 数据库的正则表达式</p>
+        <p>应先去了解相关知识，避免误用</p>
+        <p>相关知识可查看<a href="/lessons/10687">这里</a></p>
+        <p>另外，基本汉字的表示范围是[\u4e00-\u9fa5]</p>
+      </div>
+        <div class="control-group">
+          <%= search_field_tag :pattern %>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        <%= submit_tag "提交", :class => 'btn btn-primary' %>
+      </div>
+      <% end %>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -92,6 +92,16 @@
         <li>
           <%= link_to "更新字序", wordorder_update_serial_path(wordmap_id: @wordmap.id),method: :post %>
         </li>
+        <% if current_user.id == @wordmap.user_id %>
+        <li>
+          <a data-toggle="collapse" data-target="#collapseCreatePracticesInBatch" aria-expanded="false" aria-controls="collapseCreatePracticesInBatch">
+            批量导入词序
+          </a>
+        </li>
+        <% end %>
+        <li>
+          <%= link_to "生成字词练习卡片盒", export_wordmaps_to_cardbox_url(wordmap_id: @wordmap.id), method: :post %>
+        </li>
       </ul>
     </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
@@ -113,9 +123,29 @@
 </div>
 
 <div class="page-header">
-  <h3><%= @wordmap.name %>的<%=t '.title', default: model_class.model_name.human.titleize %></h3>
+  <h3><%=t '.title', default: model_class.model_name.human.titleize %>：<%= @wordmap.name %></h3>
   <%= @wordmap.user.name %>
 </div>
+
+<% if current_user.id == @wordmap.user_id %>
+  <div class="collapse" id="collapseCreatePracticesInBatch">
+    <button class="btn btn-default pull-right" type="button" data-toggle="collapse" data-target="#collapseCreatePracticesInBatch" aria-expanded="false" aria-controls="collapseCreatePracticesInBatch"> x </button>
+    <div class="well">
+      <p>注意：</p>
+      <ul>
+        <li>上传的文件必须是CVS文件，第一行为“word”，第二行开始为词语，每条词汇占一行。</li>
+      </ul>
+      <%= form_tag "/load_wordorders", multipart: true, class: 'form-inline' do %>
+        <div class="control-group">
+        <%= file_field_tag "csv_file", accept: "text/csv", class: 'form-control' %>
+        <%= submit_tag "上传文件", class: 'btn btn-info form-control' %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+
 <table class="table table-striped">
   <thead>
     <tr>
@@ -128,9 +158,10 @@
     <% @wordorders.each do |wordorder| %>
       <tr>
         <td><%= wordorder.serial %></td>
-        <td><%= link_to wordorder.word.name, word_path(wordorder.word_id) %></td>
+        <% i = @word_ids.index(wordorder.word_id) %>
+        <td><%= link_to @word_names[i], word_path(wordorder.word_id), target: "_blank"%></td>
         <td>
-          <%# link_to t('.edit', default: t("helpers.links.edit")),
+          <%= link_to t('.edit', default: t("helpers.links.edit")),
             edit_wordorder_path(wordorder), class: 'btn btn-default btn-xs',
             "data-toggle": "tooltip", 
             "data-placement": "bottom", 

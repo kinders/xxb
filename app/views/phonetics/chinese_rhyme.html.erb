@@ -1,0 +1,34 @@
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <!-- 导航按钮 -->
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), show_words_url(), class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: "返回字词首页" %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81, 
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
+</div>
+
+<div class="page-header">
+  <h3>中华新韵表</h3>
+</div>
+
+<h4><%= link_to "一麻 a, ia, ua", list_rhyme_words_url(rhyme: "a, ia, ua") %></h4>
+<h4><%= link_to "二波 o, e, uo", list_rhyme_words_url(rhyme: "o, e, uo") %></h4>
+<h4><%= link_to "三皆 ie, üe", list_rhyme_words_url(rhyme: "ie, üe") %></h4>
+<h4><%= link_to "四开 ai, uai", list_rhyme_words_url(rhyme: "ai, uai") %></h4>
+<h4><%= link_to "五微 ei, ui", list_rhyme_words_url(rhyme: "ei, ui") %></h4>
+<h4><%= link_to "六豪 ao, iao", list_rhyme_words_url(rhyme: "ao, iao") %></h4>
+<h4><%= link_to "七尤 ou, iu", list_rhyme_words_url(rhyme: "ou, iu") %></h4>
+<h4><%= link_to "八寒 an, ian, uan, üan", list_rhyme_words_url(rhyme: "an, ian, uan, üan") %></h4>
+<h4><%= link_to "九文 en, in, un, ün", list_rhyme_words_url(rhyme: "en, in, un, ün") %></h4>
+<h4><%= link_to "十唐 ang, iang, uang", list_rhyme_words_url(rhyme: "ang, iang, uang") %></h4>
+<h4><%= link_to "十一庚 eng, ing, ong, iong", list_rhyme_words_url(rhyme: "eng, ing, ong, iong") %></h4>
+<h4><%= link_to "十二齐	i, er, ü", list_rhyme_words_url(rhyme: "i, er, ü") %></h4>
+<h4><%= link_to "十三支 -i", list_rhyme_words_url(rhyme: "-i") %></h4>
+<h4><%= link_to "十四姑 u", list_rhyme_words_url(rhyme: "u") %></h4>

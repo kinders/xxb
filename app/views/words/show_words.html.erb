@@ -1,14 +1,43 @@
-<h3>词汇指南</h3>
-<%= form_tag "/search_words", method: :get, class: 'form-inline' do %>
-<div class="control-group">
-  <%= search_field_tag :pattern %>
+<%- model_class = Word -%>
+<div class="container col-xs-12 col-sm-10 col-md-8 affix">
+  <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <div class="btn-group" role="btn-group" arial-label="navigation">
+      <%= link_to t('.up', :default => t("helpers.links.up")), "/", class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.site")) %>
+      <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
+        :back, 
+        class: 'btn btn-default', 
+        tabindex: 81,
+        "data-toggle": "tooltip", 
+        "data-placement": "bottom", 
+        title: t('.retreat', default: [:"helpers.titles.retreat"]) %>
+    </div>
+  </div>
 </div>
-<% end %>
-<p>查看以某个字开头的词语：^X</p>
-<p>查看以某个字结尾的词语：X$</p>
-<p>查看成语：^[\u4e00-\u95fa][\u4e00-\u95fa][\u4e00-\u95fa][\u4e00-\u95fa]$</p>
-<p>查看ABB式词语：^[\u4e00-\u95fa][\u4e00-\u95fa]{2}$</p>
-<p>查看AABB式词语：^[\u4e00-\u95fa]{2}[\u4e00-\u95fa]{2}$</p>
-<p>查看以押中某个韵母的字词<p>
-<p>查看符合某种平仄变化的字词<p>
-<p>字表</p>
+
+<div class="page-header">
+  <h3>词汇指南</h3>
+</div>
+<div class="panel panel-default">
+  <div class="panel-body">
+    <%= form_tag "/search_words", method: :get do %>
+      <div class="control-group">
+        <%= search_field_tag :pattern, nil, class: 'form-control' %>
+      </div>
+    <% end %>
+  </div>
+  <div class="panel-footer">
+    <p>如果您不了解 postgres 数据库的正则表达式，应先去了解相关知识，避免误用。相关知识可查看<a href="/lessons/10687">这里</a>。</p>
+    <p>另外，基本汉字的表示范围是[\u4e00-\u9fa5]</p>
+    <p>也不妨参考下面的提示：</p>
+    <p>以某个字开头的词语：^X</p>
+    <p>以某个字结尾的词语：X$</p>
+    <p><%= link_to "四字成语", show_words_url(type: 'chengyu') %></p>
+    <p><%= link_to "AAB式词语", show_words_url(type: 'aab') %>，<%= link_to "ABB式词语", show_words_url(type: 'abb') %></p>
+    <p><%= link_to "AABB式词语", show_words_url(type: 'aabb') %>，<%= link_to "ABAB式词语", show_words_url(type: 'abab') %>，<%= link_to "AABC式词语", show_words_url(type: 'aabc') %>，<%= link_to "ABAC式词语", show_words_url(type: 'abac') %>，<%= link_to "ABCC式词语", show_words_url(type: 'abcc') %></p>
+    <p><%= link_to "所有字词", words_url %></p>
+    <p><%= link_to "字表词表", wordmaps_url %>——使用<%= link_to "字表词表卡片盒", lesson_url(21143) %>练习</p>
+    <p><%= link_to "汉语音序表", chinese_yinxu_url %></p>
+    <p><%= link_to "汉语新韵表", chinese_rhyme_url %></p>
+    <p>符合某种平仄变化的字词</p>
+  </div>
+</div>

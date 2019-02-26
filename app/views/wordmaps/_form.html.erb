@@ -1,3 +1,4 @@
+<% if current_user.has_role? :admin %>
 <%= form_for @wordmap, html: { class: "form-horizontal wordmap" } do |f| %>
 
     <% if @wordmap.errors.any? %>
@@ -50,3 +51,39 @@
             wordmaps_path, class: 'btn btn-default' %>
 
 <% end %>
+
+<% else %>
+
+<%= form_for @wordmap, html: { class: "form-horizontal wordmap" } do |f| %>
+
+    <% if @wordmap.errors.any? %>
+    <div id="error_expl" class="panel panel-danger">
+      <div class="panel-heading">
+        <h3 class="panel-title"><%= pluralize(@wordmap.errors.count, "error") %> 使得这个 wordmap 无法保存：</h3>
+      </div>
+      <div class="panel-body">
+        <ul>
+        <% @wordmap.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name, class: 'control-label col-sm-2' %>
+    <div class="controls col-sm-10">
+      <%= f.text_field :name, class: 'form-control' %>
+    </div>
+    <%= f.error_span(:name) %>
+  </div>
+
+  <%= f.submit nil, class: 'btn btn-primary col-sm-offset-2' %>
+  <%= link_to t('.cancel', default: t("helpers.links.cancel")),
+            wordmaps_path, class: 'btn btn-default' %>
+
+<% end %>
+
+
+<% end %> 

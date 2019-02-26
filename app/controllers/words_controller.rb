@@ -6,17 +6,21 @@ class WordsController < ApplicationController
   # GET /words
   # GET /words.json
   def index
-    # if current_user.has_role? :admin 
-      @words = Word.where(id: 1..10000).page(params[:page]).per(100)
-    # else
-      # redirect_to root_path, notice: "您没有权限查看字典，请进行其他操作。"
-    # end
+    params[:page] ? @page_num = params[:page].to_i : @page_num = 1
+    end_num = @page_num * 1000
+    start_num = end_num - 999
+    @last_page = Word.last.id / 1000 + 1
+    @words = Word.where(id: start_num..end_num)
+    @page_num = 0 if @words.empty?
   end
 
   # GET /words/1
   # GET /words/1.json
   def show
     session[:word_id] = @word.id
+    if current_user && Master.find_by(user_id: current_user.id)
+      @is_master = true
+    end
     # 生成上一个和下一个词语
     all_words_id = Word.where(id: (@word.id - 50)..(@word.id + 50)).pluck("id")
     current_word_id = all_words_id.index(@word.id)
@@ -187,18 +191,23 @@ class WordsController < ApplicationController
 
   # get /words/1/load_explain_from_baidu_hanyu
   def load_explain_from_baidu_hanyu
-    require 'net/http'
+    require 'net/https'
     require 'nokogiri'
 
+    # path = "s?wd=" + @word.name + "&ptype=zici"
+    # response = Net::HTTP.get_response("hanyu.baidu.com", path)
     @word || @word = Word.find(session[:word_id])
+    uri = URI.parse("https://hanyu.baiducom/s?wd=" + @word.name + "&ptype=zici")
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.use_ssl = true
+    http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+    request = Net::HTTP::Get.new(uri.request_uri)
+    response = http.request(request)
 
-    path = "/zici/s?wd=" + @word.name
-    response = Net::HTTP.get_response("hanyu.baidu.com", path)
     if response.body =~ /id="empty-tip"/
       redirect_to :back, notice: "百度词典还没有收录这个词语。"
       return
     end
-
     a_pattern = Regexp.union(/<a[^>]*>/, /<\/a>/)
     b_pattern = /<b[^>]*>/
     h_pattern = Regexp.union(/<h[^>]*>/, /<\/h[^>]*>/)
@@ -206,12 +215,15 @@ class WordsController < ApplicationController
     explains = ""
     doc = Nokogiri::HTML(response.body)
 
+=begin
+
     explains <<  doc.css("div#pinyin").inner_html.gsub(a_pattern, "").gsub(b_pattern, "<b>").gsub(h_pattern, "")
     title = doc.css("b.title","b.active")[0].inner_html.gsub(a_pattern, "").gsub(b_pattern, "<b>")
     explains << "<hr><b>" + title + "</b>"
     explains << doc.css("div.en-content","div.tab-content", "div#baike-wrapper")[0].inner_html.gsub(a_pattern, " ").gsub(b_pattern, "<b>").gsub(h_pattern, "") + "<hr>"
     explains <<  doc.css("div#baike-wrapper").inner_html.gsub(a_pattern, " ").gsub(b_pattern, "<b>").gsub(h_pattern, "").gsub("查看百科", "")
     @word.meanings.create(content: explains)
+=end
     redirect_to :back, notice: "成功从百度汉语网站导入信息。"
   end
 
@@ -252,19 +264,44 @@ class WordsController < ApplicationController
     word_pattern = "'" + params[:pattern].to_s + "'"
     words = Word.find_by_sql("SELECT id, name, length FROM words WHERE is_meanful = 't' AND name ~ " + word_pattern).first(100000)
     @words = Kaminari.paginate_array(words).page(params[:page]).per(1000)
-
-    render :index
   end
 
   def show_words
-    @chengyu
-    @aab
-    @abb
-    @aabb
-    @abab
-    @aabc
-    @abac
-    @abcc
+    case params[:type]
+    when 'chengyu'
+      words = Word.find_by_sql("SELECT id, name, length FROM words WHERE is_meanful = 't' AND name ~ '^[\\u4e00-\\u95fa]{4}$'").first(100000)
+      @words = Kaminari.paginate_array(words).page(params[:page]).per(1000)
+      render :search_words
+    when 'aab'
+      words = Word.find_by_sql("SELECT id, name, length FROM words WHERE is_meanful = 't' AND name ~ '^([\\u4e00-\\u95fa])\\1[\\u4e00-\\u95fa]$'").first(100000)
+      @words = Kaminari.paginate_array(words).page(params[:page]).per(1000)
+      render :search_words
+    when 'abb'
+      words = Word.find_by_sql("SELECT id, name, length FROM words WHERE is_meanful = 't' AND name ~ '^([\\u4e00-\\u95fa])([\\u4e00-\\u95fa])\\2$'").first(100000)
+      @words = Kaminari.paginate_array(words).page(params[:page]).per(1000)
+      render :search_words
+    when 'aabb'
+      words = Word.find_by_sql("SELECT id, name, length FROM words WHERE is_meanful = 't' AND name ~ '^([\\u4e00-\\u95fa])\\1([\\u4e00-\\u95fa])\\2$'").first(100000)
+      @words = Kaminari.paginate_array(words).page(params[:page]).per(1000)
+      render :search_words
+    when 'abab'
+      words = Word.find_by_sql("SELECT id, name, length FROM words WHERE is_meanful = 't' AND name ~ '^([\\u4e00-\\u95fa])([\\u4e00-\\u95fa])\\1\\2$'").first(100000)
+      @words = Kaminari.paginate_array(words).page(params[:page]).per(1000)
+      render :search_words
+    when 'aabc'
+      words = Word.find_by_sql("SELECT id, name, length FROM words WHERE is_meanful = 't' AND name ~ '^([\\u4e00-\\u95fa])\\1[\\u4e00-\\u95fa][\\u4e00-\\u95fa]$'").first(100000)
+      @words = Kaminari.paginate_array(words).page(params[:page]).per(1000)
+      render :search_words
+    when 'abac'
+      words = Word.find_by_sql("SELECT id, name, length FROM words WHERE is_meanful = 't' AND name ~ '^([\\u4e00-\\u95fa])([\\u4e00-\\u95fa])\\1[\\u4e00-\\u95fa]$'").first(100000)
+      @words = Kaminari.paginate_array(words).page(params[:page]).per(1000)
+      render :search_words
+    when 'abcc'
+      words = Word.find_by_sql("SELECT id, name, length FROM words WHERE is_meanful = 't' AND name ~ '^[\\u4e00-\\u95fa][\\u4e00-\\u95fa]([\\u4e00-\\u95fa])\\1$'").first(100000)
+      @words = Kaminari.paginate_array(words).page(params[:page]).per(1000)
+      render :search_words
+    else
+    end
   end
 
   def words_have_word
@@ -291,6 +328,23 @@ class WordsController < ApplicationController
       redirect_to :back, notice: "没有找到相应的注释。"
       return
     end
+  end
+
+  # 列出所有有缺陷的词汇，包括没有长度、md值、读音、释义
+  def show_fragmentary_words
+    case params[:type]
+    when 'length'
+      @words = Word.where(length: nil).page(params[:page]).per(1000)
+    when 'md'
+      @words = Word.where(md1: nil).page(params[:page]).per(1000)
+    when 'phonetic'
+      @words = Word.where(length: 1, is_meanful: true, phonetics_count: 0).order(:id).page(params[:page]).per(1000)
+    when 'meaning'
+      @words = Word.where(length: 1, is_meanful: true, meanings_count: 0).order(:id).page(params[:page]).per(1000)
+    else
+      @words = []
+    end
+    render :search_words
   end
 
   private

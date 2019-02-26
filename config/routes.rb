@@ -2,8 +2,10 @@ Rails.application.routes.draw do
 
   resources :wordorders
   post '/wordorder_update_serial', to: 'wordorders#update_serial'
+  post '/load_wordorders', to: 'wordorders#load_wordorders'
 
   resources :wordmaps
+  post '/export_wordmaps_to_cardbox', to: 'wordmaps#export_wordmaps_to_cardbox'
 
   require 'sidekiq/web'
   mount Sidekiq::Web => '/sidekiq'
@@ -38,6 +40,7 @@ Rails.application.routes.draw do
   get '/copy_to_new_roadmap', to: 'roadmaps#copy_to_new_roadmap'
 
   resources :meanings
+  get '/search_meanings', to: 'meanings#search_meanings'
 
   resources :phonetic_notations
   get '/choose_phonetic_notations', to: 'phonetic_notations#choose_phonetic_notations'
@@ -45,6 +48,9 @@ Rails.application.routes.draw do
 
   resources :phonetics
   post '/phonetic/create_phonetic_for_word', to: 'phonetics#create_phonetic_for_word'
+  get '/chinese_yinxu', to: 'phonetics#chinese_yinxu'
+  get '/chinese_rhyme', to: 'phonetics#chinese_rhyme'
+  get '/list_rhyme_words', to: 'phonetics#list_rhyme_words'
 
   resources :sentences
 
@@ -64,7 +70,7 @@ Rails.application.routes.draw do
   get '/words_have_word', to: 'words#words_have_word'
   get '/lessons_have_word', to: 'words#lessons_have_word'
   get '/word_comments', to: 'words#word_comments'
-
+  get '/show_fragmentary_words', to: 'words#show_fragmentary_words'
 
   resources :words_reports do
     get 'show_word_n'

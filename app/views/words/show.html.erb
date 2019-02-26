@@ -96,6 +96,7 @@
 
 <div class="container col-xs-12 col-sm-10 col-md-8 affix">
   <div class="btn-toolbar pull-right" role="toolbar" arial-label="toolbar">
+    <% if @is_master %>
     <!-- 管理功能 -->
     <div class="btn-group" role="group" arial-label="manage">
         <%= link_to t('.new', default:  t("helpers.links.new")), 
@@ -143,6 +144,7 @@
         <%#<li role="separator" class="divider"></li>%>
       </ul>
     </div>
+    <% end %>
     <!-- 导航按钮 -->
     <div class="btn-group" role="btn-group" arial-label="navigation">
       <% if @previous_word %>
@@ -183,6 +185,7 @@
     <small><%=t '.title', default: model_class.model_name.human.titleize %>：</small>
     <%= @word.name %>
     <a href="http://image.baidu.com/search/index?tn=baiduimage&word=<%= @word.name %>" class="btn btn-link btn-xs" target="_blank">查看百度图片</a>
+    <a href="http://hanyu.baidu.com/s?wd=<%= @word.name %>&amp;ptype=zici" class="btn btn-link btn-xs" target="_blank">查看百度汉语</a>
   </h3>
 </div>
 
@@ -192,23 +195,30 @@
 
 <div class="panel panel-default">
   <div class="panel-heading">
-    读音
+    读音（共<%= @word.phonetics_count %>个）
+    <% if @is_master %>
     <button class="btn btn-xs btn-default pull-right" type="button" data-toggle="collapse" data-target="#collapseAddPhonetic" aria-expanded="false" aria-controls="collapseAddPhonetic">添加读音</button>
+    <% end %>
   </div>
+
   <div class="panel-body">
     <ul>
-      <% @word.phonetics.order(:created_at).each do |phonetic| %>
+      <% @word.phonetic_notations.order(:created_at).each do |notation| %>
       <div class="col-xs-6 col-sm-4 col-md-3">
         <li>
-          <span>[<%= phonetic.content %>]</span><span>(<%= phonetic.label %>)</span>
-          <% notation = PhoneticNotation.find_by(word_id: @word.id, phonetic_id: phonetic.id) %>
+          <% phonetic = notation.phonetic %>
+          <span style="font-size: 200%;">[<%= link_to phonetic.content, phonetic_path(phonetic.id) %>]</span><span>(<%= phonetic.label %>)</span>
+          <% if @is_master %>
           <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_phonetic_notation_path(notation), class: 'btn btn-xs btn-default' %>
           <%= link_to t('.destroy', :default => t("helpers.links.destroy")), phonetic_notation_path(notation), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, class: 'btn btn-xs btn-default' %>
+          <% end %>
         </li>
       </div>
       <% end %>
     </ul>
   </div>
+
+  <% if @is_master %>
   <div class="collapse" id="collapseAddPhonetic">
     <div class="panel-footer">
       <%= form_tag "/phonetic/create_phonetic_for_word", class: 'form-inline' do %>
@@ -223,18 +233,29 @@
       <% end %>
     </div>
   </div>
+  <% end %>
 </div>
+
 <div class="panel panel-default">
   <div class="panel-heading">
-    词义
+    词义（共<%= @word.meanings_count %>个）
+    <% if @is_master %>
     <button class="btn btn-xs btn-default pull-right" type="button" data-toggle="collapse" data-target="#collapseAddMeaning" aria-expanded="false" aria-controls="collapseAddMeaning">添加解释</button>
+    <% end %>
   </div>
   <div class="panel-body">
     <% @word.meanings.order(:created_at).each do |meaning| %>
-      <%= sanitize( meaning.content )%>
-      <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_meaning_path(meaning), class: 'btn btn-xs btn-default pull-right' %>
+      <div>
+        <%= sanitize( meaning.content )%>
+        <hr>
+        <% if @is_master %>
+        <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_meaning_path(meaning), class: 'btn btn-xs btn-default pull-right' %>
+        <% end %>
+      </div>
     <% end %>
   </div>
+
+  <% if @is_master %>
   <div class="collapse" id="collapseAddMeaning">
     <div class="panel-footer">
       <% @meaning = Meaning.new %>
@@ -244,13 +265,16 @@
           <%= f.hidden_field :word_id, :class => 'form-control' %>
         </div>
         <div class="control-group">
-          <%= f.cktext_area :content, class: 'form-control' %>
+          <%# f.cktext_area :content, class: 'form-control' %>
+          <%= f.text_area :content, class: 'form-control' %>
         </div>
           <%= f.submit nil, class: 'btn btn-info' %>
           <button class="btn btn-default" type="button" data-toggle="collapse" data-target="#collapseAddMeaning" aria-expanded="false" aria-controls="collapseAddMeaning">取消</button>
       <% end %>
     </div>
   </div>
+  <% end %>
+
 </div>
 
 <% end %>

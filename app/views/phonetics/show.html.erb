@@ -42,6 +42,7 @@
       </button>
       <ul class="dropdown-menu">
         <li>
+          <%= link_to "汉字音序表", chinese_yinxu_url %>
         </li>
         <li role="separator" class="divider"></li>
       </ul>
@@ -77,18 +78,9 @@
 </div>
 
 <div class="page-header">
-  <h3><%=t '.title', default: model_class.model_name.human.titleize %></h3>
+  <h3><%=t '.title', default: model_class.model_name.human.titleize %> <%= @phonetic.content %> <small>（<%= @phonetic.label %>）</small></h3>
 </div>
-
-<dl class="dl-horizontal">
-  <dt><strong><%= model_class.human_attribute_name(:content) %>:</strong></dt>
-  <dd><%= @phonetic.content %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:label) %>:</strong></dt>
-  <dd><%= @phonetic.label %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:deleted_at) %>:</strong></dt>
-  <dd><%= @phonetic.deleted_at %></dd>
-</dl>
-
+<p>韵脚：<%= @phonetic.rhyme %></p>
 <div class="panel panel-default">
   <div class="panel-heading">相关的字</div>
   <div class="panel-body">

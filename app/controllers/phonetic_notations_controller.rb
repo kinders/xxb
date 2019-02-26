@@ -31,6 +31,9 @@ class PhoneticNotationsController < ApplicationController
 
     respond_to do |format|
       if @phonetic_notation.save
+        word = Word.find(@phonetic_notation.word_id)
+        word_p_count = word.phonetics_count + 1
+        word.update(phonetics_count: word_p_count)
         format.html { redirect_to @phonetic_notation, notice: 'Phonetic notation was successfully created.' }
         format.json { render :show, status: :created, location: @phonetic_notation }
       else
@@ -57,6 +60,9 @@ class PhoneticNotationsController < ApplicationController
   # DELETE /phonetic_notations/1
   # DELETE /phonetic_notations/1.json
   def destroy
+    word = Word.find(@phonetic_notation.word_id)
+    word_p_count = word.phonetics_count - 1
+    word.update(phonetics_count: word_p_count)
     @phonetic_notation.destroy
     respond_to do |format|
       format.html { redirect_to :back, notice: '已经删除该注音方案' }

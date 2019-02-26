@@ -17,11 +17,14 @@
       </button>
       <ul class="dropdown-menu">
         <li><%= link_to "导入字典", choose_dictionary_path %></li>
-        <li><a  data-toggle="modal" href="#searchModal">搜索字典</a></li>
+        <li><%= link_to "查看没有标识长度的单词", show_fragmentary_words_path(type: 'length') %></li>
+        <li><%= link_to "查看没有标识md码的单词", show_fragmentary_words_path(type: 'md') %></li>
+        <li><%= link_to "查看没有注音的单词", show_fragmentary_words_path(type: 'phonetic') %></li>
+        <li><%= link_to "查看没有释义的单词", show_fragmentary_words_path(type: 'meaning') %></li>
       </ul>
     </div>
     <div class="btn-group" role="btn-group" arial-label="navigation">
-      <%= link_to t('.up', :default => t("helpers.links.up")), me_summary_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.me")) %>
+      <%= link_to t('.up', :default => t("helpers.links.up")), show_words_path, class: 'btn btn-default', "data-toggle": "tooltip", "data-placement": "bottom", title: t('.up', default: t("helpers.titles.up"), :model => t("activerecord.models.site")) %>
       <%= link_to t('.retreat', default: t("helpers.links.retreat")), 
         :back, 
         class: 'btn btn-default', 
@@ -36,6 +39,45 @@
 <div class="page-header">
   <h3><%=t '.title', default: model_class.model_name.human.titleize %></h3>
 </div>
+
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <% if @page_num - 5 > 0 %>
+      <li><%= link_to (@page_num - 5).to_s, words_path(page: @page_num - 5) %></li>
+    <% end %>
+    <% if @page_num - 4 > 0 %>
+      <li><%= link_to (@page_num - 4).to_s, words_path(page: @page_num - 4) %></li>
+    <% end %>
+    <% if @page_num - 3 > 0 %>
+      <li><%= link_to (@page_num - 3).to_s, words_path(page: @page_num - 3) %></li>
+    <% end %>
+    <% if @page_num - 2 > 0 %>
+      <li><%= link_to (@page_num - 2).to_s, words_path(page: @page_num - 2) %></li>
+    <% end %>
+    <% if @page_num - 1 > 0 %>
+      <li><%= link_to (@page_num - 1).to_s, words_path(page: @page_num - 1) %></li>
+    <% end %>
+    <li class="disabled"><span><%= @page_num.to_s %></span></li>
+    <% if @page_num + 1 <= @last_page %>
+    <li><%= link_to (@page_num + 1).to_s, words_path(page: @page_num + 1) %></li>
+    <% end %>
+    <% if @page_num + 2 <= @last_page %>
+    <li><%= link_to (@page_num + 2).to_s, words_path(page: @page_num + 2) %></li>
+    <% end %>
+    <% if @page_num +3 <= @last_page %>
+    <li><%= link_to (@page_num + 3).to_s, words_path(page: @page_num + 3) %></li>
+    <% end %>
+    <% if @page_num + 4 <= @last_page %>
+    <li><%= link_to (@page_num + 4).to_s, words_path(page: @page_num + 4) %></li>
+    <% end %>
+    <% if @page_num + 5 <= @last_page %>
+    <li><%= link_to (@page_num + 5).to_s, words_path(page: @page_num + 5) %></li>
+    <% end %>
+    <% if @page_num + 5 < @last_page %>
+    <li><%= link_to (@last_page).to_s, words_path(page: @last_page) %></li>
+    <% end %>
+</nav>
+
 <table class="table table-striped">
   <thead>
     <tr>
@@ -50,7 +92,7 @@
     <% @words.each do |word| %>
       <tr>
         <td><%=  word.id %></td>
-        <td><%= link_to word.name, word_path(word) %></td>
+        <td><%= link_to word.name, word_path(word), target: "_blank" %></td>
         <td><%= word.length %></td>
         <%#<td><%= word.created_at.strftime("%F") %>
         <%#<td><%= word.deleted_at %>
@@ -58,32 +100,41 @@
     <% end %>
   </tbody>
 </table>
-<%= paginate @words %>
 
-<div class="modal fade" id="searchModal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <%= form_tag "/search_words", method: :get, class: 'form-inline' do %>
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-
-        <h4 class="modal-title">使用正则表达式搜索词语</h4>
-      </div>
-      <div class="modal-body">
-        <div>
-        <p>如果您不了解 postgres 数据库的正则表达式</p>
-        <p>应先去了解相关知识，避免误用</p>
-        <p>相关知识可查看<a href="/lessons/10687">这里</a></p>
-        <p>另外，基本汉字的表示范围是[\u4e00-\u9fa5]</p>
-      </div>
-        <div class="control-group">
-          <%= search_field_tag :pattern %>
-        </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-        <%= submit_tag "提交", :class => 'btn btn-primary' %>
-      </div>
-      <% end %>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    <% if @page_num - 5 > 0 %>
+      <li><%= link_to (@page_num - 5).to_s, words_path(page: @page_num - 5) %></li>
+    <% end %>
+    <% if @page_num - 4 > 0 %>
+      <li><%= link_to (@page_num - 4).to_s, words_path(page: @page_num - 4) %></li>
+    <% end %>
+    <% if @page_num - 3 > 0 %>
+      <li><%= link_to (@page_num - 3).to_s, words_path(page: @page_num - 3) %></li>
+    <% end %>
+    <% if @page_num - 2 > 0 %>
+      <li><%= link_to (@page_num - 2).to_s, words_path(page: @page_num - 2) %></li>
+    <% end %>
+    <% if @page_num - 1 > 0 %>
+      <li><%= link_to (@page_num - 1).to_s, words_path(page: @page_num - 1) %></li>
+    <% end %>
+    <li class="disabled"><span><%= @page_num.to_s %></span></li>
+    <% if @page_num + 1 <= @last_page %>
+    <li><%= link_to (@page_num + 1).to_s, words_path(page: @page_num + 1) %></li>
+    <% end %>
+    <% if @page_num + 2 <= @last_page %>
+    <li><%= link_to (@page_num + 2).to_s, words_path(page: @page_num + 2) %></li>
+    <% end %>
+    <% if @page_num +3 <= @last_page %>
+    <li><%= link_to (@page_num + 3).to_s, words_path(page: @page_num + 3) %></li>
+    <% end %>
+    <% if @page_num + 4 <= @last_page %>
+    <li><%= link_to (@page_num + 4).to_s, words_path(page: @page_num + 4) %></li>
+    <% end %>
+    <% if @page_num + 5 <= @last_page %>
+    <li><%= link_to (@page_num + 5).to_s, words_path(page: @page_num + 5) %></li>
+    <% end %>
+    <% if @page_num + 5 < @last_page %>
+    <li><%= link_to (@last_page).to_s, words_path(page: @last_page) %></li>
+    <% end %>
+</nav>

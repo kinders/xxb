@@ -14,13 +14,14 @@ class Word < ApplicationRecord
   def load_explain_from_baidu_hanyu
     require 'net/http'
     @word = self
-    path = "/zici/s?wd=" + @word.name
+    # path = "/zici/s?wd=" + @word.name
+    path = "s?wd=" + @word.name
     response = Net::HTTP.get_response("hanyu.baidu.com", path)
     pinyin = response.body.scan(/<span><b>(.*?)<\/b>/)
     pinyin.each do |py|
-      the_phonetic = Phonetic.find_by(content: py)
+      the_phonetic = Phonetic.find_by(content: py, label: "汉")
       unless the_phonetic
-        the_phonetic = Phonetic.create(content: py, label: "")
+        the_phonetic = Phonetic.create(content: py, label: "汉")
       end
       @word.phonetic_notations.create(phonetic_id: the_phonetic.id)
     end
@@ -29,7 +30,7 @@ class Word < ApplicationRecord
     @word.meanings.create(content: explains)
   end
 
-  # 这个方法可以批量获得词义。
+  # 这个方法可以从百度汉语中批量获得词义。
   def self.load_explain_from_baidu_hanyu(start_at, end_at)
     require 'net/http'
     require 'nokogiri'
@@ -183,16 +184,16 @@ class Word < ApplicationRecord
 =end
 
 =begin
+=end
   # 这个类方法补齐md5字段
   def self.add_md5
     require 'digest/md5'
-    words = Word.where(md1: nil)
+    words = Word.where(is_meanful: true, md1: nil)
     words.each do |word|
       word_md5 = Digest::MD5.hexdigest(word.name).bytes.map{|b|b=b-38}.join
       word.update(md1: word_md5[0..7], md2: word_md5[8..15], md3: word_md5[16..23], md4: word_md5[24..31], md5: word_md5[32..39], md6: word_md5[40..47], md7: word_md5[48..55], md8: word_md5[56..63])
     end
   end
-=end
 
 =begin
   # 这个方法用来清洗一些符号转义错误: 
@@ -212,5 +213,17 @@ class Word < ApplicationRecord
   end
 =end
 
+=begin
+=end
+  # 这个类方法补充单词的语音和释义的数量
+  def self.add_phonetic_and_meaning_count
+    Word.where(id: 11876092..11876174).find_each(batch_size: 100) do |w|
+    # Word.where(is_meanful: true).find_each(batch_size: 100) do |w|
+      pc = w.phonetics.count
+      mc = w.meanings.count
+      next if (pc == 0 && mc == 0)
+      w.update(phonetics_count: pc, meanings_count: mc)
+    end
+  end
 
 end

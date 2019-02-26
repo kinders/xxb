@@ -6,14 +6,13 @@ class PhoneticsController < ApplicationController
   # GET /phonetics
   # GET /phonetics.json
   def index
-    @phonetics = Phonetic.all.order("id").page(params[:page]).per('10')
-
+    @phonetics = Phonetic.all.order("id").page(params[:page]).per('100')
   end
 
   # GET /phonetics/1
   # GET /phonetics/1.json
   def show
-    @words = @phonetic.words
+    @words = @phonetic.words.order(:id)
     # 生成上一个和下一个音节
     all_phonetics_id = Phonetic.all.order("id").pluck("id")
     current_phonetic_id = all_phonetics_id.index(@phonetic.id)
@@ -87,15 +86,30 @@ class PhoneticsController < ApplicationController
         redirect_to :back, notice: "这个拼音已经存在，无需重复添加。"
         return
       else
+        word_p_count = @word.phonetics_count + 1
         @word.phonetic_notations.create(word_id: @word.id, phonetic_id: @phonetic.id)
+        @word.update(phonetics_count: word_p_count)
       end
     else
       @word.phonetics.create(content: params[:content], label: params[:label])
+      word_p_count = @word.phonetics_count + 1
+      @word.update(phonetics_count: word_p_count)
     end
     redirect_to :back, notice: "成功添加拼音。"
   end
 
+  def chinese_yinxu
+  end
 
+  def chinese_rhyme
+  end
+
+  def list_rhyme_words
+    @rhymes = params[:rhyme].split(", ")
+    phonetic_ids = Phonetic.where(rhyme: @rhymes).pluck(:id)
+    word_ids = PhoneticNotation.where(phonetic_id: phonetic_ids).pluck(:word_id)
+    @words = Word.where(id: word_ids).pluck(:name).join("，")
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -105,6 +119,6 @@ class PhoneticsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def phonetic_params
-      params.require(:phonetic).permit(:content, :label, :deleted_at)
+      params.require(:phonetic).permit(:content, :label, :rhyme, :deleted_at)
     end
 end
