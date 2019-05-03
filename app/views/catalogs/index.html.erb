@@ -15,12 +15,17 @@
         <li>
           <%= link_to "编辑课本信息", edit_textbook_path(@textbook.id) %>
         </li>
+        <li role="separator" class="divider"></li>
         <% unless Booklist.find_by(user_id: current_user.id, textbook_id: @textbook.id) %>
         <li>
           <%= link_to "将本书添加到书单中", new_booklist_path %>
         </li>
         <li role="separator" class="divider"></li>
         <% end %>
+        <li>
+          <%= link_to "在课本中搜索", "#search_in_textbook", data: {toggle: "modal"} %>
+        </li>
+        <li role="separator" class="divider"></li>
         <li>
           <% if @textbook.roadmap %>
             <%= link_to "查看本书的文路", roadmap_path(@textbook.roadmap) %>
@@ -99,6 +104,30 @@
   </tbody>
 </table>
 <%= paginate @catalogs %>
+
+<!-- Modal 课文中搜索 -->
+<div class="modal fade" id="search_in_textbook" tabindex="-1" role="dialog" aria-labelledby="search_in_textbook" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalTitle">课本内搜索</h4>
+      </div>
+      <%= form_tag "/search_in_textbook", method: :get, class: 'form' do %>
+      <div class="modal-body">
+        <%= hidden_field_tag :textbook_id, @textbook.id %>
+        <div class="control-group">
+          <%= search_field_tag :word, nil, class: 'form-control col-md-4' %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <%= submit_tag "提交", :class => 'btn btn-primary' %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<!-- Modal 课文中搜索 -->
 
 <% if current_user.has_role? :admin %>
 <table class="table table-striped">

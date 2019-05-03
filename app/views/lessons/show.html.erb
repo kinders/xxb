@@ -66,6 +66,9 @@
         <li>
           <%= link_to "添加辅导", new_tutor_url %>
         </li>
+        <li>
+        <%= link_to "转为另一课程的辅导", lesson_as_tutor_url  %>
+        </li>
         <li role="separator" class="divider"></li>
         <% unless @lesson.practices.empty? %>
         <li>
@@ -99,10 +102,12 @@
         </li>
         <% end %>
         <% end %>
-        <li role="separator" class="divider"></li>
-        <li>
-        <%= link_to "转为另一课程的辅导", lesson_as_tutor_url  %>
-        </li>
+        <% if session[:textbook_id] %>
+          <li role="separator" class="divider"></li>
+          <li>
+            <%= link_to "在课本中搜索", "#search_in_textbook", data: {toggle: "modal"} %>
+          </li>
+        <% end %>
         <li role="separator" class="divider"></li>
         <% unless @lesson.content == "" %>
           <% if @words_report %>
@@ -283,6 +288,32 @@
   </div>
 </div>
 <!-- Modal 选择一个字序进行比较 -->
+
+<!-- Modal 课文中搜索 -->
+<% if session[:textbook_id] %>
+<div class="modal fade" id="search_in_textbook" tabindex="-1" role="dialog" aria-labelledby="search_in_textbook" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalTitle">课本内搜索</h4>
+      </div>
+      <%= form_tag "/search_in_textbook", method: :get, class: 'form' do %>
+      <div class="modal-body">
+        <%= hidden_field_tag :textbook_id, @textbook.id %>
+        <div class="control-group">
+          <%= search_field_tag :word, nil, class: 'form-control col-md-4' %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <%= submit_tag "提交", :class => 'btn btn-primary' %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<% end %>
+<!-- Modal 课文中搜索 -->
 
 <% else %>
 

@@ -108,6 +108,7 @@
             <%= link_to "生成解释页面", tutor_create_explain_page_for_tutor_path(tutor_id: @tutor.id), tabindex: 67 %>
             <%= link_to "生成填空页面", tutor_find_sentences_with_words_path(tutor_id: @tutor.id), tabindex: 68 %>
             <%= link_to "生成音标填空页面", tutor_find_sentences_with_words_path(tutor_id: @tutor.id, is_with_phonetics: true), tabindex: 69 %>
+            <%= link_to "生成组词页面", tutor_words_consist_of_chinese_words_path(tutor_id: @tutor.id), tabindex: 70 %>
           <% end %>
             <a data-toggle="collapse" href="#copy_to_another_lesson" aria-expanded="true" aria-controls="copy_to_another_lesson" >复制给其他课文</a>
           </li>
@@ -198,7 +199,13 @@
           </button>
         <% end %>
       </h2>
-      <div class="text-right"><%= @tutor.page_length %>；<%= @tutor.difficulty %></div>
+      <div class="text-right">
+        <%= @tutor.page_length %>；
+        <%= @tutor.difficulty %>
+        <% if @lesson.id != @tutor.lesson_id %>
+          <%= link_to "返回《#{@tutor.lesson.title}》", lesson_url(@tutor.lesson_id) %>
+        <% end %>
+      </div>
       <% if @tutor.proviso && !@tutor.proviso.empty?%>
         <hr>
         <div class="paragraph"> <%= sanitize(@tutor.proviso, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u img), attributes: %w(href class style src)) %> </div>

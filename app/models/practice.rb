@@ -70,6 +70,7 @@ user_id 只有所有者才能修改，但其他人可以将题目给自己重新
 tutor_id  应该废除，改为多对多
 lesson_id  应该废除，改为多对多
 activate  应该废除，没有实际意义
+score 分值
 用图片展示问题, 应该废除，用ckeditor已经解决这个问题
 picture_q_file_name
 picture_q_content_type

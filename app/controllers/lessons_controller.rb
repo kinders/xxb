@@ -490,6 +490,16 @@ class LessonsController < ApplicationController
     render :compare_with_wordmap
   end
 
+  # get /search_in_textbook
+  def search_in_textbook
+    @search = params[:word]
+    lesson_ids = Textbook.find(params[:textbook_id]).lessons.pluck(:id)
+    lessons_by_content = Lesson.where(id: lesson_ids).where("content LIKE ?", "%" + @search +"%" )
+    lessons_by_title = Lesson.where(id: lesson_ids).where("title LIKE ?", "%" + @search +"%" )
+    lessons_by_author = Lesson.where(id: lesson_ids).where("author LIKE ?", "%" + @search +"%" )
+    @lessons = lessons_by_content + lessons_by_author + lessons_by_title
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

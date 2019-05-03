@@ -218,7 +218,7 @@ class TutorsController < ApplicationController
       p.answer = @tutor.page
       p.score = (p.answer.to_s.length.to_f / 10).ceil
     } 
-    LessonPractice.create(lesson_id: @lesson.id, practice_id: p.id)
+    LessonPractice.create(lesson_id: @lesson.id, practice_id: practice.id)
     last_exercise = Exercise.where(tutor_id: @tutor.id).order(:serial).last
     if last_exercise
       last_exercise_serial = last_exercise.serial
@@ -483,6 +483,32 @@ class TutorsController < ApplicationController
     redirect_to @tutor, notice: "已经创建逐句辅导，请您对辅导页面进行修改。"
   end
 
+  # get words_consist_of_chinese_words
+  def words_consist_of_chinese_words
+    @tutor = Tutor.find(params[:tutor_id])
+    unless @tutor.page.blank?
+      redirect_to :back, notice: '辅导页面已经存在内容。'
+      return
+    end
+    uniq_chars = @tutor.proviso.gsub(/[^\u4e00-\u9fa5]/, "").chars.uniq
+    one_word = '[' + uniq_chars + ']'
+    two_word = '[' + uniq_chars + ']' * 2
+    three_word = '[' + uniq_chars + ']' * 3
+    four_word = '[' + uniq_chars + ']' * 4
+    two_words = Word.where("name LIKE ?", two_word).where(is_meanful: true).pluck(:name).join(", ")
+    three_words = Word.where("name LIKE ?", three_word).where(is_meanful: true).pluck(:name).join(", ")
+    four_words = Word.where("name LIKE ?", four_word).where(is_meanful: true).pluck(:name).join(", ")
+    page_content = ""
+    page_content  << "<h3>两个字组成的词语：</h3>"
+    page_content  << two_words
+    page_content  << "<h3>三个字组成的词语：</h3>"
+    page_content  << three_words
+    page_content  << "<h3>四个字组成的词语：</h3>"
+    page_content  << four_words
+    @tutor = @tutor.update(page: page_content, page_length: page_content.size)
+    redirect_to :back, notice: "已经找到所选词语，请您对内容进行甄别修改。"
+  end
+
   # get find_sentences_with_words
   # 在课文中抓取包含词语的句子。
   def find_sentences_with_words
@@ -513,10 +539,10 @@ class TutorsController < ApplicationController
       else
         new_s = " " + "⃞"*(w.length)
       end
-      new_content << @lesson.content.scan(re).map{|i|i.gsub(w, new_s) + new_w}
+      new_content << @lesson.content.gsub(delete_pattern, "").scan(re).map{|i|i.gsub(w, new_s) + new_w}
     end
     new_content.flatten!
-    page_content = "<div class='well lesson_paragraph'><p>" + new_content.join("</p><p>") + "</p></div>"
+    page_content = "<div class='well lesson_paragraph'><p>" + new_content.join("</p><hr><p>") + "</p></div>"
     @tutor = @tutor.update(page: page_content, page_length: page_content.size)
     redirect_to :back, notice: "已经生成词语解释，请您对内容进行选定修改。"
 

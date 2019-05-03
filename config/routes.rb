@@ -266,6 +266,7 @@ Rails.application.routes.draw do
   get '/tutor_proviso_as_practice_material', to: 'tutors#tutor_proviso_as_practice_material'
   get '/tutor_search_tutors', to: 'tutors#search_tutors'
   get '/tutor_new_sentences_show', to: 'tutors#new_sentences_show'
+  get '/tutor_words_consist_of_chinese_words', to: 'tutor#words_consist_of_chinese_words'
 
   get 'lessons_in_content_length',  to: 'lessons#lessons_in_content_length'
   resources :lessons do
@@ -285,6 +286,7 @@ Rails.application.routes.draw do
   get '/lesson_content_as_practice_material', to: 'lessons#lesson_content_as_practice_material'
   post '/lesson_compare_with_wordmap', to: 'lessons#compare_with_wordmap'
   post '/lesson_compare_single_with_wordmap', to: 'lessons#compare_single_with_wordmap'
+  get '/search_in_textbook', to: 'lessons#search_in_textbook'
 
   devise_for :users, controllers: { sessions: "users/sessions" }
 
