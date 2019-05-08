@@ -490,14 +490,14 @@ class TutorsController < ApplicationController
       redirect_to :back, notice: '辅导页面已经存在内容。'
       return
     end
-    uniq_chars = @tutor.proviso.gsub(/[^\u4e00-\u9fa5]/, "").chars.uniq
+    uniq_chars = @tutor.proviso.gsub(/[^\u4e00-\u9fa5]/, "").chars.uniq.join
     one_word = '[' + uniq_chars + ']'
-    two_word = '[' + uniq_chars + ']' * 2
-    three_word = '[' + uniq_chars + ']' * 3
-    four_word = '[' + uniq_chars + ']' * 4
-    two_words = Word.where("name LIKE ?", two_word).where(is_meanful: true).pluck(:name).join(", ")
-    three_words = Word.where("name LIKE ?", three_word).where(is_meanful: true).pluck(:name).join(", ")
-    four_words = Word.where("name LIKE ?", four_word).where(is_meanful: true).pluck(:name).join(", ")
+    two_word = "^" + one_word * 2 + "$"
+    three_word = "^" + one_word * 3 + "$"
+    four_word = "^" + one_word * 4 + "$"
+    two_words = Word.where("name ~* ?", two_word).where(is_meanful: true).pluck(:name).join(", ")
+    three_words = Word.where("name ~* ?", three_word).where(is_meanful: true).pluck(:name).join(", ")
+    four_words = Word.where("name ~* ?", four_word).where(is_meanful: true).pluck(:name).join(", ")
     page_content = ""
     page_content  << "<h3>两个字组成的词语：</h3>"
     page_content  << two_words
