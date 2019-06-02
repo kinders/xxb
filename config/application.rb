@@ -1,5 +1,5 @@
-require File.expand_path('../boot', __FILE__)
-
+require_relative 'boot'
+# require File.expand_path('../boot', __FILE__)  # 5.0.1
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
@@ -8,6 +8,9 @@ Bundler.require(*Rails.groups)
 
 module Depot
   class Application < Rails::Application
+    # Initialize configuration defaults for originally generated Rails version.
+    config.load_defaults 5.1
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -21,7 +24,7 @@ module Depot
     # config.i18n.default_locale = :de
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
+    # config.active_record.raise_in_transactional_callbacks = true # 升级到 5.1.0 时候被注释掉，因为这一行导致了 method_missing 问题。
 
     # 配置 活性工作的队列适配器
     config.active_job.queue_adapter = :sidekiq
