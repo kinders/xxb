@@ -19,7 +19,29 @@
   <h3>图书馆</h3>
 </div>
 
-<% @textbooks.to_a.each_slice(6).to_a.each do |tbs| %>
+<div class="btn-group" role="group">
+  <a class="btn btn-default" href="#preschool" role="button">学前</a>
+  <a class="btn btn-default" href="#primary" role="button">小学</a>
+  <a class="btn btn-default" href="#junior" role="button">初中</a>
+  <a class="btn btn-default" href="#senior" role="button">高中</a>
+  <a class="btn btn-default" href="#professional" role="button">专业</a>
+</div>
+<hr>
+
+<% [@textbooks_0, @textbooks_301, @textbooks_307, @textbooks_310, @textbooks_4].each_with_index do |textbooks, ind| %>
+<% case ind %>
+<% when 0 %>
+<div id="preschool">
+<% when 1 %>
+<div id="primary">
+<% when 2 %>
+<div id="junior">
+<% when 3 %>
+<div id="senior">
+<% when 4 %>
+<div id="professional">
+<% end %>
+<% textbooks.to_a.each_slice(6).to_a.each do |tbs| %>
 <div class="row">
   <div class="row">
   <% tbs.each do |textbook| %>
@@ -51,6 +73,8 @@
   <% end %>
   </div>
 </div>
+<% end %>
+<div>
 <% end %>
 
 <%#<hr>%>

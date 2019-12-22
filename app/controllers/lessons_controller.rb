@@ -354,10 +354,8 @@ class LessonsController < ApplicationController
   # GET /choose_a_textbook
   def choose_a_textbook
     session[:textbook_id] = params[:textbook_id]
-    respond_to do |format|
-      format.html { redirect_to :back, notice: "成功选择课本。" }
-      format.json { head :no_content }
-    end
+    @lesson = Lesson.find(session[:lesson_id])
+    redirect_to @lesson, notice: "成功选择课本。"
   end
 
   # GET /lesson_quickly_find_similar_lessons?lesson_id=num

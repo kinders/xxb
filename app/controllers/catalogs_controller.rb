@@ -127,13 +127,25 @@ class CatalogsController < ApplicationController
           c.textbook_id = @textbook.id
           c.lesson_id = @lesson.id
         }
-        redirect_to :back, notice: "已经将这篇课文添加为《#{@textbook.title}》第 #{@catalog.serial.to_f} 课。"
+        redirect_to @lesson, notice: "已经将这篇课文添加为《#{@textbook.title}》第 #{@catalog.serial.to_f} 课。"
       else
-        redirect_to :back, notice: "您不能将这篇课文添加到《#{@textbook.title}》中。"
+        redirect_to @lesson, notice: "您不能将这篇课文添加到《#{@textbook.title}》中。"
       end
     else
-      redirect_to :back, notice: "操作失败，您未指定课本或课文。"
+      redirect_to :@lesson, notice: "操作失败，您未指定课本或课文。"
     end
+  end
+
+  def export_all_lessons
+    @book = Textbook.find_by(id: session[:textbook_id])
+    @lessons_id = Catalog.where(textbook_id: @book.id).order(:serial).pluck(:lesson_id, :serial)
+    file_name = @book.name + Time.now.to_s
+    dir_name = @book.name + Time.now.to_s
+    root_name = "public/data_export"
+    path = File.join(root_name, dir_name)
+    File.open(path, "wb"){ |f| 
+      f.write
+    }
   end
 
   private

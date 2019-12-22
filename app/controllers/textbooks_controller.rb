@@ -7,8 +7,13 @@ class TextbooksController < ApplicationController
   # GET /textbooks
   # GET /textbooks.json
   def index
-    @textbooks = Textbook.all.order(:serial)
     session[:textbook_id] = nil
+    @textbooks = Textbook.all.order(:serial)
+    @textbooks_0 = Textbook.where({serial: 0...3010000}).order(:serial)
+    @textbooks_301 = Textbook.where({serial: 3010000...3070000}).order(:serial)
+    @textbooks_307 = Textbook.where({serial: 3070000...3100000}).order(:serial)
+    @textbooks_310 = Textbook.where({serial: 3100000...4000000}).order(:serial)
+    @textbooks_4 = Textbook.where("serial >= 4000000").order(:serial)
   end
 
   # GET /textbooks/1

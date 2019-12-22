@@ -1,8 +1,8 @@
 class Practice < ApplicationRecord
   resourcify
   belongs_to :user
-  belongs_to :tutor
-  belongs_to :lesson
+  belongs_to :tutor, optional: true
+  belongs_to :lesson, optional: true
   has_many :evaluations, dependent: :destroy
   has_many :justices, dependent: :destroy
   has_many :exercises, dependent: :destroy

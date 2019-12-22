@@ -117,6 +117,7 @@
     <div class="panel-body">
       <%= form_tag "/practice_change_to_lesson", class: 'form-inline' do %>
         <div class="control-group">
+          <input type="hidden" name="practice_id" value="#{@practice.id}" class="form-control">
           <%= autocomplete_field_tag :lesson_id, '', autocomplete_lesson_title_practices_path, class: "form-control" %>
         <%= submit_tag "提交", :class => 'btn btn-primary' %>
         <a class="btn btn-default" data-toggle="collapse" href="#change_to_another_lesson" aria-expanded="true" aria-controls="change_to_another_lesson" >取消</a>
