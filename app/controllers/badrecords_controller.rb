@@ -55,7 +55,7 @@ class BadrecordsController < ApplicationController
       end
     rescue 
       respond_to do |format|
-        format.html { redirect_to :back, notice: '不良记录添加失败，请先检查哪些记录没有添加。' }
+        format.html { redirect_back fallback_location: root_path, notice: '不良记录添加失败，请先检查哪些记录没有添加。' }
         format.json { render json: @card.errors, status: :unprocessable_entity }
       end
     end
@@ -107,7 +107,7 @@ class BadrecordsController < ApplicationController
     @badrecord = Badrecord.find(params[:badrecord_id])
     @badrecord.update(finish_man: current_user.id, finish_time: Time.now, finish: true)
     respond_to do |format|
-      format.html { redirect_to :back, notice: "成功抹平一条不良记录（#{@badrecord.id}）。" }
+      format.html { redirect_back fallback_location: root_path, notice: "成功抹平一条不良记录（#{@badrecord.id}）。" }
       format.json { head :no_content }
     end
   end
@@ -117,7 +117,7 @@ class BadrecordsController < ApplicationController
     @badrecords = Badrecord.where(id: params[:badrecord_id])
     @badrecords.update_all(finish_man: current_user.id, finish_time: Time.now, finish: true)
     respond_to do |format|
-      format.html { redirect_to :back, notice: "成功抹平以下不良记录：#{@badrecords.map{|badrecord| badrecord.id }}。"} 
+      format.html { redirect_back fallback_location: root_path, notice: "成功抹平以下不良记录：#{@badrecords.map{|badrecord| badrecord.id }}。"} 
       format.json { head :no_content }
     end
   end
@@ -127,7 +127,7 @@ class BadrecordsController < ApplicationController
     @badrecord = Badrecord.find(params[:badrecord_id])
     @badrecord.update(finish_man: nil, finish_time: nil, finish: nil)
     respond_to do |format|
-      format.html { redirect_to :back, notice: '还原了一条不良记录。' }
+      format.html { redirect_back fallback_location: root_path, notice: '还原了一条不良记录。' }
       format.json { head :no_content }
     end
   end

@@ -7,7 +7,7 @@ class CommentsController < ApplicationController
   # GET /comments.json
   def index
     unless current_user.has_role? :admin 
-      redirect_to :back, notice: "无效操作"
+      redirect_back fallback_location: root_path, notice: "无效操作"
       return
     end
     @comments = Comment.all
@@ -17,7 +17,7 @@ class CommentsController < ApplicationController
   # GET /comments/1.json
   def show
     unless current_user.has_role? :admin 
-      redirect_to :back, notice: "无效操作"
+      redirect_back fallback_location: root_path, notice: "无效操作"
       return
     end
   end
@@ -25,7 +25,7 @@ class CommentsController < ApplicationController
   # GET /comments/new
   def new
     unless current_user.has_role? :admin 
-      redirect_to :back, notice: "无效操作"
+      redirect_back fallback_location: root_path, notice: "无效操作"
       return
     end
     @comment = Comment.new
@@ -34,7 +34,7 @@ class CommentsController < ApplicationController
   # GET /comments/1/edit
   def edit
     unless current_user.has_role? :admin 
-      redirect_to :back, notice: "无效操作"
+      redirect_back fallback_location: root_path, notice: "无效操作"
       return
     end
   end
@@ -43,7 +43,7 @@ class CommentsController < ApplicationController
   # POST /comments.json
   def create
     unless session[:lesson_id] && session[:sentence_id]
-      redirect_to :back, notice: "无法找到指定课程或者句子"
+      redirect_back fallback_location: root_path, notice: "无法找到指定课程或者句子"
       return
     end
     @sentence = Sentence.find(session[:sentence_id])
@@ -61,7 +61,7 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
-        format.html { redirect_to :back, notice: '添加评论成功！' }
+        format.html { redirect_back fallback_location: root_path, notice: '添加评论成功！' }
         format.json { render :show, status: :created, location: @comment }
       else
         format.html { render :new }
@@ -74,7 +74,7 @@ class CommentsController < ApplicationController
   # PATCH/PUT /comments/1.json
   def update
     unless current_user.has_role? :admin 
-      redirect_to :back, notice: "无效操作"
+      redirect_back fallback_location: root_path, notice: "无效操作"
       return
     end
     respond_to do |format|

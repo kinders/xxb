@@ -151,7 +151,7 @@ class TutorsController < ApplicationController
     @tutor.picture1 = nil
     @tutor.save
     respond_to do |format|
-      format.html { redirect_to :back, notice: "图片一已经被删除" }
+      format.html { redirect_back fallback_location: root_path, notice: "图片一已经被删除" }
       format.json { head :no_content }
     end
   end
@@ -161,7 +161,7 @@ class TutorsController < ApplicationController
     @tutor.picture2 = nil
     @tutor.save
     respond_to do |format|
-      format.html { redirect_to :back, notice: "图片二已经被删除" }
+      format.html { redirect_back fallback_location: root_path, notice: "图片二已经被删除" }
       format.json { head :no_content }
     end
   end
@@ -310,7 +310,7 @@ class TutorsController < ApplicationController
     end
     another_lesson = Lesson.find_by(id: params[:lesson_id])
     unless another_lesson
-      redirect_to :back, notice: "无法找到指定的课程。"
+      redirect_back fallback_location: root_path, notice: "无法找到指定的课程。"
       return
     end
     if session[:tutor_id]
@@ -385,7 +385,7 @@ class TutorsController < ApplicationController
     @lesson = Lesson.find(session[:lesson_id])
     @tutor = Tutor.find(params[:tutor_id])
     unless @tutor.page.blank?
-      redirect_to :back, notice: '辅导页面已经存在内容。'
+      redirect_back fallback_location: root_path, notice: '辅导页面已经存在内容。'
       return
     end
     contents = @tutor.proviso.chars
@@ -404,7 +404,7 @@ class TutorsController < ApplicationController
     end
     new_content = contents.join
     @tutor = @tutor.update(page: new_content, page_length: new_content.size)
-    redirect_to :back, notice: "已经生成辅导助读，请您对多音字进行选定修改。"
+    redirect_back fallback_location: root_path, notice: "已经生成辅导助读，请您对多音字进行选定修改。"
   end
 
   def create_explain_page_for_tutor
@@ -415,7 +415,7 @@ class TutorsController < ApplicationController
     @lesson = Lesson.find(session[:lesson_id])
     @tutor = Tutor.find(params[:tutor_id])
     unless @tutor.page.blank?
-      redirect_to :back, notice: '辅导页面已经存在内容。'
+      redirect_back fallback_location: root_path, notice: '辅导页面已经存在内容。'
       return
     end
     delete_pattern = /(<[^>]*>)|(\r)|(\n)/
@@ -433,7 +433,7 @@ class TutorsController < ApplicationController
       new_content << "<p><b>" + w + "</b> [" + p + "] " + m + "</p>"
     end
     @tutor = @tutor.update(page: new_content, page_length: new_content.size)
-    redirect_to :back, notice: "已经生成词语解释，请您对内容进行选定修改。"
+    redirect_back fallback_location: root_path, notice: "已经生成词语解释，请您对内容进行选定修改。"
   end
 
   # /tutors/1/just_for_show 
@@ -447,7 +447,7 @@ class TutorsController < ApplicationController
   def tutor_proviso_as_practice_material
     @tutor = Tutor.find(params[:tutor_id])
     if @tutor.proviso.blank?
-      redirect_to :back, notice: '辅导提示不能为空。'
+      redirect_back fallback_location: root_path, notice: '辅导提示不能为空。'
       return
     end
     practice_material = '<p>请点击阅读《<a href="/tutors/' + @tutor.id.to_s + '/just_for_show">'+ @tutor.title + '</a>》，然后回答下面的问题。</p>'
@@ -487,7 +487,7 @@ class TutorsController < ApplicationController
   def words_consist_of_chinese_words
     @tutor = Tutor.find(params[:tutor_id])
     unless @tutor.page.blank?
-      redirect_to :back, notice: '辅导页面已经存在内容。'
+      redirect_back fallback_location: root_path, notice: '辅导页面已经存在内容。'
       return
     end
     uniq_chars = @tutor.proviso.gsub(/[^\u4e00-\u9fa5]/, "").chars.uniq.join
@@ -506,7 +506,7 @@ class TutorsController < ApplicationController
     page_content  << "<h3>四个字组成的词语：</h3>"
     page_content  << four_words
     @tutor = @tutor.update(page: page_content, page_length: page_content.size)
-    redirect_to :back, notice: "已经找到所选词语，请您对内容进行甄别修改。"
+    redirect_back fallback_location: root_path, notice: "已经找到所选词语，请您对内容进行甄别修改。"
   end
 
   # get find_sentences_with_words
@@ -519,7 +519,7 @@ class TutorsController < ApplicationController
     @lesson = Lesson.find(session[:lesson_id])
     @tutor = Tutor.find(params[:tutor_id])
     unless @tutor.page.blank?
-      redirect_to :back, notice: '辅导页面已经存在内容。'
+      redirect_back fallback_location: root_path, notice: '辅导页面已经存在内容。'
       return
     end
     delete_pattern = /(<[^>]*>)|(\r)|(\n)/
@@ -544,7 +544,7 @@ class TutorsController < ApplicationController
     new_content.flatten!
     page_content = "<div class='well lesson_paragraph'><p>" + new_content.join("</p><hr><p>") + "</p></div>"
     @tutor = @tutor.update(page: page_content, page_length: page_content.size)
-    redirect_to :back, notice: "已经生成词语解释，请您对内容进行选定修改。"
+    redirect_back fallback_location: root_path, notice: "已经生成词语解释，请您对内容进行选定修改。"
 
   end
 
@@ -561,7 +561,7 @@ class TutorsController < ApplicationController
 
     def be_a_master
       unless Master.find_by(user_id: current_user.id)
-        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+        redirect_back fallback_location: root_path, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
       end
     end
 

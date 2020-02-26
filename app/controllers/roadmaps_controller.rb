@@ -183,7 +183,7 @@ class RoadmapsController < ApplicationController
 
   def choose_begin_and_end
     unless session[:lesson_id]
-      redirect_to :back, notice: "请先指定一个课程"
+      redirect_back fallback_location: root_path, notice: "请先指定一个课程"
       return
     end
     @lesson = Lesson.find(session[:lesson_id])
@@ -235,7 +235,7 @@ class RoadmapsController < ApplicationController
   # 直接为课本生成文路
   def create_roadmap_for_textbook
     unless session[:textbook_id]
-      redirect_to :back, notice: "无法找到对应的课文"
+      redirect_back fallback_location: root_path, notice: "无法找到对应的课文"
       return
     else
       @textbook = Textbook.find(session[:textbook_id])
@@ -285,14 +285,14 @@ class RoadmapsController < ApplicationController
   def copy_to_new_roadmap
     @roadmap = Roadmap.find_by(id: params[:roadmap_id])
     unless @roadmap
-      redirect_to :back, notice: '无法找到要复制的指定文路'
+      redirect_back fallback_location: root_path, notice: '无法找到要复制的指定文路'
       return
     end
     new_roadmap = Roadmap.create(name: @roadmap.name + Time.now.to_s, description: @roadmap.description, user_id: current_user.id, textbook_id: @roadmap.textbook_id)
     @roadmap.paces.each do |pace|
       Pace.create(user_id: current_user.id, roadmap_id: new_roadmap.id, lesson_id: pace.lesson_id, serial: pace.serial)
     end
-    redirect_to :back, notice: '成功复制文路'
+    redirect_back fallback_location: root_path, notice: '成功复制文路'
   end
 
   private

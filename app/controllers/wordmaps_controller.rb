@@ -116,19 +116,19 @@ class WordmapsController < ApplicationController
           }
         }
         respond_to do |format|
-          format.html { redirect_to :back, notice: "习题已经被成功添加到卡片盒“#{@cardbox.name}”（#{@cardbox.id}）中。" }
+          format.html { redirect_back fallback_location: root_path, notice: "习题已经被成功添加到卡片盒“#{@cardbox.name}”（#{@cardbox.id}）中。" }
           format.json { render json: @card.errors, status: :unprocessable_entity }
         end
       else
         respond_to do |format|
-          format.html { redirect_to :back, notice: '这个词序表里面没有词语，请先添加词语' }
+          format.html { redirect_back fallback_location: root_path, notice: '这个词序表里面没有词语，请先添加词语' }
           format.json { render json: @card.errors, status: :unprocessable_entity }
         end
       end
 =begin
     rescue
       respond_to do |format|
-        format.html { redirect_to :back, notice: '习题添加出错，请在卡片盒中检查哪些词语没有被添加到卡片盒中。' }
+        format.html { redirect_back fallback_location: root_path, notice: '习题添加出错，请在卡片盒中检查哪些词语没有被添加到卡片盒中。' }
         format.json { render json: @card.errors, status: :unprocessable_entity }
       end
     end

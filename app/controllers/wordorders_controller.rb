@@ -55,7 +55,7 @@ class WordordersController < ApplicationController
     if session[:wordmap_id]
       @wordorder.wordmap_id = session[:wordmap_id]
     else
-      redirect_to :back, notice: "找不到词序表，无法添加词序"
+      redirect_back fallback_location: root_path, notice: "找不到词序表，无法添加词序"
       return
     end
 
@@ -106,12 +106,12 @@ class WordordersController < ApplicationController
         wordorder.update(serial: index + 1) unless wordorder.serial == index + 1
       end
     end
-    redirect_to :back, notice: '序列更新完毕'
+    redirect_back fallback_location: root_path, notice: '序列更新完毕'
   end
 
   def load_wordorders
     unless session[:wordmap_id]
-      redirect_to :back, notice: '请先指定一个词序表'
+      redirect_back fallback_location: root_path, notice: '请先指定一个词序表'
       return
     end
     @wordmap = Wordmap.find(session[:wordmap_id])
@@ -166,7 +166,7 @@ class WordordersController < ApplicationController
       end
     end
     respond_to do |format|
-      format.html { redirect_to :back, notice: '成功导入所有词序！' }
+      format.html { redirect_back fallback_location: root_path, notice: '成功导入所有词序！' }
       format.json { head :no_content }
     end
   end

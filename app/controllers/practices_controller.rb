@@ -148,7 +148,7 @@ class PracticesController < ApplicationController
     @practice.picture_q = nil
     @practice.save
     respond_to do |format|
-      format.html { redirect_to :back, notice: "问题图片已经被删除" }
+      format.html { redirect_back fallback_location: root_path, notice: "问题图片已经被删除" }
       format.json { head :no_content }
     end
   end
@@ -158,7 +158,7 @@ class PracticesController < ApplicationController
     @practice.picture_a = nil
     @practice.save
     respond_to do |format|
-      format.html { redirect_to :back, notice: "答案图片已经被删除" }
+      format.html { redirect_back fallback_location: root_path, notice: "答案图片已经被删除" }
       format.json { head :no_content }
     end
   end
@@ -190,13 +190,13 @@ class PracticesController < ApplicationController
         end
       end
       unless session[:tutor_id]
-        redirect_to :back, notice: '成功导入练习！'
+        redirect_back fallback_location: root_path, notice: '成功导入练习！'
         return
       end
     rescue 
       File.delete(path)
       respond_to do |format|
-        format.html { redirect_to :back, notice: '导入练习失败，请修改CSV文件后重新尝试！' }
+        format.html { redirect_back fallback_location: root_path, notice: '导入练习失败，请修改CSV文件后重新尝试！' }
         format.json { head :no_content }
       end
     end
@@ -205,7 +205,7 @@ class PracticesController < ApplicationController
   def add_to_paper
     @practice = Practice.find(params[:practice_id])
     if Paperitem.find_by(paper_id: session[:paper_id], practice_id: @practice.id)
-      redirect_to :back, notice: "您之前已经将这道题添加到试卷中。"
+      redirect_back fallback_location: root_path, notice: "您之前已经将这道题添加到试卷中。"
       return
     else
       @paperitem = Paperitem.create{ |pi|
@@ -214,7 +214,7 @@ class PracticesController < ApplicationController
         pi.practice_id = @practice.id
         pi.score = @practice.score
       }
-      redirect_to :back, notice: "成功将这道题添加到试卷中！"
+      redirect_back fallback_location: root_path, notice: "成功将这道题添加到试卷中！"
     end
   end
 
@@ -244,10 +244,10 @@ class PracticesController < ApplicationController
   def practice_add_to_lesson
    @lesson_practice = LessonPractice.find_by(lesson_id: params[:lesson_id], practice_id: params[:practice_id])
    if @lesson_practice
-    redirect_to :back, notice: '习题已经在课程中。'
+    redirect_back fallback_location: root_path, notice: '习题已经在课程中。'
    else
     LessonPractice.create(lesson_id: params[:lesson_id], practice_id: params[:practice_id])
-    redirect_to :back, notice: '已经将习题添加到课程中。'
+    redirect_back fallback_location: root_path, notice: '已经将习题添加到课程中。'
    end
   end
 
@@ -264,7 +264,7 @@ class PracticesController < ApplicationController
     end
    @exercise = Exercise.find_by(tutor_id: params[:tutor_id], practice_id: params[:practice_id])
    if @exercise
-    redirect_to :back, notice: '习题已经在辅导中。'
+    redirect_back fallback_location: root_path, notice: '习题已经在辅导中。'
    else
     last_exercise = Exercise.where(tutor_id: params[:tutor_id]).order(:serial).last
     if last_exercise
@@ -272,47 +272,47 @@ class PracticesController < ApplicationController
     else
       Exercise.create(tutor_id: params[:tutor_id], practice_id: params[:practice_id], user_id: current_user.id, serial: 1)
     end
-    redirect_to :back, notice: '已经将习题添加到辅导中。'
+    redirect_back fallback_location: root_path, notice: '已经将习题添加到辅导中。'
    end
   end
 
   def analysize
     AnalyzePracticeJob.perform_later params[:practice_id]
-    redirect_to :back, notice: '已经将习题添加到分析队列中。'
+    redirect_back fallback_location: root_path, notice: '已经将习题添加到分析队列中。'
   end
 
   # post /practices/1/copy_to_another_lesson
   def copy_to_another_lesson
     unless session[:practice_id]
-      redirect_to :back, notice: "无法找到相应的练习。"
+      redirect_back fallback_location: root_path, notice: "无法找到相应的练习。"
       return
     end
     another_lesson = Lesson.find_by(id: params[:lesson_id])
     unless another_lesson
-      redirect_to :back, notice: "无法找到指定的课程。"
+      redirect_back fallback_location: root_path, notice: "无法找到指定的课程。"
       return
     end
    @lesson_practice = LessonPractice.find_by(lesson_id: params[:lesson_id], practice_id: session[:practice_id])
    if @lesson_practice
-      redirect_to :back, notice: "指定课程已有本习题，无需重新添加。"
+      redirect_back fallback_location: root_path, notice: "指定课程已有本习题，无需重新添加。"
     else
       LessonPractice.create(lesson_id: params[:lesson_id], practice_id: session[:practice_id])
-      redirect_to :back, notice: "已经将本题复制到课文《#{another_lesson.title}》（#{another_lesson.id}）中。"
+      redirect_back fallback_location: root_path, notice: "已经将本题复制到课文《#{another_lesson.title}》（#{another_lesson.id}）中。"
     end
   end
 
   def practice_change_to_lesson
     unless session[:lesson_id]
-      redirect_to :back, notice: "无法找到相应的课程。"
+      redirect_back fallback_location: root_path, notice: "无法找到相应的课程。"
       return
     end
     unless session[:practice_id]
-      redirect_to :back, notice: "无法找到相应的练习。"
+      redirect_back fallback_location: root_path, notice: "无法找到相应的练习。"
       return
     end
     another_lesson = Lesson.find_by(id: params[:lesson_id])
     unless another_lesson
-      redirect_to :back, notice: "无法找到指定的课程。"
+      redirect_back fallback_location: root_path, notice: "无法找到指定的课程。"
       return
     end
     @lesson_practice = LessonPractice.find_by(lesson_id: params[:lesson_id], practice_id: session[:practice_id])
@@ -321,7 +321,7 @@ class PracticesController < ApplicationController
     else
       LessonPractice.find_by(lesson_id: session[:lesson_id], practice_id: session[:practice_id]).update(lesson_id: params[:lesson_id])
     end
-    redirect_to :back, notice: '已经将习题转移到指定的课程中。'
+    redirect_back fallback_location: root_path, notice: '已经将习题转移到指定的课程中。'
   end
 
 
@@ -338,7 +338,7 @@ class PracticesController < ApplicationController
 
     def be_a_master
       unless Master.find_by(user_id: current_user.id)
-        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+        redirect_back fallback_location: root_path, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
       end
     end
 

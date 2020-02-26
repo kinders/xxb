@@ -81,7 +81,7 @@ class JusticesController < ApplicationController
     if current_user.has_role? :admin
       respond_to do |format|
         if @justice.save
-          format.html { redirect_to :back, notice: '评分成功' }
+          format.html { redirect_back fallback_location: root_path, notice: '评分成功' }
           format.json { render :show, status: :created, location: @justice }
         else
           format.html { render :new }

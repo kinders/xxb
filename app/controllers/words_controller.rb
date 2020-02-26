@@ -38,13 +38,13 @@ class WordsController < ApplicationController
 
   # GET /words/new
   def new
-    redirect_to :back, notice: "您没有权限新建字典，请进行其他操作。"
+    redirect_back fallback_location: root_path, notice: "您没有权限新建字典，请进行其他操作。"
     # @word = Word.new
   end
 
   # GET /words/1/edit
   def edit
-    # redirect_to :back, notice: "您没有权限新建字典，请进行其他操作。"
+    # redirect_back fallback_location: root_path, notice: "您没有权限新建字典，请进行其他操作。"
   end
 
   # POST /words
@@ -56,7 +56,7 @@ class WordsController < ApplicationController
 
     word = Word.find_by(md1: word_md[0..7], md2: word_md[8..15], md3: word_md[16..23], md4: word_md[24..31], md5: word_md[32..39], md6: word_md[40..47], md7: word_md[48..55], md8: word_md[56..63])
     if word
-      redirect_to :back, notice: "词语已经存在，无需新建。"
+      redirect_back fallback_location: root_path, notice: "词语已经存在，无需新建。"
       return
     else
       if @word.name =~ /[\u4e00-\u9fa5]/
@@ -122,7 +122,7 @@ class WordsController < ApplicationController
   # DELETE /words/1
   # DELETE /words/1.json
   def destroy
-    redirect_to :back, notice: "您没有权限新建字典，请进行其他操作。"
+    redirect_back fallback_location: root_path, notice: "您没有权限新建字典，请进行其他操作。"
     # @word.destroy
     # respond_to do |format|
       # format.html { redirect_to words_url, notice: 'Word was successfully destroyed.' }
@@ -140,7 +140,7 @@ class WordsController < ApplicationController
       @word.update(is_meanful: true)
       status = "有意义词汇"
     end
-    redirect_to :back, notice: "“#{@word.name}”已经被标记为#{status}。"
+    redirect_back fallback_location: root_path, notice: "“#{@word.name}”已经被标记为#{status}。"
   end
 
   # GET /words/choose_dictionary
@@ -177,13 +177,13 @@ class WordsController < ApplicationController
         end
       end
       respond_to do |format|
-        format.html { redirect_to :back, notice: '成功导入所有单词！' }
+        format.html { redirect_back fallback_location: root_path, notice: '成功导入所有单词！' }
         format.json { head :no_content }
       end
     rescue Exception => e 
       # File.delete(path)
       respond_to do |format|
-        format.html { redirect_to :back, notice: "导入单词失败，请修改CSV文件后重新尝试！错误提示：#{e}" }
+        format.html { redirect_back fallback_location: root_path, notice: "导入单词失败，请修改CSV文件后重新尝试！错误提示：#{e}" }
         format.json { head :no_content }
       end
     end
@@ -205,7 +205,7 @@ class WordsController < ApplicationController
     response = http.request(request)
 
     if response.body =~ /id="empty-tip"/
-      redirect_to :back, notice: "百度词典还没有收录这个词语。"
+      redirect_back fallback_location: root_path, notice: "百度词典还没有收录这个词语。"
       return
     end
     a_pattern = Regexp.union(/<a[^>]*>/, /<\/a>/)
@@ -224,21 +224,21 @@ class WordsController < ApplicationController
     explains <<  doc.css("div#baike-wrapper").inner_html.gsub(a_pattern, " ").gsub(b_pattern, "<b>").gsub(h_pattern, "").gsub("查看百科", "")
     @word.meanings.create(content: explains)
 =end
-    redirect_to :back, notice: "成功从百度汉语网站导入信息。"
+    redirect_back fallback_location: root_path, notice: "成功从百度汉语网站导入信息。"
   end
 
   # get /words/1/load_explain_from_baidu_dict
   def load_explain_from_baidu_dict
     @word || @word = Word.find(session[:word_id])
     @word.load_explain_from_baidu_dict
-    redirect_to :back, notice: "成功从百度词典网站导入信息。"
+    redirect_back fallback_location: root_path, notice: "成功从百度词典网站导入信息。"
   end
 
   # get /words/1/load_explain_from_youdao_dict
   def load_explain_from_youdao_dict
     @word || @word = Word.find(session[:word_id])
     @word.load_explain_from_youdao_dict
-    redirect_to :back, notice: "成功从有道词典网站导入信息。"
+    redirect_back fallback_location: root_path, notice: "成功从有道词典网站导入信息。"
   end
 
   def new_words_as_tutor
@@ -308,7 +308,7 @@ class WordsController < ApplicationController
     @word = Word.find(params[:word_id])
     @words_have_word = Word.where(is_meanful: true).where("name LIKE ?", "%" + @word.name + "%" ).order(:length)
     if @words_have_word.size < 2
-      redirect_to :back, notice: "没有找到包含的词语。"
+      redirect_back fallback_location: root_path, notice: "没有找到包含的词语。"
       return
     end
   end
@@ -317,7 +317,7 @@ class WordsController < ApplicationController
     @word = Word.find(params[:word_id])
     @lessons_have_word = WordParser.where(word_id: @word.id).pluck(:lesson_id).uniq
     if @lessons_have_word.blank?
-      redirect_to :back, notice: "没有找到相应的课文。"
+      redirect_back fallback_location: root_path, notice: "没有找到相应的课文。"
       return
     end
   end
@@ -325,7 +325,7 @@ class WordsController < ApplicationController
   def word_comments
     @comments = Comment.where(word_id: params[:word_id])
     if @comments.blank?
-      redirect_to :back, notice: "没有找到相应的注释。"
+      redirect_back fallback_location: root_path, notice: "没有找到相应的注释。"
       return
     end
   end

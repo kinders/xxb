@@ -101,7 +101,7 @@ class ReceiptsController < ApplicationController
   def person_onboards
     @user = User.find(params[:user_id])
     if @user.has_role? :admin
-      redirect_to :back, notice: '无法查询该用户的登录记录。'
+      redirect_back fallback_location: root_path, notice: '无法查询该用户的登录记录。'
     else
       @onboards = Onboard.where(user_id: @user.id).page params[:page]
     end
@@ -114,7 +114,7 @@ class ReceiptsController < ApplicationController
   def off_onboard
     @onboard = Onboard.find(params[:onboard_id])
     @onboard.update(expire_at: Time.now, end_at: Time.now)
-    redirect_to :back, notice: "用户 #{@onboard.user.name} 的会话（#{@onboard.id}）已经结束！"
+    redirect_back fallback_location: root_path, notice: "用户 #{@onboard.user.name} 的会话（#{@onboard.id}）已经结束！"
   end
 
   private

@@ -34,7 +34,7 @@ class MeaningsController < ApplicationController
         word = Word.find(@meaning.word_id)
         word_m_count = word.meanings_count + 1
         word.update(meanings_count: word_m_count)
-        format.html { redirect_to :back, notice: '成功新增一种词义。' }
+        format.html { redirect_to word, notice: '成功新增一种词义。' }
         # format.html { redirect_to @meaning, notice: 'Meaning was successfully created.' }
         format.json { render :show, status: :created, location: @meaning }
       else

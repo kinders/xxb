@@ -138,7 +138,7 @@ class LessonsController < ApplicationController
     @lesson.picture = nil
     @lesson.save
     respond_to do |format|
-      format.html { redirect_to :back, notice: "图片已经被删除" }
+      format.html { redirect_back fallback_location: root_path, notice: "图片已经被删除" }
       format.json { head :no_content }
     end
   end
@@ -159,7 +159,7 @@ class LessonsController < ApplicationController
         p.serial = index
       }
     }
-    redirect_to :back, notice: "#{teaching.title}已经成功创建。"
+    redirect_back fallback_location: root_path, notice: "#{teaching.title}已经成功创建。"
   end
 
 
@@ -169,9 +169,9 @@ class LessonsController < ApplicationController
 # =begin
     if params[:lesson_id]
       AnalyzeLessonJob.perform_later params[:lesson_id]
-      redirect_to :back, notice: "已经将分析任务提交给后台，分析需要较长时间，请耐心等候。"
+      redirect_back fallback_location: root_path, notice: "已经将分析任务提交给后台，分析需要较长时间，请耐心等候。"
     else
-      redirect_to :back, notice: "没有找到所要分析的课程"
+      redirect_back fallback_location: root_path, notice: "没有找到所要分析的课程"
     end
 # =end
 =begin
@@ -180,7 +180,7 @@ class LessonsController < ApplicationController
     # 检查是否空白内容
     @lesson = Lesson.find(session[:lesson_id])
     if @lesson.content == ""
-        redirect_to :back, notice: "该课程内容为空，无需分析"
+        redirect_back fallback_location: root_path, notice: "该课程内容为空，无需分析"
         return
     end
     content = @lesson.title + "。" + (@lesson.author || "") + "。"+ (@lesson.content || "")
@@ -288,7 +288,7 @@ class LessonsController < ApplicationController
       @lesson.sentences.destroy_all
       @words_report.destroy
       respond_to do |format|
-        format.html { redirect_to :back, notice: "对课文解析出错。建议您将情况通过“建议”向管理员反映。"}
+        format.html { redirect_back fallback_location: root_path, notice: "对课文解析出错。建议您将情况通过“建议”向管理员反映。"}
         format.json { head :no_content }
       end
     end
@@ -300,12 +300,12 @@ class LessonsController < ApplicationController
   def as_tutor_link
     @origin_lesson = Lesson.find_by(id: session[:lesson_id])
     unless @origin_lesson
-      redirect_to :back, notice: "无法确定辅导关联的课文。"
+      redirect_back fallback_location: root_path, notice: "无法确定辅导关联的课文。"
       return
     end
     @lesson = Lesson.find_by(id: params[:lesson_id])
     unless @lesson
-      redirect_to :back, notice: "无法找到辅导关联的课文。"
+      redirect_back fallback_location: root_path, notice: "无法找到辅导关联的课文。"
       return
     end
   end
@@ -329,7 +329,7 @@ class LessonsController < ApplicationController
       return
     end
     if @lesson.id == @target.id
-      redirect_to :back, notice: "请重新指定一片课文。"
+      redirect_back fallback_location: root_path, notice: "请重新指定一片课文。"
       return
     end
     if @lesson.author
@@ -362,7 +362,7 @@ class LessonsController < ApplicationController
   def lesson_quickly_find_similar_lessons
     @target_lesson = Lesson.find_by(id: params[:lesson_id])
     unless @target_lesson
-      redirect_to :back, notice: '请先指定一个课程'
+      redirect_back fallback_location: root_path, notice: '请先指定一个课程'
       return
     end
     all_word_ids = WordParser.where(lesson_id: @target_lesson.id).pluck(:word_id).uniq
@@ -378,7 +378,7 @@ class LessonsController < ApplicationController
   def lesson_similar_title_lessons
     @target_lesson = Lesson.find_by(id: params[:lesson_id])
     unless @target_lesson
-      redirect_to :back, notice: '请先指定一个课程'
+      redirect_back fallback_location: root_path, notice: '请先指定一个课程'
       return
     end
     lesson_titles = @target_lesson.title.split(/\s/).map{|word|(word =~ /[\u4e00-\u9fa5]/)? word.chars : word}.flatten.uniq
@@ -389,7 +389,7 @@ class LessonsController < ApplicationController
     similar_title_lessons_id.flatten!
     @lessons_id = similar_title_lessons_id.sort_by{|i|similar_title_lessons_id.find_all{|j|j==i}.count}.uniq.reverse.first(101)
     unless @lessons_id.any?
-      redirect_to :back, notice: '找不到标题类似的课文'
+      redirect_back fallback_location: root_path, notice: '找不到标题类似的课文'
     end
   end 
 
@@ -397,7 +397,7 @@ class LessonsController < ApplicationController
   def lesson_same_author_lessons
     @target_lesson = Lesson.find_by(id: params[:lesson_id])
     unless @target_lesson
-      redirect_to :back, notice: '请先指定一个课程'
+      redirect_back fallback_location: root_path, notice: '请先指定一个课程'
       return
     end
     lesson_authors = @target_lesson.author.gsub(/[(（\[].+[)）\]]/, "").split(/\s|,|，|、/).flatten.uniq
@@ -408,7 +408,7 @@ class LessonsController < ApplicationController
     similar_author_lessons_id.flatten!
     @lessons_id = similar_author_lessons_id.sort_by{|i|similar_author_lessons_id.find_all{|j|j==i}.count}.uniq.reverse
     if @lessons_id.size == 1
-      redirect_to :back, notice: '找不到同一作者写的其他课文'
+      redirect_back fallback_location: root_path, notice: '找不到同一作者写的其他课文'
       return
     end
   end 
@@ -417,7 +417,7 @@ class LessonsController < ApplicationController
   def lesson_similar_time_lessons
     @target_lesson = Lesson.find_by(id: params[:lesson_id])
     unless @target_lesson
-      redirect_to :back, notice: '请先指定一个课程'
+      redirect_back fallback_location: root_path, notice: '请先指定一个课程'
       return
     end
     similar_time_lessons = []
@@ -437,7 +437,7 @@ class LessonsController < ApplicationController
   def lesson_content_as_practice_material
     @lesson = Lesson.find(params[:lesson_id])
     if @lesson.content.blank?
-      redirect_to :back, notice: '课文正文不能为空。'
+      redirect_back fallback_location: root_path, notice: '课文正文不能为空。'
       return
     end
     practice_material = '<p>请点击阅读《<a href="/lessons/' + @lesson.id.to_s + '/as_tutor_link">'+ @lesson.title + '</a>》，然后回答下面的问题。</p>'
@@ -512,7 +512,7 @@ class LessonsController < ApplicationController
 
     def be_a_master
       unless Master.find_by(user_id: current_user.id)
-        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+        redirect_back fallback_location: root_path, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
       end
     end
 

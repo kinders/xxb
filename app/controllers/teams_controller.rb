@@ -101,7 +101,7 @@ class TeamsController < ApplicationController
       if @player.save
         format.html { redirect_to teams_url, notice: "您已经成功加入“#{@team.name}”小组"}
       else
-        format.html { redirect_to :back, notice: "加入小组失败，请重试或者联系管理员" }
+        format.html { redirect_back fallback_location: root_path, notice: "加入小组失败，请重试或者联系管理员" }
       end
     end
   end

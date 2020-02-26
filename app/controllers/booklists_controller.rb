@@ -23,7 +23,7 @@ class BooklistsController < ApplicationController
   # GET /booklists/new
   def new
     unless session[:textbook_id]
-      redirect_to :back, notice: '无法找到指定的图书'
+      redirect_back fallback_location: root_path, notice: '无法找到指定的图书'
       return
     end
     @textbook = Textbook.find_by(id: session[:textbook_id])
@@ -38,7 +38,7 @@ class BooklistsController < ApplicationController
   # POST /booklists.json
   def create
     unless session[:textbook_id]
-      redirect_to :back, notice: '无法找到指定的图书'
+      redirect_back fallback_location: root_path, notice: '无法找到指定的图书'
       return
     end
     @booklist = Booklist.new(booklist_params)

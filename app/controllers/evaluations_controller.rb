@@ -96,7 +96,7 @@ class EvaluationsController < ApplicationController
           }
         else              ### 如果没有取出题目
           respond_to do |format|
-            format.html { redirect_to :back, notice: "暂时没有可用的练习了。"}
+            format.html { redirect_back fallback_location: root_path, notice: "暂时没有可用的练习了。"}
 	        end
         end
       end
@@ -224,7 +224,7 @@ class EvaluationsController < ApplicationController
     @evaluation.picture_ya = nil
     @evaluation.save
     respond_to do |format|
-      format.html { redirect_to :back, notice: "答题图片已经被删除" }
+      format.html { redirect_back fallback_location: root_path, notice: "答题图片已经被删除" }
       format.json { head :no_content }
     end
   end

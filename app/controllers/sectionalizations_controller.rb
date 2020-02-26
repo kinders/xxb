@@ -90,12 +90,12 @@ class SectionalizationsController < ApplicationController
 
   def choose_sectionalization
     session[:sectionalization_id] = params[:sectionalization_id]
-    redirect_to :back, notice: "您已经选择了一个分组方案"
+    redirect_back fallback_location: root_path, notice: "您已经选择了一个分组方案"
   end
 
   def reset_sectionalization
     session[:sectionalization_id] = nil
-    redirect_to :back, notice: "您现在可以重新选择_分组方案_了"
+    redirect_back fallback_location: root_path, notice: "您现在可以重新选择_分组方案_了"
   end
 
   private

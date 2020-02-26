@@ -132,9 +132,9 @@ class TextbooksController < ApplicationController
       @textbook.lessons.each do |lesson|
         AnalyzeLessonJob.perform_later lesson.id
       end
-      redirect_to :back, notice: "已经将分析任务提交给后台，分析需要较长时间，请耐心等候。"
+      redirect_back fallback_location: root_path, notice: "已经将分析任务提交给后台，分析需要较长时间，请耐心等候。"
     else
-      redirect_to :back, notice: "没有找到所要分析的课本"
+      redirect_back fallback_location: root_path, notice: "没有找到所要分析的课本"
     end
   end
 
@@ -152,7 +152,7 @@ class TextbooksController < ApplicationController
 
     def be_a_master
       unless Master.find_by(user_id: current_user.id)
-        redirect_to :back, notice: "对不起，您暂时还没有老师的身份来进行操作。"
+        redirect_back fallback_location: root_path, notice: "对不起，您暂时还没有老师的身份来进行操作。"
       end
     end
 end

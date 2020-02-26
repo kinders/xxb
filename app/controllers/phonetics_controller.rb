@@ -83,7 +83,7 @@ class PhoneticsController < ApplicationController
     @phonetic = Phonetic.find_by(content: params[:content], label: params[:label])
     if @phonetic
       if @word.phonetics.exists?(@phonetic)
-        redirect_to :back, notice: "这个拼音已经存在，无需重复添加。"
+        redirect_back fallback_location: root_path, notice: "这个拼音已经存在，无需重复添加。"
         return
       else
         word_p_count = @word.phonetics_count + 1
@@ -95,7 +95,7 @@ class PhoneticsController < ApplicationController
       word_p_count = @word.phonetics_count + 1
       @word.update(phonetics_count: word_p_count)
     end
-    redirect_to :back, notice: "成功添加拼音。"
+    redirect_back fallback_location: root_path, notice: "成功添加拼音。"
   end
 
   def chinese_yinxu

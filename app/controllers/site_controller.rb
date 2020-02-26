@@ -8,8 +8,7 @@ class SiteController < ApplicationController
   def search_lesson
     @search = params[:title]
     # 词汇
-    words = Word.where("name LIKE ?", "%" + params[:title] +"%" ).where(is_meanful: true)
-    @words = words.order("length")
+    @words = [] #  Word.where("name LIKE ?", "%" + params[:title] +"%" ).where(is_meanful: true).order("length")
     # 课本标题
     @textbooks = Textbook.where("title LIKE ?", "%" + params[:title] +"%")
     # 课文标题

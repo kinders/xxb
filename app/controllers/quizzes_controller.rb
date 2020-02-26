@@ -46,7 +46,7 @@ class QuizzesController < ApplicationController
 
   # GET /quizzes/1/edit
   def edit
-    redirect_to :back, notice: "不能修改测试数据。"
+    redirect_back fallback_location: root_path, notice: "不能修改测试数据。"
 =begin
 =end
   end
@@ -86,7 +86,7 @@ class QuizzesController < ApplicationController
   # PATCH/PUT /quizzes/1
   # PATCH/PUT /quizzes/1.json
   def update
-    redirect_to :back, notice: "不能修改测试数据。"
+    redirect_back fallback_location: root_path, notice: "不能修改测试数据。"
 =begin
     respond_to do |format|
       if @quiz.update(quiz_params)

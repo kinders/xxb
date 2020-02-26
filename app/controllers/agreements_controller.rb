@@ -7,7 +7,8 @@ class AgreementsController < ApplicationController
     unless @agreement
       Agreement.create(user_id: current_user.id, comment_id: params[:comment_id])
     end
-    redirect_to :back, notice: "支持了一个评论"
+    # redirect_to :back, notice: "支持了一个赞成"
+    redirect_back fallback_location: root_path, notice: "支持了一个评论"
   end
 
   def dislike
@@ -15,7 +16,8 @@ class AgreementsController < ApplicationController
     if @agreement
       @agreement.destroy
     end
-    redirect_to :back, notice: "取消了一个赞成"
+    # redirect_to :back, notice: "取消了一个赞成"
+    redirect_back fallback_location: root_path, notice: "取消了一个评论"
   end
 
   private

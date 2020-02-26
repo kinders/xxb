@@ -50,7 +50,7 @@ class HomeworksController < ApplicationController
       @homework = Homework.new
     else
       flash[:notice] = "您的权限不足，请您联系班主任。"
-      redirect_to :back
+      redirect_back fallback_location: root_path
     end
   end
 
@@ -112,7 +112,7 @@ class HomeworksController < ApplicationController
 
     def be_a_master
       unless Master.find_by(user_id: current_user.id)
-        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+        redirect_back fallback_location: root_path, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
       end
     end
 

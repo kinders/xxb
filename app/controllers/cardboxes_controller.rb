@@ -171,7 +171,7 @@ class CardboxesController < ApplicationController
       end
     rescue 
       respond_to do |format|
-        format.html { redirect_to :back, notice: '添加失败，请到卡片盒中检查哪些习题没有添加。' }
+        format.html { redirect_back fallback_location: root_path, notice: '添加失败，请到卡片盒中检查哪些习题没有添加。' }
         format.json { render json: @card.errors, status: :unprocessable_entity }
       end
     end

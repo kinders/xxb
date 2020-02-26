@@ -59,10 +59,10 @@ class ClassgroupscoresController < ApplicationController
             }
             @classpersonscore.save
           }
-          format.html { redirect_to :back, notice: '成功为小组添加评分！' }
+          format.html { redirect_back fallback_location: root_path, notice: '成功为小组添加评分！' }
           format.json { render :show, status: :created, location: @classgroupscore }
         else
-          format.html { redirect_to :back, notice: '为小组添加评分失败。' }
+          format.html { redirect_back fallback_location: root_path, notice: '为小组添加评分失败。' }
           format.json { render json: @classgroupscore.errors, status: :unprocessable_entity }
         end
       end

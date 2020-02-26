@@ -16,7 +16,7 @@ class PlansController < ApplicationController
       @plans = Plan.where(teaching_id: teaching_id).order('serial')
     else
       respond_to do |format|
-        format.html { redirect_to :back, notice: '课程或教学计划出错'}
+        format.html { redirect_back fallback_location: root_path, notice: '课程或教学计划出错'}
       end 
     end
   end
@@ -91,7 +91,7 @@ class PlansController < ApplicationController
       @plans = Plan.where(teaching_id: teaching_id).order('serial')
     else
       respond_to do |format|
-        format.html { redirect_to :back, notice: '需要指定一个教学计划'}
+        format.html { redirect_back fallback_location: root_path, notice: '需要指定一个教学计划'}
       end 
     end
   end
@@ -109,7 +109,7 @@ class PlansController < ApplicationController
 
     def be_a_master
       unless Master.find_by(user_id: current_user.id)
-        redirect_to :back, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+        redirect_back fallback_location: root_path, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
       end
     end
 

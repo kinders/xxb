@@ -57,10 +57,10 @@ class CardsController < ApplicationController
       @card.nexttime = Time.now
       respond_to do |format|
         if @card.save
-          format.html { redirect_to :back, notice: '成功添加一张卡片。' }
+          format.html { redirect_back fallback_location: root_path, notice: '成功添加一张卡片。' }
           format.json { render :show, status: :created, location: @card }
         else
-          format.html { redirect_to :back, notice: '卡片添加失败。' }
+          format.html { redirect_back fallback_location: root_path, notice: '卡片添加失败。' }
           format.json { render json: @card.errors, status: :unprocessable_entity }
         end
       end
@@ -203,7 +203,7 @@ class CardsController < ApplicationController
       end
     rescue 
       respond_to do |format|
-        format.html { redirect_to :back, notice: '卡片添加失败，请到卡片盒中检查哪些习题没有添加。' }
+        format.html { redirect_back fallback_location: root_path, notice: '卡片添加失败，请到卡片盒中检查哪些习题没有添加。' }
         format.json { render json: @card.errors, status: :unprocessable_entity }
       end
     end
@@ -212,7 +212,7 @@ class CardsController < ApplicationController
   def multiple_operate
     if params[:commit] == "删除所选"
       Card.where(id: params[:card_id]).destroy_all
-      redirect_to :back, notice: "删除所选的多个卡片。"
+      redirect_back fallback_location: root_path, notice: "删除所选的多个卡片。"
     elsif params[:commit] == "追加"
       @cardbox = Cardbox.find(params[:cardbox_id])
       Card.where(id: params[:card_id]).each do | card |
@@ -229,9 +229,9 @@ class CardsController < ApplicationController
         n_card.nexttime = Time.now
         }
       end
-      redirect_to :back, notice: "已经将卡片添加到该卡片盒中。"
+      redirect_back fallback_location: root_path, notice: "已经将卡片添加到该卡片盒中。"
     else
-      redirect_to :back, notice: "操作失败。"
+      redirect_back fallback_location: root_path, notice: "操作失败。"
     end
   end
 

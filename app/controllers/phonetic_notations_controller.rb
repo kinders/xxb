@@ -65,7 +65,7 @@ class PhoneticNotationsController < ApplicationController
     word.update(phonetics_count: word_p_count)
     @phonetic_notation.destroy
     respond_to do |format|
-      format.html { redirect_to :back, notice: '已经删除该注音方案' }
+      format.html { redirect_back fallback_location: root_path, notice: '已经删除该注音方案' }
       # format.html { redirect_to phonetic_notations_url, notice: 'Phonetic notation was successfully destroyed.' }
       format.json { head :no_content }
     end
@@ -94,13 +94,13 @@ class PhoneticNotationsController < ApplicationController
         end
       end
       respond_to do |format|
-        format.html { redirect_to :back, notice: '成功导入所有读音！' }
+        format.html { redirect_back fallback_location: root_path, notice: '成功导入所有读音！' }
         format.json { head :no_content }
       end
     rescue Exception => e 
       # File.delete(path)
       respond_to do |format|
-        format.html { redirect_to :back, notice: "导入读音失败，请修改CSV文件后重新尝试！错误提示：#{e}" }
+        format.html { redirect_back fallback_location: root_path, notice: "导入读音失败，请修改CSV文件后重新尝试！错误提示：#{e}" }
         format.json { head :no_content }
       end
     end

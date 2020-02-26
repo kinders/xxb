@@ -13,7 +13,7 @@ class QuizItemsController < ApplicationController
       @quiz = Quiz.find(session[:quiz_id])
       @quiz_items = QuizItem.where(quiz_id: @quiz.id)
     else
-      redirect_to :back, notice: "没有相应的测试。"
+      redirect_back fallback_location: root_path, notice: "没有相应的测试。"
     end
   end
 
@@ -35,7 +35,7 @@ class QuizItemsController < ApplicationController
 
   # GET /quiz_items/1/edit
   def edit
-    redirect_to :back, notice: "您不应随意更改记录。"
+    redirect_back fallback_location: root_path, notice: "您不应随意更改记录。"
 =begin
 =end
   end
@@ -59,7 +59,7 @@ class QuizItemsController < ApplicationController
   # PATCH/PUT /quiz_items/1
   # PATCH/PUT /quiz_items/1.json
   def update
-    redirect_to :back, notice: "您不应随意更改记录。"
+    redirect_back fallback_location: root_path, notice: "您不应随意更改记录。"
 =begin
     respond_to do |format|
       if @quiz_item.update(quiz_item_params)
@@ -76,7 +76,7 @@ class QuizItemsController < ApplicationController
   # DELETE /quiz_items/1
   # DELETE /quiz_items/1.json
   def destroy
-    redirect_to :back, notice: "您不应随意更改记录。"
+    redirect_back fallback_location: root_path, notice: "您不应随意更改记录。"
 =begin
     @quiz_item.destroy
     respond_to do |format|

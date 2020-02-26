@@ -13,7 +13,7 @@ class WordsReportsController < ApplicationController
   # GET /words_reports/1.json
   def show
     unless WordsReport.find_by(id: @words_report.id)
-      redirect_to :back, notice: "相关报告已被删除。"
+      redirect_back fallback_location: root_path, notice: "相关报告已被删除。"
     end
     session[:words_report_id] = @words_report.id
     all_words = WordParser.where(lesson_id: @words_report.lesson_id).pluck(:word_id).uniq
@@ -132,7 +132,7 @@ class WordsReportsController < ApplicationController
     @lesson = Lesson.find(session[:lesson_id])
     @lesson_2 = Lesson.find(params[:lesson_id])
     unless WordsReport.find_by(lesson_id: params[:lesson_id])
-      redirect_to :back, notice: "还未对《#{@lesson_2.title}》进行分析，暂时无法比较。"
+      redirect_back fallback_location: root_path, notice: "还未对《#{@lesson_2.title}》进行分析，暂时无法比较。"
       return
     end
     words_from_lesson_1 = WordParser.includes(:word).where(lesson_id: @lesson.id, words: {is_meanful: true}).map{|word_parser|word_parser.word_id}
