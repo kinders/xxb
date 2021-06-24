@@ -22,7 +22,13 @@
     </div>
     <%= f.error_span(:serial) %>
   </div>
+
+  <div class="control-group">
+    <p>上次的序号：<%= session[:new_catalog_serial] %></p>
+  </div>
+
 <% if current_user.has_role? :admin %>
+
   <div class="control-group">
     <%= f.label "序号", :class => 'control-label' %>
     <div class="controls">
@@ -30,6 +36,7 @@
     </div>
     <%= f.error_span(:user_id) %>
   </div>
+
   <div class="control-group">
     <%= f.label "教科书", :class => 'control-label' %>
     <div class="controls">
@@ -37,7 +44,9 @@
     </div>
     <%= f.error_span(:textbook_id) %>
   </div>
+
 <% end %>
+
   <div class="control-group">
     <%= f.label "课文", :class => 'control-label' %>
     <div class="controls">

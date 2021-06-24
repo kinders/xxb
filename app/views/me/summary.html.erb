@@ -166,7 +166,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @ever_textbooks.reverse.each do |textbook| %>
+              <% @ever_textbooks.each do |textbook| %>
                 <tr>
                   <td><%= link_to textbook.title, textbook_path(textbook) %></td>
                 </tr>
@@ -197,7 +197,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @ever_lessons.reverse.each do |lesson| %>
+              <% @ever_lessons.each do |lesson| %>
                 <tr>
                   <td><%= link_to lesson.title, lesson_path(lesson) %></td>
                 </tr>
@@ -228,7 +228,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @ever_tutors.reverse.each do |tutor| %>
+              <% @ever_tutors.each do |tutor| %>
                 <tr>
                   <td><%= tutor.title %></td>
                   <td><%# link_to tutor.title, tutor_path(tutor) %></td>

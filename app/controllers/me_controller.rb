@@ -5,17 +5,30 @@ class MeController < ApplicationController
   # 用来显示用户最近的活动记录。
   def summary
     ## 最近看过的资料：课本
+=begin
     @ever_textbooks_ids = []
     his_textbook = History.where(user_id: current_user.id, modelname: "textbook").last(50)
     his_textbook.each {|h| @ever_textbooks_ids << h.entryid }
-    @ever_textbooks = []
-    @ever_textbooks_ids.each { |i| 
+    ever_textbooks_ids.each { |i| 
       if Textbook.exists?(i)
         @ever_textbooks << Textbook.find(i)
       end
     }
     @ever_textbooks.uniq!
+=end
+    @ever_textbooks = []
+    ever_textbooks_ids = History.where(user_id: current_user.id, modelname: "textbook").order(id: :desc).first(50).pluck(:entryid).uniq
+    ever_textbooks = Textbook.where(id: ever_textbooks_ids)
+    ever_textbooks_ids.each do |i|
+      ever_textbooks.each do |j|
+        if i == j.id
+          @ever_textbooks << j
+          break
+        end
+      end
+    end
     ## 最近看过的资料：课程
+=begin
     @ever_lessons_ids = []
     his_lessons = History.where(user_id: current_user.id, modelname: "lesson").last(50)
     his_lessons.each {|h| @ever_lessons_ids << h.entryid }
@@ -26,7 +39,20 @@ class MeController < ApplicationController
       end
     }
     @ever_lessons.uniq!
+=end
+    @ever_lessons = []
+    ever_lessons_ids = History.where(user_id: current_user.id, modelname: "lesson").order(id: :desc).first(50).pluck(:entryid).uniq
+    ever_lessons = Lesson.where(id: ever_lessons_ids)
+    ever_lessons_ids.each do |i|
+      ever_lessons.each do |j|
+        if i == j.id
+          @ever_lessons << j
+          break
+        end
+      end
+    end
     ## 最近看过的资料：辅导
+=begin
     @ever_tutors_ids = []
     his_tutors = History.where(user_id: current_user.id, modelname: "tutor").last(50)
     his_tutors.each {|h| @ever_tutors_ids << h.entryid }
@@ -37,6 +63,18 @@ class MeController < ApplicationController
       end
     }
     @ever_tutors.uniq!
+=end
+    @ever_tutors = []
+    ever_tutors_ids = History.where(user_id: current_user.id, modelname: "tutor").order(id: :desc).first(50).pluck(:entryid).uniq
+    ever_tutors = Tutor.where(id: ever_tutors_ids)
+    ever_tutors_ids.each do |i|
+      ever_tutors.each do |j|
+        if i == j.id
+          @ever_tutors << j
+          break
+        end
+      end
+    end
     ## 最近玩过的卡片盒
     @my_cardboxes = Cardbox.where(user_id: current_user.id).last(10)
     ## 最近使用过的文路

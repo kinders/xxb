@@ -38,18 +38,30 @@ class WordsController < ApplicationController
 
   # GET /words/new
   def new
+    unless Master.find_by(user_id: current_user.id)
+      redirect_back fallback_location: root_path, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      return
+    end
     redirect_back fallback_location: root_path, notice: "您没有权限新建字典，请进行其他操作。"
     # @word = Word.new
   end
 
   # GET /words/1/edit
   def edit
+    unless Master.find_by(user_id: current_user.id)
+      redirect_back fallback_location: root_path, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      return
+    end
     # redirect_back fallback_location: root_path, notice: "您没有权限新建字典，请进行其他操作。"
   end
 
   # POST /words
   # POST /words.json
   def create
+    unless Master.find_by(user_id: current_user.id)
+      redirect_back fallback_location: root_path, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      return
+    end
     require 'digest/md5'
     @word = Word.new(word_params)
     word_md = Digest::MD5.hexdigest(@word.name).bytes.map{|b|b=b-38}.join
@@ -90,6 +102,9 @@ class WordsController < ApplicationController
   # PATCH/PUT /words/1
   # PATCH/PUT /words/1.json
   def update
+      unless Master.find_by(user_id: current_user.id)
+        redirect_back fallback_location: root_path, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      end
     require 'digest/md5'
     respond_to do |format|
       if @word.update(word_params)
@@ -132,6 +147,10 @@ class WordsController < ApplicationController
 
   # GET /words/1/change_meanful
   def change_meanful
+    unless Master.find_by(user_id: current_user.id)
+      redirect_back fallback_location: root_path, notice: "对不起，您暂时还没有老师的身份，无法进行操作。"
+      return
+    end
     @word = Word.find(params[:word_id])
     if @word.is_meanful
       @word.update(is_meanful: nil)
@@ -197,7 +216,7 @@ class WordsController < ApplicationController
     # path = "s?wd=" + @word.name + "&ptype=zici"
     # response = Net::HTTP.get_response("hanyu.baidu.com", path)
     @word || @word = Word.find(session[:word_id])
-    uri = URI.parse("https://hanyu.baiducom/s?wd=" + @word.name + "&ptype=zici")
+    uri = URI.parse("https://hanyu.baidu.com/s?wd=" + @word.name + "&ptype=zici")
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
     http.verify_mode = OpenSSL::SSL::VERIFY_NONE

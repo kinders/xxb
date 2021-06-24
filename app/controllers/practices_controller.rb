@@ -324,6 +324,31 @@ class PracticesController < ApplicationController
     redirect_back fallback_location: root_path, notice: '已经将习题转移到指定的课程中。'
   end
 
+  def all_in_table
+    if session[:lesson_id]
+      @lesson = Lesson.find(session[:lesson_id])
+      case params[:order_type]
+      when nil
+        @practices = @lesson.practices.order(:score, :id)
+        @order_type = nil
+      when "created_at"
+        @practices = @lesson.practices.order(:id)
+        @order_type = "created_at"
+      when "title"
+        @practices = @lesson.practices.order(:title, :id)
+        @order_type = "title"
+      when "labelname"
+        @practices = @lesson.practices.order(:labelname, :id)
+        @order_type = "labelname"
+      when "question"
+        @practices = @lesson.practices.order(:question, :id)
+        @order_type = "question"
+      end
+    else
+      redirect_to list_all_practices_path, notice: "需要指定课文。"
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

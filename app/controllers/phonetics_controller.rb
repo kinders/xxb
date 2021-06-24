@@ -79,10 +79,14 @@ class PhoneticsController < ApplicationController
 
   # POST /phonetic/create_phonetic_for_word
   def create_phonetic_for_word
+    if params[:content] == '' || params[:label] == ''
+        redirect_back fallback_location: root_path, notice: "注音和标签，缺一不可。"
+        return
+    end
     @word = Word.find(session[:word_id])
     @phonetic = Phonetic.find_by(content: params[:content], label: params[:label])
     if @phonetic
-      if @word.phonetics.exists?(@phonetic)
+      if @word.phonetics.exists?(@phonetic.id)
         redirect_back fallback_location: root_path, notice: "这个拼音已经存在，无需重复添加。"
         return
       else
@@ -102,6 +106,9 @@ class PhoneticsController < ApplicationController
   end
 
   def chinese_rhyme
+  end
+
+  def xxb_rhyme
   end
 
   def list_rhyme_words

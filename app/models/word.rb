@@ -185,10 +185,10 @@ class Word < ApplicationRecord
 
 =begin
 =end
-  # 这个类方法补齐md5字段
+  # 这个类方法补齐单字md5字段
   def self.add_md5
     require 'digest/md5'
-    words = Word.where(is_meanful: true, md1: nil)
+    words = Word.where(length: 1, is_meanful: true, md1: nil)
     words.each do |word|
       word_md5 = Digest::MD5.hexdigest(word.name).bytes.map{|b|b=b-38}.join
       word.update(md1: word_md5[0..7], md2: word_md5[8..15], md3: word_md5[16..23], md4: word_md5[24..31], md5: word_md5[32..39], md6: word_md5[40..47], md7: word_md5[48..55], md8: word_md5[56..63])
@@ -214,8 +214,7 @@ class Word < ApplicationRecord
 =end
 
 =begin
-=end
-  # 这个类方法补充单词的语音和释义的数量
+  # 这个类方法补充一批单词的语音和释义的数量
   def self.add_phonetic_and_meaning_count
     Word.where(id: 11876092..11876174).find_each(batch_size: 100) do |w|
     # Word.where(is_meanful: true).find_each(batch_size: 100) do |w|
@@ -225,5 +224,6 @@ class Word < ApplicationRecord
       w.update(phonetics_count: pc, meanings_count: mc)
     end
   end
+=end
 
 end

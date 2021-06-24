@@ -1,0 +1,25 @@
+<table class="table table-bordered">
+<thead>
+<tr>
+<th>序号</th>
+<th>标签</th>
+<th>标题</th>
+<th>材料</th>
+<th>问题</th>
+<th>答案</th>
+<th>分值</th>
+</thead>
+<tbody>
+<% @practices.each_with_index do |p, i| %>
+<tr>
+<td><%= i + 1 %></td>
+<td><%= p.labelname %></td>
+<td><%= p.title %></td>
+<td><%= sanitize p.material, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style) %></td>
+<td><%= sanitize p.question, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)  %></td>
+<td><%= sanitize p.answer, tags: %w(div a acronym b strong i em li ul ol h1 h2 h3 h4 h5 h6 hr blockquote br cite sub sup ins p ruby rt rp table tr td span u ), attributes: %w(href class style)  %></td>
+<td><%= p.score %></td>
+</tr>
+<% end %>
+</tbody>
+</table>

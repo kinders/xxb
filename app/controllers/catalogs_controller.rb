@@ -71,6 +71,7 @@ class CatalogsController < ApplicationController
 
     respond_to do |format|
       if @catalog.save
+        session[:new_catalog_serial] = @catalog.serial
         format.html { redirect_to @catalog, notice: "目录已被成功创建" }
         format.json { render :show, status: :created, location: @catalog }
       else
@@ -85,6 +86,8 @@ class CatalogsController < ApplicationController
   def update
     respond_to do |format|
       if @catalog.update(catalog_params)
+        session[:new_catalog_serial] = @catalog.serial
+        format.html { redirect_to @catalog, notice: "目录已被成功创建" }
         format.html { redirect_to @catalog, notice: "目录已经成功更新" }
         format.json { render :show, status: :ok, location: @catalog }
       else

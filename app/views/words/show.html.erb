@@ -29,7 +29,7 @@
           "data-placement": "bottom", 
           title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
       <%= link_to t('.back', default: t("helpers.links.back")),
-        words_path,
+        show_words_url,
         class: 'btn btn-default', 
         tabindex: 24, 
         "data-toggle": "tooltip", 
@@ -86,6 +86,22 @@
   <dd><%= @word.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:length) %>:</strong></dt>
   <dd><%= @word.length %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:md1) %>:</strong></dt>
+  <dd><%= @word.md1 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:md2) %>:</strong></dt>
+  <dd><%= @word.md2 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:md3) %>:</strong></dt>
+  <dd><%= @word.md3 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:md4) %>:</strong></dt>
+  <dd><%= @word.md4 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:md5) %>:</strong></dt>
+  <dd><%= @word.md5 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:md6) %>:</strong></dt>
+  <dd><%= @word.md6 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:md7) %>:</strong></dt>
+  <dd><%= @word.md7 %></dd>
+  <dt><strong><%= model_class.human_attribute_name(:md8) %>:</strong></dt>
+  <dd><%= @word.md8 %></dd>
   <dt><strong><%= model_class.human_attribute_name(:deleted_at) %>:</strong></dt>
   <dd><%= @word.deleted_at %></dd>
 </dl>
@@ -123,7 +139,7 @@
           "data-placement": "bottom", 
           title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
       <%= link_to t('.back', default: t("helpers.links.back")),
-        words_path,
+        show_words_path,
         class: 'btn btn-default', 
         tabindex: 24, 
         "data-toggle": "tooltip", 
@@ -188,10 +204,23 @@
     <a href="http://hanyu.baidu.com/s?wd=<%= @word.name %>&amp;ptype=zici" class="btn btn-link btn-xs" target="_blank">查看百度汉语</a>
   </h3>
 </div>
-
+<div>
+    <% if @word.is_meanful %>
+      <span class="badge">有意义词汇</span>
+      <%= link_to "标记为无意义词汇", word_change_meanful_path(@word) %>
+    <% else %>
+      <span class="badge">无意义词汇</span>
+      <%= link_to "标记为有意义词汇", word_change_meanful_path(@word) %>
+    <% end %>
+</div>
+<div>
 <%= link_to "查看包含“#{@word.name}”的词语", words_have_word_path(word_id: @word.id), class: "btn btn-xs btn-default" %>
 <%= link_to "查看包含“#{@word.name}”的课文", lessons_have_word_path(word_id: @word.id), class: "btn btn-xs btn-default" %>
 <%= link_to "查看“#{@word.name}”的注释", word_comments_path(word_id: @word.id), class: "btn btn-xs btn-default" %>
+</div>
+<div>
+  <p style="color: white;">md：<%= @word.md1 %>-<%= @word.md2 %>-<%= @word.md3 %>-<%= @word.md4 %>-<%= @word.md5 %>-<%= @word.md6 %>-<%= @word.md7 %>-<%= @word.md8 %></p>
+</div>
 
 <div class="panel panel-default">
   <div class="panel-heading">

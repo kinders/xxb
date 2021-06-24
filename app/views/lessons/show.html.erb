@@ -157,7 +157,7 @@
               <% textbook_user = User.find(textbook.user_id) %>
               <tr>
                 <td><%= textbook.serial.round(3) %></td>
-                <td><%= link_to textbook.title, choose_a_textbook_path(textbook_id: textbook.id), class: "btn-link" %></td>
+                <td><%= link_to textbook.title, choose_a_textbook_path(textbook_id: textbook.id, lesson_id: @lesson.id), class: "btn-link" %></td>
                 <td><%= textbook.description %></td>
                 <td><%= textbook_user.name %></td>
               </tr>
@@ -220,7 +220,7 @@
 <%# 标题部分 %>
 <div class="page-header">
   <%# number_with_precision(@catalog.serial, precision: 3) %>
-  <h2><%= @catalog.serial.to_f if @catalog %> <%= @lesson.title %> <br> <small><%= @lesson.author if @lesson.author %></small></h2>
+  <h2><%= @catalog.serial.to_f if @catalog %> <%= @lesson.title %> <br> <small><%= @lesson.author if @lesson.author %><%= "《" + @textbook.title + "》" if @textbook %> </small></h2>
 </div>
 <p class="text-right" >
 <strong>出处：</strong><%= @lesson.source || "未知" %>；

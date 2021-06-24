@@ -355,6 +355,7 @@ class TutorsController < ApplicationController
 
   # GET /tutor/create_multi_pinyin_tutor
   def create_multi_pinyin_tutor
+    require 'digest/md5'
     unless session[:lesson_id]
       redirect_to me_summary_url, notice: "无法找到相应的课程。"
       return
@@ -363,7 +364,9 @@ class TutorsController < ApplicationController
     content = @lesson.title + @lesson.content
     contents = content.gsub(/<[^>]+>/, "").chars.uniq
     contents.map! do |char|
-      word = Word.find_by(name: char.to_s)
+      words_with_blank_id = Digest::MD5.hexdigest(char.to_s).bytes.map{|b|b=b-38}.join
+      word = Word.find_by(md1: words_with_blank_id[0..7], md2: words_with_blank_id[8..15], md3: words_with_blank_id[16..23], md4: words_with_blank_id[24..31], md5: words_with_blank_id[32..39], md6: words_with_blank_id[40..47], md7: words_with_blank_id[48..55], md8: words_with_blank_id[56..63])
+      # word = Word.find_by(name: char.to_s)
       if word && word.name =~ /[\u4e00-\u9fa5]/
         if word.phonetics.count > 1
           pinyins = word.phonetics.map{|p| p.content}.join(" ")
@@ -378,6 +381,7 @@ class TutorsController < ApplicationController
 
   # GET /tutor/create_pinyin_page_for_tutor
   def create_pinyin_page_for_tutor
+    require 'digest/md5'
     unless session[:lesson_id]
       redirect_to me_summary_url, notice: "无法找到相应的课程。"
       return
@@ -390,7 +394,9 @@ class TutorsController < ApplicationController
     end
     contents = @tutor.proviso.chars
     contents.map! do |char|
-      word = Word.find_by(name: char.to_s)
+      words_with_blank_id = Digest::MD5.hexdigest(char.to_s).bytes.map{|b|b=b-38}.join
+      word = Word.find_by(md1: words_with_blank_id[0..7], md2: words_with_blank_id[8..15], md3: words_with_blank_id[16..23], md4: words_with_blank_id[24..31], md5: words_with_blank_id[32..39], md6: words_with_blank_id[40..47], md7: words_with_blank_id[48..55], md8: words_with_blank_id[56..63])
+      # word = Word.find_by(name: char.to_s)
       if word
         if word.name =~ /[\u4e00-\u9fa5]/
           pinyins = word.phonetics.map{|p| p.content}.join(" ")
@@ -408,6 +414,7 @@ class TutorsController < ApplicationController
   end
 
   def create_explain_page_for_tutor
+    require 'digest/md5'
     unless session[:lesson_id]
       redirect_to me_summary_url, notice: "无法找到相应的课程。"
       return
@@ -422,7 +429,9 @@ class TutorsController < ApplicationController
     contents = @tutor.proviso.gsub(delete_pattern, "").split("，")
     new_content = ""
     contents.each do |w|
-      word = Word.find_by(name: w)
+      words_with_blank_id = Digest::MD5.hexdigest(w).bytes.map{|b|b=b-38}.join
+      word = Word.find_by(md1: words_with_blank_id[0..7], md2: words_with_blank_id[8..15], md3: words_with_blank_id[16..23], md4: words_with_blank_id[24..31], md5: words_with_blank_id[32..39], md6: words_with_blank_id[40..47], md7: words_with_blank_id[48..55], md8: words_with_blank_id[56..63])
+      # word = Word.find_by(name: w)
       if word
         p = word.phonetics.pluck("content").join(", ")
         m = word.meanings.pluck("content").join("！！！").gsub(delete_pattern, '')
@@ -512,6 +521,7 @@ class TutorsController < ApplicationController
   # get find_sentences_with_words
   # 在课文中抓取包含词语的句子。
   def find_sentences_with_words
+    require 'digest/md5'
     unless session[:lesson_id]
       redirect_to me_summary_url, notice: "无法找到相应的课程。"
       return
@@ -529,15 +539,24 @@ class TutorsController < ApplicationController
       re_str = "[^.?!。？！]*" + w + "[^.?!。？！]*[.?!。？！]"
       re = Regexp.new(re_str)
       new_w = "<span style='color:#FFFFFF;'>," + w + "</span>"
+      new_s = ""
       if params[:is_with_phonetics]
-        new_w2 = Word.find_by(name: w)
+        words_with_blank_id = Digest::MD5.hexdigest(w).bytes.map{|b|b=b-38}.join
+        new_w2 = Word.find_by(md1: words_with_blank_id[0..7], md2: words_with_blank_id[8..15], md3: words_with_blank_id[16..23], md4: words_with_blank_id[24..31], md5: words_with_blank_id[32..39], md6: words_with_blank_id[40..47], md7: words_with_blank_id[48..55], md8: words_with_blank_id[56..63])
+        # new_w2 = Word.find_by(name: w)
         if new_w2
-          new_s = new_w2.phonetics.map{|i|i.content}.join + ("⃞"*(w.length))
+          # new_s = new_w2.phonetics.map{|i|i.content}.join + ("__ "*(w.length))
+          p_s = new_w2.phonetics.to_a
+          if p_s.empty?
+            new_s = "<span style='color: red;'>没有音标</span> " + "__ "*(w.length)
+          else
+            new_s = p_s.map{|i|i.content}.join + ("__ "*(w.length))
+          end
         else
-          new_s = "<span style='color: red;'>没有找到音标</span> " + "⃞"*(w.length)
+          new_s = "<span style='color: red;'>没有词语</span> " + "__ "*(w.length)
         end
       else
-        new_s = " " + "⃞"*(w.length)
+        new_s = " " + "__ "*(w.length)
       end
       new_content << @lesson.content.gsub(delete_pattern, "").scan(re).map{|i|i.gsub(w, new_s) + new_w}
     end

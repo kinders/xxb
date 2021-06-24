@@ -19,6 +19,22 @@ class WordordersController < ApplicationController
     end
   end
 
+  # GET /wordorders
+  # GET /wordorders.json
+  def index_with_details
+    if current_user.has_role? :admin
+      @wordorders = Wordorder.all
+    elsif session[:wordmap_id]
+      @wordmap = Wordmap.find(session[:wordmap_id])
+      @wordorders = Wordorder.where(user_id: current_user.id, wordmap_id: @wordmap.id).order(:serial)
+      words = @wordmap.words.pluck(:id, :name)
+      @word_ids = words.map{|i| i[0]}
+      @word_names = words.map{|i| i[1]}
+    else
+      redirect_to roadmaps_url, notice: "请先指定文路和词序表。"
+    end
+  end
+
   # GET /wordorders/1
   # GET /wordorders/1.json
   def show

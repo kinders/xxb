@@ -92,6 +92,9 @@
         <li>
           <%= link_to "更新字序", wordorder_update_serial_path(wordmap_id: @wordmap.id),method: :post %>
         </li>
+        <li>
+          <%= link_to "字词详情视图", wordorder_index_with_details_path %>
+        </li>
         <% if current_user.id == @wordmap.user_id %>
         <li>
           <a data-toggle="collapse" data-target="#collapseCreatePracticesInBatch" aria-expanded="false" aria-controls="collapseCreatePracticesInBatch">
@@ -158,8 +161,9 @@
     <% @wordorders.each do |wordorder| %>
       <tr>
         <td><%= wordorder.serial %></td>
+        <% if Word.find_by(id: wordorder.word_id) %>
         <% i = @word_ids.index(wordorder.word_id) %>
-        <td><%= link_to @word_names[i], word_path(wordorder.word_id), target: "_blank"%></td>
+        <td><%= link_to @word_names[i], word_path(wordorder.word_id), target: "_blank" %></td>
         <td>
           <%= link_to t('.edit', default: t("helpers.links.edit")),
             edit_wordorder_path(wordorder), class: 'btn btn-default btn-xs',
@@ -175,6 +179,8 @@
             "data-placement": "bottom", 
             title: t('.delete', default: [:"helpers.titles.delete"], model: model_class.model_name.human.titleize) %>
         </td>
+        <% else %>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

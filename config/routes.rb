@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resources :wordorders
   post '/wordorder_update_serial', to: 'wordorders#update_serial'
   post '/load_wordorders', to: 'wordorders#load_wordorders'
+  get '/wordorder_index_with_details', to: 'wordorders#index_with_details'
 
   resources :wordmaps
   post '/export_wordmaps_to_cardbox', to: 'wordmaps#export_wordmaps_to_cardbox'
@@ -50,6 +51,7 @@ Rails.application.routes.draw do
   post '/phonetic/create_phonetic_for_word', to: 'phonetics#create_phonetic_for_word'
   get '/chinese_yinxu', to: 'phonetics#chinese_yinxu'
   get '/chinese_rhyme', to: 'phonetics#chinese_rhyme'
+  get '/xxb_rhyme', to: 'phonetics#xxb_rhyme'
   get '/list_rhyme_words', to: 'phonetics#list_rhyme_words'
 
   resources :sentences
@@ -243,6 +245,7 @@ Rails.application.routes.draw do
   post'/practice_add_to_tutor', to: 'practices#practice_add_to_tutor'
   post '/practice_copy_to_another_lesson', to: "practices#copy_to_another_lesson"
   post'/practice_change_to_lesson', to: 'practices#practice_change_to_lesson'
+  get '/practice_all_in_table', to: 'practices#all_in_table'
 
   resources :tutors do
     get :autocomplete_lesson_title, on: :collection

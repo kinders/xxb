@@ -354,7 +354,7 @@ class LessonsController < ApplicationController
   # GET /choose_a_textbook
   def choose_a_textbook
     session[:textbook_id] = params[:textbook_id]
-    @lesson = Lesson.find(session[:lesson_id])
+    @lesson = Lesson.find(params[:lesson_id])
     redirect_to @lesson, notice: "成功选择课本。"
   end
 
